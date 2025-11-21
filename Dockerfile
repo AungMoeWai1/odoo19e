@@ -5,11 +5,6 @@ RUN apt-get update && \
         apt-get install -y --no-install-recommends build-essential gcc git libpq-dev libxml2-dev libxslt1-dev zlib1g-dev libsasl2-dev libldap2-dev libjpeg-dev libssl-dev libffi-dev && apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# wkhtmltopdf
-RUN curl -SL https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox_0.12.6-1.buster_amd64.deb -o wkhtmltox.deb \
-    && apt install -y ./wkhtmltox.deb \
-    && rm wkhtmltox.deb
-
 
 # Set working directory
 WORKDIR /opt/odoo
