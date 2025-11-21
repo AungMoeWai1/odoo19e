@@ -1,5 +1,5 @@
 services:
-  odoo18db:
+  odoo19db:
     image: postgres
     env_file: myenvfile.env
     volumes:

@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # Default values if not provided
-: "${DB_HOST:=odoo18db}"
+: "${DB_HOST:=odoo19db}"
 : "${PORT:=5432}"
-: "${USER:=odoo18}"
-: "${PASSWORD:=odoo18}"
-: "${DB_NAME:=odoo18_db}"
+: "${USER:=odoo19}"
+: "${PASSWORD:=odoo19}"
+: "${DB_NAME:=odoo19_db}"
 
 exec python3 /opt/odoo/odoo-bin \
     -c /etc/odoo.conf \
