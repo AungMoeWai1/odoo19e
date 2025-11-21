@@ -1,12 +1,17 @@
 FROM python:3.12-slim
 
-# Install dependencies
+# System dependencies
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-        build-essential gcc git wkhtmltopdf \
+        build-essential gcc git xz-utils \
         libpq-dev libxml2-dev libxslt1-dev zlib1g-dev \
-        libsasl2-dev libldap2-dev libjpeg-dev libssl-dev libffi-dev && \
+        libsasl2-dev libldap2-dev libjpeg-dev libssl-dev libffi-dev curl && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# wkhtmltopdf
+RUN curl -SL https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox_0.12.6-1.buster_amd64.deb -o wkhtmltox.deb \
+    && apt install -y ./wkhtmltox.deb \
+    && rm wkhtmltox.deb
 
 
 # Set working directory
@@ -20,7 +25,7 @@ COPY ./odoo /opt/odoo
 COPY ./requirements.txt /opt/requirements.txt
 
 # Install Python dependencies
-RUN pip install --upgrade setuptools
+RUN pip install --upgrade setuptools wheel
 RUN pip install --upgrade pip
 RUN pip install -r /opt/requirements.txt
 RUN pip install pydantic
