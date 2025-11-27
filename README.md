@@ -1,98 +1,166 @@
-Odoo 18 Dockerized Deployment
-=============================
+# Odoo 19 Dockerized Deployment
 
-This project contains a Dockerized Odoo 18 setup with PostgreSQL and pgAdmin, configured for easy development, deployment, and CI/CD.
+This project provides a simple Docker Compose setup for **Odoo 19** with **PostgreSQL** and **pgAdmin** for development or testing purposes.
 
-Project Structure
------------------
+---
 
-::
+## Project Structure
 
-  odoo18-docker/
-  ├── custom_addons/          # Create manually for custom Odoo modules
-  ├── Dockerfile              # Odoo image with dependencies
-  ├── entrypoint.sh           # Startup script for Odoo
-  ├── odoo.conf               # Odoo configuration file
-  ├── docker-compose.yml      # Docker services definition
-  ├── myenvfile.env           # Environment variables
-  ├── VERSION.txt             # Image version tag
-  ├── Makefile                # Build/push utilities
-  ├── .github/
-  │   └── workflows/
-  │       └── docker-publish.yml  # CI/CD to Docker Hub
-  └── README.rst
+```
+odoo19e/
+├── custom_addons/          # Create manually for custom Odoo modules
+├── Dockerfile              # Odoo image with dependencies
+├── entrypoint.sh           # Startup script for Odoo
+├── odoo.conf               # Odoo configuration file
+├── docker-compose.yml      # Docker services definition
+├── myenvfile.env           # Environment variables
+├── VERSION.txt             # Image version tag
+├── Makefile                # Build/push utilities
+└── .github/                # GitHub Actions CI/CD workflow
+```
 
-Usage
------
+---
 
-1. **Clone the repo**
+## Quick Start
 
-.. code-block:: bash
+### 1. Clone the repo
 
-    git clone https://github.com/YOUR_USER/odoo18-docker.git
-    cd odoo18-docker
+```bash
+git clone https://github.com/AungMoeWai1/odoo19e.git
+cd odoo19e
+```
 
-2. **Manually create** the `custom_addons/` folder:
+### 2. Create custom addons folder
 
-.. code-block:: bash
+```bash
+mkdir custom_addons
+```
 
-    mkdir custom_addons
-
-3. **Configure environment**
+### 3. Configure environment variables
 
 Create `myenvfile.env`:
 
-.. code-block::
+```env
+POSTGRES_DB=postgres
+POSTGRES_USER=odoo
+POSTGRES_PASSWORD=odoo
 
-    POSTGRES_DB=postgres
-    POSTGRES_USER=odoo
-    POSTGRES_PASSWORD=odoo
-    PGADMIN_DEFAULT_EMAIL=admin@example.com
-    PGADMIN_DEFAULT_PASSWORD=admin
+PGADMIN_DEFAULT_EMAIL=admin@example.com
+PGADMIN_DEFAULT_PASSWORD=admin
+```
 
-4. **Start containers**
+### 4. Start services
 
-.. code-block:: bash
+```bash
+docker-compose up -d
+```
 
-    docker-compose up -d
+### 5. Check docker process
 
-5. **Access**
+```bash
+docker ps
+```
 
-- Odoo: http://localhost:8069  
-- pgAdmin: http://localhost:5050 (login with credentials from `.env`)
+### 5. Access
 
-Docker Hub Automation (CI/CD)
------------------------------
+- **Odoo:** [http://localhost:8069](http://localhost:8069)  
+- **pgAdmin:** [http://localhost:5050](http://localhost:5050) (login with `.env` credentials)
 
-This repo includes a GitHub Actions workflow that automatically builds and pushes to Docker Hub when changes are made to `Dockerfile` or `docker-compose.yml`.
+---
 
-### GitHub Secrets Required
+## Docker Hub CI/CD (Optional)
 
-In your GitHub repository, add the following secrets:
+- Automatically builds and pushes the image when `Dockerfile` or `docker-compose.yml` changes.
+- Requires GitHub Secrets:
 
-- `DOCKERHUB_USERNAME`: your Docker Hub username
-- `DOCKERHUB_TOKEN`: a [Docker Hub Access Token](https://hub.docker.com/settings/security)
+  - `DOCKERHUB_USERNAME`
+  - `DOCKERHUB_TOKEN` (Docker Hub Access Token)
 
-To generate a Docker Hub access token:
+---
 
-1. Log in to Docker Hub
-2. Navigate to **Account Settings > Security**
-3. Click **New Access Token**
-4. Name it (e.g., `github-ci`) and copy the token
-5. Add it as `DOCKERHUB_TOKEN` in your GitHub repo secrets
+## Manual Versioning
 
-Manual Version Bump
--------------------
+Update `VERSION.txt` with your desired version (e.g., `1.0.1`) and run:
 
-Edit `VERSION.txt` with your desired tag (e.g., `1.0.1`).  
-Use the provided Makefile commands:
+```bash
+make build   # Build Docker image
+make push    # Push to Docker Hub
+```
 
-.. code-block:: bash
+---
 
-    make build        # Builds Docker image
-    make push         # Pushes to Docker Hub with version
+## Notes
 
-License
--------
+- `custom_addons/` is mounted into the Odoo container. Changes in this folder reflect immediately.
+- Use this setup for **development or testing**. For production, consider volumes, backups, and security configurations.
 
-MIT License
+---
+
+## Kubernetes Deployment
+
+Below is a simple Kubernetes setup to run Odoo 19 + PostgreSQL using Deployments, Services, and Persistent Volumes.
+
+![alt text](image.png)
+
+## Quick Start
+
+### 1. Clone the repo
+
+```bash
+git clone https://github.com/AungMoeWai1/odoo19e.git
+cd odoo19e
+```
+
+### 2. Create custom addons folder
+
+```bash
+mkdir custom_addons
+```
+
+### 3. Create pv,pvc,configmap,deployment & service of postgres
+
+```bash
+kubectl apply -f postgres-pv.yaml
+kubectl apply -f postgres-pvc.yaml
+kubectl apply -f postgres-config.yaml
+kubectl apply -f postgres-deployment.yaml
+kubectl apply -f postgres-service.yaml
+```
+
+### 3. Create pv,pvc,configmap,deployment & service of odoo
+
+```bash
+kubectl apply -f odoo_custom_addon_pv.yaml
+kubectl apply -f odoo_custom_addon_pvc.yaml
+kubectl create configmap odoo-entrypoint --from-file=entrypoint.sh
+kubectl create configmap odoo-config --from-file=odoo.conf
+sudo ufw allow 37675/tcp
+minikube mount ./custom_addons:/custom_addons --port=37675
+kubectl apply -f odoo-deployment.yaml
+kubectl apply -f odoo-service.yaml
+```
+
+### 4. check the created services:
+```bash
+kubectl get all
+kubectl describe pod <podname> 
+kubectl logs pod <podname>
+kubectl get pv
+kubectl get pvc
+kubectl get configmap
+```
+
+### 5. Start run
+```bash
+minikube start
+minikube service odoo-service
+minikube ip
+minikube dashboard
+```
+
+
+
+## License
+
+My license
+

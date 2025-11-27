@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: odoo-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: odoo
+  template:
+    metadata:
+      labels:
+        app: odoo
+    spec:
+      containers:
+      - name: odoo
+        image: aungmoewai/odoo19e:latest
+        ports:
+          - containerPort: 8069
+        volumeMounts:
+          # Entry point script
+          - name: entrypoint-script
+            mountPath: /entrypoint.sh
+            subPath: entrypoint.sh
+            readOnly: true
+          # Odoo config file
+          - name: odoo-config
+            mountPath: /etc/odoo.conf
+            subPath: odoo.conf
+            readOnly: true
+          # Mount the custom addons directory
+          - name: custom-addons
+            mountPath: /mnt/custom_addons
+        command: ["/bin/bash", "/entrypoint.sh"]
+      volumes:                # Correctly nested under spec
+        - name: entrypoint-script
+          configMap:
+            name: odoo-entrypoint
+        - name: odoo-config
+          configMap:
+            name: odoo-config
+        - name: custom-addons
+          persistentVolumeClaim:
+            claimName: custom-addons-pvc
