@@ -1,8 +1,9 @@
 FROM python:3.12
 
 # Install system dependencies
+
 RUN apt-get update && \
-        apt-get install -y --no-install-recommends build-essential gcc git libpq-dev libxml2-dev libxslt1-dev zlib1g-dev libsasl2-dev libldap2-dev libjpeg-dev libssl-dev libffi-dev && apt-get clean && \
+        apt-get install -y --no-install-recommends build-essential gcc git wkhtmltopdf libpq-dev libxml2-dev libxslt1-dev zlib1g-dev libsasl2-dev libldap2-dev libjpeg-dev libssl-dev libffi-dev && apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
 
