@@ -3,7 +3,11 @@ FROM python:3.12
 # Install system dependencies
 
 RUN apt-get update && \
-        apt-get install -y --no-install-recommends build-essential gcc git xvfb xfonts-100dpi xfonts-75dpi xfonts-scalable xfonts-cyrillic wkhtmltopdf flashplugin-nonfree libpq-dev libxml2-dev libxslt1-dev zlib1g-dev libsasl2-dev libldap2-dev libjpeg-dev libssl-dev libffi-dev && apt-get clean && \
+        apt-get install -y --no-install-recommends build-essential gcc git xvfb \
+        wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-2/wkhtmltox_0.12.6.1-2.jammy_amd64.deb\
+        sudo dpkg -i wkhtmltox_0.12.6.1-2.jammy_amd64.deb \
+        sudo apt-get -f install && \
+        apt-get install libpq-dev libxml2-dev libxslt1-dev zlib1g-dev libsasl2-dev libldap2-dev libjpeg-dev libssl-dev libffi-dev && apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
 
