@@ -8,13 +8,15 @@
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
 # Emily Jia <eji@odoo.com>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Chloe Wang (chwa)" <chwa@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-12 18:45+0000\n"
-"PO-Revision-Date: 2025-09-16 15:24+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2026-01-30 18:46+0000\n"
+"PO-Revision-Date: 2026-02-14 10:01+0000\n"
+"Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
 "projects/odoo-19/hr_contract_salary/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -22,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: hr_contract_salary
 #: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_personal_info__impacts_net_salary
@@ -85,6 +87,26 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                <h2>恭喜！</h2>\n"
+"                您可点击下方链接配置您的薪酬方案。<br/>\n"
+"                <t t-if=\"ctx.get('validity_end')\">\n"
+"                    该链接将于 <t t-out=\"ctx.get('validity_end')\"/>失效。\n"
+"                </t>\n"
+"                <div style=\"padding: 16px 0px 16px 0px;\">\n"
+"                    <a t-att-href=\"'/salary_package/simulation/offer/%s%s' "
+"% (                             ctx.get('offer_id')"
+",                             ('?token=' + ctx.get('access_token')) if "
+"ctx.get('access_token') else ''                         )\" target=\"_blank\""
+" t-attf-style=\"background-color: {{object.company_id.email_secondary_color "
+"or '#875A7B'}}; text-decoration: none; color: {{"
+"object.company_id.email_primary_color or '#FFFFFF'}}; padding: 8px 16px 8px "
+"16px; border-radius: 5px;\">\n"
+"                        配置薪酬方案\n"
+"                    </a>\n"
+"                </div>\n"
+"            </div>\n"
+"        "
 
 #. module: hr_contract_salary
 #: model:mail.template,body_html:hr_contract_salary.mail_template_send_offer_applicant
@@ -109,6 +131,22 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                <h2>恭喜！</h2>\n"
+"                您可点击下方链接配置您的薪酬方案。<br/>\n"
+"                <t t-if=\"ctx.get('validity_end')\">\n"
+"                    该链接将于 <t t-out=\"ctx.get('validity_end')\"/>失效。\n"
+"                </t>\n"
+"                <div style=\"padding: 16px 0px 16px 0px;\">\n"
+"                    <a t-attf-href=\"/salary_package/simulation/offer/"
+"{{ctx.get('offer_id')}}?token={{ctx.get('access_token')}}\" target=\"_blank\""
+" t-attf-style=\"background-color: {{object.company_id.email_secondary_color "
+"or '#875A7B'}}; text-decoration: none; color: {{"
+"object.company_id.email_primary_color or '#FFFFFF'}}; padding: 8px 16px 8px "
+"16px; border-radius: 5px;\">配置薪酬方案</a>\n"
+"                </div>\n"
+"            </div>\n"
+"        "
 
 #. module: hr_contract_salary
 #: model_terms:ir.ui.view,arch_db:hr_contract_salary.salary_package_sidebar
@@ -131,6 +169,8 @@ msgid ""
 "<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
 "title=\"Arrow\"/>"
 msgstr ""
+"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"箭头图标\" title=\"箭头"
+"\"/>"
 
 #. module: hr_contract_salary
 #: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_view_employee_form
@@ -199,11 +239,11 @@ msgid ""
 "                                </span>"
 msgstr ""
 "<span>\n"
-"                                    "
-"此字段只能由服务器管理员修改，如果需要修改这些字段，请联系他们。\n"
+"                                    此字段只能由服务器管理员修改，如果需要修"
+"改这些字段，请联系他们。\n"
 "                                </span>\n"
-"                                <span invisible="
-"\"requested_documents_fields_string\">\n"
+"                                <span "
+"invisible=\"requested_documents_fields_string\">\n"
 "                                    目前没有要求修改的字段。\n"
 "                                </span>"
 
@@ -324,7 +364,7 @@ msgstr "添加小节"
 #. module: hr_contract_salary
 #: model:hr.contract.salary.personal.info.type,name:hr_contract_salary.hr_contract_salary_personal_info_type_address
 msgid "Address"
-msgstr ""
+msgstr "地址"
 
 #. module: hr_contract_salary
 #: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_benefit__benefit_type_id
@@ -488,7 +528,7 @@ msgstr "优点"
 msgid ""
 "Benefits that are not linked to a field or salary rule should always be "
 "displayed."
-msgstr ""
+msgstr "与字段或工资规则无关的福利应始终显示。"
 
 #. module: hr_contract_salary
 #: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_birthdate
@@ -578,7 +618,7 @@ msgstr "确认"
 #. module: hr_contract_salary
 #: model:hr.contract.salary.personal.info.type,name:hr_contract_salary.hr_contract_salary_personal_info_type_contact
 msgid "Contact Information"
-msgstr ""
+msgstr "联系信息"
 
 #. module: hr_contract_salary
 #: model:ir.model,name:hr_contract_salary.model_hr_contract_salary_benefit_type
@@ -598,7 +638,7 @@ msgstr ""
 #. module: hr_contract_salary
 #: model:ir.actions.act_window,name:hr_contract_salary.action_view_contract_statbutton
 msgid "Contract Details"
-msgstr ""
+msgstr "合同细节"
 
 #. module: hr_contract_salary
 #: model:ir.actions.act_window,name:hr_contract_salary.action_view_partially_signed_contract_statbutton
@@ -608,7 +648,7 @@ msgstr ""
 #. module: hr_contract_salary
 #: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__contract_end_date
 msgid "Contract End Date"
-msgstr ""
+msgstr "合同结束日期"
 
 #. module: hr_contract_salary
 #. odoo-python
@@ -728,8 +768,8 @@ msgstr "国籍"
 
 #. module: hr_contract_salary
 #: model_terms:ir.actions.act_window,help:hr_contract_salary.hr_contract_salary_offer_action
-msgid "Create a Offer"
-msgstr "创建录用通知"
+msgid "Create an Offer"
+msgstr ""
 
 #. module: hr_contract_salary
 #: model_terms:ir.actions.act_window,help:hr_contract_salary.hr_contract_salary_offer_recruitment_action
@@ -816,7 +856,8 @@ msgstr "员工的默认薪资配置链接有效期"
 msgid ""
 "Default contract used to generate an offer. If empty, benefits will be taken "
 "from current contract of the employee/nothing for an applicant."
-msgstr "用于生成要约的默认合同。如果为空，则将从员工的当前合同中提取福利；如果为申请"
+msgstr ""
+"用于生成要约的默认合同。如果为空，则将从员工的当前合同中提取福利；如果为申请"
 "人，则不提取任何福利。"
 
 #. module: hr_contract_salary
@@ -916,6 +957,7 @@ msgstr "丢弃"
 #: model:ir.model.fields,field_description:hr_contract_salary.field_hr_version__display_name
 #: model:ir.model.fields,field_description:hr_contract_salary.field_refuse_offer_wizard__display_name
 #: model:ir.model.fields,field_description:hr_contract_salary.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:hr_contract_salary.field_sign_item__display_name
 #: model:ir.model.fields,field_description:hr_contract_salary.field_sign_request__display_name
 msgid "Display Name"
 msgstr "显示名称"
@@ -943,7 +985,8 @@ msgid ""
 "Documents selected here will be requested to the employee for additional "
 "signatures related to the benefit. eg: A company car policy to approve if "
 "you choose a company car."
-msgstr "在此选择的文件将要求员工签署与福利相关的附加文件：如果您选择公司用车，则需要"
+msgstr ""
+"在此选择的文件将要求员工签署与福利相关的附加文件：如果您选择公司用车，则需要"
 "批准公司用车政策。"
 
 #. module: hr_contract_salary
@@ -959,7 +1002,7 @@ msgstr "不影响净薪"
 #. module: hr_contract_salary
 #: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_view_employee_form_readonly
 msgid "Draft"
-msgstr ""
+msgstr "草稿"
 
 #. module: hr_contract_salary
 #: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit__display_type__dropdown
@@ -1061,7 +1104,7 @@ msgstr "雇主预算"
 #. module: hr_contract_salary
 #: model:hr.contract.salary.resume,name:hr_contract_salary.hr_contract_salary_resume_final_yearly_costs
 msgid "Employer Cost"
-msgstr ""
+msgstr "人工成本"
 
 #. module: hr_contract_salary
 #: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_view_employee_form
@@ -1111,7 +1154,7 @@ msgstr "女性"
 #: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__field
 #: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit__source__field
 msgid "Field"
-msgstr ""
+msgstr "字段"
 
 #. module: hr_contract_salary
 #: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__field
@@ -1122,6 +1165,11 @@ msgstr "字段名称"
 #: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_study_field
 msgid "Field of Study"
 msgstr "研究领域"
+
+#. module: hr_contract_salary
+#: model:ir.model,name:hr_contract_salary.model_sign_item
+msgid "Fields to be sign on Document"
+msgstr "要在文档上签名的字段"
 
 #. module: hr_contract_salary
 #: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume__fixed_value
@@ -1181,7 +1229,7 @@ msgstr "生成录取书"
 #. module: hr_contract_salary
 #: model:hr.contract.salary.resume,name:hr_contract_salary.hr_contract_salary_resume_gross
 msgid "Gross"
-msgstr ""
+msgstr "毛额"
 
 #. module: hr_contract_salary
 #: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_signatory__signatory__hr
@@ -1256,6 +1304,7 @@ msgstr "检查时隐藏儿童的个人信息。"
 #: model:ir.model.fields,field_description:hr_contract_salary.field_hr_version__id
 #: model:ir.model.fields,field_description:hr_contract_salary.field_refuse_offer_wizard__id
 #: model:ir.model.fields,field_description:hr_contract_salary.field_res_config_settings__id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_sign_item__id
 #: model:ir.model.fields,field_description:hr_contract_salary.field_sign_request__id
 msgid "ID"
 msgstr "ID"
@@ -1333,9 +1382,8 @@ msgid ""
 "annual time off (legal leaves)."
 msgstr ""
 "除法定假期外，您还可以选择多达 30 天的额外假期。\n"
-"            "
-"您可获得的年假（法定假期）天数取决于您上一年的工作安排。根据合约，"
-"如果上一年全职工作满 12 个月，您可获得 20 天年假（法定假期）。"
+"            您可获得的年假（法定假期）天数取决于您上一年的工作安排。根据合"
+"约，如果上一年全职工作满 12 个月，您可获得 20 天年假（法定假期）。"
 
 #. module: hr_contract_salary
 #: model:hr.contract.salary.personal.info.type,name:hr_contract_salary.hr_contract_salary_personal_info_type_emergency
@@ -1554,7 +1602,7 @@ msgstr "月工资总额"
 #. module: hr_contract_salary
 #: model:hr.contract.salary.resume.category,name:hr_contract_salary.hr_contract_salary_resume_category_monthly_salary
 msgid "Monthly Salary"
-msgstr ""
+msgstr "月薪"
 
 #. module: hr_contract_salary
 #: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_resume__value_type__monthly_total
@@ -1658,7 +1706,7 @@ msgstr "无数据显示"
 #. module: hr_contract_salary
 #: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_form
 msgid "No limit"
-msgstr ""
+msgstr "没有限制"
 
 #. module: hr_contract_salary
 #. odoo-python
@@ -1927,6 +1975,12 @@ msgid ""
 "Monthly Total: The information will be a total of all the information in the "
 "category Monthly Benefits"
 msgstr ""
+"选择信息值的计算方式：\n"
+"固定值：为所有链接设置一个固定值\n"
+"员工记录值：从员工记录的字段中获取值\n"
+"工资单值：从工资单记录的字段中获取值\n"
+"效益总和值：您可以选择所有效益并计算其总和\n"
+"每月总计：该信息将是 “每月津贴” 类别中所有信息的总计。"
 
 #. module: hr_contract_salary
 #: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_place_of_birth
@@ -2242,8 +2296,9 @@ msgstr "选择一个省/州"
 msgid ""
 "Select a contract template to auto-fill the contract form with predefined "
 "values. You can still edit the fields as needed after applying the template."
-msgstr "选择合同模板，用预定义值自动填写合同表格。应用模板后，您仍可根据需要编辑字段"
-"。"
+msgstr ""
+"选择合同模板，用预定义值自动填写合同表格。应用模板后，您仍可根据需要编辑字"
+"段。"
 
 #. module: hr_contract_salary
 #: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_form
@@ -2270,8 +2325,8 @@ msgid ""
 "        "
 msgstr ""
 "只选择有 1 或 2 个不同签名人的文件。\n"
-"        有 1 个签名人的文件只需要雇员签名，而有 2 "
-"个签名人的文件则需要雇员和人力资源负责人签名。\n"
+"        有 1 个签名人的文件只需要雇员签名，而有 2 个签名人的文件则需要雇员和"
+"人力资源负责人签名。\n"
 "        "
 
 #. module: hr_contract_salary
@@ -2422,7 +2477,7 @@ msgstr "签名请求 - %s"
 #. module: hr_contract_salary
 #: model:hr.contract.salary.personal.info.type,name:hr_contract_salary.hr_contract_salary_personal_info_type_family
 msgid "Situation"
-msgstr ""
+msgstr "情况"
 
 #. module: hr_contract_salary
 #: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit__display_type__slider
@@ -2551,7 +2606,7 @@ msgstr "目前所需的文件如下："
 msgid ""
 "The display type of a benefit linked to a salary rule must be one of the "
 "following: %s"
-msgstr ""
+msgstr "与薪金规则相关联的津贴的显示类型必须是以下类型之一： %s"
 
 #. module: hr_contract_salary
 #: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_benefit__fold_res_field_id
@@ -2632,8 +2687,15 @@ msgstr "这个链接是无效的。请联系人力资源部门负责人，以获
 msgid ""
 "This offer has been fully signed and can no longer be edited. However, you "
 "can still make changes to the Signed Contract if needed."
-msgstr "此报价已完全签署，不能再编辑。但是，如果需要，您仍然可以对已签署的合同进行更"
+msgstr ""
+"此报价已完全签署，不能再编辑。但是，如果需要，您仍然可以对已签署的合同进行更"
 "改。"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+msgid "This offer has been fully signed, you can not sign it again.."
+msgstr ""
 
 #. module: hr_contract_salary
 #. odoo-python
@@ -2660,7 +2722,7 @@ msgstr "令牌"
 #. module: hr_contract_salary
 #: model:hr.contract.salary.resume.category,name:hr_contract_salary.hr_contract_salary_resume_category_total
 msgid "Total"
-msgstr ""
+msgstr "总计"
 
 #. module: hr_contract_salary
 #: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_offer__activity_exception_decoration
@@ -2710,7 +2772,7 @@ msgstr "值类型"
 #. module: hr_contract_salary
 #: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_personal_info__applies_on__version_personal
 msgid "Version"
-msgstr ""
+msgstr "版本"
 
 #. module: hr_contract_salary
 #. odoo-python
@@ -2866,7 +2928,7 @@ msgstr "此处"
 #. odoo-python
 #: code:addons/hr_contract_salary/models/hr_contract_salary_offer.py:0
 msgid "id"
-msgstr ""
+msgstr "id"
 
 #. module: hr_contract_salary
 #: model:mail.template,subject:hr_contract_salary.mail_template_send_offer_applicant
@@ -2874,17 +2936,23 @@ msgid ""
 "{{ object.company_id.name }}: Job Offer - "
 "{{ object.applicant_id.partner_name }}"
 msgstr ""
-"{{ object.company_id.name }}: 录用通知 - {{ object.applicant_id.partner_name "
-"}}"
+"{{ object.company_id.name }}: 录用通知 - "
+"{{ object.applicant_id.partner_name }}"
 
 #. module: hr_contract_salary
 #: model:mail.template,subject:hr_contract_salary.mail_template_send_offer
-msgid ""
-"{{ object.company_id.name }}: Job Offer - "
-"{{ object.employee_version_id.name }}"
+msgid "{{ object.company_id.name }}: Job Offer - {{ object.employee_id.name }}"
 msgstr ""
-"{{ object.company_id.name }}: 录用通知 - {{ object.employee_version_id.name "
-"}}"
+
+#~ msgid ""
+#~ "{{ object.company_id.name }}: Job Offer - "
+#~ "{{ object.employee_version_id.name }}"
+#~ msgstr ""
+#~ "{{ object.company_id.name }}: 录用通知 - "
+#~ "{{ object.employee_version_id.name }}"
+
+#~ msgid "Create a Offer"
+#~ msgstr "创建录用通知"
 
 #~ msgid ""
 #~ "<div style=\"margin: 0px; padding: 0px;\">\n"

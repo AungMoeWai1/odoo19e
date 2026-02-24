@@ -192,14 +192,14 @@ class HrAppraisal(models.Model):
             appraisal.employee_feedback_template = appraisal._get_appraisal_template('employee')
             appraisal.manager_feedback_template = appraisal._get_appraisal_template('manager')
 
-    @api.depends('department_id')
+    @api.depends('department_id', 'company_id')
     def _compute_appraisal_template(self):
         all_department_template_ids = self.env['hr.appraisal.template'].search(
-            [('department_ids', '=', False), ('company_id', 'in', self.department_id.company_id.ids + [False])])
+            [('department_ids', '=', False), ('company_id', 'in', self.company_id.ids + [False])])
         for appraisal in self:
             appraisal.appraisal_template_id = appraisal.appraisal_template_id or \
                 appraisal.department_id.appraisal_template_ids[:1] or \
-                all_department_template_ids.filtered(lambda t: t.company_id.id in [appraisal.department_id.company_id.id, False])[:1]
+                all_department_template_ids.filtered(lambda t: t.company_id.id in [appraisal.company_id.id, False])[:1]
 
     @api.depends('employee_feedback_published', 'manager_feedback_published')
     def _compute_waiting_feedback(self):
@@ -500,16 +500,19 @@ class HrAppraisal(models.Model):
 
     def action_back(self):
         self.state = '1_new'
+        self.assessment_note = False
+
+    def action_reopen(self):
+        self.state = '2_pending'
 
     def action_open_employee_appraisals(self):
-        self.ensure_one()
         view_id = self.env.ref('hr_appraisal.hr_appraisal_view_tree_orderby_create_date').id
         return {
             'name': self.env._('Previous Appraisals'),
             'res_model': 'hr.appraisal',
             'view_mode': 'list,kanban,form,gantt,calendar,activity',
             'views': [(view_id, 'list'), (False, 'kanban'), (False, 'form'), (False, 'gantt'), (False, 'calendar'), (False, 'activity')],
-            'domain': [('employee_id', '=', self.employee_id.id)],
+            'domain': [('employee_id', '=', self.employee_id.ids)],
             'type': 'ir.actions.act_window',
             'target': 'current',
             'context': {
@@ -532,7 +535,7 @@ class HrAppraisal(models.Model):
             ],
             'target': 'current',
             'domain': [('employee_ids', '=', self.employee_id.id), ('child_ids', '=', False)],
-            'context': {'default_employee_id': self.employee_id.id},
+            'context': {'default_employee_ids': self.employee_id.ids},
         }
 
     def action_send_appraisal_request(self):

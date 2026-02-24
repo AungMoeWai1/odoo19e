@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:50+0000\n"
-"PO-Revision-Date: 2025-10-01 12:11+0000\n"
+"POT-Creation-Date: 2025-12-30 18:49+0000\n"
+"PO-Revision-Date: 2025-10-16 09:07+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-19/"
 "whatsapp_stock/fr/>\n"
@@ -27,37 +27,37 @@ msgstr "Choisir un modèle..."
 #. module: whatsapp_stock
 #: model:ir.model,name:whatsapp_stock.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Entreprises"
 
 #. module: whatsapp_stock
 #: model:ir.model,name:whatsapp_stock.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Paramètres de config"
 
 #. module: whatsapp_stock
 #: model:ir.model.fields,field_description:whatsapp_stock.field_res_company__display_name
 #: model:ir.model.fields,field_description:whatsapp_stock.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:whatsapp_stock.field_stock_picking__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nom d'affichage"
 
 #. module: whatsapp_stock
 #: model:ir.model.fields,field_description:whatsapp_stock.field_res_company__id
 #: model:ir.model.fields,field_description:whatsapp_stock.field_res_config_settings__id
 #: model:ir.model.fields,field_description:whatsapp_stock.field_stock_picking__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: whatsapp_stock
 #: model:ir.model.fields,help:whatsapp_stock.field_res_company__stock_confirmation_wa_template_id
 #: model:ir.model.fields,help:whatsapp_stock.field_res_config_settings__stock_confirmation_wa_template_id
 msgid "Send WhatsApp to the customer once the order is delivered."
-msgstr ""
+msgstr "Envoyez un message WhatsApp au client une fois la commande livrée."
 
 #. module: whatsapp_stock
 #: model:ir.model,name:whatsapp_stock.model_stock_picking
 msgid "Transfer"
-msgstr ""
+msgstr "Transfert"
 
 #. module: whatsapp_stock
 #: model:ir.model.fields,field_description:whatsapp_stock.field_res_company__stock_confirmation_wa_template_id

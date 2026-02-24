@@ -8,6 +8,7 @@ import json
 import logging
 import pathlib
 import pprint
+import re
 import textwrap
 import werkzeug
 import zipfile
@@ -61,9 +62,20 @@ class IoTController(http.Controller):
         # '_L.py' files for Linux and '_W.py' for Windows
         incompatible_filename = "_L.py" if box.version[0] == 'W' else "_W.py"
         module_ids = request.env['ir.module.module'].sudo().search([('state', '=', 'installed')])
+        modules = module_ids.mapped('name') + ["iot_drivers", "pos_blackbox_be"]  # add pos_blackbox_be to detect blackbox devices without the module installed
+
+        if re.search(r"\d{4}\.\d{2}\.\d{2}", box.version):
+            # New IoT Boxes get drivers from git repository, not from installed modules
+            # for partners/clients that want to download custom drivers from the db, we only download
+            # custom drivers, to avoid overwriting the git ones
+            modules = [
+                m for m in modules
+                if m not in {"iot", "iot_drivers", "pos_blackbox_be", "l10n_se_pos", "pos_iot_six", "quality_iot"}
+            ]
+
         fobj = io.BytesIO()
         with zipfile.ZipFile(fobj, 'w', zipfile.ZIP_DEFLATED) as zf:
-            for module in module_ids.mapped('name') + ['iot_drivers', 'pos_blackbox_be']:  # add pos_blackbox_be to detect blackbox devices without the module installed
+            for module in modules:
                 module_path = get_module_path(module)
                 if module_path:
                     iot_handlers = pathlib.Path(module_path) / 'iot_handlers'
@@ -122,8 +134,9 @@ class IoTController(http.Controller):
         if (
             device_identifier
             and not request.env["iot.device"].sudo().search(
-                [('identifier', '=', device_identifier), ('iot_id', '=', box.id)], limit=1
+                    [('identifier', '=', device_identifier), ('iot_id', '=', box.id)], limit=1
             )
+            and device_identifier != box.identifier  # target the box itself
         ):
             _logger.warning(
                 "No IoT device found with identifier '%s' (iot_box_identifier: %s). Request ignored",
@@ -132,7 +145,7 @@ class IoTController(http.Controller):
             return
 
         request.env['iot.channel'].send_message({
-            'session_id': session_id,
+            'session_id': session_id or kwargs.get("owner"),  # TODO: replace "owner" by "session_id" in drivers
             'iot_box_identifier': iot_box_identifier,
             'device_identifier': device_identifier,
             'message': {
@@ -173,16 +186,17 @@ class IoTController(http.Controller):
         :return: IoT websocket channel
         """
         # Update or create box
-        iot_identifier = iot_box['identifier']  # IoT Mac Address
+        iot_identifier = iot_box['identifier']
         new_iot_ip = iot_box['ip']
         new_iot_version = iot_box['version']
-        box = self._search_box(iot_identifier)
+        box = self._search_box(iot_identifier) or self._search_box(iot_box.get('mac'))
         create_update_value = {
+            "identifier": iot_identifier,  # Ensure upgrade from MAC to serial number
             'ip': new_iot_ip,
             'version': new_iot_version,
         }
         if box:
-            if (box.ip, box.version) != (new_iot_ip, new_iot_version):
+            if (box.identifier, box.ip, box.version) != (iot_identifier, new_iot_ip, new_iot_version):
                 _logger.info('Updating IoT %s with data: %s', box, create_update_value)
                 box.write(create_update_value)
         else:
@@ -190,7 +204,7 @@ class IoTController(http.Controller):
             create_update_value['name'] = ensure_unique_name(name)
             icp_sudo = request.env['ir.config_parameter'].sudo()
             iot_token = icp_sudo.get_param('iot.iot_token')
-            if iot_token == iot_box['token']:
+            if iot_token and iot_token == iot_box['token']:
                 create_update_value['identifier'] = iot_identifier
                 _logger.info('Creating IoT with data: %s', create_update_value)
                 box = request.env['iot.box'].sudo().create(create_update_value)

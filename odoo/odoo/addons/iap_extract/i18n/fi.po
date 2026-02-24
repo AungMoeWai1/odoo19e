@@ -3,13 +3,14 @@
 # * iap_extract
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Saara Hakanen <sahak@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:35+0000\n"
-"PO-Revision-Date: 2025-09-16 17:07+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2025-12-30 18:45+0000\n"
+"PO-Revision-Date: 2025-12-19 16:12+0000\n"
+"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
 "iap_extract/fi/>\n"
 "Language: fi\n"
@@ -17,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: iap_extract
 #: model:mail.template,body_html:iap_extract.iap_extract_no_credit
@@ -32,8 +33,8 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p>Hyvä,<br/></p>\n"
-"    <p>Sovelluksen sisäisten hahmontunnistukseen käytettävien krediittien ("
-"IAP OCR) tililläsi ei ole enää krediittejä.<br/>\n"
+"    <p>Sovelluksen sisäisten hahmontunnistukseen käytettävien krediittien "
+"(IAP OCR) tililläsi ei ole enää krediittejä.<br/>\n"
 "    Voit ladata lisää IAP OCR -krediittejä tiliisi asetussivulla.</p>\n"
 "    <p>Ystävällisin terveisin,<br/></p>\n"
 "    <p>Odoo S.A.</p>\n"
@@ -115,8 +116,8 @@ msgstr "Valmistunut ajo"
 #. module: iap_extract
 #: model:iap.service,description:iap_extract.iap_service_ocr
 msgid ""
-"Digitize your scanned or PDF vendor bills, expenses and resumes with OCR and"
-" Artificial Intelligence."
+"Digitize your scanned or PDF vendor bills, expenses and resumes with OCR and "
+"Artificial Intelligence."
 msgstr ""
 "Digitoi skannatut tai PDF-myyjien laskut, kulut ja ansioluettelot OCR:n ja "
 "tekoälyn avulla."
@@ -188,12 +189,12 @@ msgstr "Hae status"
 #. module: iap_extract
 #: model:ir.model.fields,field_description:iap_extract.field_extract_mixin_with_words__extracted_dates
 msgid "Extracted Dates"
-msgstr ""
+msgstr "Poimitut päivämäärät"
 
 #. module: iap_extract
 #: model:ir.model.fields,field_description:iap_extract.field_extract_mixin_with_words__extracted_numbers
 msgid "Extracted Numbers"
-msgstr ""
+msgstr "Poimitut numerot"
 
 #. module: iap_extract
 #: model:ir.model.fields,field_description:iap_extract.field_extract_mixin_with_words__extracted_words
@@ -380,8 +381,8 @@ msgstr "Joitakin asiakirjoja jätettiin pois, koska ne oli jo digitoitu"
 #. odoo-python
 #: code:addons/iap_extract/models/extract_mixin.py:0
 msgid ""
-"The 'invoice_ocr' IAP account token is invalid. Please delete it to let Odoo"
-" generate a new one or fill it with a valid token."
+"The 'invoice_ocr' IAP account token is invalid. Please delete it to let Odoo "
+"generate a new one or fill it with a valid token."
 msgstr ""
 "IAP-tilin 'invoice_ocr' tunniste on virheellinen. Poista se, jotta Odoo voi "
 "luoda uuden, tai täytä kenttä voimassa olevalla tunnuksella."

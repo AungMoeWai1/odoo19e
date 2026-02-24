@@ -5,7 +5,10 @@ from unittest.mock import patch
 
 import requests
 
+from odoo import fields, Command
 from odoo.tests import Form, TransactionCase, tagged
+
+from ..models.fedex_request import FedexRequest
 
 
 @contextmanager
@@ -17,7 +20,10 @@ def _mock_request_call():
             'rate': {'output': {
                 "alerts": [{"code": "string", "message": "string"}],
                 'rateReplyDetails': [{
-                    'ratedShipmentDetails': [{'currency': 'USD', 'totalNetChargeWithDutiesAndTaxes': 5.5}]
+                    'ratedShipmentDetails': [
+                        {'currency': 'USD', 'totalNetChargeWithDutiesAndTaxes': 5.5},
+                        {'currency': 'EUR', 'totalNetChargeWithDutiesAndTaxes': 8.25},  # Test rate set to 1.5 EUR = 1 USD
+                    ]
                 }],
             }},
             'cancel': {'output': {'cancelledShipment': True}},
@@ -26,10 +32,15 @@ def _mock_request_call():
                     'transactionShipments': [{
                         'completedShipmentDetail': {
                             'shipmentRating': {
-                                'actualRateType': 'TEST',
+                                'actualRateType': 'PAYOR_ACCOUNT_SHIPMENT',
                                 'shipmentRateDetails': [{
-                                    'rateType': 'TEST',
-                                    "totalNetChargeWithDutiesAndTaxes": 5.5
+                                    'rateType': 'PAYOR_ACCOUNT_SHIPMENT',
+                                    "totalNetChargeWithDutiesAndTaxes": 5.5,
+                                    'currency': 'USD',
+                                }, {
+                                    'rateType': 'PREFERRED_ACCOUNT_SHIPMENT',  # Test rate set to 1.5 EUR = 1 USD
+                                    "totalNetChargeWithDutiesAndTaxes": 8.25,
+                                    'currency': 'EUR',
                                 }]
                             },
                             'completedPackageDetails': [{'trackingIds': [{'trackingNumber': 'TEST'}]}]
@@ -107,6 +118,16 @@ class TestDeliveryFedex(TransactionCase):
             'zip': 29201,
             'state_id': self.env.ref('base.state_us_41').id,
             'country_id': self.env.ref('base.us').id,
+        })
+        self.hong_kong_partner = self.env['res.partner'].create({
+            'name': 'HK Island Customer',
+            'phone': '12345678',
+            'street': "1 H-K Road",
+            'street2': "",
+            'city': "Hong Kong",
+            'zip': '999077',
+            'state_id': self.env.ref('base.state_hk_hk').id,
+            'country_id': self.env.ref('base.hk').id,
         })
         self.stock_location = self.env.ref('stock.stock_location_stock')
         self.customer_location = self.env.ref('stock.stock_location_customers')
@@ -215,7 +236,7 @@ class TestDeliveryFedex(TransactionCase):
                       'product_uom_qty': 1.0,
                       'price_unit': self.large_desk.lst_price}
 
-        so_vals = {'partner_id': self.agrolait.id,
+        so_vals = {'partner_id': self.hong_kong_partner.id,
                    'order_line': [(0, None, sol_1_vals), (0, None, sol_2_vals)]}
 
         sale_order = SaleOrder.create(so_vals)
@@ -237,10 +258,10 @@ class TestDeliveryFedex(TransactionCase):
             self.assertEqual(picking.carrier_id.id, sale_order.carrier_id.id, "Carrier is not the same on Picking and on SO.")
 
             move0 = picking.move_line_ids[0]
+            move1 = picking.move_line_ids[1]
             move0.quantity = 1.0
             move0.picked = True
             self.wiz_put_in_pack(picking)
-            move1 = picking.move_line_ids[1]
             move1.quantity = 1.0
             move1.picked = True
             self.wiz_put_in_pack(picking)
@@ -281,3 +302,87 @@ class TestDeliveryFedex(TransactionCase):
         with _mock_request_call():
             delivery_order.button_validate()
             self.assertEqual(delivery_order.state, 'done', 'Shipment state should be done.')
+
+    def test_05_fedex_international_delivery_with_multi_currency(self):
+        '''
+        Create a SO in a different currency from the company's. Ensure prices
+        are computed and displayed to the user in the correct currency.
+        '''
+        currency_EUR = self.env.ref('base.EUR')
+        currency_EUR.active = True
+        currency_EUR.rate_ids = [Command.clear(), Command.create({
+            'name': fields.Date.today(),
+            'rate': 1.5,
+            'company_id': self.env.company.id,
+        })]
+        pricelist_EUR = self.env['product.pricelist'].create({
+            'name': 'pricelist_EUR',
+            'currency_id': currency_EUR.id,
+        })
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.hong_kong_partner.id,
+            'pricelist_id': pricelist_EUR.id,
+            'order_line':  [Command.create({
+                'product_id': self.iPadMini.id,
+                'name': "[A1232] iPad Mini",
+                'product_uom_qty': 1.0,
+            })],
+        })
+        self.assertRecordValues(sale_order, [{
+            'currency_id': currency_EUR.id,
+            'amount_untaxed': 1.5,
+        }])
+        delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context({
+            'default_order_id': sale_order.id,
+            'default_carrier_id': self.env.ref('delivery_fedex_rest.delivery_carrier_fedex_inter').id
+        }))
+        choose_delivery_carrier = delivery_wizard.save()
+        with _mock_request_call():
+            choose_delivery_carrier.update_price()
+            self.assertEqual(choose_delivery_carrier.delivery_price, 8.25)
+            choose_delivery_carrier.button_confirm()
+
+            sale_order.action_confirm()
+            self.assertEqual(len(sale_order.picking_ids), 1)
+
+            picking = sale_order.picking_ids[0]
+            self.assertEqual(picking.carrier_id.id, sale_order.carrier_id.id)
+
+            picking._action_done()
+            self.assertIsNot(picking.carrier_tracking_ref, False)
+            self.assertEqual(picking.carrier_price, 8.25)
+
+    def test_06_fedex_address_special_characters(self):
+        '''
+        Ensure accents get removed when sending address to the Fedex API.
+        '''
+        def patched_get_shipping_price(self, ship_from, ship_to, packages, currency):
+            if self._get_location_from_partner(ship_to)['city'] == "Hong Kong":
+                return {
+                    'price': 10,
+                    'alert_message': '',
+                }
+            return {
+                'price': -1,
+                'alert_message': '',
+            }
+
+        self.hong_kong_partner.city = "Höñg Kòńg"
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.hong_kong_partner.id,
+            'order_line':  [Command.create({
+                'product_id': self.iPadMini.id,
+                'name': "[A1232] iPad Mini",
+                'product_uom_qty': 1.0,
+            })],
+        })
+        delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context({
+            'default_order_id': sale_order.id,
+            'default_carrier_id': self.env.ref('delivery_fedex_rest.delivery_carrier_fedex_inter').id
+        }))
+        choose_delivery_carrier = delivery_wizard.save()
+        with patch.object(FedexRequest, '_get_shipping_price', side_effect=patched_get_shipping_price, autospec=True):
+            with _mock_request_call():
+                choose_delivery_carrier.update_price()
+                self.assertEqual(choose_delivery_carrier.delivery_price, 10)

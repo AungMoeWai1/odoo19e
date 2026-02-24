@@ -11,9 +11,11 @@ import {
 } from "@odoo/owl";
 import { getBundle } from "@web/core/assets";
 import { memoize } from "@web/core/utils/functions";
+import { fillHtmlTransferData } from "@html_editor/utils/clipboard";
 import { fixInvalidHTML, instanceofMarkup } from "@html_editor/utils/sanitize";
 import { HtmlUpgradeManager } from "@html_editor/html_migrations/html_upgrade_manager";
 import { TableOfContentManager } from "@html_editor/others/embedded_components/core/table_of_content/table_of_content_manager";
+import { scrollAndHighlightHeading } from "@html_editor/utils/url";
 
 export class HtmlViewer extends Component {
     static template = "html_editor.HtmlViewer";
@@ -26,6 +28,7 @@ export class HtmlViewer extends Component {
     };
 
     setup() {
+        this._cleanups = [];
         this.htmlUpgradeManager = new HtmlUpgradeManager();
         this.iframeRef = useRef("iframe");
 
@@ -70,6 +73,10 @@ export class HtmlViewer extends Component {
             );
         }
 
+        onMounted(() => {
+            scrollAndHighlightHeading(this.readonlyElementRef?.el || this.iframeRef?.el);
+        });
+
         if (this.props.config.cssAssetId) {
             onWillStart(async () => {
                 this.cssAsset = await getBundle(this.props.config.cssAssetId);
@@ -95,6 +102,14 @@ export class HtmlViewer extends Component {
             );
             this.tocManager = new TableOfContentManager(this.readonlyElementRef);
         }
+    }
+
+    addDomListener(target, eventName, fn, capture = false) {
+        const handler = (ev) => {
+            fn?.call(this, ev);
+        };
+        target.addEventListener(eventName, handler, capture);
+        this._cleanups.push(() => target.removeEventListener(eventName, handler, capture));
     }
 
     get showIframe() {
@@ -127,6 +142,19 @@ export class HtmlViewer extends Component {
     processReadonlyContent(container) {
         this.retargetLinks(container);
         this.applyAccessibilityAttributes(container);
+        this.addDomListener(container, "copy", this.onCopy);
+    }
+
+    /**
+     * @param {ClipboardEvent} ev
+     */
+    onCopy(ev) {
+        ev.preventDefault();
+        const selection = ev.target.ownerDocument.defaultView.getSelection();
+        const clonedContents = selection.getRangeAt(0).cloneContents();
+        fillHtmlTransferData(ev, "clipboardData", clonedContents, {
+            textContent: selection.toString(),
+        });
     }
 
     /**
@@ -209,6 +237,9 @@ export class HtmlViewer extends Component {
     }
 
     destroyComponents() {
+        for (const cleanup of this._cleanups) {
+            cleanup();
+        }
         for (const info of [...this.components]) {
             this.destroyComponent(info);
         }

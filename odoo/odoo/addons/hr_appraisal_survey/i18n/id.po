@@ -3,13 +3,15 @@
 # * hr_appraisal_survey
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Abe Manyo (abem)" <abem@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:33+0000\n"
-"PO-Revision-Date: 2025-09-15 23:04+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2025-12-30 18:42+0000\n"
+"PO-Revision-Date: 2026-01-06 06:53+0000\n"
+"Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-19/"
 "hr_appraisal_survey/id/>\n"
 "Language: id\n"
@@ -17,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: hr_appraisal_survey
 #: model_terms:ir.ui.view,arch_db:hr_appraisal_survey.hr_appraisal_survey_page_statistics_header
@@ -36,7 +38,7 @@ msgstr "360 Feedback"
 #. module: hr_appraisal_survey
 #: model:ir.model.fields,field_description:hr_appraisal_survey.field_hr_appraisal_template__survey_template_ids
 msgid "360 Feedback Survey"
-msgstr ""
+msgstr "360 Survei Feedback"
 
 #. module: hr_appraisal_survey
 #: model_terms:ir.ui.view,arch_db:hr_appraisal_survey.hr_appraisal_survey_button_form_view
@@ -47,32 +49,80 @@ msgstr "<i class=\"oi oi-fw oi-arrow-right\"/>Pergi ke Appraisal"
 #: model:mail.template,body_html:hr_appraisal_survey.mail_template_appraisal_ask_feedback
 msgid ""
 "<p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"                    Dear <t t-out=\"object.partner_id.name or 'participant'\">[participant]</t>,\n"
+"                    Dear <t t-out=\"object.partner_id.name or "
+"'participant'\">[participant]</t>,\n"
 "                    <br/>\n"
-"                    As part of our 360° feedback process, <t t-out=\"ctx.get('logged_user')\">[Current user]</t> would love\n"
-"                    to get your insights on <t t-out=\"ctx.get('employee')\">[the employee]</t>'s performance.\n"
+"                    As part of our 360° feedback process, <t t-"
+"out=\"ctx.get('logged_user')\">[Current user]</t> would love\n"
+"                    to get your insights on <t t-out=\"ctx.get('employee')"
+"\">[the employee]</t>'s performance.\n"
 "                    <br/>\n"
-"                    Your feedback is valuable in helping us recognize strengths and identify growth opportunities.\n"
+"                    Your feedback is valuable in helping us recognize "
+"strengths and identify growth opportunities.\n"
 "                    <br/>\n"
-"                    It should only take a few minutes, and you can submit your feedback via the link below:\n"
+"                    It should only take a few minutes, and you can submit "
+"your feedback via the link below:\n"
 "                    <br/>\n"
 "                    </p><div class=\"text-center my-4\">\n"
-"                        <a t-att-href=\"object.get_start_url()\" t-attf-style=\"background-color: {{user.company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; font-size:13px;\">\n"
+"                        <a t-att-href=\"object.get_start_url()\" t-attf-"
+"style=\"background-color: {{user.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"{{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
+"font-size:13px;\">\n"
 "                            Give your feedback\n"
 "                        </a>\n"
 "                    </div>\n"
-"                    Please complete the survey before <t t-out=\"ctx.get('deadline')\">[the specified deadline]</t>.\n"
+"                    Please complete the survey before <t t-"
+"out=\"ctx.get('deadline')\">[the specified deadline]</t>.\n"
 "                    <br/>\n"
 "                    Thank you for your time and honesty!\n"
 "                    <br/>\n"
 "                    <t t-if=\"ctx.get('user_body')\">\n"
 "                        <div class=\"my-3 py-2 px-3 bg-secondary\">\n"
-"                            <t t-out=\"ctx.get('user_body')\">[Optional comment]</t>\n"
+"                            <t t-out=\"ctx.get('user_body')\">[Optional "
+"comment]</t>\n"
 "                        </div>\n"
 "                    </t>\n"
 "                \n"
 "            "
 msgstr ""
+"<p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                    Kepada <t t-out=\"object.partner_id.name or "
+"'participant'\">[participant]</t>,\n"
+"                    <br/>\n"
+"                    Sebagai bagian dari proses feedback 360° kami, <t t-"
+"out=\"ctx.get('logged_user')\">[Current user]</t> ingin mendapatkan\n"
+"                    wawasan Anda mengenai performa <t t-"
+"out=\"ctx.get('employee')\">[the employee]</t>.\n"
+"                    <br/>\n"
+"                    Feedback Anda berharga dalam membantu kami mengenali "
+"kekuatan dan mengidentifikasi peluang pertumbuhan.\n"
+"                    <br/>\n"
+"                    Ini seharusnya hanya membutuhkan beberapa menit, Anda "
+"dapat menyerahkan feedback Anda melalui link di bawah:\n"
+"                    <br/>\n"
+"                    </p><div class=\"text-center my-4\">\n"
+"                        <a t-att-href=\"object.get_start_url()\" t-attf-"
+"style=\"background-color: {{user.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"{{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
+"font-size:13px;\">\n"
+"                            Berikan feedback Anda\n"
+"                        </a>\n"
+"                    </div>\n"
+"                    Silakan selesaikan survei sebelum <t t-"
+"out=\"ctx.get('deadline')\">[the specified deadline]</t>.\n"
+"                    <br/>\n"
+"                    Terirma kasih untuk waktu dan kejujuran Anda!\n"
+"                    <br/>\n"
+"                    <t t-if=\"ctx.get('user_body')\">\n"
+"                        <div class=\"my-3 py-2 px-3 bg-secondary\">\n"
+"                            <t t-out=\"ctx.get('user_body')\">[Optional "
+"comment]</t>\n"
+"                        </div>\n"
+"                    </t>\n"
+"                \n"
+"            "
 
 #. module: hr_appraisal_survey
 #: model_terms:ir.ui.view,arch_db:hr_appraisal_survey.hr_appraisal_view_form
@@ -88,11 +138,11 @@ msgstr "<span> / </span>"
 #. odoo-python
 #: code:addons/hr_appraisal_survey/models/hr_appraisal.py:0
 msgid ""
-"A new 360 Feedback report has been completed for the appraisal of "
-"%(employee_name)s."
+"A new 360 Feedback report has been completed for the appraisal of %"
+"(employee_name)s."
 msgstr ""
-"Laporan 360 Feedback yang baru telah diselesaikan untuk appraisal "
-"%(employee_name)s."
+"Laporan 360 Feedback yang baru telah diselesaikan untuk appraisal %"
+"(employee_name)s."
 
 #. module: hr_appraisal_survey
 #: model:survey.question.answer,value:hr_appraisal_survey.arow_3_1_1
@@ -156,7 +206,7 @@ msgstr "Mengakui kesalahan mereka"
 #: model:ir.model.fields,field_description:hr_appraisal_survey.field_appraisal_ask_feedback__allowed_survey_template_ids
 #: model:ir.model.fields,field_description:hr_appraisal_survey.field_appraisal_select_survey__allowed_survey_template_ids
 msgid "Allowed Survey Template"
-msgstr ""
+msgstr "Templat Survei yang Diizinkan"
 
 #. module: hr_appraisal_survey
 #: model:survey.question.answer,value:hr_appraisal_survey.x_360_5_5
@@ -283,7 +333,7 @@ msgstr "Batal"
 #: code:addons/hr_appraisal_survey/models/survey_survey.py:0
 #: model_terms:ir.ui.view,arch_db:hr_appraisal_survey.appraisal_select_survey_view_form
 msgid "Choose Survey"
-msgstr ""
+msgstr "Pilih Survei"
 
 #. module: hr_appraisal_survey
 #: model:survey.question.answer,value:hr_appraisal_survey.y_360_5_3
@@ -380,7 +430,7 @@ msgstr "Tidak memenuhi standar dan ekspektasi"
 #. module: hr_appraisal_survey
 #: model_terms:ir.ui.view,arch_db:hr_appraisal_survey.appraisal_select_survey_view_form
 msgid "Discard"
-msgstr ""
+msgstr "Buang"
 
 #. module: hr_appraisal_survey
 #: model:ir.model.fields,field_description:hr_appraisal_survey.field_appraisal_ask_feedback__display_name
@@ -396,7 +446,8 @@ msgstr "Nama Tampilan"
 #. module: hr_appraisal_survey
 #: model:survey.question,title:hr_appraisal_survey.appraisal_360_10
 msgid "Do you have any comment to tell him/her in order to improve?"
-msgstr "Apakah Anda memiliki komentar apa pun untuk membantu mereka berkembang?"
+msgstr ""
+"Apakah Anda memiliki komentar apa pun untuk membantu mereka berkembang?"
 
 #. module: hr_appraisal_survey
 #: model_terms:ir.ui.view,arch_db:hr_appraisal_survey.hr_appraisal_survey_user_input_view_tree
@@ -416,7 +467,7 @@ msgstr "Bentuk penilaian karyawan"
 #. module: hr_appraisal_survey
 #: model:ir.model,name:hr_appraisal_survey.model_hr_appraisal_template
 msgid "Employee Appraisal Template"
-msgstr ""
+msgstr "Templat Appraisal Karyawan"
 
 #. module: hr_appraisal_survey
 #: model:survey.question,title:hr_appraisal_survey.appraisal_5
@@ -529,8 +580,8 @@ msgstr "Adalah Editor"
 #: model_terms:survey.question,description:hr_appraisal_survey.appraisal_1
 msgid ""
 "It is the joint responsibility of the employee and the supervisor "
-"(appraiser) to establish a feasible work plan for the coming year, including"
-" major employee responsibilities and corresponding benchmarks against which "
+"(appraiser) to establish a feasible work plan for the coming year, including "
+"major employee responsibilities and corresponding benchmarks against which "
 "results will be evaluated."
 msgstr ""
 "Adalah tanggung jawab bersama karyawan dan supervisor (yang melakukan "
@@ -621,7 +672,7 @@ msgstr "Tidak pernah"
 #. odoo-python
 #: code:addons/hr_appraisal_survey/models/survey_survey.py:0
 msgid "No surveys found for this appraisal."
-msgstr ""
+msgstr "Tidak ada survei yang ditemukan untuk appraisal ini."
 
 #. module: hr_appraisal_survey
 #: model:survey.question,title:hr_appraisal_survey.appraisal_2_1
@@ -646,6 +697,10 @@ msgid ""
 "usually be a placeholder expression that provides the appropriate language, "
 "e.g. {{ object.partner_id.lang }}."
 msgstr ""
+"Bahasa terjemahan opsional (kode ISO) untuk dipilih saat mengirimkan email. "
+"Bila tidak ditetapkan, bahasa utama partner akan digunakan. Ini biasanya "
+"merupakan expression placeholder yang menyediakan bahasa yang sesuai, "
+"contoh. {{ object.partner_id.lang }}."
 
 #. module: hr_appraisal_survey
 #: model_terms:survey.question,description:hr_appraisal_survey.appraisal_1
@@ -760,7 +815,7 @@ msgstr ""
 #. module: hr_appraisal_survey
 #: model_terms:ir.ui.view,arch_db:hr_appraisal_survey.hr_appraisal_survey_user_input_view_tree
 msgid "See results"
-msgstr ""
+msgstr "Lihat hasil"
 
 #. module: hr_appraisal_survey
 #: model:survey.question.answer,value:hr_appraisal_survey.y_360_5_5
@@ -770,7 +825,7 @@ msgstr "Mencoba untuk memahami masalah sebelum memikirkan solusi"
 #. module: hr_appraisal_survey
 #: model:ir.model,name:hr_appraisal_survey.model_appraisal_select_survey
 msgid "Select survey type for an appraisal to show its results"
-msgstr ""
+msgstr "Pilih tipe survei agar appraisal menunjukkan hasilnya"
 
 #. module: hr_appraisal_survey
 #: model_terms:ir.ui.view,arch_db:hr_appraisal_survey.appraisal_ask_feedback_view_form
@@ -843,7 +898,7 @@ msgstr "Feedback Survei"
 #. module: hr_appraisal_survey
 #: model:ir.model.fields,field_description:hr_appraisal_survey.field_appraisal_select_survey__survey_input_ids
 msgid "Survey Inputs"
-msgstr ""
+msgstr "Input Survei"
 
 #. module: hr_appraisal_survey
 #: model:ir.model,name:hr_appraisal_survey.model_survey_question_answer
@@ -868,11 +923,11 @@ msgstr "Pengguna"
 #. module: hr_appraisal_survey
 #: model:mail.template,subject:hr_appraisal_survey.mail_template_appraisal_ask_feedback
 msgid ""
-"Take part in {{ ctx.get('employee_id') and ctx['employee_id'].name or 'this'"
-" }} appraisal"
+"Take part in {{ ctx.get('employee_id') and ctx['employee_id'].name or "
+"'this' }} appraisal"
 msgstr ""
-"Mengambil bagian dalam appraisal {{ ctx.get('employee_id') and ctx"
-"['employee_id'].name or 'this' }}"
+"Mengambil bagian dalam appraisal {{ ctx.get('employee_id') and "
+"ctx['employee_id'].name or 'this' }}"
 
 #. module: hr_appraisal_survey
 #: model:survey.question.answer,value:hr_appraisal_survey.arow_3_1_4
@@ -952,6 +1007,8 @@ msgid ""
 "The survey templates available to choose from for the appraisals that use "
 "this template."
 msgstr ""
+"Templat-templat survei yang tersedia untuk dipilih untuk appraisal yang "
+"menggunakan templat ini."
 
 #. module: hr_appraisal_survey
 #: model_terms:survey.survey,description:hr_appraisal_survey.appraisal_feedback_template
@@ -970,8 +1027,8 @@ msgstr "Pengaturan waktu: project tugas-tugas selesai tepat waktu"
 #. module: hr_appraisal_survey
 #: model_terms:survey.question,description:hr_appraisal_survey.appraisal_1
 msgid ""
-"To assist employees in their professional growth, through the identification"
-" of strengths and opportunities for development"
+"To assist employees in their professional growth, through the identification "
+"of strengths and opportunities for development"
 msgstr ""
 "Untuk membantu karyawan dalam perkembangan profesional mereka, dengan "
 "mengidentifikasi kekuatan dan kesempatan untuk pengembangan mereka"
@@ -989,8 +1046,8 @@ msgstr "Total Jumlah Survei"
 #. module: hr_appraisal_survey
 #: model:survey.question,title:hr_appraisal_survey.appraisal_5_1
 msgid ""
-"Use the following space to make any comments regarding the above performance"
-" evaluation."
+"Use the following space to make any comments regarding the above performance "
+"evaluation."
 msgstr ""
 "Menggunakan ruang berikut untuk membuat komentar mengenai evaluasi kinerja "
 "di atas."
@@ -998,7 +1055,7 @@ msgstr ""
 #. module: hr_appraisal_survey
 #: model:ir.model.fields,field_description:hr_appraisal_survey.field_appraisal_ask_feedback__user_body
 msgid "User Contents"
-msgstr ""
+msgstr "Konten User"
 
 #. module: hr_appraisal_survey
 #: model:ir.model.fields,help:hr_appraisal_survey.field_survey_survey__appraisal_manager_user_ids
@@ -1019,9 +1076,13 @@ msgstr "Kita rekan kerja, di tim yang berbeda."
 #: model_terms:survey.survey,description:hr_appraisal_survey.appraisal_360_feedback_template
 msgid ""
 "Welcome to this survey, <br><br>\n"
-"                You've been asked to participate to a 360 Feedback. It's a small survey that will allow managers to get more feedback about their employee. \n"
-"                By working with him/her, you're the best to share your thoughts and explain how your collaboration was.<br><br>\n"
-"                Your answers will be viewed only by the managers. This is not an anonymous survey."
+"                You've been asked to participate to a 360 Feedback. It's a "
+"small survey that will allow managers to get more feedback about their "
+"employee. \n"
+"                By working with him/her, you're the best to share your "
+"thoughts and explain how your collaboration was.<br><br>\n"
+"                Your answers will be viewed only by the managers. This is "
+"not an anonymous survey."
 msgstr ""
 "Welcome to this survey, <br><br>\n"
 "                You've been asked to participate to a 360 Feedback. It's a "
@@ -1078,12 +1139,13 @@ msgstr ""
 #: code:addons/hr_appraisal_survey/models/survey_survey.py:0
 msgid "You can't ask feedback for multiple appraisals at once."
 msgstr ""
+"Anda tidak dapat meminta feedback untuk lebih dari satu appraisal sekaligus."
 
 #. module: hr_appraisal_survey
 #. odoo-python
 #: code:addons/hr_appraisal_survey/models/survey_survey.py:0
 msgid "You can't select multiple feedback templates."
-msgstr ""
+msgstr "Anda tidak dapat memilih lebih dari satu templat feedback."
 
 #. module: hr_appraisal_survey
 #: model_terms:ir.ui.view,arch_db:hr_appraisal_survey.hr_appraisal_view_form

@@ -3,13 +3,14 @@
 # * helpdesk_stock
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:32+0000\n"
-"PO-Revision-Date: 2025-09-24 11:34+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2025-12-30 18:45+0000\n"
+"PO-Revision-Date: 2025-11-17 03:15+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Greek <https://translate.odoo.com/projects/odoo-19/"
 "helpdesk_stock/el/>\n"
 "Language: el\n"
@@ -24,8 +25,10 @@ msgstr ""
 #: code:addons/helpdesk_stock/models/helpdesk_ticket.py:0
 msgid ""
 "\n"
-"                <p class=\"o_view_nocontent_smiling_face o_view_nocontent_stock\">No delivery orders yet. Let's create one!</p>\n"
-"                <p>Send customers a replacement for a lost, damaged, or returned item</p>\n"
+"                <p class=\"o_view_nocontent_smiling_face "
+"o_view_nocontent_stock\">No delivery orders yet. Let's create one!</p>\n"
+"                <p>Send customers a replacement for a lost, damaged, or "
+"returned item</p>\n"
 "            "
 msgstr ""
 
@@ -65,13 +68,13 @@ msgstr "Πελάτης"
 #. module: helpdesk_stock
 #: model_terms:ir.ui.view,arch_db:helpdesk_stock.helpdesk_ticket_view_form_inherit_helpdesk_stock
 msgid "Deliveries"
-msgstr ""
+msgstr "Παραδόσεις"
 
 #. module: helpdesk_stock
 #. odoo-python
 #: code:addons/helpdesk_stock/models/helpdesk_ticket.py:0
 msgid "Delivery Orders"
-msgstr ""
+msgstr "Εντολές Παράδοσης"
 
 #. module: helpdesk_stock
 #. odoo-python
@@ -92,7 +95,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:helpdesk_stock.field_stock_return_picking__display_name
 #: model:ir.model.fields,field_description:helpdesk_stock.field_stock_return_picking_line__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Εμφάνιση Ονόματος"
 
 #. module: helpdesk_stock
 #: model:ir.model.fields,help:helpdesk_stock.field_helpdesk_ticket__tracking
@@ -119,7 +122,7 @@ msgstr "Αίτημα Γραφείου Υποστήριξης"
 #: model:ir.model.fields,field_description:helpdesk_stock.field_stock_return_picking__id
 #: model:ir.model.fields,field_description:helpdesk_stock.field_stock_return_picking_line__id
 msgid "ID"
-msgstr ""
+msgstr "Κωδικός"
 
 #. module: helpdesk_stock
 #: model:ir.model.fields,field_description:helpdesk_stock.field_helpdesk_ticket__lot_id
@@ -131,13 +134,21 @@ msgstr "Παρτίδα/Σειριακός Αριθμός"
 msgid ""
 "People to whom this helpdesk team and its tickets will be visible.\n"
 "\n"
-"- Invited internal users: internal users can access the team and the tickets they are following. This access can be modified on each ticket individually by adding or removing the user as follower.\n"
-"A user with the helpdesk > administrator access right level can still access this team and its tickets, even if they are not explicitely part of the followers.\n"
+"- Invited internal users: internal users can access the team and the tickets "
+"they are following. This access can be modified on each ticket individually "
+"by adding or removing the user as follower.\n"
+"A user with the helpdesk > administrator access right level can still access "
+"this team and its tickets, even if they are not explicitely part of the "
+"followers.\n"
 "\n"
-"- All internal users: all internal users can access the team and all of its tickets without distinction.\n"
+"- All internal users: all internal users can access the team and all of its "
+"tickets without distinction.\n"
 "\n"
-"- Invited portal users and all internal users: all internal users can access the team and all of its tickets without distinction.\n"
-"Portal users can only access the tickets they are following. This access can be modified on each ticket individually by adding or removing the portal user as follower."
+"- Invited portal users and all internal users: all internal users can access "
+"the team and all of its tickets without distinction.\n"
+"Portal users can only access the tickets they are following. This access can "
+"be modified on each ticket individually by adding or removing the portal "
+"user as follower."
 msgstr ""
 
 #. module: helpdesk_stock
@@ -155,8 +166,8 @@ msgstr "Είδος"
 #. module: helpdesk_stock
 #: model:ir.model.fields,help:helpdesk_stock.field_helpdesk_ticket__product_id
 msgid ""
-"Product this ticket is about. If selected, only the sales orders, deliveries"
-" and invoices including this product will be visible."
+"Product this ticket is about. If selected, only the sales orders, deliveries "
+"and invoices including this product will be visible."
 msgstr ""
 "Προϊόν στο οποίο αναφέρεται αυτό το αίτημα. Αν επιλεγεί, θα είναι ορατές "
 "μόνο οι παραγγελίες πώλησης, οι παραδόσεις και τα τιμολόγια που "
@@ -192,7 +203,7 @@ msgstr "Επιστροφή Συλλογής"
 #. module: helpdesk_stock
 #: model:ir.model,name:helpdesk_stock.model_stock_return_picking_line
 msgid "Return Picking Line"
-msgstr ""
+msgstr "Γραμμή Επιστροφής Συλλογής"
 
 #. module: helpdesk_stock
 #: model_terms:ir.ui.view,arch_db:helpdesk_stock.helpdesk_ticket_view_form_inherit_helpdesk_stock

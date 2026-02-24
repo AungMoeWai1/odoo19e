@@ -113,15 +113,13 @@ class HrEmployee(models.Model):
             SELECT emp.id,
                    acc.acc_number,
                    acc.allow_out_payment
-             FROM  hr_employee emp
+              FROM hr_employee emp
          LEFT JOIN employee_bank_account_rel rel
                 ON rel.employee_id=emp.id
          LEFT JOIN res_partner_bank acc
                 ON acc.id=rel.bank_account_id
-              JOIN hr_version ver
-                ON ver.employee_id=emp.id
              WHERE emp.company_id IN %s
-             AND emp.active = TRUE
+               AND emp.active = TRUE
         ''', (tuple(self.env.companies.ids),))
 
         return self.env.cr.dictfetchall()
@@ -149,17 +147,6 @@ class HrEmployee(models.Model):
 
     def action_configure_employee_inputs(self):
         self.ensure_one()
-        current_structure = self.env.context.get('structure_id')
-        return {
-            'type': 'ir.actions.act_window',
-            'view_mode': 'list',
-            'view_id': self.env.ref("hr_payroll.hr_salary_rule_benefit_selector_list", False).id,
-            'res_model': 'hr.salary.rule',
-            'target': 'new',
-            'domain': [
-                ('struct_id', '=', current_structure),
-                ('condition_select', '=', 'property_input'),
-                ('input_usage_employee', '=', True),
-                ('dependent_input_id', '=', False),
-            ]
-        }
+        action = self.structure_id.action_get_structure_inputs()
+        action['domain'].append(('input_usage_employee', '=', True))
+        return action

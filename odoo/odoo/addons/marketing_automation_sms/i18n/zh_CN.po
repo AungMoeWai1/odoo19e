@@ -6,13 +6,15 @@
 # Martin Trigaux, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Chloe Wang (chwa)" <chwa@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 16:02+0000\n"
-"PO-Revision-Date: 2025-09-16 15:24+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2025-12-30 18:45+0000\n"
+"PO-Revision-Date: 2025-11-16 17:51+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
 "projects/odoo-19/marketing_automation_sms/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -21,6 +23,16 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 5.12.2\n"
+
+#. module: marketing_automation_sms
+#: model_terms:ir.ui.view,arch_db:marketing_automation_sms.marketing_activity_summary_template_sms
+msgid "\" <strong>bounced</strong>,"
+msgstr "”<strong>已弹回</strong>，"
+
+#. module: marketing_automation_sms
+#: model_terms:ir.ui.view,arch_db:marketing_automation_sms.marketing_activity_summary_template_sms
+msgid "\" gets clicked,"
+msgstr "”获点击开启，"
 
 #. module: marketing_automation_sms
 #: model:ir.model.fields,field_description:marketing_automation_sms.field_marketing_campaign__mailing_sms_count
@@ -50,15 +62,21 @@ msgstr "<i class=\"fa fa-pie-chart\"/> 详细"
 #. module: marketing_automation_sms
 #: model_terms:ir.ui.view,arch_db:marketing_automation_sms.marketing_campaign_view_form
 msgid ""
-"<i data-trigger-type=\"sms_click\" class=\"fa fa-hand-pointer-o o_ma_text_processed o_add_child_activity text-success\" title=\"Clicked\" role=\"img\" aria-label=\"Clicked\"/>\n"
-"                    <i data-trigger-type=\"sms_not_click\" class=\"fa fa-hand-pointer-o o_ma_text_rejected o_add_child_activity text-danger\" title=\"Not Clicked\" role=\"img\" aria-label=\"Not Clicked\"/>\n"
-"                    <i data-trigger-type=\"sms_bounce\" class=\"fa fa fa-exclamation-circle o_ma_text_rejected o_add_child_activity text-danger\" title=\"Bounced\" role=\"img\" aria-label=\"Bounced\"/>"
+"<i data-trigger-type=\"sms_click\" class=\"fa fa-hand-pointer-o "
+"o_ma_text_processed o_add_child_activity text-success\" title=\"Clicked\" "
+"role=\"img\" aria-label=\"Clicked\"/>\n"
+"                    <i data-trigger-type=\"sms_not_click\" class=\"fa fa-"
+"hand-pointer-o o_ma_text_rejected o_add_child_activity text-danger\" "
+"title=\"Not Clicked\" role=\"img\" aria-label=\"Not Clicked\"/>\n"
+"                    <i data-trigger-type=\"sms_bounce\" class=\"fa fa fa-"
+"exclamation-circle o_ma_text_rejected o_add_child_activity text-danger\" "
+"title=\"Bounced\" role=\"img\" aria-label=\"Bounced\"/>"
 msgstr ""
 "<i data-trigger-type=\"sms_click\" class=\"fa fa-hand-pointer-o "
 "o_ma_text_processed o_add_child_activity text-success\" title=\"Clicked\" "
 "role=\"img\" aria-label=\"Clicked\"/>\n"
-"                    <i data-trigger-type=\"sms_not_click\" class="
-"\"fa fa-hand-pointer-o o_ma_text_rejected o_add_child_activity text-danger\" "
+"                    <i data-trigger-type=\"sms_not_click\" class=\"fa fa-"
+"hand-pointer-o o_ma_text_rejected o_add_child_activity text-danger\" "
 "title=\"Not Clicked\" role=\"img\" aria-label=\"Not Clicked\"/>\n"
 "                    <i data-trigger-type=\"sms_bounce\" class=\"fa fa fa-"
 "exclamation-circle o_ma_text_rejected o_add_child_activity text-danger\" "
@@ -71,19 +89,41 @@ msgstr "活动类型"
 
 #. module: marketing_automation_sms
 #: model_terms:ir.ui.view,arch_db:marketing_automation_sms.marketing_campaign_view_form
-msgid "Bounced"
-msgstr "被退回"
-
-#. module: marketing_automation_sms
-#: model_terms:ir.ui.view,arch_db:marketing_automation_sms.marketing_campaign_view_form
 msgid "Clicked"
 msgstr "点击"
+
+#. module: marketing_automation_sms
+#: model:ir.model.fields,field_description:marketing_automation_sms.field_mailing_mailing__display_name
+#: model:ir.model.fields,field_description:marketing_automation_sms.field_mailing_trace__display_name
+#: model:ir.model.fields,field_description:marketing_automation_sms.field_marketing_activity__display_name
+#: model:ir.model.fields,field_description:marketing_automation_sms.field_marketing_campaign__display_name
+#: model:ir.model.fields,field_description:marketing_automation_sms.field_marketing_trace__display_name
+#: model:ir.model.fields,field_description:marketing_automation_sms.field_sms_composer__display_name
+#: model:ir.model.fields,field_description:marketing_automation_sms.field_sms_tracker__display_name
+msgid "Display Name"
+msgstr "显示名称"
 
 #. module: marketing_automation_sms
 #. odoo-python
 #: code:addons/marketing_automation_sms/models/marketing_activity.py:0
 msgid "Exception in SMS Marketing: %s"
-msgstr "短信息营销中的例外情况。%s"
+msgstr "短信营销中的例外情况。%s"
+
+#. module: marketing_automation_sms
+#: model:ir.model.fields,field_description:marketing_automation_sms.field_mailing_mailing__id
+#: model:ir.model.fields,field_description:marketing_automation_sms.field_mailing_trace__id
+#: model:ir.model.fields,field_description:marketing_automation_sms.field_marketing_activity__id
+#: model:ir.model.fields,field_description:marketing_automation_sms.field_marketing_campaign__id
+#: model:ir.model.fields,field_description:marketing_automation_sms.field_marketing_trace__id
+#: model:ir.model.fields,field_description:marketing_automation_sms.field_sms_composer__id
+#: model:ir.model.fields,field_description:marketing_automation_sms.field_sms_tracker__id
+msgid "ID"
+msgstr "ID"
+
+#. module: marketing_automation_sms
+#: model:ir.model,name:marketing_automation_sms.model_sms_tracker
+msgid "Link SMS to mailing/sms tracking models"
+msgstr "将短讯连结至邮件/短讯追踪模型"
 
 #. module: marketing_automation_sms
 #: model:ir.model,name:marketing_automation_sms.model_mailing_trace
@@ -122,6 +162,11 @@ msgid "Mass Mailing"
 msgstr "群发邮件"
 
 #. module: marketing_automation_sms
+#: model_terms:ir.ui.view,arch_db:marketing_automation_sms.marketing_campaign_view_form
+msgid "Opened"
+msgstr "已开启"
+
+#. module: marketing_automation_sms
 #. odoo-python
 #: code:addons/marketing_automation_sms/models/marketing_trace.py:0
 msgid "Parent activity SMS bounced"
@@ -144,16 +189,6 @@ msgid "SMS"
 msgstr "短信息"
 
 #. module: marketing_automation_sms
-#: model_terms:ir.ui.view,arch_db:marketing_automation_sms.mailing_mailing_view_form_marketing_activity
-msgid "SMS Content"
-msgstr "短信息内容"
-
-#. module: marketing_automation_sms
-#: model_terms:ir.ui.view,arch_db:marketing_automation_sms.mailing_mailing_view_form_marketing_activity
-msgid "SMS Options"
-msgstr "短信息选项"
-
-#. module: marketing_automation_sms
 #: model_terms:ir.ui.view,arch_db:marketing_automation_sms.marketing_campaign_view_form
 msgid "SMS Sent"
 msgstr "短信息已发送"
@@ -166,8 +201,8 @@ msgstr "短信息模板"
 #. module: marketing_automation_sms
 #. odoo-python
 #: code:addons/marketing_automation_sms/models/marketing_activity.py:0
-msgid "SMS canceled"
-msgstr "短信息被取消"
+msgid "SMS cancelled"
+msgstr "短信已取消"
 
 #. module: marketing_automation_sms
 #. odoo-python
@@ -204,7 +239,9 @@ msgstr "已发送"
 #. module: marketing_automation_sms
 #. odoo-python
 #: code:addons/marketing_automation_sms/models/marketing_activity.py:0
-msgid "To use this feature you should be an administrator or belong to the marketing automation group."
+msgid ""
+"To use this feature you should be an administrator or belong to the "
+"marketing automation group."
 msgstr "要使用此功能，必须是管理员或是营销自动化组成员."
 
 #. module: marketing_automation_sms
@@ -216,3 +253,36 @@ msgstr "触发类别"
 #: model:ir.model.fields,field_description:marketing_automation_sms.field_marketing_activity__trigger_type
 msgid "Trigger Type"
 msgstr "触发器类型"
+
+#. module: marketing_automation_sms
+#: model_terms:ir.ui.view,arch_db:marketing_automation_sms.marketing_activity_summary_template_sms
+msgid "after the <strong>SMS text message</strong> sent by the Activity \""
+msgstr "在以下活动传送<strong>SMS 文字信息</strong>之后：“"
+
+#. module: marketing_automation_sms
+#: model_terms:ir.ui.view,arch_db:marketing_automation_sms.marketing_activity_summary_template_sms
+msgid ""
+"after the Participant <strong>clicked</strong>,<br/>on any link included in "
+"the <strong>SMS text message</strong> sent by the Activity \""
+msgstr ""
+"在参与者<strong>按下</strong><br/>活动传送的<strong>SMS 文字信息</strong>内含"
+"的任何连接之后。活动：“"
+
+#. module: marketing_automation_sms
+#: model_terms:ir.ui.view,arch_db:marketing_automation_sms.marketing_activity_summary_template_sms
+msgid ""
+"if no link included in the <strong>SMS text message</strong> sent by the "
+"Activity \""
+msgstr "如果由以下活动传送的<strong>SMS 文字信息</strong>内，没有包括链接：“"
+
+#~ msgid "Bounced"
+#~ msgstr "被退回"
+
+#~ msgid "SMS Content"
+#~ msgstr "短信息内容"
+
+#~ msgid "SMS Options"
+#~ msgstr "短信息选项"
+
+#~ msgid "SMS canceled"
+#~ msgstr "短信息被取消"

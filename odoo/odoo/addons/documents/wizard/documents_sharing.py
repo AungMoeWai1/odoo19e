@@ -93,7 +93,7 @@ class DocumentsSharing(models.TransientModel):
     @api.depends('access_via_link', 'document_ids')
     def _compute_access_via_link_help(self):
         for record in self:
-            if record.access_internal.endswith('view'):
+            if record.access_via_link.endswith('view'):
                 if record.is_folder_only:
                     record.access_via_link_help = _("Can only view contents. Cannot add, modify, or delete items.")
                 else:
@@ -158,9 +158,22 @@ class DocumentsSharing(models.TransientModel):
             )
             if self.invite_notify and (
                     share_template := self.env.ref('documents.mail_template_document_share', raise_if_not_found=False)):
+                access_urls_by_partner = {}
+                for partner in self.invite_partner_ids:
+                    access_urls = {}
+                    for document in self.document_ids:
+                        access_url = document.access_url
+                        member = document.access_ids.filtered(lambda access:
+                            access.partner_id == partner)
+                        if member and member._is_signup_available():
+                            access_url = f'{access_url}?member_signup_token={member._get_member_signup_token()}&member_id={member.id}'
+                        access_urls[document] = access_url
+                    access_urls_by_partner[partner] = access_urls
                 share_template.with_context(
                     documents=self.document_ids,
+                    access_urls_by_partner=access_urls_by_partner,
                     message=self.invite_notify_message or "").send_mail_batch(self.invite_partner_ids.ids)
+
             params = {
                 'title': _('Successfully Shared'),
                 'message': (
@@ -179,8 +192,8 @@ class DocumentsSharing(models.TransientModel):
 
     def action_allow_link_access(self):
         if self.has_warning_partners_without_access:
-            self.access_via_link = 'view'
-            self.access_via_link_mode = 'link_required'
+            self.access_via_link = f'{self.WRITE_VALUE_PREFIX}view'
+            self.access_via_link_mode = f'{self.WRITE_VALUE_PREFIX}link_required'
         return self.action_update_rights()
 
     @api.model

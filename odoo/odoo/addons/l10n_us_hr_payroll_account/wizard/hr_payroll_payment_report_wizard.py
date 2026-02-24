@@ -68,7 +68,7 @@ class HrPayrollPaymentReportWizard(models.TransientModel):
             f"{self._calculate_aba_hash_for_payments(payments | offset_payment):0>10}",  # Entry Hash
             f"{self._get_total_cents(offset_payment):012d}",  # Total Debit Entry Dollar Amount in Batch
             f"{self._get_total_cents(payments):012d}",  # Total Credit Entry Dollar Amount in Batch
-            f"{self.journal_id.nacha_company_identification:0>10.10}",  # Company Identification
+            f"{self.journal_id.nacha_company_identification:10.10}",  # Company Identification
             f"{'':19.19}",  # Message Authentication Code (leave blank)
             f"{'':6.6}",  # Reserved (leave blank)
             f"{self.journal_id.nacha_origination_dfi_identification:8.8}",  # Originating DFI Identification
@@ -121,7 +121,8 @@ class HrPayrollPaymentReportWizard(models.TransientModel):
         if not bank.clearing_number:
             raise ValidationError(
                 self.env._(
-                    "Please set a Clearing Number on the %(account)s bank account for %(partner)s.",
+                    "Please set the %(clearing_number_label)s on the %(account)s bank account for %(partner)s.",
+                    clearing_number_label=_("ABA Routing Number") if bank.show_aba_routing else _("Clearing Number"),
                     account=bank.display_name,
                     partner=payment.partner_id.display_name,
                 )

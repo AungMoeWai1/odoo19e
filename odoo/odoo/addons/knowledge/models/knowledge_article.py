@@ -918,6 +918,10 @@ class KnowledgeArticle(models.Model):
                     vals['sequence'] = current_sequence
                     current_sequence += 1
 
+        # check access rights only if all records needs sudo
+        if all(vals_as_sudo):
+            self.check_access('create')
+
         # sort by sudo / not sudo
         notsudo_articles = iter(super().create([
             vals for vals, can_sudo in zip(vals_list, vals_as_sudo)
@@ -1187,7 +1191,7 @@ class KnowledgeArticle(models.Model):
             if not preserve_name and self.name else self.name
 
         # Copy the article and make it private:
-        article = self.create({
+        article = self.env['knowledge.article'].create({
             'article_member_ids': [(0, 0, {
                 'partner_id': self.env.user.partner_id.id,
                 'permission': 'write'
@@ -1214,7 +1218,7 @@ class KnowledgeArticle(models.Model):
 
         # Copy the related article items and link them to their corresponding stage:
         article_items = self.child_ids.filtered(lambda article: article.is_article_item)
-        self.create([{
+        self.env['knowledge.article'].create([{
             'article_properties': article_item.article_properties,
             'body': article_item.body,
             'cover_image_id': article_item.cover_image_id.id,
@@ -1855,6 +1859,8 @@ class KnowledgeArticle(models.Model):
 
     def get_permission_panel_members(self):
         self.ensure_one()
+        if not self.user_has_access:
+            return []
         res_partner_fields_list = [('name', 'name'), ('partner_share', 'partner_share'), ('id', 'partner_id')]
         if self.env.user._is_internal():
             res_partner_fields_list.append(('email', 'email'))
@@ -1909,9 +1915,10 @@ class KnowledgeArticle(models.Model):
         access is straightforward (just set permission). Inviting with rights
         requires to check for privilege escalation in descendants.
 
-        :param partners recordset of invited partners;
+        :param partners: recordset of invited partners;
         :param str permission: permission of newly invited members, one of
-          'none', 'read' or 'write';
+            'none', 'read' or 'write';
+
         :param message: the message relayed to :meth:`~_send_invite_mail`.
         """
         self.ensure_one()
@@ -1976,19 +1983,20 @@ class KnowledgeArticle(models.Model):
         """ Sets the given permission to the given member.
 
         If the member has rights based on membership: simply update it.
-
         If the member has rights based on a parent article (inherited rights)
-          If the new permission is downgrading the member's access
-            the article is desynchronized form its parent;
-          Else we add a new member with the higher permission;
+        If the new permission is downgrading the member's access
+        the article is desynchronized form its parent;
+        Else we add a new member with the higher permission;
 
         Security notes:
+
         - this method checks for write access on current article,
           considering it as sufficient to modify members permissions.
         - portal users cannot alter memberships in any way.
 
         :param int member_id: member_id whose permission is to be updated.
-          Can be a member of 'self' or one of its ancestors;
+            Can be a member of 'self' or one of its ancestors;
+
         :param str permission: new permission, one of 'none', 'read' or 'write';
         """
         member = self.env['knowledge.article.member'].browse(member_id)
@@ -2850,16 +2858,20 @@ class KnowledgeArticle(models.Model):
 
     def apply_template(self, template_id, skip_body_update=False):
         """Applies the given template on the current article
+
         :param int template_id: Template id
         :param boolean skip_body_update: Whether the method should skip writing
-          the body and return it for further management by the caller. Note that
-          this does to apply to child articles as they are not managed the same
-          way and are side records. Typically
-          - False: when creating a template based article from scratch;
-          - True: in other cases to avoid collaborative issues (write on
-            body should be done at client side);
+            the body and return it for further management by the caller. Note that
+            this does to apply to child articles as they are not managed the same
+            way and are side records. Typically:
+
+            - False: when creating a template based article from scratch;
+            - True: in other cases to avoid collaborative issues (write on
+              body should be done at client side);
+
         :returns: body of the article, used notably client side for
-          collaborative mode
+            collaborative mode
+
         :rtype: str
         """
         self.ensure_one()
@@ -2899,8 +2911,9 @@ class KnowledgeArticle(models.Model):
 
             # Create the child articles:
             child_templates = parent_template.child_ids
-            child_templates = child_templates.filtered(
-                lambda template: template.template_child_default_create)
+            if parent_article._should_load_all_annexes():
+                child_templates = child_templates.filtered(
+                    lambda template: template.template_child_default_create)
             child_templates = child_templates.sorted(
                 lambda template: (template.write_date, template.id))
 
@@ -3146,6 +3159,14 @@ class KnowledgeArticle(models.Model):
                 (_("New"), 0, False), (_("Ongoing"), 1, False), (_("Done"), 2, True)]
             ])
 
+    def _should_load_all_annexes(self):
+        """
+        Return whether all child templates should be loaded when applying a template.
+        If True, the template_child_default_create flag is ignored.
+        """
+        self.ensure_one()
+        return True
+
     # ------------------------------------------------------------
     # TOOLS
     # ------------------------------------------------------------
@@ -3291,14 +3312,15 @@ class KnowledgeArticle(models.Model):
         """ Get the data used by the sidebar on load in the form view.
         It returns some information from every article that is accessible by
         the user and that is either:
-            - a visible root article
-            - a favorite article or a favorite item (for the current user)
-            - the current article (except if it is a descendant of a hidden
-              root article or of an non accessible article - but even if it is
-              a hidden root article)
-            - an ancestor of the current article, if the current article is
-              shown
-            - a child article of any unfolded article that is shown
+
+        - a visible root article.
+        - a favorite article or a favorite item (for the current user).
+        - the current article (except if it is a descendant of a hidden
+          root article or of an non accessible article - but even if it is
+          a hidden root article).
+        - an ancestor of the current article, if the current article is
+          shown.
+        - a child article of any unfolded article that is shown.
         """
 
         root_articles_domain = [

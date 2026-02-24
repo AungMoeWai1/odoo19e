@@ -289,6 +289,11 @@ export function assertLineResultPackage(lineOrIndex, expectedPackageName = false
     }
 }
 
+export function assertLinePackages(lineOrIndex, expectedSrcPackageName, expectedResultPackageName) {
+    assertLinePackage(lineOrIndex, expectedSrcPackageName);
+    assertLineResultPackage(lineOrIndex, expectedResultPackageName);
+}
+
 export function assertLineSourceIsNotVisible(lineOrIndex) {
     const line = _getLineOrFail(lineOrIndex);
     const sourceElement = line.parentNode.querySelector(".o_barcode_location_line");
@@ -390,13 +395,6 @@ export function assertFormQuantity(expected) {
         '.o_field_widget[name="inventory_quantity"] input, .o_field_widget[name="qty_done"] input'
     );
     assert(quantityField.value, expected, "Wrong quantity");
-}
-
-export function assertErrorMessage(expected) {
-    const errorMessage = document.querySelector(
-        ".o_notification:last-child .o_notification_content"
-    );
-    assert(errorMessage.innerText, expected, "wrong or absent error message");
 }
 
 export function assertKanbanRecordsCount(expected) {

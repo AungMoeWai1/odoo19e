@@ -1,6 +1,7 @@
 export { PrintRecSubtotalAdjustment } from "./print_rec_subtotal_adjustment/print_rec_subtotal_adjustment";
 export { PrintRecItemAdjustment } from "./print_rec_item_adjustment/print_rec_item_adjustment";
 export { PrintDuplicateReceipt } from "./print_duplicate_receipt/print_duplicate_receipt";
+export { PrintContentByNumbers } from "./print_content_by_numbers/print_content_by_numbers";
 export { PrintRecMessage } from "./print_rec_message/print_rec_message";
 export { PrintRecItem } from "./print_rec_item/print_rec_item";
 export { PrintRecRefund } from "./print_rec_refund/print_rec_refund";
@@ -9,3 +10,4 @@ export { DisplayText } from "./display_text/display_text";
 export { OpenDrawer } from "./open_drawer/open_drawer";
 export { RTStatus } from "./rt_status/rt_status";
 export { DirectIO } from "./direct_io/direct_io";
+export { PrintNormal } from "./print_normal/print_normal";

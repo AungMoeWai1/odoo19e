@@ -3,13 +3,14 @@
 # * knowledge
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Junko Augias (juau)" <juau@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-03 18:44+0000\n"
-"PO-Revision-Date: 2025-09-24 11:34+0000\n"
+"POT-Creation-Date: 2025-12-30 18:42+0000\n"
+"PO-Revision-Date: 2026-02-04 09:29+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
 "knowledge/ja/>\n"
@@ -18,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: knowledge
 #. odoo-javascript
@@ -101,13 +102,13 @@ msgstr "%s をゴミ箱に移動しました。"
 #. odoo-javascript
 #: code:addons/knowledge/static/src/components/permission_panel/permission_panel.xml:0
 msgid "(Guest)"
-msgstr ""
+msgstr "(ゲスト)"
 
 #. module: knowledge
 #. odoo-javascript
 #: code:addons/knowledge/static/src/components/permission_panel/permission_panel.xml:0
 msgid "(You)"
-msgstr ""
+msgstr "(あなた)"
 
 #. module: knowledge
 #: model_terms:ir.ui.view,arch_db:knowledge.knowledge_article_mail_invite
@@ -125,6 +126,13 @@ msgid ""
 "                        <br>\n"
 "                        info@yourcompany.com"
 msgstr ""
+"8000 Marina Blvd, Suite 300 94005\n"
+"                        <br>\n"
+"                        Brisbane California (US)\n"
+"                        <br>\n"
+"                        United States\n"
+"                        <br>\n"
+"                        info@yourcompany.com"
 
 #. module: knowledge
 #: model_terms:knowledge.article,template_body:knowledge.knowledge_article_template_meeting_example_branding
@@ -2177,7 +2185,7 @@ msgstr "アクションプラン"
 #. module: knowledge
 #: model:ir.model.fields,field_description:knowledge.field_knowledge_article__active
 msgid "Active"
-msgstr "アクティブ"
+msgstr "有効"
 
 #. module: knowledge
 #: model:ir.model.fields,field_description:knowledge.field_knowledge_article__activity_ids
@@ -2187,17 +2195,17 @@ msgstr "活動"
 #. module: knowledge
 #: model:ir.model.fields,field_description:knowledge.field_knowledge_article__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "例外活動文字装飾"
+msgstr "例外の活動を示す装飾"
 
 #. module: knowledge
 #: model:ir.model.fields,field_description:knowledge.field_knowledge_article__activity_state
 msgid "Activity State"
-msgstr "活動状態"
+msgstr "活動ステータス"
 
 #. module: knowledge
 #: model:ir.model.fields,field_description:knowledge.field_knowledge_article__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "活動種別アイコン"
+msgstr "活動タイプアイコン"
 
 #. module: knowledge
 #. odoo-javascript
@@ -2257,7 +2265,7 @@ msgstr "コメントを追加..."
 #. odoo-javascript
 #: code:addons/knowledge/static/src/editor/embedded_components/plugins/foldable_section_plugin/foldable_section_plugin.js:0
 msgid "Add a foldable section."
-msgstr ""
+msgstr "折りたたみ可能なセクションを追加します。"
 
 #. module: knowledge
 #. odoo-javascript
@@ -2269,13 +2277,13 @@ msgstr "ランダムアイコンを追加"
 #. odoo-javascript
 #: code:addons/knowledge/static/src/editor/embedded_components/plugins/foldable_section_plugin/foldable_section_plugin.js:0
 msgid "Add a title to your section"
-msgstr ""
+msgstr "セクションにタイトルを追加"
 
 #. module: knowledge
 #. odoo-javascript
 #: code:addons/knowledge/static/src/editor/embedded_components/backend/article_index/article_index.xml:0
 msgid "Add an Article"
-msgstr ""
+msgstr "記事を追加"
 
 #. module: knowledge
 #: model_terms:ir.actions.act_window,help:knowledge.knowledge_article_stage_action
@@ -2304,13 +2312,13 @@ msgstr "人またはメールアドレスを追加..."
 #. odoo-javascript
 #: code:addons/knowledge/static/src/components/permission_panel/permission_panel.xml:0
 msgid "Add people..."
-msgstr ""
+msgstr "人を追加..."
 
 #. module: knowledge
 #. odoo-javascript
 #: code:addons/knowledge/static/src/components/options_dropdown/options_dropdown.xml:0
 msgid "Add to Favorites"
-msgstr ""
+msgstr "お気に入りに追加"
 
 #. module: knowledge
 #. odoo-javascript
@@ -2454,7 +2462,7 @@ msgstr "全ての自分の活動は常にCRMにエンコードされます"
 #. odoo-javascript
 #: code:addons/knowledge/static/src/components/article_annexe_picker_dialog/article_annexe_picker_no_content_helper.xml:0
 msgid "All pages have already been loaded."
-msgstr ""
+msgstr "すべてのページはロード済みです。"
 
 #. module: knowledge
 #: model_terms:knowledge.article,template_body:knowledge.knowledge_article_template_brand_assets
@@ -2800,7 +2808,7 @@ msgstr "添付数"
 #. module: knowledge
 #: model:ir.model.fields,field_description:knowledge.field_knowledge_article__template_child_default_create
 msgid "Auto-Create Child Article"
-msgstr ""
+msgstr "子記事を自動的に作成"
 
 #. module: knowledge
 #: model_terms:knowledge.article,template_body:knowledge.knowledge_article_template_product_catalog
@@ -2810,7 +2818,7 @@ msgstr "利用可能なモデル ✅"
 #. module: knowledge
 #: model:ir.model.fields,field_description:knowledge.field_knowledge_article_member__article_member_avatar
 msgid "Avatar 128"
-msgstr ""
+msgstr "アバター 128"
 
 #. module: knowledge
 #: model_terms:knowledge.article,template_body:knowledge.knowledge_article_template_company_newsletter
@@ -3381,7 +3389,7 @@ msgstr "ワークスペースで新規記事を作成"
 #. odoo-javascript
 #: code:addons/knowledge/static/src/components/sidebar/sidebar_section.xml:0
 msgid "Create a new private article"
-msgstr ""
+msgstr "新しい非公開記事の作成"
 
 #. module: knowledge
 #: model:knowledge.article,template_description:knowledge.knowledge_article_template_product_catalog
@@ -3400,7 +3408,7 @@ msgstr "記事項目を作成"
 #. odoo-javascript
 #: code:addons/knowledge/static/src/components/sidebar/sidebar_row.xml:0
 msgid "Create an Article inside"
-msgstr ""
+msgstr "この中に記事を作成"
 
 #. module: knowledge
 #: model_terms:ir.actions.act_window,help:knowledge.knowledge_article_action
@@ -3527,7 +3535,7 @@ msgstr "テンプレートを削除"
 #. odoo-javascript
 #: code:addons/knowledge/static/src/editor/embedded_components/backend/article_index/article_index_list.xml:0
 msgid "Delete article"
-msgstr ""
+msgstr "記事を削除"
 
 #. module: knowledge
 #. odoo-javascript
@@ -3584,7 +3592,7 @@ msgstr "破棄"
 #. odoo-javascript
 #: code:addons/knowledge/static/src/components/form_status_indicator/form_status_indicator.xml:0
 msgid "Discard all changes"
-msgstr ""
+msgstr "全ての変更を破棄する"
 
 #. module: knowledge
 #: model:ir.model.fields,field_description:knowledge.field_ir_attachment__display_name
@@ -3642,7 +3650,7 @@ msgstr "完了"
 #. odoo-javascript
 #: code:addons/knowledge/static/src/components/options_dropdown/options_dropdown.xml:0
 msgid "Download PDF"
-msgstr ""
+msgstr "PDFをダウンロード"
 
 #. module: knowledge
 #. odoo-javascript
@@ -3806,13 +3814,13 @@ msgstr "共有された全てのドキュメントを見る"
 #. odoo-javascript
 #: code:addons/knowledge/static/src/components/sidebar/sidebar_section.xml:0
 msgid "Fold/unfold the section"
-msgstr ""
+msgstr "セクションを展開/折りたたむ"
 
 #. module: knowledge
 #. odoo-javascript
 #: code:addons/knowledge/static/src/editor/embedded_components/plugins/foldable_section_plugin/foldable_section_plugin.js:0
 msgid "Foldable Section"
-msgstr ""
+msgstr "折りたたみ可能なセクション"
 
 #. module: knowledge
 #: model:ir.model.fields,field_description:knowledge.field_knowledge_article_stage__fold
@@ -3852,12 +3860,12 @@ msgstr "フル幅"
 #. module: knowledge
 #: model:ir.model.fields,field_description:knowledge.field_knowledge_article__full_width
 msgid "Full width"
-msgstr "左右の余白を縮小"
+msgstr "フル幅"
 
 #. module: knowledge
 #: model_terms:ir.ui.view,arch_db:knowledge.knowledge_article_view_search
 msgid "Future Activities"
-msgstr ""
+msgstr "今後の活動"
 
 #. module: knowledge
 #: model_terms:knowledge.article,template_body:knowledge.knowledge_article_template_marketing_customer_personas
@@ -3880,7 +3888,7 @@ msgstr "性別: 女性"
 #. odoo-javascript
 #: code:addons/knowledge/static/src/components/permission_panel/permission_panel.xml:0
 msgid "General Access"
-msgstr ""
+msgstr "一般アクセス"
 
 #. module: knowledge
 #: model:knowledge.article,template_name:knowledge.knowledge_article_template_hr_faq
@@ -3981,25 +3989,25 @@ msgstr "非表示"
 #. odoo-javascript
 #: code:addons/knowledge/static/src/components/options_dropdown/options_dropdown.xml:0
 msgid "Hide Chatter"
-msgstr ""
+msgstr "チャターを非表示"
 
 #. module: knowledge
 #. odoo-javascript
 #: code:addons/knowledge/static/src/components/options_dropdown/options_dropdown.xml:0
 msgid "Hide Comments"
-msgstr ""
+msgstr "コメントを非表示"
 
 #. module: knowledge
 #. odoo-javascript
 #: code:addons/knowledge/static/src/components/options_dropdown/options_dropdown.xml:0
 msgid "Hide Properties"
-msgstr ""
+msgstr "プロパティを非表示"
 
 #. module: knowledge
 #. odoo-javascript
 #: code:addons/knowledge/static/src/editor/embedded_components/backend/article_index/article_index.xml:0
 msgid "Hide sub-articles"
-msgstr ""
+msgstr "サブ記事を非表示"
 
 #. module: knowledge
 #. odoo-javascript
@@ -4153,7 +4161,7 @@ msgstr "チェックした場合は、新しいメッセージに注意が必要
 #: model:ir.model.fields,help:knowledge.field_knowledge_article_thread__message_has_error
 #: model:ir.model.fields,help:knowledge.field_knowledge_article_thread__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "チェックした場合は、一部のメッセージに配信エラーが発生されました。"
+msgstr "有効にすると、一部のメッセージに配信エラーが発生します。"
 
 #. module: knowledge
 #: model:ir.model.fields,help:knowledge.field_knowledge_article__is_listed_in_templates_gallery
@@ -4186,7 +4194,7 @@ msgstr "設定された場合、この記事は親のアクセス規則を継承
 msgid ""
 "If set, this will automatically create this child article when its parent "
 "template is used"
-msgstr ""
+msgstr "設定すると、親テンプレートが使用された際に、この子記事が自動的に作成されます"
 
 #. module: knowledge
 #: model_terms:knowledge.article,template_body:knowledge.knowledge_article_template_post_mortem
@@ -4395,7 +4403,7 @@ msgstr "人を招待する"
 #. module: knowledge
 #: model:ir.model.fields,field_description:knowledge.field_knowledge_article_favorite__is_article_active
 msgid "Is Article Active"
-msgstr "記事がアクティブ"
+msgstr "記事が有効"
 
 #. module: knowledge
 #: model:ir.model.fields,field_description:knowledge.field_knowledge_article__is_user_favorite
@@ -4605,12 +4613,12 @@ msgstr "最終編集日"
 #. odoo-javascript
 #: code:addons/knowledge/static/src/components/options_dropdown/options_dropdown.xml:0
 msgid "Last Edited ·"
-msgstr ""
+msgstr "最終編集 ·"
 
 #. module: knowledge
 #: model:ir.model.fields,field_description:knowledge.field_knowledge_article__last_edition_user_avatar
 msgid "Last Editor's Avatar"
-msgstr ""
+msgstr "最終編集者のアバター"
 
 #. module: knowledge
 #: model:ir.model.fields,field_description:knowledge.field_knowledge_article__write_uid
@@ -4639,13 +4647,13 @@ msgstr "最終更新日"
 #. module: knowledge
 #: model_terms:ir.ui.view,arch_db:knowledge.knowledge_article_view_search
 msgid "Late Activities"
-msgstr ""
+msgstr "期限超過の活動"
 
 #. module: knowledge
 #. odoo-javascript
 #: code:addons/knowledge/static/src/components/permission_panel/permission_panel.xml:0
 msgid "Leave"
-msgstr "解除"
+msgstr "アクセス解除"
 
 #. module: knowledge
 #. odoo-javascript
@@ -4703,14 +4711,14 @@ msgstr "ディスカッションをさらにロード"
 #. odoo-javascript
 #: code:addons/knowledge/static/src/components/article_template_picker_dialog/article_template_picker_dialog.xml:0
 msgid "Load Template"
-msgstr "テンプレートをロード"
+msgstr "テンプレートを読み込む"
 
 #. module: knowledge
 #. odoo-javascript
 #: code:addons/knowledge/static/src/components/wysiwyg_article_helper/wysiwyg_article_helper.xml:0
 #: code:addons/knowledge/static/src/editor/embedded_components/backend/article_index/article_index.xml:0
 msgid "Load a Template"
-msgstr "テンプレートをロード"
+msgstr "テンプレートを読込"
 
 #. module: knowledge
 #. odoo-javascript
@@ -4834,7 +4842,7 @@ msgstr "メンバ情報"
 #: model:ir.model.fields.selection,name:knowledge.selection__knowledge_article__inherited_permission__none
 #: model:ir.model.fields.selection,name:knowledge.selection__knowledge_article__internal_permission__none
 msgid "Members only"
-msgstr ""
+msgstr "メンバのみ"
 
 #. module: knowledge
 #: model:ir.model.fields,field_description:knowledge.field_knowledge_article__root_article_id
@@ -5109,7 +5117,7 @@ msgstr "アクセス権なし"
 #. odoo-javascript
 #: code:addons/knowledge/static/src/components/article_annexe_picker_dialog/article_annexe_picker_no_content_helper.xml:0
 msgid "No annex found!"
-msgstr ""
+msgstr "付属文書が見つかりませんでした!"
 
 #. module: knowledge
 #. odoo-javascript
@@ -5174,7 +5182,7 @@ msgstr "エラー数"
 #: model:ir.model.fields,help:knowledge.field_knowledge_article__message_needaction_counter
 #: model:ir.model.fields,help:knowledge.field_knowledge_article_thread__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr "アクションを必要とするメッセージの数"
+msgstr "対応が必要なメッセージ数"
 
 #. module: knowledge
 #: model:ir.model.fields,help:knowledge.field_knowledge_article__message_has_error_counter
@@ -5436,7 +5444,7 @@ msgstr "Podcast更新 📻"
 #. odoo-javascript
 #: code:addons/knowledge/static/src/mail/composer/composer_patch.js:0
 msgid "Post"
-msgstr ""
+msgstr "記帳"
 
 #. module: knowledge
 #: model_terms:knowledge.article,template_body:knowledge.knowledge_article_template_post_mortem
@@ -5658,13 +5666,13 @@ msgstr "削除"
 #. odoo-javascript
 #: code:addons/knowledge/static/src/components/options_dropdown/options_dropdown.xml:0
 msgid "Remove Cover"
-msgstr "表紙を削除"
+msgstr "カバー画像を削除"
 
 #. module: knowledge
 #. odoo-javascript
 #: code:addons/knowledge/static/src/components/options_dropdown/options_dropdown.xml:0
 msgid "Remove From Favorites"
-msgstr ""
+msgstr "お気に入りから削除"
 
 #. module: knowledge
 #. odoo-javascript
@@ -5808,7 +5816,7 @@ msgstr "SEO &amp; SEA プロジェクト (キーワードに賭ける...)"
 #: model:ir.model.fields,field_description:knowledge.field_knowledge_article__message_has_sms_error
 #: model:ir.model.fields,field_description:knowledge.field_knowledge_article_thread__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr "SMS配信エラー"
+msgstr "SMS送信エラー"
 
 #. module: knowledge
 #: model:knowledge.article.template.category,name:knowledge.knowledge_article_template_category_sales
@@ -5843,7 +5851,7 @@ msgstr "位置を保存"
 #. odoo-javascript
 #: code:addons/knowledge/static/src/components/form_status_indicator/form_status_indicator.xml:0
 msgid "Save manually"
-msgstr ""
+msgstr "手動で保存"
 
 #. module: knowledge
 #. odoo-javascript
@@ -5967,7 +5975,7 @@ msgstr "共有"
 #. odoo-javascript
 #: code:addons/knowledge/static/src/components/permission_panel_dialog/permission_panel_dialog.xml:0
 msgid "Share settings"
-msgstr ""
+msgstr "共有設定"
 
 #. module: knowledge
 #. odoo-javascript
@@ -5994,13 +6002,13 @@ msgstr "共有済ToDoリスト"
 #. odoo-javascript
 #: code:addons/knowledge/static/src/components/options_dropdown/options_dropdown.xml:0
 msgid "Show Chatter"
-msgstr ""
+msgstr "チャターを表示"
 
 #. module: knowledge
 #. odoo-javascript
 #: code:addons/knowledge/static/src/components/options_dropdown/options_dropdown.xml:0
 msgid "Show Comments"
-msgstr ""
+msgstr "コメントを表示"
 
 #. module: knowledge
 #. odoo-javascript
@@ -6030,13 +6038,13 @@ msgstr "週末を表示しますか?"
 #. module: knowledge
 #: model_terms:ir.ui.view,arch_db:knowledge.knowledge_article_view_search
 msgid "Show all records whose next activity date is past"
-msgstr ""
+msgstr "次回活動日が過去のすべてのレコードを表示"
 
 #. module: knowledge
 #. odoo-javascript
 #: code:addons/knowledge/static/src/components/permission_panel/permission_panel.xml:0
 msgid "Show in Workspace"
-msgstr ""
+msgstr "作業区に表示"
 
 #. module: knowledge
 #. odoo-javascript
@@ -6048,7 +6056,7 @@ msgstr "ネスト済記事を表示"
 #. odoo-javascript
 #: code:addons/knowledge/static/src/editor/embedded_components/backend/article_index/article_index.xml:0
 msgid "Show sub-articles"
-msgstr ""
+msgstr "サブ記事を表示"
 
 #. module: knowledge
 #: model_terms:knowledge.article,template_body:knowledge.knowledge_article_template_sales_playbook
@@ -6264,7 +6272,7 @@ msgid ""
 "Planned: Future activities."
 msgstr ""
 "活動に基づくステータス\n"
-"遅延: 期限が既に過ぎています\n"
+"期限超過：期限日がすでに過ぎています\n"
 "今日: 活動日は今日です\n"
 "予定: 将来の活動。"
 
@@ -6349,7 +6357,7 @@ msgstr "テンプレートタイトル"
 #. module: knowledge
 #: model:ir.model.fields,field_description:knowledge.field_knowledge_article__origin_template_id
 msgid "Template used to generate the article"
-msgstr ""
+msgstr "記事生成に使用されるテンプレート"
 
 #. module: knowledge
 #: model:ir.ui.menu,name:knowledge.knowledge_article_template_menu
@@ -6629,7 +6637,7 @@ msgstr "最新情報を入手するには、以下をフォローして下さい
 #. module: knowledge
 #: model_terms:ir.ui.view,arch_db:knowledge.knowledge_article_view_search
 msgid "Today Activities"
-msgstr ""
+msgstr "本日の活動"
 
 #. module: knowledge
 #. odoo-javascript
@@ -6671,13 +6679,13 @@ msgstr "記録上の例外活動の種類。"
 #. odoo-javascript
 #: code:addons/knowledge/static/src/editor/embedded_components/plugins/foldable_section_plugin/foldable_section_plugin.js:0
 msgid "Type something inside this section"
-msgstr ""
+msgstr "このセクション内に何かを入力してください"
 
 #. module: knowledge
 #. odoo-javascript
 #: code:addons/knowledge/static/src/components/form_status_indicator/form_status_indicator.xml:0
 msgid "Unable to save. Correct the issue or discard all changes"
-msgstr ""
+msgstr "保存できません。問題を修正するか、変更を全て破棄して下さい。"
 
 #. module: knowledge
 #. odoo-javascript
@@ -7104,7 +7112,7 @@ msgstr "この記事へのアクセス権がありません。"
 #. odoo-javascript
 #: code:addons/knowledge/static/src/components/sidebar/sidebar_section.xml:0
 msgid "You have no private Article."
-msgstr ""
+msgstr "非公開の記事はありません。"
 
 #. module: knowledge
 #. odoo-python

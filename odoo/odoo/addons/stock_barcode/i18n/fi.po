@@ -19,13 +19,15 @@
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Saara Hakanen <sahak@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-13 21:41+0000\n"
-"PO-Revision-Date: 2025-09-16 17:05+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2025-12-30 18:42+0000\n"
+"PO-Revision-Date: 2026-02-18 14:53+0000\n"
+"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
 "stock_barcode/fi/>\n"
 "Language: fi\n"
@@ -33,7 +35,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: stock_barcode
 #. odoo-javascript
@@ -87,7 +89,8 @@ msgstr "<i class=\"fa fa-lg fa-user-o me-2\" title=\"Owner\"/>"
 #. module: stock_barcode
 #: model_terms:ir.ui.view,arch_db:stock_barcode.res_config_settings_view_form
 msgid "<i class=\"fa fa-print\"/> Print barcode commands and operation types"
-msgstr "<i class=\"fa fa-print\"/> Tulosta viivakoodikomennot ja toimintatyypit"
+msgstr ""
+"<i class=\"fa fa-print\"/> Tulosta viivakoodikomennot ja toimintatyypit"
 
 #. module: stock_barcode
 #: model_terms:ir.ui.view,arch_db:stock_barcode.res_config_settings_view_form
@@ -141,8 +144,8 @@ msgstr "Lisää tuote"
 #: model_terms:ir.ui.view,arch_db:stock_barcode.stock_barcode_view_picking_type_form
 msgid "Add colors to operation cards to help users differentiate them."
 msgstr ""
-"Lisää värejä toimintokortteihin, jotta käyttäjien on helpompi erottaa ne "
-"toisistaan"
+"Lisää värejä operaatiokortteihin auttaaksesi käyttäjiä niiden erottamisessa "
+"toisistaan."
 
 #. module: stock_barcode
 #. odoo-javascript
@@ -199,8 +202,8 @@ msgid ""
 "An error occured during parsing of element_string: AI code %(ai_code)s is "
 "missing for scheme %(scheme_name)s"
 msgstr ""
-"Virhe jäsennettäessä element_string: AI-koodi %(ai_code)s puuttuu mallista "
-"%(scheme_name)s"
+"Virhe jäsennettäessä element_string: AI-koodi %(ai_code)s puuttuu mallista %"
+"(scheme_name)s"
 
 #. module: stock_barcode
 #. odoo-python
@@ -220,7 +223,7 @@ msgid ""
 "must be between 6 and 12 inclusive."
 msgstr ""
 "Tapahtui virhe: company_prefix_length (%(company_prefix_length)s) arvon on "
-"oltava välillä 6–12"
+"oltava 6-12 välillä."
 
 #. module: stock_barcode
 #. odoo-python
@@ -257,7 +260,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/stock_barcode/static/src/components/confirm_quant_dialog.xml:0
 msgid "Apply Now"
-msgstr ""
+msgstr "Hae nyt"
 
 #. module: stock_barcode
 #: model_terms:ir.ui.view,arch_db:stock_barcode.stock_barcode_cancel_operation_view
@@ -299,7 +302,7 @@ msgstr "Viivakoodisovellus"
 #. module: stock_barcode
 #: model:ir.model.fields,field_description:stock_barcode.field_stock_location__barcode_img
 msgid "Barcode Img"
-msgstr ""
+msgstr "Viivakoodikuva"
 
 #. module: stock_barcode
 #: model:ir.actions.client,name:stock_barcode.stock_barcode_inventory_client_action
@@ -421,7 +424,7 @@ msgstr "Vahvista"
 #. odoo-javascript
 #: code:addons/stock_barcode/static/src/components/confirm_quant_dialog.xml:0
 msgid "Confirm Inventory Adjustment"
-msgstr ""
+msgstr "Vahvista varastoinnin muutos"
 
 #. module: stock_barcode
 #: model:ir.model,name:stock_barcode.model_res_partner
@@ -489,7 +492,7 @@ msgstr "Demodata on käytössä"
 #. module: stock_barcode
 #: model_terms:ir.ui.view,arch_db:stock_barcode.stock_move_line_product_selector
 msgid "Destination Container Package"
-msgstr ""
+msgstr "Kohdekonttipaketti"
 
 #. module: stock_barcode
 #. odoo-javascript
@@ -632,8 +635,8 @@ msgid ""
 "Error: The product barcode is not a valid Global Trade Item Number, we can't "
 "generate an Electronic Product Code for it."
 msgstr ""
-"Virhe: Tuotteen viivakoodi ei ole kelvollinen Global Trade Item Number (GTIN)"
-", emme voi luoda sille elektronista tuotetunnusta."
+"Virhe: Tuotteen viivakoodi ei ole kelvollinen Global Trade Item Number "
+"(GTIN), emme voi luoda sille elektronista tuotetunnusta."
 
 #. module: stock_barcode
 #. odoo-python
@@ -785,7 +788,8 @@ msgstr ""
 #: code:addons/stock_barcode/static/src/components/backorder_dialog.xml:0
 msgid ""
 "If you validate now, the remaining products will be added to a backorder."
-msgstr "Jos vahvistat nyt, jäljellä olevat tuotteet lisätään jälkitoimitukseen."
+msgstr ""
+"Jos vahvistat nyt, jäljellä olevat tuotteet lisätään jälkitoimitukseen."
 
 #. module: stock_barcode
 #: model:ir.model.fields,field_description:stock_barcode.field_stock_move_line__image_1920
@@ -815,26 +819,26 @@ msgstr "Kansainvälistä tuotenumeroa (IAN) käytetään tuotteen tunnistamiseen
 #. odoo-python
 #: code:addons/stock_barcode/models/epc_encoder.py:0
 msgid "Invalid pad_char '%(pad_char)s'. Use '0' or '1'."
-msgstr "Virheellinen pad_char '%(pad_char)s'. Käytä '0' tai '1'"
+msgstr "Virheellinen pad_char '%(pad_char)s'. Käytä '0' tai '1'."
 
 #. module: stock_barcode
 #. odoo-python
 #: code:addons/stock_barcode/models/epc_encoder.py:0
 msgid "Invalid pad_side '%(pad_side)s'. Use 'left' or 'right'."
-msgstr "Virheellinen pad_side '%(pad_side)s'. Käytä 'vasen' tai 'oikea'"
+msgstr "Virheellinen pad_side '%(pad_side)s'. Käytä 'vasen' tai 'oikea'."
 
 #. module: stock_barcode
 #. odoo-python
 #: code:addons/stock_barcode/models/epc_encoder.py:0
 msgid "Invalid word_pad_char '%(word_pad_char)s'. Use '0' or '1'."
-msgstr "Virheellinen word_pad_char '%(word_pad_char)s'. Käytä '0' tai '1'"
+msgstr "Virheellinen word_pad_char '%(word_pad_char)s'. Käytä '0' tai '1'."
 
 #. module: stock_barcode
 #. odoo-python
 #: code:addons/stock_barcode/models/epc_encoder.py:0
 msgid "Invalid word_pad_side '%(word_pad_side)s'. Use 'left' or 'right'."
 msgstr ""
-"Virheellinen word_pad_char '%(word_pad_char)s'. Käytä 'vasen' tai 'oikea'"
+"Virheellinen word_pad_char '%(word_pad_side)s'. Käytä 'vasen' tai 'oikea'."
 
 #. module: stock_barcode
 #: model:ir.model,name:stock_barcode.model_stock_location
@@ -845,7 +849,7 @@ msgstr "Inventaariopaikat"
 #. odoo-javascript
 #: code:addons/stock_barcode/static/src/components/confirm_quant_dialog.xml:0
 msgid "Inventory Reason"
-msgstr ""
+msgstr "Inventoinnin syy"
 
 #. module: stock_barcode
 #: model:ir.model.fields,field_description:stock_barcode.field_stock_picking_type__is_barcode_picking_type
@@ -995,13 +999,13 @@ msgstr "Ei viivakoodia vastaavaa poimintaa tai tuotetta %(barcode)s"
 #. odoo-python
 #: code:addons/stock_barcode/models/stock_picking.py:0
 msgid "No product found for barcode %s"
-msgstr ""
+msgstr "Viivakoodille %s ei löytynyt tuotetta"
 
 #. module: stock_barcode
 #. odoo-python
 #: code:addons/stock_barcode/models/stock_picking.py:0
 msgid "No product or lot found for barcode %s"
-msgstr ""
+msgstr "Viivakoodille %s ei löytynyt tuotetta tai erää"
 
 #. module: stock_barcode
 #. odoo-python
@@ -1013,31 +1017,31 @@ msgstr "Viivakoodille %s ei löytynyt tuotetta tai pakkausta"
 #. odoo-python
 #: code:addons/stock_barcode/models/stock_picking.py:0
 msgid "No product or packaging found for barcode %s"
-msgstr ""
+msgstr "Viivakoodille %s ei löytynyt tuotetta tai pakkausta"
 
 #. module: stock_barcode
 #. odoo-python
 #: code:addons/stock_barcode/models/stock_picking.py:0
 msgid "No product, lot, or package found for barcode %s"
-msgstr ""
+msgstr "Viivakoodille %s ei löytynyt tuotetta, erää tai pakettia"
 
 #. module: stock_barcode
 #. odoo-python
 #: code:addons/stock_barcode/models/stock_picking.py:0
 msgid "No product, lot, or packaging found for barcode %s"
-msgstr ""
+msgstr "Viivakoodille %s ei löytynyt tuotetta, erää tai pakkausta"
 
 #. module: stock_barcode
 #. odoo-python
 #: code:addons/stock_barcode/models/stock_picking.py:0
 msgid "No product, lot, packaging, or package found for barcode %s"
-msgstr ""
+msgstr "Viivakoodille %s ei löytynyt tuotetta, erää, pakkausta tai pakettia"
 
 #. module: stock_barcode
 #. odoo-python
 #: code:addons/stock_barcode/models/stock_picking.py:0
 msgid "No product, package, or packaging found for barcode %s"
-msgstr ""
+msgstr "Viivakoodille %s ei löytynyt tuotetta, pakettia tai pakkausta"
 
 #. module: stock_barcode
 #. odoo-javascript
@@ -1095,7 +1099,7 @@ msgstr "Vaihtoehdot"
 #. module: stock_barcode
 #: model:ir.model.fields,field_description:stock_barcode.field_stock_move_line__outermost_result_package_id
 msgid "Outermost Result Package"
-msgstr ""
+msgstr "Ulommaisin tulospaketti"
 
 #. module: stock_barcode
 #: model_terms:ir.ui.view,arch_db:stock_barcode.stock_move_line_product_selector
@@ -1159,8 +1163,8 @@ msgid ""
 "Partition table %(table_name)s not found, available tables are : %"
 "(table_list)s)"
 msgstr ""
-"Osiotaulukkoa %(table_name)s ei löydy, valittavissa olevat taulukot ovat: "
-"%(table_list)s)"
+"Osiotaulukkoa %(table_name)s ei löydy, valittavissa olevat taulukot ovat: %"
+"(table_list)s)"
 
 #. module: stock_barcode
 #. odoo-javascript
@@ -1239,6 +1243,8 @@ msgid ""
 "Print the %(sheet_s)sdemo data sheet%(sheet_e)s to test, or %"
 "(ops_s)sbarcodes%(ops_e)s for operations."
 msgstr ""
+"Tulosta %(sheet_s)sdemodata%(sheet_e)s testausta varten tai %(ops_s)"
+"sviivakoodit%(ops_e)s operaatioita varten."
 
 #. module: stock_barcode
 #. odoo-javascript
@@ -1325,7 +1331,7 @@ msgstr "Siirretty määrä"
 #. module: stock_barcode
 #: model_terms:ir.ui.view,arch_db:stock_barcode.stock_move_line_product_selector
 msgid "Quantity in Stock"
-msgstr ""
+msgstr "Määrä varastossa"
 
 #. module: stock_barcode
 #: model:ir.model.fields,help:stock_barcode.field_stock_move_line__packaging_uom_qty
@@ -1373,6 +1379,8 @@ msgid ""
 "Scan a %(bold_s)s transfer%(bold_e)s or a %(bold_s)s product%(bold_e)s to "
 "filter your records"
 msgstr ""
+"Skannaa %(bold_s)s siirto%(bold_e)s tai %(bold_s)s tuote%(bold_e)s "
+"suodattaaksesi tietojasi"
 
 #. module: stock_barcode
 #. odoo-javascript
@@ -1382,6 +1390,9 @@ msgid ""
 "(bold_s)s lot%(bold_e)s, a %(bold_s)s packaging%(bold_e)s, or a %(bold_s)s "
 "package%(bold_e)s to filter your records"
 msgstr ""
+"Skannaa %(bold_s)s siirto%(bold_e)s, %(bold_s)s tuote%(bold_e)s, %(bold_s)s "
+"erä%(bold_e)s, %(bold_s)s pakkaus%(bold_e)s tai %(bold_s)s paketti%(bold_e)s "
+"suodattaaksesi tietojasi"
 
 #. module: stock_barcode
 #. odoo-javascript
@@ -1391,6 +1402,8 @@ msgid ""
 "(bold_s)s lot%(bold_e)s, or a %(bold_s)s package%(bold_e)s to filter your "
 "records"
 msgstr ""
+"Skannaa %(bold_s)s siirto%(bold_e)s, %(bold_s)s tuote%(bold_e)s, %(bold_s)s "
+"erä%(bold_e)s tai %(bold_s)s pakkaus%(bold_e)s suodattaaksesi tietojasi"
 
 #. module: stock_barcode
 #. odoo-javascript
@@ -1400,6 +1413,8 @@ msgid ""
 "(bold_s)s lot%(bold_e)s, or a %(bold_s)s packaging%(bold_e)s to filter your "
 "records"
 msgstr ""
+"Skannaa %(bold_s)s siirto%(bold_e)s, %(bold_s)s tuote%(bold_e)s, %(bold_s)s "
+"erä%(bold_e)s tai %(bold_s)s pakkaus%(bold_e)s suodattaaksesi tietojasi"
 
 #. module: stock_barcode
 #. odoo-javascript
@@ -1409,6 +1424,8 @@ msgid ""
 "(bold_s)s packaging%(bold_e)s, or a %(bold_s)s package%(bold_e)s to filter "
 "your records"
 msgstr ""
+"Skannaa %(bold_s)s siirto%(bold_e)s, %(bold_s)s tuote%(bold_e)s, %(bold_s)s "
+"pakkaus%(bold_e)s tai %(bold_s)s paketti%(bold_e)s suodattaaksesi tietojasi"
 
 #. module: stock_barcode
 #. odoo-javascript
@@ -1417,6 +1434,8 @@ msgid ""
 "Scan a %(bold_s)s transfer%(bold_e)s, a %(bold_s)s product%(bold_e)s, or a %"
 "(bold_s)s lot%(bold_e)s to filter your records"
 msgstr ""
+"Skannaa %(bold_s)s siirto%(bold_e)s, %(bold_s)s tuote%(bold_e)s tai %(bold_s)"
+"s erä%(bold_e)s suodattaaksesi tietojasi"
 
 #. module: stock_barcode
 #. odoo-javascript
@@ -1425,6 +1444,8 @@ msgid ""
 "Scan a %(bold_s)s transfer%(bold_e)s, a %(bold_s)s product%(bold_e)s, or a %"
 "(bold_s)s package%(bold_e)s to filter your records"
 msgstr ""
+"Skannaa %(bold_s)s siirto%(bold_e)s, %(bold_s)s tuote%(bold_e)s tai %(bold_s)"
+"s paketti%(bold_e)s suodattaaksesi tietojasi"
 
 #. module: stock_barcode
 #. odoo-javascript
@@ -1433,24 +1454,26 @@ msgid ""
 "Scan a %(bold_s)s transfer%(bold_e)s, a %(bold_s)s product%(bold_e)s, or a %"
 "(bold_s)s packaging%(bold_e)s to filter your records"
 msgstr ""
+"Skannaa %(bold_s)s siirto%(bold_e)s, %(bold_s)s tuote%(bold_e)s tai %(bold_s)"
+"s pakkaus%(bold_e)s suodattaaksesi tietojasi"
 
 #. module: stock_barcode
 #. odoo-javascript
 #: code:addons/stock_barcode/static/src/main_menu/main_menu.js:0
 msgid "Scan a %(bold_s)slocation%(bold_e)s to initiate a transfer"
-msgstr ""
+msgstr "Skannaa %(bold_s)s sijainti%(bold_e)s aloittaaksesi siirron"
 
 #. module: stock_barcode
 #. odoo-javascript
 #: code:addons/stock_barcode/static/src/main_menu/main_menu.js:0
 msgid "Scan a %(bold_s)spackage%(bold_e)s to find a transfer"
-msgstr ""
+msgstr "Skannaa %(bold_s)spaketti%(bold_e)s löytääksesi siirron"
 
 #. module: stock_barcode
 #. odoo-javascript
 #: code:addons/stock_barcode/static/src/main_menu/main_menu.js:0
 msgid "Scan a %(bold_s)spicking%(bold_e)s to open it"
-msgstr ""
+msgstr "Skannaa %(bold_s)skeräily%(bold_e)s avataksesi sen"
 
 #. module: stock_barcode
 #. odoo-javascript
@@ -1459,6 +1482,8 @@ msgid ""
 "Scan a %(bold_s)sproduct%(bold_e)s or its %(bold_s)spackaging%(bold_e)s to "
 "locate it"
 msgstr ""
+"Skannaa %(bold_s)stuote%(bold_e)s tai sen %(bold_s)spakkaus%(bold_e)s "
+"paikantaaksesi sen"
 
 #. module: stock_barcode
 #. odoo-javascript
@@ -1467,12 +1492,14 @@ msgid ""
 "Scan a %(bold_s)stracking number%(bold_e)s or a %(bold_s)spackage%(bold_e)s "
 "to find a transfer"
 msgstr ""
+"Skannaa %(bold_s)sseurantanumero%(bold_e)s tai %(bold_s)spaketti%(bold_e)s "
+"löytääksesi siirron"
 
 #. module: stock_barcode
 #. odoo-javascript
 #: code:addons/stock_barcode/static/src/main_menu/main_menu.js:0
 msgid "Scan a %(bold_s)stracking number%(bold_e)s to find a transfer"
-msgstr ""
+msgstr "Skannaa %(bold_s)sseurantanumero%(bold_e)s löytääksesi siirron"
 
 #. module: stock_barcode
 #. odoo-javascript
@@ -1538,7 +1565,7 @@ msgstr "Skannaa tuote lähteestä %s"
 #. odoo-python
 #: code:addons/stock_barcode/models/stock_picking.py:0
 msgid "Scan a product or a lot to filter the transfers."
-msgstr ""
+msgstr "Skannaa tuote tai erä suodattaaksesi siirtoja."
 
 #. module: stock_barcode
 #. odoo-javascript
@@ -1556,7 +1583,7 @@ msgstr "Skannaa tuote tai paketti suodattaaksesi siirrot."
 #. odoo-python
 #: code:addons/stock_barcode/models/stock_picking.py:0
 msgid "Scan a product or a packaging to filter the transfers."
-msgstr ""
+msgstr "Skannaa tuote tai pakkaus suodattaaksesi siirtoja."
 
 #. module: stock_barcode
 #. odoo-javascript
@@ -1580,26 +1607,26 @@ msgstr "Skannaa tuote ja sitten määränpää"
 #. odoo-python
 #: code:addons/stock_barcode/models/stock_picking.py:0
 msgid "Scan a product to filter the transfers."
-msgstr ""
+msgstr "Skannaa tuote suodattaaksesi siirtoja."
 
 #. module: stock_barcode
 #. odoo-python
 #: code:addons/stock_barcode/models/stock_picking.py:0
 msgid ""
 "Scan a product, a lot, a packaging, or a package to filter the transfers."
-msgstr ""
+msgstr "Skannaa tuote, erä, pakkaus tai paketti suodattaaksesi siirtoja."
 
 #. module: stock_barcode
 #. odoo-python
 #: code:addons/stock_barcode/models/stock_picking.py:0
 msgid "Scan a product, a lot, or a package to filter the transfers."
-msgstr ""
+msgstr "Skannaa tuote, erä tai paketti suodattaaksesi siirtoja."
 
 #. module: stock_barcode
 #. odoo-python
 #: code:addons/stock_barcode/models/stock_picking.py:0
 msgid "Scan a product, a lot, or a packaging to filter the transfers."
-msgstr ""
+msgstr "Skannaa tuote, erä tai pakkaus suodattaaksesi siirtoja."
 
 #. module: stock_barcode
 #. odoo-javascript
@@ -1617,7 +1644,7 @@ msgstr "Skannaa tuote, paketti tai määränpää."
 #. odoo-python
 #: code:addons/stock_barcode/models/stock_picking.py:0
 msgid "Scan a product, a package, or a packaging to filter the transfers."
-msgstr ""
+msgstr "Skannaa tuote, paketti tai pakkaus suodattaaksesi siirtoja."
 
 #. module: stock_barcode
 #. odoo-javascript
@@ -1647,7 +1674,7 @@ msgstr "Skannaa sarjanumero ja sitten määränpää"
 #. odoo-javascript
 #: code:addons/stock_barcode/static/src/main_menu/main_menu.js:0
 msgid "Scan an %(bold_s)soperation type%(bold_e)s to start it"
-msgstr ""
+msgstr "Skannaa %(bold_s)soperaatiotyyppi%(bold_e)s käynnistääksesi sen"
 
 #. module: stock_barcode
 #. odoo-javascript
@@ -1759,8 +1786,8 @@ msgstr "Sarjanumero/eränumero"
 #: model_terms:ir.ui.view,arch_db:stock_barcode.res_config_settings_view_form
 msgid "Set the maximum delay between each key in ms (100 ms by default.)"
 msgstr ""
-"Aseta kunkin näppäimen välinen enimmäisviive millisekunteina ("
-"oletusarvoisesti 100 ms)"
+"Aseta kunkin näppäimen välinen enimmäisviive millisekunteina "
+"(oletusarvoisesti 100 ms)"
 
 #. module: stock_barcode
 #: model:ir.model.fields,field_description:stock_barcode.field_res_config_settings__show_barcode_nomenclature
@@ -1832,9 +1859,8 @@ msgid ""
 "Technical field used to compute whether the \"Final Validation\" group "
 "should be displayed, to support combined groups/invisible complexity."
 msgstr ""
-"Tekninen kenttä, jota käytetään laskemaan, näytetäänkö "
-"\"Lopullinen vahvistus\" -ryhmää, kun tuetaan yhdistettyjä ryhmiä/"
-"näkymättömyys asetuksia."
+"Tekninen kenttä, jota käytetään laskemaan, näytetäänkö \"Lopullinen "
+"vahvistus\" -ryhmää, kun tuetaan yhdistettyjä ryhmiä/näkymättömyys asetuksia."
 
 #. module: stock_barcode
 #. odoo-python
@@ -1895,6 +1921,16 @@ msgstr "Tällä sivulla ei ole mitään, jonka voisi asettaa."
 #: code:addons/stock_barcode/static/src/models/barcode_quant_model.js:0
 msgid "There is nothing to print in this page."
 msgstr "Tällä sivulla ei ole mitään tulostettavaa."
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+msgid ""
+"This package contains extra products and extra products are not allowed on "
+"this operation."
+msgstr ""
+"Tämä paketti sisältää ylimääräisiä tuotteita, mikä ei ole sallittua tässä "
+"operaatiossa."
 
 #. module: stock_barcode
 #. odoo-javascript
@@ -1992,7 +2028,7 @@ msgstr "Yksikkö"
 #. odoo-javascript
 #: code:addons/stock_barcode/static/src/components/package_line.xml:0
 msgid "Unpack"
-msgstr ""
+msgstr "Pura paketointi"
 
 #. module: stock_barcode
 #: model_terms:ir.ui.view,arch_db:stock_barcode.view_stock_quant_tree
@@ -2039,7 +2075,7 @@ msgstr "Lukija"
 #. odoo-javascript
 #: code:addons/stock_barcode/static/src/components/confirm_quant_dialog.xml:0
 msgid "Wait a Review"
-msgstr ""
+msgstr "Odota tarkastusta"
 
 #. module: stock_barcode
 #: model:ir.model,name:stock_barcode.model_stock_warehouse

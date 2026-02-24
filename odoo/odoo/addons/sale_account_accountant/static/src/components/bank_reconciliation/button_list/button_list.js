@@ -5,39 +5,22 @@ import { patch } from "@web/core/utils/patch";
 patch(BankRecButtonList, {
     props: {
         ...BankRecButtonList.props,
-        availableSaleOrders: { type: Array, optional: true },
+        hasSaleOrders: { type: Boolean, optional: true },
+        actionOpenSaleOrders: { type: Function, optional: true },
     },
     defaultProps: {
         ...BankRecButtonList.defaultProps,
-        availableSaleOrders: [],
     },
 });
 
 patch(BankRecButtonList.prototype, {
-    actionOpenSaleOrders() {
-        const singleSale = this.props.availableSaleOrders.length === 1;
-        const numberRecordsDepend = {};
-        if (singleSale) {
-            numberRecordsDepend.res_id = this.props.availableSaleOrders[0];
-            numberRecordsDepend.views = [[false, "form"]];
-        } else {
-            numberRecordsDepend.views = [
-                [false, "list"],
-                [false, "form"],
-            ];
-            numberRecordsDepend.domain = [["id", "in", this.props.availableSaleOrders]];
-        }
-
-        this.action.doAction({
-            type: "ir.actions.act_window",
-            res_model: "sale.order",
-            target: "current",
-            ...numberRecordsDepend,
-        });
+    async _setPartnerOnReconcileLine(partner_id) {
+        super._setPartnerOnReconcileLine(partner_id);
+        await this.bankReconciliation.checkPartnerSales(partner_id);
     },
 
     get isSalesButtonShown() {
-        return this.props.availableSaleOrders.length;
+        return this.props.hasSaleOrders;
     },
 
     get buttons() {
@@ -45,8 +28,8 @@ patch(BankRecButtonList.prototype, {
         if (this.isSalesButtonShown) {
             buttonsToDisplay.sale = {
                 label: _t("Sales"),
-                count: this.props.availableSaleOrders.length,
-                action: this.actionOpenSaleOrders.bind(this),
+                action: () => this.props.actionOpenSaleOrders(),
+                classes: "sales-btn",
             };
         }
         return buttonsToDisplay;

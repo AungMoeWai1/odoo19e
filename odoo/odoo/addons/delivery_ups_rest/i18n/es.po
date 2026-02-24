@@ -3,13 +3,14 @@
 # * delivery_ups_rest
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-13 21:41+0000\n"
-"PO-Revision-Date: 2025-09-18 02:41+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2025-12-30 18:42+0000\n"
+"PO-Revision-Date: 2025-11-14 15:22+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-19/"
 "delivery_ups_rest/es/>\n"
 "Language: es\n"
@@ -271,8 +272,8 @@ msgid ""
 "Return label generated<br/><b>Tracking Numbers:</b> %(tracking_numbers)s<br/"
 "><b>Packages:</b> %(packages)s"
 msgstr ""
-"Etiqueta de devolución generada<br/><b>Números de rastreo:</b> "
-"%(tracking_numbers)s<br/><b>Paquetes:</b> %(packages)s"
+"Etiqueta de devolución generada<br/><b>Números de rastreo:</b> %"
+"(tracking_numbers)s<br/><b>Paquetes:</b> %(packages)s"
 
 #. module: delivery_ups_rest
 #: model:ir.model.fields.selection,name:delivery_ups_rest.selection__delivery_carrier__ups_label_file_type__spl
@@ -364,7 +365,8 @@ msgstr ""
 #: code:addons/delivery_ups_rest/models/ups_request.py:0
 msgid ""
 "The delivery cannot be done because the weight of your product %s is missing."
-msgstr "No se puede realizar la entrega porque falta el peso de su producto %s."
+msgstr ""
+"No se puede realizar la entrega porque falta el peso de su producto %s."
 
 #. module: delivery_ups_rest
 #. odoo-python
@@ -374,6 +376,9 @@ msgid ""
 "missing for the following product(s): \n"
 " %s"
 msgstr ""
+"El precio estimado de envío no se puede calcular porque falta el peso para "
+"los siguientes productos: \n"
+" %s"
 
 #. module: delivery_ups_rest
 #. odoo-python
@@ -612,7 +617,8 @@ msgstr "developer.ups.com"
 #. module: delivery_ups_rest
 #: model_terms:ir.ui.view,arch_db:delivery_ups_rest.view_delivery_carrier_form
 msgid "the callback is your odoo address https://\"mycompany\".odoo.com"
-msgstr "la retrollamada es su dirección de odoo https://\"micompañía\".odoo.com"
+msgstr ""
+"la retrollamada es su dirección de odoo https://\"micompañía\".odoo.com"
 
 #. module: delivery_ups_rest
 #: model_terms:ir.ui.view,arch_db:delivery_ups_rest.view_delivery_carrier_form

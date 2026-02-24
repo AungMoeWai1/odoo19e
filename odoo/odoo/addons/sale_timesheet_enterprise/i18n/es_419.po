@@ -4,13 +4,14 @@
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025.
+# "Patricia Gutiérrez (pagc)" <pagc@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:43+0000\n"
-"PO-Revision-Date: 2025-09-20 02:41+0000\n"
-"Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
+"POT-Creation-Date: 2025-12-30 18:47+0000\n"
+"PO-Revision-Date: 2025-11-11 23:47+0000\n"
+"Last-Translator: \"Patricia Gutiérrez (pagc)\" <pagc@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-19/sale_timesheet_enterprise/es_419/>\n"
 "Language: es_419\n"
@@ -52,17 +53,18 @@ msgstr "(%(percentage)s%)"
 
 #. module: sale_timesheet_enterprise
 #: model_terms:ir.ui.view,arch_db:sale_timesheet_enterprise.view_edit_billable_time_target_update_kanban
-msgid "<i class=\"fa fa-fw me-2 fa-birthday-cake text-primary\" title=\"Birthday\"/>"
+msgid ""
+"<i class=\"fa fa-fw me-2 fa-birthday-cake text-primary\" title=\"Birthday\"/>"
 msgstr ""
-"<i class=\"fa fa-fw me-2 fa-birthday-cake text-primary\" title=\"Cumpleaños\""
-"/>"
+"<i class=\"fa fa-fw me-2 fa-birthday-cake text-primary\" "
+"title=\"Cumpleaños\"/>"
 
 #. module: sale_timesheet_enterprise
 #: model_terms:ir.ui.view,arch_db:sale_timesheet_enterprise.view_edit_billable_time_target_update_kanban
 msgid "<i class=\"fa fa-fw me-2 fa-envelope text-primary\" title=\"Email\"/>"
 msgstr ""
-"<i class=\"fa fa-fw me-2 fa-envelope text-primary\" title="
-"\"Correo electrónico\"/>"
+"<i class=\"fa fa-fw me-2 fa-envelope text-primary\" title=\"Correo "
+"electrónico\"/>"
 
 #. module: sale_timesheet_enterprise
 #: model_terms:ir.ui.view,arch_db:sale_timesheet_enterprise.view_edit_billable_time_target_update_kanban
@@ -79,8 +81,10 @@ msgstr "<span class=\"m-14 w-100\">por mes</span>"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet_enterprise.sale_timesheet_enterprise_advance_payment_inv_timesheet_view_form
 msgid ""
 "<span>\n"
-"                            Some employees currently have active timers for the timesheets you are trying to invoice.\n"
-"                            Creating the invoice will automatically stop these timers.\n"
+"                            Some employees currently have active timers for "
+"the timesheets you are trying to invoice.\n"
+"                            Creating the invoice will automatically stop "
+"these timers.\n"
 "                        </span>"
 msgstr ""
 "<span>\n"
@@ -108,8 +112,8 @@ msgstr "Línea analítica"
 #. module: sale_timesheet_enterprise
 #: model:hr.timesheet.tip,name:sale_timesheet_enterprise.timesheet_tip_7
 msgid ""
-"Any time spent interacting with others—whether it’s a quick call, a meeting,"
-" or an informal chat—is valuable and should be recorded."
+"Any time spent interacting with others—whether it’s a quick call, a meeting, "
+"or an informal chat—is valuable and should be recorded."
 msgstr ""
 "El tiempo que usa para interactuar con otras personas. Ya sea una llamada "
 "rápida, una reunión o una plática informal, todo es valioso y lo debe "
@@ -310,8 +314,8 @@ msgstr "Muestre el progreso de la tarea actual."
 #. module: sale_timesheet_enterprise
 #: model:hr.timesheet.tip,name:sale_timesheet_enterprise.timesheet_tip_10
 msgid ""
-"Don’t second-guess whether something “counts”—if you’ve spent time on it, it"
-" belongs in your timesheet."
+"Don’t second-guess whether something “counts”—if you’ve spent time on it, it "
+"belongs in your timesheet."
 msgstr ""
 "No se pregunte si algo \"cuenta\" o no, si le invirtió tiempo a la tarea, "
 "entonces debe ir en sus hojas de horas."
@@ -647,8 +651,8 @@ msgstr "Mostrar la tabla de clasificación en la vista de Mis hojas de horas"
 #. module: sale_timesheet_enterprise
 #: model:hr.timesheet.tip,name:sale_timesheet_enterprise.timesheet_tip_13
 msgid ""
-"Small administrative tasks keep operations running smoothly. Don’t forget to"
-" include them in your timesheet."
+"Small administrative tasks keep operations running smoothly. Don’t forget to "
+"include them in your timesheet."
 msgstr ""
 "Las tareas administrativas pequeñas ayudan a mantener las operaciones en "
 "marcha. No olvide incluirlas en sus hojas de horas."
@@ -743,7 +747,7 @@ msgstr "Mostrar tarifas de la hoja de horas"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet_enterprise.view_edit_billable_time_target_update_form
 #: model_terms:ir.ui.view,arch_db:sale_timesheet_enterprise.view_employee_form
 msgid "Timesheets"
-msgstr "Hojas de horas"
+msgstr "Registro de horas"
 
 #. module: sale_timesheet_enterprise
 #: model:ir.model.fields,field_description:sale_timesheet_enterprise.field_res_config_settings__invoiced_timesheet
@@ -820,7 +824,8 @@ msgid ""
 "        !! Set the task a high priority\n"
 "        !!! Set the task a urgent priority\n"
 "\n"
-"        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
+"        Make sure to use the right format and order e.g. Improve the "
+"configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
 "Usa estas palabras clave en el título para configurar nuevas tareas:\n"
 "\n"
@@ -870,8 +875,11 @@ msgstr ""
 #. module: sale_timesheet_enterprise
 #: model:ir.model.fields,help:sale_timesheet_enterprise.field_res_config_settings__invoiced_timesheet
 msgid ""
-"With the 'all recorded timesheets' option, all timesheets will be invoiced without distinction, even if they haven't been validated. Additionally, all timesheets will be accessible in your customers' portal. \n"
-"When you choose the 'validated timesheets only' option, only the validated timesheets will be invoiced and appear in your customers' portal."
+"With the 'all recorded timesheets' option, all timesheets will be invoiced "
+"without distinction, even if they haven't been validated. Additionally, all "
+"timesheets will be accessible in your customers' portal. \n"
+"When you choose the 'validated timesheets only' option, only the validated "
+"timesheets will be invoiced and appear in your customers' portal."
 msgstr ""
 "Con la opción \"todas las hojas de horas registradas\", todas las hojas de "
 "horas se facturarán por igual, aunque no se hayan validado. Además, se podrá "
@@ -917,7 +925,7 @@ msgstr "Horas laborables"
 #. module: sale_timesheet_enterprise
 #: model_terms:ir.ui.view,arch_db:sale_timesheet_enterprise.view_edit_billable_time_target_update_form
 msgid "e.g. John Doe"
-msgstr "por ejemplo, Juan Pérez"
+msgstr "Por ejemplo, Juan Pérez"
 
 #. module: sale_timesheet_enterprise
 #: model_terms:ir.ui.view,arch_db:sale_timesheet_enterprise.hr_timesheet_tip_view_tree

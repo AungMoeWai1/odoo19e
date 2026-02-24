@@ -6,13 +6,15 @@
 # Martin Trigaux, 2022
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Thi Huong Nguyen (thng)" <thng@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 22:20+0000\n"
-"PO-Revision-Date: 2025-09-15 23:04+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-01-09 18:44+0000\n"
+"PO-Revision-Date: 2025-11-16 05:22+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-19/"
 "account_bank_statement_import_csv/vi/>\n"
 "Language: vi\n"
@@ -23,9 +25,28 @@ msgstr ""
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: account_bank_statement_import_csv
+#: model:ir.model,name:account_bank_statement_import_csv.model_account_bank_statement_line
+msgid "Bank Statement Line"
+msgstr ""
+
+#. module: account_bank_statement_import_csv
 #: model:ir.model,name:account_bank_statement_import_csv.model_base_import_import
 msgid "Base Import"
 msgstr "Nhập cơ sở"
+
+#. module: account_bank_statement_import_csv
+#: model:ir.model.fields,field_description:account_bank_statement_import_csv.field_account_bank_statement_line__display_name
+#: model:ir.model.fields,field_description:account_bank_statement_import_csv.field_account_journal__display_name
+#: model:ir.model.fields,field_description:account_bank_statement_import_csv.field_base_import_import__display_name
+msgid "Display Name"
+msgstr "Tên hiển thị"
+
+#. module: account_bank_statement_import_csv
+#: model:ir.model.fields,field_description:account_bank_statement_import_csv.field_account_bank_statement_line__id
+#: model:ir.model.fields,field_description:account_bank_statement_import_csv.field_account_journal__id
+#: model:ir.model.fields,field_description:account_bank_statement_import_csv.field_base_import_import__id
+msgid "ID"
+msgstr "ID"
 
 #. module: account_bank_statement_import_csv
 #. odoo-javascript
@@ -34,9 +55,26 @@ msgid "Import Bank Statement"
 msgstr "Nhập sao kê ngân hàng"
 
 #. module: account_bank_statement_import_csv
+#: model_terms:ir.ui.view,arch_db:account_bank_statement_import_csv.view_bank_statement_line_search_bank_rec_widget_inherit_csv
+msgid "Imported Transactions"
+msgstr ""
+
+#. module: account_bank_statement_import_csv
+#. odoo-javascript
+#: code:addons/account_bank_statement_import_csv/static/src/bank_statement_csv_import_action.js:0
+msgid "Imported records"
+msgstr ""
+
+#. module: account_bank_statement_import_csv
 #: model:ir.model,name:account_bank_statement_import_csv.model_account_journal
 msgid "Journal"
 msgstr "Sổ nhật ký"
+
+#. module: account_bank_statement_import_csv
+#. odoo-python
+#: code:addons/account_bank_statement_import_csv/wizard/account_bank_statement_import_csv.py:0
+msgid "Make sure that an Amount or Debit and Credit is in the file."
+msgstr "Đảm bảo rằng có Số tiền hoặc Nợ và Có trong tệp."
 
 #. module: account_bank_statement_import_csv
 #. odoo-python
@@ -51,6 +89,7 @@ msgid "Only one CSV file can be selected."
 msgstr "Chỉ có thể chọn một tệp CSV."
 
 #. module: account_bank_statement_import_csv
+#. odoo-python
 #: code:addons/account_bank_statement_import_csv/wizard/account_bank_statement_import_csv.py:0
 msgid "Rows must be sorted by date."
 msgstr "Các hàng phải được sắp xếp theo ngày."

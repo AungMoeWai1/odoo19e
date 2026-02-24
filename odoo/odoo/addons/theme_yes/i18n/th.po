@@ -3,13 +3,14 @@
 # * theme_yes
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-01 12:59+0000\n"
-"PO-Revision-Date: 2025-09-17 02:51+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2025-10-09 10:57+0000\n"
+"PO-Revision-Date: 2025-11-19 10:30+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-19/theme_yes/"
 "th/>\n"
 "Language: th\n"
@@ -22,8 +23,8 @@ msgstr ""
 #. module: theme_yes
 #: model_terms:theme.ir.ui.view,arch:theme_yes.s_quotes_carousel_minimal
 msgid ""
-"\" A top choice for unforgettable weddings. <br/>Professional, creative, and"
-" dedicated to every detail. \""
+"\" A top choice for unforgettable weddings. <br/>Professional, creative, and "
+"dedicated to every detail. \""
 msgstr ""
 "\" ตัวเลือกอันดับหนึ่งสำหรับงานแต่งงานที่น่าจดจำ <br/>มืออาชีพ, สร้างสรรค์, "
 "และมุ่งมั่นในทุกรายละเอียด\""
@@ -34,8 +35,8 @@ msgid ""
 "\" Exceptional planning and execution! <br/>They made our wedding day truly "
 "special and memorable. \""
 msgstr ""
-"\" การวางแผนและการดำเนินการที่ยอดเยี่ยม! <br/>พวกเขาทำให้วันแต่งงานของเราพิเศษและน่"
-"าจดจำ \""
+"\" การวางแผนและการดำเนินการที่ยอดเยี่ยม! <br/"
+">พวกเขาทำให้วันแต่งงานของเราพิเศษและน่าจดจำ \""
 
 #. module: theme_yes
 #: model_terms:theme.ir.ui.view,arch:theme_yes.s_quotes_carousel_minimal
@@ -43,8 +44,7 @@ msgid ""
 "\" Their service made our day magical. Elegant, seamless, and perfectly "
 "tailored to our vision. \""
 msgstr ""
-"\"บร"
-"ิการของพวกเขาทำให้วันของเรากลายเป็นวันที่เพอร์เฟ็คและปรับแต่งได้อย่างลงตัวตามวิสัยทัศน์ของเรา!"
+"\"บริการของพวกเขาทำให้วันของเรากลายเป็นวันที่เพอร์เฟ็คและปรับแต่งได้อย่างลงตัวตามวิสัยทัศน์ของเรา!"
 "\""
 
 #. module: theme_yes
@@ -83,8 +83,19 @@ msgid "1,500+"
 msgstr ""
 
 #. module: theme_yes
+#: model_terms:theme.ir.ui.view,arch:theme_yes.s_numbers_boxed
+msgid "30+"
+msgstr ""
+
+#. module: theme_yes
+#: model_terms:theme.ir.ui.view,arch:theme_yes.s_numbers_boxed
+msgid "45%"
+msgstr "45%"
+
+#. module: theme_yes
 #: model_terms:theme.ir.ui.view,arch:theme_yes.s_masonry_block_default_template
-msgid "<a href=\"#\" class=\"btn btn-primary o_translate_inline\">Go to FAQ</a>"
+msgid ""
+"<a href=\"#\" class=\"btn btn-primary o_translate_inline\">Go to FAQ</a>"
 msgstr ""
 
 #. module: theme_yes
@@ -94,7 +105,8 @@ msgstr ""
 
 #. module: theme_yes
 #: model_terms:theme.ir.ui.view,arch:theme_yes.s_masonry_block_default_template
-msgid "<a href=\"#\" class=\"btn btn-secondary o_translate_inline\">Find a venue</a>"
+msgid ""
+"<a href=\"#\" class=\"btn btn-secondary o_translate_inline\">Find a venue</a>"
 msgstr ""
 
 #. module: theme_yes
@@ -108,8 +120,8 @@ msgstr ""
 #: model_terms:theme.ir.ui.view,arch:theme_yes.s_split_intro
 msgid ""
 "<br/>Let us turn your vision into a stunning reality. As your dedicated "
-"wedding planner, we handle every detail with care and creativity, from venue"
-" selection to final touches. Whether you envision an intimate ceremony or a "
+"wedding planner, we handle every detail with care and creativity, from venue "
+"selection to final touches. Whether you envision an intimate ceremony or a "
 "grand celebration, we ensure your special day is seamless, beautiful, and "
 "unforgettable.<br/><br/>"
 msgstr ""
@@ -117,16 +129,16 @@ msgstr ""
 "ในฐานะนักวางแผนงานแต่งงานที่ใส่ใจและทุ่มเท "
 "เราดูแลทุกรายละเอียดด้วยความพิถีพิถันและความคิดสร้างสรรค์ "
 "ตั้งแต่การเลือกสถานที่ไปจนถึงการตกแต่งขั้นสุดท้าย ไม่ว่าคุณจะต้องการงานพิธีเล็กๆ แสนอบอุ่น "
-"หรือการเฉลิมฉลองสุดยิ่งใหญ่ เราจะทำให้งานพิเศษของคุณราบรื่น สวยงาม และน่าจดจำไม่รู้ลืม<br/><"
-"br/>"
+"หรือการเฉลิมฉลองสุดยิ่งใหญ่ เราจะทำให้งานพิเศษของคุณราบรื่น สวยงาม และน่าจดจำไม่รู้ลืม<br/"
+"><br/>"
 
 #. module: theme_yes
 #: model_terms:theme.ir.ui.view,arch:theme_yes.s_text_cover
 msgid ""
 "<br/>Organize and showcase your wedding services with a user-friendly "
 "platform that simplifies everything, from setup to event management, making "
-"it easy for couples to discover and choose the perfect details for their big"
-" day<br/>"
+"it easy for couples to discover and choose the perfect details for their big "
+"day<br/>"
 msgstr ""
 "<br/>จัดระเบียบและโชว์งานแต่งงานของคุณด้วยแพลตฟอร์มที่ใช้งานง่าย "
 "ซึ่งช่วยลดความยุ่งยากตั้งแต่การตั้งค่าไปจนถึงการจัดการอีเวนต์ "
@@ -143,16 +155,16 @@ msgstr ""
 #. module: theme_yes
 #: model_terms:theme.ir.ui.view,arch:theme_yes.s_company_team
 msgid ""
-"<font style=\"font-weight: bolder;\" class=\"text-o-color-1\">The "
-"Designer</font>"
+"<font style=\"font-weight: bolder;\" class=\"text-o-color-1\">The Designer</"
+"font>"
 msgstr ""
 "<font style=\"font-weight: bolder;\" class=\"text-o-color-1\">ผู้ออกแบบ</font>"
 
 #. module: theme_yes
 #: model_terms:theme.ir.ui.view,arch:theme_yes.s_company_team
 msgid ""
-"<font style=\"font-weight: bolder;\" class=\"text-o-color-1\">The "
-"Planner</font>"
+"<font style=\"font-weight: bolder;\" class=\"text-o-color-1\">The Planner</"
+"font>"
 msgstr ""
 
 #. module: theme_yes
@@ -161,8 +173,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-info-circle o_not-animable\" role=\"img\"/>  Dream "
 "weddings"
 msgstr ""
-"<i class=\"fa fa-fw fa-info-circle o_not-animable\" role=\"img\"/>  "
-"งานแต่งงานในฝัน"
+"<i class=\"fa fa-fw fa-info-circle o_not-animable\" role=\"img\"/"
+">  งานแต่งงานในฝัน"
 
 #. module: theme_yes
 #: model_terms:theme.ir.ui.view,arch:theme_yes.s_features
@@ -205,8 +217,8 @@ msgid ""
 "A lovely wedding is a joyful celebration of love, marked by touching vows, "
 "beautiful decor, and happy faces, creating unforgettable memories."
 msgstr ""
-"งานแต่งงานที่สวยงามเป็นการเฉลิมฉลองความรักที่สนุกสนาน โดดเด่นด้วยคำสาบาน การตกแต่งที่"
-"สวยงาม และใบหน้าที่มีความสุข ทำให้เกิดความทรงจำที่ไม่อาจลืมเลือน"
+"งานแต่งงานที่สวยงามเป็นการเฉลิมฉลองความรักที่สนุกสนาน โดดเด่นด้วยคำสาบาน "
+"การตกแต่งที่สวยงาม และใบหน้าที่มีความสุข ทำให้เกิดความทรงจำที่ไม่อาจลืมเลือน"
 
 #. module: theme_yes
 #: model_terms:theme.ir.ui.view,arch:theme_yes.s_features_wall
@@ -269,8 +281,8 @@ msgid ""
 "Bespoke floral arrangements designed to match your wedding theme, including "
 "bridal bouquets, centerpieces, and ceremony flowers."
 msgstr ""
-"การจัดดอกไม้ที่ปรับแต่งเฉพาะตามธีมงานแต่งงานของคุณ รวมถึงช่อดอกเจ้าสาว, ดอกไม้ตกแต่งโต๊"
-"ะกลาง, และดอกไม้สำหรับพิธี"
+"การจัดดอกไม้ที่ปรับแต่งเฉพาะตามธีมงานแต่งงานของคุณ รวมถึงช่อดอกเจ้าสาว, "
+"ดอกไม้ตกแต่งโต๊ะกลาง, และดอกไม้สำหรับพิธี"
 
 #. module: theme_yes
 #: model_terms:theme.ir.ui.view,arch:theme_yes.s_cta_box
@@ -286,8 +298,8 @@ msgstr ""
 #: model_terms:theme.ir.ui.view,arch:theme_yes.s_quadrant
 msgid ""
 "Capture the magic of your special day with our professional wedding "
-"photography services. We help you create memories that last a "
-"lifetime.<br/><br/> Let us tell your love story."
+"photography services. We help you create memories that last a lifetime.<br/"
+"><br/> Let us tell your love story."
 msgstr ""
 "เก็บทุกช่วงเวลาพิเศษให้งดงามด้วยบริการถ่ายภาพงานแต่งงานระดับมืออาชีพของเรา "
 "เราช่วยให้คุณสร้างความทรงจำที่คงอยู่ตลอดไป<br/><br/> ให้เราบอกเล่าเรื่องราวความรักของคุณ"
@@ -376,8 +388,8 @@ msgstr "สร้างวันที่เพอร์เฟ็คในแบ
 #. module: theme_yes
 #: model_terms:theme.ir.ui.view,arch:theme_yes.s_carousel_intro
 msgid ""
-"Create an unforgettable wedding with our expert planning services that blend"
-" elegance, personal touch, and seamless execution."
+"Create an unforgettable wedding with our expert planning services that blend "
+"elegance, personal touch, and seamless execution."
 msgstr ""
 "สร้างงานแต่งงานที่น่าจดจำด้วยบริการวางแผนจากผู้เชี่ยวชาญของเรา ที่ผสมผสานความหรูหรา "
 "ประสบการณ์เฉพาะตัว และการดำเนินงานที่ไร้ที่ติ"
@@ -385,8 +397,8 @@ msgstr ""
 #. module: theme_yes
 #: model_terms:theme.ir.ui.view,arch:theme_yes.s_cta_box
 msgid ""
-"Create timeproof memories of this unique moment with our wedding photography"
-" services<br/><br/>"
+"Create timeproof memories of this unique moment with our wedding photography "
+"services<br/><br/>"
 msgstr ""
 "สร้างความทรงจำอันล้ำค่าของช่วงเวลาพิเศษนี้ด้วยบริการถ่ายภาพงานแต่งงานของเรา<br/><br/>"
 
@@ -430,8 +442,8 @@ msgid ""
 "Customized lighting solutions and ambiance settings to enhance the mood and "
 "atmosphere of your wedding venue, including fairy lights and chandeliers."
 msgstr ""
-"โซลูชันระบบไฟส่องสว่างและการตั้งค่าบรรยากาศที่ปรับแต่งได้เพื่อเพิ่มอารมณ์และบรรยากาศของสถานที่จัด"
-"งานแต่งงานของคุณ รวมถึงไฟหยดน้ำและโคมไฟระย้า"
+"โซลูชันระบบไฟส่องสว่างและการตั้งค่าบรรยากาศที่ปรับแต่งได้เพื่อเพิ่มอารมณ์และบรรยากาศของสถานที่จัดงานแต่งงานของคุณ "
+"รวมถึงไฟหยดน้ำและโคมไฟระย้า"
 
 #. module: theme_yes
 #: model_terms:theme.ir.ui.view,arch:theme_yes.s_cards_grid
@@ -464,11 +476,11 @@ msgstr ""
 #. module: theme_yes
 #: model_terms:theme.ir.ui.view,arch:theme_yes.s_cards_grid
 msgid ""
-"Discover breathtaking venues that capture the essence of romance, from grand"
-" castles to scenic beach resorts, perfect for your unforgettable day."
+"Discover breathtaking venues that capture the essence of romance, from grand "
+"castles to scenic beach resorts, perfect for your unforgettable day."
 msgstr ""
-"ค้นพบสถานที่อันน่าทึ่งที่ถ่ายทอดความเป็นโรแมนติก ตั้งแต่ปราสาทอันยิ่งใหญ่ไปจนถึงรีสอร์ทริมชายหาดที่"
-"งดงาม เหมาะสำหรับวันสำคัญอันน่าจดจำของคุณ"
+"ค้นพบสถานที่อันน่าทึ่งที่ถ่ายทอดความเป็นโรแมนติก "
+"ตั้งแต่ปราสาทอันยิ่งใหญ่ไปจนถึงรีสอร์ทริมชายหาดที่งดงาม เหมาะสำหรับวันสำคัญอันน่าจดจำของคุณ"
 
 #. module: theme_yes
 #: model_terms:theme.ir.ui.view,arch:theme_yes.s_call_to_action
@@ -528,8 +540,7 @@ msgstr ""
 msgid ""
 "Enhance your celebration with our bespoke solutions and professional "
 "guidance."
-msgstr ""
-"เพิ่มความหรูหราให้กับการฉลองของคุณด้วยโซลูชันเฉพาะของเราและรับคำแนะนำจากมืออาชีพ"
+msgstr "เพิ่มความหรูหราให้กับการฉลองของคุณด้วยโซลูชันเฉพาะของเราและรับคำแนะนำจากมืออาชีพ"
 
 #. module: theme_yes
 #: model_terms:theme.ir.ui.view,arch:theme_yes.s_features_wall
@@ -548,8 +559,7 @@ msgstr "เพลิดเพลินไปกับช่วงเวลาน
 #. module: theme_yes
 #: model_terms:theme.ir.ui.view,arch:theme_yes.s_quotes_carousel
 msgid "Everything was so well-coordinated, we couldn't have asked for more!"
-msgstr ""
-"ทุกอย่างได้รับการประสานงานเป็นอย่างดี เราไม่สามารถขออะไรได้มากกว่านี้อีกแล้ว!"
+msgstr "ทุกอย่างได้รับการประสานงานเป็นอย่างดี เราไม่สามารถขออะไรได้มากกว่านี้อีกแล้ว!"
 
 #. module: theme_yes
 #: model_terms:theme.ir.ui.view,arch:theme_yes.s_key_benefits
@@ -620,8 +630,7 @@ msgstr ""
 #: model_terms:theme.ir.ui.view,arch:theme_yes.s_features
 msgid ""
 "From photography to videography, we will record all the important moments."
-msgstr ""
-"ตั้งแต่การถ่ายภาพจนถึงการถ่ายวิดีโอ เราจะบันทึกช่วงเวลาพิเศษทั้งหมดของคุณ"
+msgstr "ตั้งแต่การถ่ายภาพจนถึงการถ่ายวิดีโอ เราจะบันทึกช่วงเวลาพิเศษทั้งหมดของคุณ"
 
 #. module: theme_yes
 #: model_terms:theme.ir.ui.view,arch:theme_yes.s_cards_grid
@@ -715,9 +724,7 @@ msgstr "เหมือนอย่างที่คุณฝันไว้"
 msgid ""
 "Let us help you capture the magic of your special day with stunning "
 "photography and personalized wedding services."
-msgstr ""
-"ให้เราช่วยคุณเก็บบันทึกความมหัศจรรย์ในวันพิเศษของคุณด้วยการถ่ายภาพที่งดงามและบริการจัดงานแต่งงา"
-"นที่ปรับแต่งเฉพาะ"
+msgstr "ให้เราช่วยคุณเก็บบันทึกความมหัศจรรย์ในวันพิเศษของคุณด้วยการถ่ายภาพที่งดงามและบริการจัดงานแต่งงานที่ปรับแต่งเฉพาะ"
 
 #. module: theme_yes
 #: model_terms:theme.ir.ui.view,arch:theme_yes.s_card_offset
@@ -727,21 +734,19 @@ msgid ""
 "beautifully for a lifetime."
 msgstr ""
 "ให้เราช่วยคุณเก็บภาพวันสำคัญอันแสนวิเศษของคุณ "
-"บริการถ่ายภาพระดับมืออาชีพของเราจะทำให้ความทรงจำในงานแต่งงานของคุณได้รับการเก็บรักษาไว้อย่า"
-"งสวยงามตลอดไป"
+"บริการถ่ายภาพระดับมืออาชีพของเราจะทำให้ความทรงจำในงานแต่งงานของคุณได้รับการเก็บรักษาไว้อย่างสวยงามตลอดไป"
 
 #. module: theme_yes
 #: model_terms:theme.ir.ui.view,arch:theme_yes.s_shape_image
 msgid ""
 "Let us make your wedding day unforgettable with our expert planning "
 "services. From venue selection to coordination on the big day, we handle "
-"every detail to create a seamless and personalized celebration that reflects"
-" your unique vision."
+"every detail to create a seamless and personalized celebration that reflects "
+"your unique vision."
 msgstr ""
 "ให้เราทำให้วันแต่งงานของคุณเป็นวันที่น่าจดจำด้วยบริการวางแผนจากผู้เชี่ยวชาญของเรา "
 "ตั้งแต่การเลือกสถานที่จนถึงการประสานงานในวันสำคัญ "
-"เราจัดการทุกรายละเอียดเพื่อสร้างงานเฉลิมฉลองที่ราบรื่นและเป็นส่วนตัวซึ่งสะท้อนถึงวิสัยทัศน์ที่เป็นเอกลั"
-"กษณ์ของคุณ"
+"เราจัดการทุกรายละเอียดเพื่อสร้างงานเฉลิมฉลองที่ราบรื่นและเป็นส่วนตัวซึ่งสะท้อนถึงวิสัยทัศน์ที่เป็นเอกลักษณ์ของคุณ"
 
 #. module: theme_yes
 #: model_terms:theme.ir.ui.view,arch:theme_yes.s_striped_top
@@ -857,9 +862,7 @@ msgstr ""
 msgid ""
 "Our expert team crafts personalized wedding experiences, managing every "
 "detail so you can enjoy a stress-free celebration with your loved ones."
-msgstr ""
-"ทีมผู้เชี่ยวชาญของเราสร้างประสบการณ์งานแต่งงานที่เป็นส่วนตัวโดยจัดการทุกรายละเอียดเพื่อให้คุณเพลิด"
-"เพลินไปกับการเฉลิมฉลองกับคนที่คุณรักโดยปราศจากความกังวล"
+msgstr "ทีมผู้เชี่ยวชาญของเราสร้างประสบการณ์งานแต่งงานที่เป็นส่วนตัวโดยจัดการทุกรายละเอียดเพื่อให้คุณเพลิดเพลินไปกับการเฉลิมฉลองกับคนที่คุณรักโดยปราศจากความกังวล"
 
 #. module: theme_yes
 #: model_terms:theme.ir.ui.view,arch:theme_yes.s_image_text_overlap
@@ -876,8 +879,8 @@ msgstr "บริการของเรา"
 #. module: theme_yes
 #: model_terms:theme.ir.ui.view,arch:theme_yes.s_key_benefits
 msgid ""
-"Our team provides comprehensive support from initial consultation to the big"
-" day, handling every aspect to ensure a smooth and stress-free experience."
+"Our team provides comprehensive support from initial consultation to the big "
+"day, handling every aspect to ensure a smooth and stress-free experience."
 msgstr ""
 "ทีมงานของเรามอบการสนับสนุนที่ครอบคลุมตั้งแต่การปรึกษาเพื่อหารือในเบื้องต้นจนถึงวันสำคัญ "
 "โดยจัดการทุกด้านเพื่อให้แน่ใจว่าจะมีประสบการณ์ราบรื่นและปราศจากความเครียด"
@@ -915,8 +918,7 @@ msgstr ""
 #. module: theme_yes
 #: model_terms:theme.ir.ui.view,arch:theme_yes.s_key_images
 msgid "Professional planning and coordination for a seamless event"
-msgstr ""
-"การวางแผนและการประสานงานอย่างมืออาชีพเพื่อให้กิจกรรมดำเนินไปอย่างราบรื่น"
+msgstr "การวางแผนและการประสานงานอย่างมืออาชีพเพื่อให้กิจกรรมดำเนินไปอย่างราบรื่น"
 
 #. module: theme_yes
 #: model_terms:theme.ir.ui.view,arch:theme_yes.s_quotes_carousel
@@ -935,7 +937,9 @@ msgstr "ดูว่าคนอื่นต่ออายุคำสาบา
 
 #. module: theme_yes
 #: model_terms:theme.ir.ui.view,arch:theme_yes.s_empowerment
-msgid "See our wedding galleries   <i class=\"fa fa-long-arrow-right\" role=\"img\"/>"
+msgid ""
+"See our wedding galleries   <i class=\"fa fa-long-arrow-right\" role=\"img\"/"
+">"
 msgstr ""
 "ชมแกลเลอรี่งานแต่งงานของเรา   <i class=\"fa fa-long-arrow-right\" role=\"img\"/>"
 
@@ -976,8 +980,8 @@ msgstr "งานแต่งงานของ Stuart และ Iliana ที�
 #. module: theme_yes
 #: model_terms:theme.ir.ui.view,arch:theme_yes.s_pricelist_boxed
 msgid ""
-"Tailored planning assistance for specific aspects of your wedding, including"
-" vendor selection and coordination of key elements of your day."
+"Tailored planning assistance for specific aspects of your wedding, including "
+"vendor selection and coordination of key elements of your day."
 msgstr ""
 "บริการช่วยวางแผนที่ปรับแต่งเฉพาะสำหรับวันสำคัญของคุณ "
 "รวมถึงการเลือกผู้ให้บริการและการประสานงานส่วนสำคัญต่างๆ ที่จะทำให้วันแต่งงานของคุณนั้นเพอร์เฟ็ค"
@@ -1026,10 +1030,9 @@ msgstr ""
 #. module: theme_yes
 #: model_terms:theme.ir.ui.view,arch:theme_yes.s_media_list
 msgid ""
-"The heartfelt exchange of wedding vows is often the most memorable part of a"
-" marriage ceremony."
-msgstr ""
-"การแลกเปลี่ยนคำสาบานในงานแต่งงานอย่างจริงใจมักเป็นส่วนที่น่าจดจำที่สุดของพิธีแต่งงาน"
+"The heartfelt exchange of wedding vows is often the most memorable part of a "
+"marriage ceremony."
+msgstr "การแลกเปลี่ยนคำสาบานในงานแต่งงานอย่างจริงใจมักเป็นส่วนที่น่าจดจำที่สุดของพิธีแต่งงาน"
 
 #. module: theme_yes
 #: model:ir.model,name:theme_yes.model_theme_utils
@@ -1054,12 +1057,12 @@ msgstr "Tony Fred"
 #. module: theme_yes
 #: model_terms:theme.ir.ui.view,arch:theme_yes.s_image_title
 msgid ""
-"Transform your special day with our bespoke wedding services, where elegance"
-" meets personalized touches. Elevate your celebration with arrangements that"
-" blend sophistication and love seamlessly."
+"Transform your special day with our bespoke wedding services, where elegance "
+"meets personalized touches. Elevate your celebration with arrangements that "
+"blend sophistication and love seamlessly."
 msgstr ""
-"จัดงานที่แสนพิเศษของคุณด้วยบริการจัดงานแต่งงานของเราที่รวมความสง่างามและประสบการณ์เฉพาะตัวไ"
-"ว้ ยกระดับงานของคุณด้วยการจัดเตรียมที่ผสมผสานความหรูหราและความรักได้อย่างลงตัว"
+"จัดงานที่แสนพิเศษของคุณด้วยบริการจัดงานแต่งงานของเราที่รวมความสง่างามและประสบการณ์เฉพาะตัวไว้ "
+"ยกระดับงานของคุณด้วยการจัดเตรียมที่ผสมผสานความหรูหราและความรักได้อย่างลงตัว"
 
 #. module: theme_yes
 #: model_terms:theme.ir.ui.view,arch:theme_yes.s_cta_box
@@ -1131,8 +1134,7 @@ msgstr ""
 #: model_terms:theme.ir.ui.view,arch:theme_yes.s_media_list
 msgid ""
 "We’ll help you mark the engagement milestone with an unforgettable ceremony."
-msgstr ""
-"เราจะช่วยคุณทำเครื่องหมายเหตุการณ์สำคัญในการมีส่วนร่วมด้วยพิธีการที่น่าจดจำ"
+msgstr "เราจะช่วยคุณทำเครื่องหมายเหตุการณ์สำคัญในการมีส่วนร่วมด้วยพิธีการที่น่าจดจำ"
 
 #. module: theme_yes
 #: model_terms:theme.ir.ui.view,arch:theme_yes.s_cover

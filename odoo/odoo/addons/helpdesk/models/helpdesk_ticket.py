@@ -216,7 +216,7 @@ class HelpdeskTicket(models.Model):
         for ticket in self:
 
             # the current team is invalid, no need to compute new values since the transaction will be rolled back anyway.
-            if not ticket.team_id:
+            if not (ticket.team_id and ticket.team_id.use_sla):
                 continue
             min_deadline = False
             for status in ticket.sla_status_ids:
@@ -280,12 +280,14 @@ class HelpdeskTicket(models.Model):
 
     @api.depends('partner_id')
     def _compute_partner_name(self):
+        self.fetch(['partner_id'])
         for ticket in self:
             if ticket.partner_id:
                 ticket.partner_name = ticket.partner_id.name
 
     @api.depends('partner_id.email')
     def _compute_partner_email(self):
+        self.fetch(['partner_id'])
         for ticket in self:
             if ticket.partner_id:
                 ticket.partner_email = ticket.partner_id.email
@@ -297,6 +299,7 @@ class HelpdeskTicket(models.Model):
 
     @api.depends('partner_id.phone')
     def _compute_partner_phone(self):
+        self.fetch(['partner_id'])
         for ticket in self:
             if ticket.partner_id:
                 ticket.partner_phone = ticket.partner_id.phone
@@ -331,7 +334,7 @@ class HelpdeskTicket(models.Model):
     def _compute_close_hours(self):
         for ticket in self:
             create_date = fields.Datetime.from_string(ticket.create_date)
-            if create_date and ticket.close_date and ticket.team_id:
+            if create_date and ticket.close_date and ticket.team_id.resource_calendar_id:
                 duration_data = ticket.team_id.resource_calendar_id.get_work_duration_data(create_date, fields.Datetime.from_string(ticket.close_date), compute_leaves=True)
                 ticket.close_hours = duration_data['hours']
             else:
@@ -732,6 +735,12 @@ class HelpdeskTicket(models.Model):
     def _unsubscribe_portal_users(self):
         self.message_unsubscribe(partner_ids=self.message_partner_ids.filtered('user_ids.share').ids)
 
+    def website_form_input_filter(self, request, values):
+        if 'partner_id' in values:
+            values.pop('partner_name', None)
+            values.pop('partner_email', None)
+        return values
+
     # ------------------------------------------------------------
     # Actions and Business methods
     # ------------------------------------------------------------
@@ -762,6 +771,19 @@ class HelpdeskTicket(models.Model):
         # unlink status and create the new ones in 2 operations
         sla_status_to_remove.unlink()
         return self.env['helpdesk.sla.status'].create(sla_status_value_list)
+
+    def _sla_find_domain(self):
+        """
+        Get domain to find matching SLAs.
+        This function aims to be inherited by submodules
+        :return: domain
+        :rtype : list [tuple]
+        """
+        return [
+            ('team_id', '=', self.team_id.id),
+            ('priority', '=', self.priority),
+            ('stage_id.sequence', '>=', self.stage_id.sequence),
+        ]
 
     @api.model
     def _sla_find_false_domain(self):
@@ -802,10 +824,13 @@ class HelpdeskTicket(models.Model):
                 tickets_map[key] |= ticket
                 # group the SLA to apply, by key
                 if key not in sla_domain_map:
-                    sla_domain_map[key] = Domain.AND([[
-                        ('team_id', '=', ticket.team_id.id), ('priority', '=', ticket.priority),
-                        ('stage_id.sequence', '>=', ticket.stage_id.sequence),
-                    ], Domain.OR([ticket._sla_find_extra_domain(), self._sla_find_false_domain()])])
+                    sla_domain_map[key] = Domain.AND([
+                        ticket._sla_find_domain(),
+                        Domain.OR([
+                            ticket._sla_find_extra_domain(),
+                            self._sla_find_false_domain(),
+                        ]),
+                    ])
 
         result = {}
         for key, tickets in tickets_map.items():  # only one search per ticket group
@@ -891,6 +916,10 @@ class HelpdeskTicket(models.Model):
     @api.model
     def message_new(self, msg_dict, custom_values=None):
         values = dict(custom_values or {}, partner_email=msg_dict.get('from'), partner_name=msg_dict.get('from'), partner_id=msg_dict.get('author_id'))
+        partner = self.env['res.partner'].browse(values.get('partner_id'))
+        team = self.env['helpdesk.team'].browse(values.get('team_id'))
+        if team and partner.company_id and partner.company_id != team.company_id:
+            values.pop('partner_id')
         ticket = super(HelpdeskTicket, self.with_context(mail_notify_author=True)).message_new(msg_dict, custom_values=values)
         partner_ids = ticket._partner_find_from_emails_single(tools.email_split((msg_dict.get('to') or '') + ',' + (msg_dict.get('cc') or ''))).ids
         customer_ids = ticket._partner_find_from_emails_single(tools.email_split(values['partner_email'])).ids

@@ -58,10 +58,11 @@ class TestUi(odoo.tests.HttpCase, SignRequestCommon):
             'height': 0.050,
         }])
         self.env['sign.template'].search([('id', '!=', self.template_1_role.id)]).write({'active': False})
+        self.template_1_role.user_id = self.user_1
         type_id = self.env['sign.item.type'].create({
             'name': "Issuer",
             'item_type': "text",
-            'placeholder': "Issued by Mitchell Admin",
+            'placeholder': "Issued by Laurie Poiret",
         })
         self.env['sign.item'].create([{
             'type_id': type_id.id,
@@ -78,12 +79,10 @@ class TestUi(odoo.tests.HttpCase, SignRequestCommon):
         with file_open('sign/static/demo/signature.png', "rb") as f:
             img_content = base64.b64encode(f.read())
 
-        self.env.ref('base.user_admin').write({
-            'name': 'Mitchell Admin',
+        self.user_1.write({
             'sign_signature': img_content,
-            'email': 'mitchell.admin@example.com',
         })
-        self.start_tour("/odoo", 'test_sign_flow_tour', login='admin')
+        self.start_tour("/odoo", 'test_sign_flow_tour', login=self.user_1.login)
 
     def test_template_edition(self):
         blank_template = self.env['sign.template'].create({
@@ -96,10 +95,12 @@ class TestUi(odoo.tests.HttpCase, SignRequestCommon):
         })
         self.start_tour("/odoo", "sign_template_creation_tour", login="admin")
         self.assertEqual(document.name, 'new-document-name', 'The tour should have changed the document name')
-        self.assertEqual(len(blank_template.sign_item_ids), 5)
-        self.assertEqual(blank_template.responsible_count, 1)
+        self.assertEqual(len(blank_template.sign_item_ids), 7)
+        self.assertEqual(blank_template.responsible_count, 2)
         self.assertEqual(set(blank_template.sign_item_ids.mapped("type_id.item_type")), {"text", "signature"})
         self.assertEqual(set(blank_template.sign_item_ids.mapped("name")), set(["Text", "Name", "Signature"]))
+        self.assertEqual(blank_template.sign_item_ids.responsible_id[0].name, "Test Signer", "Role should be updated with the new name")
+        self.assertEqual(blank_template.sign_item_ids.responsible_id[1].name, "Signer 1-Test", "Role should be updated with the new name")
 
     def test_report_modal(self):
         self.start_tour("/odoo", "sign_report_modal_tour", login="admin")

@@ -3,13 +3,14 @@
 # * marketing_automation_website_sale
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Chloe Wang (chwa)" <chwa@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:36+0000\n"
-"PO-Revision-Date: 2025-09-16 15:31+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2025-12-30 18:45+0000\n"
+"PO-Revision-Date: 2025-12-06 10:14+0000\n"
+"Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
 "projects/odoo-19/marketing_automation_website_sale/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -17,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: marketing_automation_website_sale
 #: model_terms:ir.ui.view,arch_db:marketing_automation_website_sale.mailing_purchase_followup_arch
@@ -28,28 +29,30 @@ msgstr "! 您已经购买几天时间了。希望您喜欢！"
 #: model_terms:ir.ui.view,arch_db:marketing_automation_website_sale.mailing_purchase_followup_arch
 msgid ""
 "-\n"
-"          <span style=\"color: rgb(183, 191, 199); font-size: 12.25px\">September 10 2024</span>"
+"            <span style=\"color: rgb(183, 191, 199); font-size: "
+"12.25px\">September 10 2024</span>"
 msgstr ""
 "-\n"
-"          <span style=\"color: rgb(183, 191, 199); font-size: 12.25px\">2024 "
-"年 9 月 10 日</span>"
-
-#. module: marketing_automation_website_sale
-#: model_terms:ir.ui.view,arch_db:marketing_automation_website_sale.mailing_anniversary_arch
-msgid "<b>John DOE</b> • CEO of MyCompany"
-msgstr "<b>John DOE</b> • MyCompany 首席执行官"
+"            <span style=\"color: rgb(183, 191, 199); font-size: "
+"12.25px\">2024 年 9 月 10 日</span>"
 
 #. module: marketing_automation_website_sale
 #: model_terms:ir.ui.view,arch_db:marketing_automation_website_sale.mailing_purchase_followup_arch
 msgid ""
 "<br/>\n"
 "            <span style=\"font-size: 12px\">\n"
-"              <font style=\"color: rgb(183, 191, 199)\">To unsubscribe,</font></span>"
+"              <font style=\"color: rgb(183, 191, 199)\">To unsubscribe,</"
+"font></span>"
 msgstr ""
 "<br/>\n"
 "            <span style=\"font-size: 12px\">\n"
-"              若要<font style=\"color: rgb(183, 191, 199)\""
-">取消订阅</font>，</span>"
+"              若要<font style=\"color: rgb(183, 191, 199)\">取消订阅</font>，"
+"</span>"
+
+#. module: marketing_automation_website_sale
+#: model_terms:ir.ui.view,arch_db:marketing_automation_website_sale.mailing_anniversary_arch
+msgid "<em>\" Cheers to more great years ahead!</em><br/>\""
+msgstr ""
 
 #. module: marketing_automation_website_sale
 #: model_terms:ir.ui.view,arch_db:marketing_automation_website_sale.mailing_anniversary_arch
@@ -68,8 +71,11 @@ msgstr "<font style=\"color: rgb(255, 0, 0)\">感谢您选择我们</font>"
 
 #. module: marketing_automation_website_sale
 #: model_terms:ir.ui.view,arch_db:marketing_automation_website_sale.mailing_anniversary_arch
-msgid "<i>Cheers to more great years ahead!</i><br/>"
-msgstr "<i>祝贺前路更加辉煌！</i><br/>"
+msgid ""
+"<span style=\"font-size: 0.857143rem;\"><font style=\"color: inherit;"
+"\"><strong>BUY YOURSELF A GIFT</strong></font></span><span style=\"font-"
+"size: 0.857143rem;\"> !</span><br/>"
+msgstr ""
 
 #. module: marketing_automation_website_sale
 #: model_terms:ir.ui.view,arch_db:marketing_automation_website_sale.mailing_repeat_customer_new_purchase_arch
@@ -80,32 +86,33 @@ msgstr "<span style=\"font-size: 1.07143rem\">感谢您的购买</span>"
 #: model_terms:ir.ui.view,arch_db:marketing_automation_website_sale.mailing_repeat_customer_new_purchase_arch
 msgid ""
 "<span style=\"font-size: 1.07143rem\">YOU MAKE OUR SUCCESS POSSIBLE</span>\n"
-"              <font style=\"font-size: 12px\">​</font><br/>"
+"              <font style=\"font-size: 12px\"/><br/>"
 msgstr ""
-"<span style=\"font-size: 1.07143rem\">您让我们的成功成为可能</span>\n"
-"              <font style=\"font-size: 12px\">​</font><br/>"
 
 #. module: marketing_automation_website_sale
 #: model_terms:ir.ui.view,arch_db:marketing_automation_website_sale.mailing_purchase_followup_arch
 msgid ""
 "<span style=\"font-size: 12px\">\n"
-"              <font style=\"color: rgb(183, 191, 199)\">8000 Marina Blvd, Suite 300</font></span>\n"
+"              <font style=\"color: rgb(183, 191, 199)\">8000 Marina Blvd, "
+"Suite 300</font></span>\n"
 "            <br/>\n"
-"            <span style=\"font-size: 12px\"><font style=\"color: rgb(183, 191, 199)\">Brisbane, California 94005</font></span>\n"
+"            <span style=\"font-size: 12px\"><font style=\"color: rgb(183, "
+"191, 199)\">Brisbane, California 94005</font></span>\n"
 "            <br/>\n"
 "            <span style=\"font-size: 12px\">\n"
-"              <font style=\"color: rgb(183, 191, 199)\">You received this email from</font>\n"
+"              <font style=\"color: rgb(183, 191, 199)\">You received this "
+"email from</font>\n"
 "            </span>"
 msgstr ""
 
 #. module: marketing_automation_website_sale
 #: model_terms:ir.ui.view,arch_db:marketing_automation_website_sale.mailing_purchase_followup_arch
 msgid ""
-"<span style=\"font-size: 12px\"><font style=\"color: rgb(183, 191, "
-"199)\">.</font></span>"
+"<span style=\"font-size: 12px\"><font style=\"color: rgb(183, 191, 199)\">.</"
+"font></span>"
 msgstr ""
-"<span style=\"font-size: 12px\"><font style=\"color: rgb(183, 191, 199)\""
-">。</font></span>"
+"<span style=\"font-size: 12px\"><font style=\"color: rgb(183, 191, 199)\">。"
+"</font></span>"
 
 #. module: marketing_automation_website_sale
 #: model_terms:ir.ui.view,arch_db:marketing_automation_website_sale.mailing_purchase_followup_arch
@@ -113,8 +120,8 @@ msgid ""
 "<span style=\"font-size: 12px\"><font style=\"color: rgb(183, 191, "
 "199)\">click here</font></span>"
 msgstr ""
-"<span style=\"font-size: 12px\"><font style=\"color: rgb(183, 191, 199)\""
-">点击此处</font></span>"
+"<span style=\"font-size: 12px\"><font style=\"color: rgb(183, 191, 199)\">点"
+"击此处</font></span>"
 
 #. module: marketing_automation_website_sale
 #: model_terms:ir.ui.view,arch_db:marketing_automation_website_sale.mailing_purchase_followup_arch
@@ -122,32 +129,31 @@ msgid ""
 "<span style=\"font-size: 12px\"><font style=\"color: rgb(183, 191, "
 "199)\">info@mycompany.com</font></span>"
 msgstr ""
-"<span style=\"font-size: 12px\"><font style=\"color: rgb(183, 191, 199)\""
-">info@mycompany.com</font></span>"
+"<span style=\"font-size: 12px\"><font style=\"color: rgb(183, 191, "
+"199)\">info@mycompany.com</font></span>"
+
+#. module: marketing_automation_website_sale
+#: model_terms:ir.ui.view,arch_db:marketing_automation_website_sale.mailing_anniversary_arch
+msgid ""
+"<span style=\"font-size: 14px\"><strong>John DOE</strong> • CEO of "
+"MyCompany</span>"
+msgstr ""
+"<span style=\"font-size: 14px\"><strong>John DOE</strong> • MyCompany CEO</"
+"span>"
 
 #. module: marketing_automation_website_sale
 #: model_terms:ir.ui.view,arch_db:marketing_automation_website_sale.mailing_anniversary_arch
 msgid ""
 "<span style=\"font-size: 1rem;\">You've been with us for a whole year—thank "
 "you for being here! 🎈</span>"
-msgstr "<span style=\"font-size: 1rem;\">您使用我们的服务已有一年了！感谢您长期支持！"
-" 🎈</span>"
+msgstr ""
+"<span style=\"font-size: 1rem;\">您使用我们的服务已有一年了！感谢您长期支"
+"持！ 🎈</span>"
 
 #. module: marketing_automation_website_sale
 #: model_terms:ir.ui.view,arch_db:marketing_automation_website_sale.mailing_anniversary_arch
 msgid "<span style=\"font-size: 3.5rem;\">Happy Non-birthday!</span>"
 msgstr "<span style=\"font-size: 3.5rem;\">“生日” 快乐！</span>"
-
-#. module: marketing_automation_website_sale
-#: model_terms:ir.ui.view,arch_db:marketing_automation_website_sale.mailing_anniversary_arch
-msgid ""
-"<span style=\"font-weight: bolder; color: inherit; font-size: "
-"0.857143rem;\">BUY YOURSELF A GIFT</span><span style=\"font-size: "
-"0.857143rem;\"> !</span><br/>"
-msgstr ""
-"<span style=\"font-weight: bolder; color: inherit; font-size: 0.857143rem;"
-"\">买一份礼物给自己吧</span><span style=\"font-size: 0.857143rem;\"> "
-"！</span><br/>"
 
 #. module: marketing_automation_website_sale
 #: model_terms:ir.ui.view,arch_db:marketing_automation_website_sale.mailing_repeat_customer_new_arrivals_arch
@@ -245,19 +251,20 @@ msgstr "ID"
 msgid ""
 "If you have any questions or concerns about your product, please\n"
 "              don’t hesitate to reach out. We’re always here to help."
-msgstr "如果您对您的产品有任何疑问或疑虑，请不要犹豫联系我们，我们随时为您提供帮助。"
+msgstr ""
+"如果您对您的产品有任何疑问或疑虑，请不要犹豫联系我们，我们随时为您提供帮助。"
 
 #. module: marketing_automation_website_sale
 #: model_terms:ir.ui.view,arch_db:marketing_automation_website_sale.mailing_purchase_followup_arch
 msgid ""
 "If you need a hand or have any questions, please don't hesitate to\n"
-"              get in touch with our awesome customer service team. They are here\n"
-"              to help you with any inquiries or concerns you may have. Just\n"
-"              reach out to them, and they will be more than happy to assist you."
+"                get in touch with our awesome customer service team. They "
+"are here\n"
+"                to help you with any inquiries or concerns you may have. "
+"Just\n"
+"                reach out to them, and they will be more than happy to "
+"assist you."
 msgstr ""
-"如果您需要帮助或有任何疑问，请不要犹豫与我们出色的客户服务团队取得联系。他们"
-"在这里帮助您解决您可能遇到的任何疑问或疑虑。请随时与他们联系，他们将非常乐意"
-"为您提供帮助。"
 
 #. module: marketing_automation_website_sale
 #: model_terms:ir.ui.view,arch_db:marketing_automation_website_sale.mailing_anniversary_arch
@@ -270,7 +277,7 @@ msgstr "Instagram"
 #. module: marketing_automation_website_sale
 #: model_terms:ir.ui.view,arch_db:marketing_automation_website_sale.mailing_purchase_followup_arch
 msgid "John Doe, from all of us at MyCompany"
-msgstr "约翰·多伊，来自我们全体在MyCompany的人"
+msgstr "John Doe，代表 MyCompany 全体员工"
 
 #. module: marketing_automation_website_sale
 #: model_terms:ir.ui.view,arch_db:marketing_automation_website_sale.mailing_anniversary_arch
@@ -288,10 +295,8 @@ msgstr "营销活动"
 #: model_terms:ir.ui.view,arch_db:marketing_automation_website_sale.mailing_repeat_customer_new_purchase_arch
 msgid ""
 "Michael Fletcher<br/>\n"
-"              <span style=\"font-size: 12px; font-weight: bolder\">CEO</span>"
+"              <span style=\"font-size: 12px\"><strong>CEO</strong></span>"
 msgstr ""
-"迈克尔·弗莱彻<br/>\n"
-"              <span style=\"font-size: 12px; font-weight: bolder\">CEO</span>"
 
 #. module: marketing_automation_website_sale
 #: model_terms:ir.ui.view,arch_db:marketing_automation_website_sale.mailing_purchase_followup_arch
@@ -412,10 +417,13 @@ msgstr "致以最诚挚的问候，"
 #: model_terms:ir.ui.view,arch_db:marketing_automation_website_sale.mailing_repeat_customer_new_arrivals_arch
 msgid ""
 "We are thrilled to announce that we have just received some\n"
-"              amazing new arrivals in our store that we know you're going to\n"
+"              amazing new arrivals in our store that we know you're going "
+"to\n"
 "              love! 🎉 From trendy fashion pieces to must-have accessories,\n"
-"              we've got something special just for you. Come on in and check out\n"
-"              our latest collection - we can't wait to see you! Happy shopping!\n"
+"              we've got something special just for you. Come on in and check "
+"out\n"
+"              our latest collection - we can't wait to see you! Happy "
+"shopping!\n"
 "              🛍️✨"
 msgstr ""
 "我们很高兴地宣布，我们刚刚收到了一些\n"
@@ -446,23 +454,28 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:marketing_automation_website_sale.mailing_repeat_customer_new_purchase_arch
 msgid ""
 "We’re absolutely thrilled to welcome you to the MyCompany family.\n"
-"              We can’t wait for you to experience our product/service and hear\n"
-"              how it went! Don’t hesitate to share your thoughts online using\n"
-"              our hashtag #MyCompany. We’re genuinely excited to see what you\n"
+"              We can’t wait for you to experience our product/service and "
+"hear\n"
+"              how it went! Don’t hesitate to share your thoughts online "
+"using\n"
+"              our hashtag #MyCompany. We’re genuinely excited to see what "
+"you\n"
 "              have to say. After all, making people happy is what drives us\n"
 "              at MyCompany."
 msgstr ""
 "我们非常高兴并欢迎加入我们公司这个大家庭。 \n"
 "我们迫不及待地想让您体验我们的产品/服务并听取您的反馈！ \n"
-"请随时在网上分享您的想法。 "
-"我们真心期待看到您的评价。毕竟，让顾客满意是我们全公司人员的动力。"
+"请随时在网上分享您的想法。 我们真心期待看到您的评价。毕竟，让顾客满意是我们全"
+"公司人员的动力。"
 
 #. module: marketing_automation_website_sale
 #: model_terms:ir.ui.view,arch_db:marketing_automation_website_sale.mailing_repeat_customer_new_purchase_arch
 msgid ""
 "What started as a small project in my garage has grown into a\n"
-"              global venture, shipping packages around the world. And what an\n"
-"              incredible journey it’s been... A journey that wouldn’t have been\n"
+"              global venture, shipping packages around the world. And what "
+"an\n"
+"              incredible journey it’s been... A journey that wouldn’t have "
+"been\n"
 "              possible without the support of customers like you."
 msgstr ""
 "起初只是在我车库里的一个小项目， \n"
@@ -492,3 +505,57 @@ msgstr "✨ 有惊喜送给您 ✨"
 #: model_terms:ir.ui.view,arch_db:marketing_automation_website_sale.mailing_repeat_customer_new_arrivals_arch
 msgid "🌟 Exciting News Alert! 🌟"
 msgstr "🌟 激动人心的新提醒！ 🌟"
+
+#~ msgid ""
+#~ "-\n"
+#~ "          <span style=\"color: rgb(183, 191, 199); font-size: "
+#~ "12.25px\">September 10 2024</span>"
+#~ msgstr ""
+#~ "-\n"
+#~ "          <span style=\"color: rgb(183, 191, 199); font-size: "
+#~ "12.25px\">2024 年 9 月 10 日</span>"
+
+#~ msgid "<b>John DOE</b> • CEO of MyCompany"
+#~ msgstr "<b>John DOE</b> • MyCompany 首席执行官"
+
+#~ msgid "<i>Cheers to more great years ahead!</i><br/>"
+#~ msgstr "<i>祝贺前路更加辉煌！</i><br/>"
+
+#~ msgid ""
+#~ "<span style=\"font-size: 1.07143rem\">YOU MAKE OUR SUCCESS POSSIBLE</"
+#~ "span>\n"
+#~ "              <font style=\"font-size: 12px\">​</font><br/>"
+#~ msgstr ""
+#~ "<span style=\"font-size: 1.07143rem\">您让我们的成功成为可能</span>\n"
+#~ "              <font style=\"font-size: 12px\">​</font><br/>"
+
+#~ msgid ""
+#~ "<span style=\"font-weight: bolder; color: inherit; font-size: 0.857143rem;"
+#~ "\">BUY YOURSELF A GIFT</span><span style=\"font-size: 0.857143rem;\"> !</"
+#~ "span><br/>"
+#~ msgstr ""
+#~ "<span style=\"font-weight: bolder; color: inherit; font-size: 0.857143rem;"
+#~ "\">买一份礼物给自己吧</span><span style=\"font-size: 0.857143rem;\"> ！</"
+#~ "span><br/>"
+
+#~ msgid ""
+#~ "If you need a hand or have any questions, please don't hesitate to\n"
+#~ "              get in touch with our awesome customer service team. They "
+#~ "are here\n"
+#~ "              to help you with any inquiries or concerns you may have. "
+#~ "Just\n"
+#~ "              reach out to them, and they will be more than happy to "
+#~ "assist you."
+#~ msgstr ""
+#~ "如果您需要帮助或有任何疑问，请不要犹豫与我们出色的客户服务团队取得联系。他"
+#~ "们在这里帮助您解决您可能遇到的任何疑问或疑虑。请随时与他们联系，他们将非常"
+#~ "乐意为您提供帮助。"
+
+#~ msgid ""
+#~ "Michael Fletcher<br/>\n"
+#~ "              <span style=\"font-size: 12px; font-weight: bolder\">CEO</"
+#~ "span>"
+#~ msgstr ""
+#~ "迈克尔·弗莱彻<br/>\n"
+#~ "              <span style=\"font-size: 12px; font-weight: bolder\">CEO</"
+#~ "span>"

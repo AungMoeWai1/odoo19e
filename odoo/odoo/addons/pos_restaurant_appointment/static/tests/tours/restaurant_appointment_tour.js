@@ -13,45 +13,47 @@ const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
 registry.category("web_tour.tours").add("RestaurantAppointmentTour", {
     steps: () =>
         [
-            Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
+            Chrome.withTimeFreeze(1769601600000, [
+                Chrome.startPoS(),
+                Dialog.confirm("Open Register"),
 
-            // Make sure there is a currently active order.
-            FloorScreen.clickTable("4"),
-            ProductScreen.clickDisplayedProduct("Coca-Cola", true),
+                // Make sure there is a currently active order.
+                FloorScreen.clickTable("4"),
+                ProductScreen.clickDisplayedProduct("Coca-Cola", true),
 
-            // Check that the booking gantt view is shown.
-            {
-                content:
-                    "Wait few ms before clicking on Booking to ensure gantt view will be shown",
-                isActive: ["auto"],
-                trigger: "body",
-                async run() {
-                    await delay(1000);
+                // Check that the booking gantt view is shown.
+                {
+                    content:
+                        "Wait few ms before clicking on Booking to ensure gantt view will be shown",
+                    isActive: ["auto"],
+                    trigger: "body",
+                    async run() {
+                        await delay(1000);
+                    },
                 },
-            },
-            {
-                trigger: ".pos-leftheader button:contains('Booking')",
-                run: "click",
-            },
-            RestaurantAppointment.isKanbanViewShown(),
-            refresh(),
-            RestaurantAppointment.isKanbanViewShown(),
-            Chrome.clickMenuButton(),
-            Chrome.clickMenuDropdownOption("Reload Data"),
-            Chrome.clickBtn("Limited", { expectUnloadPage: true }),
-            RestaurantAppointment.isKanbanViewShown(),
-            Chrome.clickMenuButton(),
-            Chrome.clickMenuDropdownOption("Reload Data"),
-            Chrome.clickBtn("Full", { expectUnloadPage: true }),
-            RestaurantAppointment.isKanbanViewShown(),
-            Chrome.clickPlanButton(),
-            RestaurantAppointment.appointmentLabel(5, "Test Lunch"),
-            RestaurantAppointment.checkAppointmentLabelNotPresent(4, "Tomorrow Appointment"),
+                {
+                    trigger: ".pos-leftheader button:contains('Booking')",
+                    run: "click",
+                },
+                RestaurantAppointment.isKanbanViewShown(),
+                refresh(),
+                RestaurantAppointment.isKanbanViewShown(),
+                Chrome.clickMenuButton(),
+                Chrome.clickMenuDropdownOption("Reload Data"),
+                Chrome.clickBtn("Limited", { expectUnloadPage: true }),
+                RestaurantAppointment.isKanbanViewShown(),
+                Chrome.clickMenuButton(),
+                Chrome.clickMenuDropdownOption("Reload Data"),
+                Chrome.clickBtn("Full", { expectUnloadPage: true }),
+                RestaurantAppointment.isKanbanViewShown(),
+                Chrome.clickPlanButton(),
+                RestaurantAppointment.appointmentLabel(5, "Test Lunch"),
+                RestaurantAppointment.checkAppointmentLabelNotPresent(4, "Tomorrow Appointment"),
 
-            // Going back to the table, it should still be possible to add items
-            FloorScreen.clickTable("4"),
-            ProductScreen.clickDisplayedProduct("Coca-Cola", true),
+                // Going back to the table, it should still be possible to add items
+                FloorScreen.clickTable("4"),
+                ProductScreen.clickDisplayedProduct("Coca-Cola", true),
+            ]),
         ].flat(),
 });
 
@@ -81,7 +83,12 @@ registry.category("web_tour.tours").add("test_appointment_kanban_view", {
                 trigger: ".o_form_renderer .o_field_many2many_selection .o_input",
                 run: "click",
             },
-            RestaurantAppointment.selectTable("Test Main Floor - Table 4"),
+            RestaurantAppointment.selectTable("Test Main Floor - Table 4"), // 2 capacity
+            {
+                trigger: ".o_form_renderer .o_field_many2many_selection .o_input",
+                run: "click",
+            },
+            RestaurantAppointment.selectTable("Test Main Floor - Table 5"), // 2 capacity
             {
                 trigger: ".o_form_button_save",
                 run: "click",
@@ -148,6 +155,46 @@ registry.category("web_tour.tours").add("test_appointment_kanban_view", {
             RestaurantAppointment.selectTable("Search more..."),
             {
                 trigger: ".o_list_renderer tbody tr:first-child td:contains('3p')",
+            },
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("DuplicateFloorCalendarResource", {
+    steps: () =>
+        [
+            // check floors if they contain their corresponding tables
+            Chrome.startPoS(),
+
+            FloorScreen.selectedFloorIs("Main Floor"),
+            FloorScreen.hasTable("2"),
+            FloorScreen.hasTable("4"),
+            FloorScreen.hasTable("5"),
+
+            Chrome.clickMenuOption("Edit Plan"),
+
+            //test copy floor
+            FloorScreen.clickFloor("Main Floor"),
+            FloorScreen.clickEditButton("Clone"),
+            FloorScreen.selectedFloorIs("Main Floor (copy)"),
+            FloorScreen.hasTable("2"),
+            FloorScreen.hasTable("4"),
+            FloorScreen.hasTable("5"),
+            FloorScreen.clickSaveEditButton(),
+            {
+                content: `Check copied floor plan tables have an appointment resource`,
+                trigger: ".pos", // dummy trigger
+                run: function () {
+                    const tables = window.posmodel.models["restaurant.floor"]
+                        .find((rf) => rf.name == "Main Floor (copy)")
+                        .table_ids?.filter((table) => table.active);
+                    for (const table of tables) {
+                        if (table.appointment_resource_id === undefined) {
+                            console.error(
+                                `Table "${table.table_number}" has no appointment_resource_id.`
+                            );
+                        }
+                    }
+                },
             },
         ].flat(),
 });

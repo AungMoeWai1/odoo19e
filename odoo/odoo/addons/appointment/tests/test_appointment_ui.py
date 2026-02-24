@@ -449,11 +449,56 @@ class AppointmentUITest(AppointmentUICommon):
 
     @freeze_time('2022-02-14')
     @users('apt_manager')
+    def test_appointment_resource_manual_confirmation(self):
+        """ Test that when auto_confirm is False, the appointment type is not confirmed
+        and the attendees are not confirmed until the booking is confirmed manually.
+        """
+        self.authenticate(self.env.user.login, self.env.user.login)
+        self.assertFalse(self.apt_resource_multiple_bookings.meeting_ids)
+        phone_question = self.apt_resource_multiple_bookings._get_main_phone_question()
+        self.assertTrue(phone_question)
+        resource = self.env['appointment.resource'].sudo().create([{
+            'appointment_type_ids': self.apt_resource_multiple_bookings.ids,
+            'capacity': 4,
+            'name': 'Resource',
+        }])
+
+        self.assertTrue(self.apt_resource_multiple_bookings.auto_confirm)
+        self.assertEqual(float_compare(self.apt_resource_multiple_bookings.manual_confirmation_percentage, 1.0, 3), 0)
+        appointment_data = {
+            'available_resource_ids': [resource.id],
+            'csrf_token': http.Request.csrf_token(self),
+            'datetime_str': '2022-02-14 15:00:00',
+            'duration_str': '1.0',
+            'email': 'test@test.example.com',
+            'name': 'Online Meeting',
+            'phone': '2025550999',
+            f'question_{phone_question.id}': '2025550999',
+        }
+
+        url = f'/appointment/{self.apt_resource_multiple_bookings.id}/submit'
+        res = self.url_open(url, data=appointment_data)
+        self.assertEqual(res.status_code, 200, 'Response should = OK')
+        self.assertEqual(len(self.apt_resource_multiple_bookings.meeting_ids), 1)
+        self.assertEqual(self.apt_resource_multiple_bookings.meeting_ids[0].appointment_status, 'booked')
+
+        self.apt_resource_multiple_bookings.write({'auto_confirm': False})
+        appointment_data['datetime_str'] = '2022-02-14 16:00:00'
+        res = self.url_open(url, data=appointment_data)
+        self.assertEqual(res.status_code, 200, 'Response should = OK')
+        self.assertEqual(len(self.apt_resource_multiple_bookings.meeting_ids), 2)
+        self.assertEqual(
+            self.apt_resource_multiple_bookings.meeting_ids[0].appointment_status, 'request',
+            'When manual confirmation is set, the booking status should be set to request.'
+        )
+
+    @freeze_time('2022-02-14')
+    @users('apt_manager')
     def test_appointment_staff_user_manual_confirmation(self):
         """ Check that appointment and attendee status are correctly
         set based on the auto_confirm and manual_confirmation_percentage fields"""
         self.authenticate(self.env.user.login, self.env.user.login)
-        phone_question = self.apt_type_resource._get_main_phone_question()
+        phone_question = self.apt_type_bxls_2days._get_main_phone_question()
         self.assertTrue(phone_question)
         event_values = {
             'allday': 0,
@@ -498,6 +543,54 @@ class AppointmentUITest(AppointmentUICommon):
         self.assertEqual(len(third_meeting), 1)
         self.assertEqual(third_meeting.appointment_status, "request")
         self.assertTrue(all(attendee.state == 'accepted' for attendee in third_meeting.attendee_ids))
+
+    @freeze_time('2022-02-14')
+    @users('apt_manager')
+    def test_appointment_staff_user_manual_confirmation_percentage(self):
+        """ Check that appointment and attendee status are correctly set based on the auto_confirm
+        and manual_confirmation_percentage fields when enabled, when booking (multiple) users and
+        managing capacity """
+        self.authenticate(self.env.user.login, self.env.user.login)
+        # 2 users, 3 capacity -> 6 total.
+        self.apt_type_manage_capacity_users.write({
+            'auto_confirm': True,
+            'manual_confirmation_percentage': 0.5,
+            'user_capacity': 3,
+        })
+        self.apt_type_manage_capacity_users.staff_user_ids = [Command.set([self.staff_user_aust.id, self.staff_user_bxls.id])]
+        phone_question = self.apt_type_manage_capacity_users._get_main_phone_question()
+        self.assertTrue(phone_question)
+
+        event_values = {
+            'csrf_token': http.Request.csrf_token(self),
+            'datetime_str': '2022-02-14 11:00:00',
+            'duration_str': '1.0',
+            'email': 'test1@test.example.com',
+            'name': 'Meeting Test',
+            f'question_{phone_question.id}': '2025550999',
+            'staff_user_id': self.staff_user_bxls.id,
+            'asked_capacity': 3,
+        }
+
+        # Booking for 3 capacity with one staff user. Total used is 3/6. It should create a 'booked' event as <= 50%
+        res = self.url_open(f"/appointment/{self.apt_type_manage_capacity_users.id}/submit", event_values)
+        self.assertEqual(res.status_code, 200, "Response should be OK")
+        first_meeting = self.apt_type_manage_capacity_users.meeting_ids
+        self.assertEqual(len(first_meeting), 1)
+        self.assertEqual(first_meeting.appointment_status, "booked")
+        self.assertTrue(all(attendee.state == 'accepted' for attendee in first_meeting.attendee_ids))
+
+        # Booking for 1 capacity with another staff user. Total used is 4/6. It should create a 'request' event as > 50%
+        event_values.update({
+            'asked_capacity': 1,
+            'staff_user_id': self.staff_user_aust.id,
+        })
+        res = self.url_open(f"/appointment/{self.apt_type_manage_capacity_users.id}/submit", event_values)
+        self.assertEqual(res.status_code, 200, "Response should be OK")
+        second_meeting = self.apt_type_manage_capacity_users.meeting_ids - first_meeting
+        self.assertEqual(len(second_meeting), 1)
+        self.assertEqual(second_meeting.appointment_status, "request")
+        self.assertTrue(all(attendee.state == 'accepted' for attendee in second_meeting.attendee_ids))
 
 @tagged('appointment_ui', '-at_install', 'post_install')
 class CalendarTest(AppointmentUICommon):

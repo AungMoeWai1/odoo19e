@@ -33,7 +33,7 @@ class HrSalaryAttachment(models.Model):
         "End date may not be before the starting date.",
     )
 
-    employee_ids = fields.Many2many('hr.employee', string='Employees', required=True,
+    employee_ids = fields.Many2many('hr.employee', string='Employees', required=True, context={'active_test': False},
                                     domain=lambda self: [('company_id', 'in', self.env.companies.ids)])
     employee_count = fields.Integer(compute='_compute_employee_count')
     company_id = fields.Many2one(
@@ -282,6 +282,7 @@ class HrSalaryAttachment(models.Model):
                 'company_id': self.company_id.id,
                 'description': self.description,
                 'other_input_type_id': self.other_input_type_id.id,
+                'duration_type': self.duration_type,
                 'monthly_amount': self.monthly_amount,
                 'total_amount': self.total_amount,
                 'paid_amount': self.paid_amount,

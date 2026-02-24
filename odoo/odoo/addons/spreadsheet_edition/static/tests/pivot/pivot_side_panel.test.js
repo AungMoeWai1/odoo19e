@@ -69,6 +69,12 @@ async function replaceSidePanel(model, env, pivotId, onCloseSidePanel = () => {}
     await mountWithCleanup(Parent, { env, props: { model, pivotId, onCloseSidePanel } });
 }
 
+function getFieldItem(name, fixture) {
+    return fixture.querySelector(
+        `.o_popover_field_selector .o_model_field_selector_popover_item[data-name="${name}"]`
+    );
+}
+
 test("Open pivot properties", async function () {
     const { pivotId, env, model } = await createSpreadsheetWithPivot();
     await openSidePanel(model, env, pivotId);
@@ -362,6 +368,8 @@ test("add column dimension on a related model", async function () {
     await contains(
         ".o_popover_field_selector .o_model_field_selector_popover_item[data-name='active'] button"
     ).click();
+    expect(".fa-exclamation-triangle").toHaveCount(0);
+    expect(".pivot-dimension:first .o-fw-bold").toHaveText("Product > Active");
     await contains(".pivot-defer-update .o-checkbox").click();
     const definition = JSON.parse(JSON.stringify(model.getters.getPivotCoreDefinition(pivotId)));
     expect(definition.columns).toEqual([{ fieldName: "product_id.active", order: "asc" }]);
@@ -385,11 +393,60 @@ test("add row dimension on a related model", async function () {
     await contains(
         ".o_popover_field_selector .o_model_field_selector_popover_item[data-name='active'] button"
     ).click();
+    expect(".fa-exclamation-triangle").toHaveCount(0);
+    expect(".pivot-dimension:first .o-fw-bold").toHaveText("Product > Active");
     await contains(".pivot-defer-update .o-checkbox").click();
     const definition = JSON.parse(JSON.stringify(model.getters.getPivotCoreDefinition(pivotId)));
     expect(definition.columns).toEqual([]);
     expect(definition.rows).toEqual([{ fieldName: "product_id.active", order: "asc" }]);
     expect(".pivot-dimension:first .o-fw-bold").toHaveText("Product > Active");
+});
+
+test("single non-relation dimension is filtered out after selection", async function () {
+    const { model, env, pivotId } = await createSpreadsheetWithPivot();
+    await openSidePanel(model, env, pivotId);
+    const fixture = getFixture();
+
+    await contains(".add-dimension.o-button").click();
+    getFieldItem("id", fixture).querySelector("button").click();
+    await contains(".pivot-defer-update .o-checkbox").click();
+
+    await contains(".add-dimension.o-button").click();
+    expect(getFieldItem("id", fixture)).toBe(null);
+});
+
+test("date/datetime field can be re-selected because of different granularities", async function () {
+    const { model, env, pivotId } = await createSpreadsheetWithPivot();
+    await openSidePanel(model, env, pivotId);
+    const fixture = getFixture();
+
+    await contains(".add-dimension.o-button").click();
+    getFieldItem("date", fixture).querySelector("button").click();
+    await contains(".pivot-defer-update .o-checkbox").click();
+
+    await contains(".add-dimension.o-button").click();
+    const item = getFieldItem("date", fixture);
+    expect(item).not.toBe(null);
+    expect(item.getAttribute("data-tooltip")).toBe(null);
+    expect(item.querySelector(".o_model_field_selector_popover_item_name").disabled).toBe(false);
+});
+
+test("relation field cannot be re-selected but subfields stay accessible", async function () {
+    const { model, env, pivotId } = await createSpreadsheetWithPivot();
+    await openSidePanel(model, env, pivotId);
+    const fixture = getFixture();
+
+    await contains(".add-dimension.o-button").click();
+    getFieldItem("product_id", fixture).querySelector("button").click();
+    await contains(".pivot-defer-update .o-checkbox").click();
+
+    await contains(".add-dimension.o-button").click();
+    const item = getFieldItem("product_id", fixture);
+    expect(item.getAttribute("data-tooltip")).toBe("Pivot contains duplicate groupbys");
+    expect(item.querySelector(".o_model_field_selector_popover_item_name").disabled).toBe(true);
+    expect(item.querySelector(".o_model_field_selector_popover_item_relation").disabled).toBe(
+        false
+    );
 });
 
 test("Cannot follow relation of a non store field", async function () {
@@ -719,4 +776,36 @@ test("display pivot related filters panel", async function () {
     );
     await addGlobalFilter(model, { id: "43", type: "relation", label: "Filter 2" });
     expect(".o_side_panel_collapsible_title:contains(Matching 1 / 2 filters)").toHaveCount(1);
+});
+
+test("PivotModelFieldSelectorPopover in debug mode for column", async function () {
+    const { model, env, pivotId } = await createSpreadsheetWithPivot({
+        arch: /*xml*/ `
+            <pivot>
+                <field name="probability" type="measure"/>
+            </pivot>
+        `,
+    });
+    env.debug = true;
+    await openSidePanel(model, env, pivotId);
+    await contains(".add-dimension.o-button:eq(0)").click();
+    expect(
+        "li.o_model_field_selector_popover_item div.o_model_field_selector_popover_item_title"
+    ).toHaveCount(12);
+});
+
+test("PivotModelFieldSelectorPopover in debug mode for row", async function () {
+    const { model, env, pivotId } = await createSpreadsheetWithPivot({
+        arch: /*xml*/ `
+            <pivot>
+                <field name="probability" type="measure"/>
+            </pivot>
+        `,
+    });
+    env.debug = true;
+    await openSidePanel(model, env, pivotId);
+    await contains(".add-dimension.o-button:eq(1)").click();
+    expect(
+        "li.o_model_field_selector_popover_item div.o_model_field_selector_popover_item_title"
+    ).toHaveCount(12);
 });

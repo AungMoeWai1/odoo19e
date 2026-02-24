@@ -120,6 +120,7 @@ class WebStudioController(http.Controller):
             "delivery_iot.report_shipping_labels",
             "delivery_iot.report_shipping_docs",
             "l10n_co_reports.report_libro_diario",
+            "account.report_original_vendor_bill",
         ]
         report_domain = Domain.AND([
             # One can edit only reports backed by persisting models
@@ -362,6 +363,8 @@ class WebStudioController(http.Controller):
                 relation=field.relation,
                 relation_field=field.relation_field,
             )
+            if values.get("store", True) is False:
+                values["relation_field"] = False
         # For one2many fields
         if rel := values.pop('relation_field_id', None):
             field = request.env['ir.model.fields'].browse(rel)
@@ -450,6 +453,7 @@ class WebStudioController(http.Controller):
         return True
 
     def _get_studio_view(self, view):
+        view = view._get_closest_primary_view()
         domain = [('inherit_id', '=', view.id), ('name', '=', self._generate_studio_view_name(view))]
         return view.search(domain, order='priority desc, name desc, id desc', limit=1)
 
@@ -582,10 +586,12 @@ class WebStudioController(http.Controller):
             if node and node.get('tag') == 'field' and node.get('field_description') and node['field_description'].get('related'):
                 model_name = node['field_description'].get("model_name") or model
                 related_filename = node['field_description']['related'] + '_filename'
+                related_model_path = related_filename.split(".")[:-1]
                 related_filename = request.env["ir.model.fields"]._get_related_field(model_name, related_filename)
                 if not related_filename:
                     continue
-                char_op['node']['field_description'].update({'related': related_filename.name})
+                path = ".".join(chain(related_model_path, [related_filename.name]))
+                char_op['node']['field_description'].update({'related': path})
             char_op['node']['attrs']['invisible'] = 'True'
 
             # put the filename field after the binary field
@@ -611,8 +617,8 @@ class WebStudioController(http.Controller):
             values = op['node'].get('field_description') or op['node']['attrs']
             currency_op = deepcopy(op)
 
-            has_currency_field = new_field and new_field.get("currency_field")
-            if new_field and not has_currency_field:
+            current_currency_field = new_field and new_field.get("currency_field")
+            if new_field and not current_currency_field:
                 # There is no currencies in the model, create one with the operation
                 currency_op['node']['field_description'].update({
                     'name': 'x_studio_currency_id',
@@ -631,8 +637,9 @@ class WebStudioController(http.Controller):
                         if not related_model_path:
                             # The monetary is related to the current model (no dots, no following links)
                             # The currency on current model should exist and we just have to add it to the view
-                            new_field['currency_field'] = related_currency.name
-                            currency_op["node"] = {"tag": "field", "attrs": {"name": related_currency.name}}
+                            new_field['currency_field'] = related_currency
+                            currency_op["node"] = {"tag": "field", "attrs": {"name": related_currency}}
+                            current_currency_field = related_currency
                         else:
                             to_model = request.env[related_monetary.model_name]
                             related_currency = to_model._fields[related_currency]
@@ -642,14 +649,15 @@ class WebStudioController(http.Controller):
                             new_related_field_name = path.replace(".", "_")
                             currency_op['node']['field_description']["name"] = f"x_studio_{new_related_field_name}"
                             currency_op['node']['field_description']['field_description'] = f"{request.env['ir.model']._get(to_model._name).name} {related_currency.get_description(self.env, 'string')['string']}"
-                        has_currency_field = True
+                            current_currency_field = currency_op['node']['field_description']["name"]
 
-                if not has_currency_field:
+                if not current_currency_field:
                     # delete the 'related' attribute from currency if it comes from a related monetary
                     currency_op['node']['field_description']["store"] = True
                     currency_op['node']['field_description'].pop("related", None)
+                    current_currency_field = currency_op['node']['field_description']["name"]
 
-                new_field['currency_field'] = currency_op['node']['field_description']["name"]
+                new_field['currency_field'] = current_currency_field
             else:
                 # There is a currency in the model, set it up to eventually add it to the arch
                 currency_op['node'].pop('field_description', None)
@@ -787,6 +795,7 @@ class WebStudioController(http.Controller):
         return actions_list
 
     def _create_studio_view(self, view, arch):
+        view = view._get_closest_primary_view()
         # We have to play with priorities in order for our customization to be the last
         # to be applied.
         # In studio, what the user sees is the resulting view from all the inheritance.

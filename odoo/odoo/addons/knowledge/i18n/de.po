@@ -3,13 +3,13 @@
 # * knowledge
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025.
+# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-03 18:44+0000\n"
-"PO-Revision-Date: 2025-09-30 10:53+0000\n"
+"POT-Creation-Date: 2025-12-30 18:42+0000\n"
+"PO-Revision-Date: 2026-02-20 17:15+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/knowledge/"
 "de/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: knowledge
 #. odoo-javascript
@@ -2200,7 +2200,7 @@ msgstr "Spickzettel für Kundenbetreuung"
 #: model:ir.model.fields,field_description:knowledge.field_knowledge_article__message_needaction
 #: model:ir.model.fields,field_description:knowledge.field_knowledge_article_thread__message_needaction
 msgid "Action Needed"
-msgstr "Aktion notwendig"
+msgstr "Aktion erforderlich"
 
 #. module: knowledge
 #: model_terms:knowledge.article,template_body:knowledge.knowledge_article_template_account_management
@@ -2220,7 +2220,7 @@ msgstr "Aktivitäten"
 #. module: knowledge
 #: model:ir.model.fields,field_description:knowledge.field_knowledge_article__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Aktivitätsausnahme-Dekoration"
+msgstr "Kennzeichnung von Aktivitätsausnahmen"
 
 #. module: knowledge
 #: model:ir.model.fields,field_description:knowledge.field_knowledge_article__activity_state
@@ -3451,7 +3451,7 @@ msgstr "Ein Artikelelement erstellen"
 #. odoo-javascript
 #: code:addons/knowledge/static/src/components/sidebar/sidebar_row.xml:0
 msgid "Create an Article inside"
-msgstr ""
+msgstr "Artikel innerhalb erstellen"
 
 #. module: knowledge
 #: model_terms:ir.actions.act_window,help:knowledge.knowledge_article_action
@@ -3524,7 +3524,7 @@ msgstr "Datums- und Zeiteigenschaften"
 #. module: knowledge
 #: model_terms:ir.ui.view,arch_db:knowledge.knowledge_article_trash_notification
 msgid "Dear"
-msgstr "Hallo"
+msgstr "Guten Tag"
 
 #. module: knowledge
 #: model_terms:knowledge.article,template_body:knowledge.knowledge_article_template_meeting_minutes_template
@@ -3857,7 +3857,7 @@ msgstr "Favoriten"
 #. module: knowledge
 #: model_terms:ir.ui.view,arch_db:knowledge.portal_my_home_knowledge
 msgid "Find all articles shared with you"
-msgstr "Finden Sie alle mit Ihnen geteilten Artikel"
+msgstr "Alle mit mir geteilten Artikel einsehen"
 
 #. module: knowledge
 #. odoo-javascript
@@ -3916,7 +3916,7 @@ msgstr "Volle Breite"
 #. module: knowledge
 #: model_terms:ir.ui.view,arch_db:knowledge.knowledge_article_view_search
 msgid "Future Activities"
-msgstr ""
+msgstr "Anstehende Aktivitäten"
 
 #. module: knowledge
 #: model_terms:knowledge.article,template_body:knowledge.knowledge_article_template_marketing_customer_personas
@@ -3988,7 +3988,7 @@ msgstr "Haben Partner, mit denen geteilt wird"
 #. module: knowledge
 #: model_terms:ir.ui.view,arch_db:knowledge.knowledge_article_user_onboarding
 msgid "Hello there"
-msgstr "Hallo"
+msgstr "Guten Tag"
 
 #. module: knowledge
 #: model_terms:ir.ui.view,arch_db:knowledge.knowledge_article_user_onboarding
@@ -4000,7 +4000,7 @@ msgid ""
 "            <br/>\n"
 "            No more time wasted! 🔥"
 msgstr ""
-"Hallo, ich bin eine Vorlage 👋\n"
+"Guten Tag, ich bin eine Vorlage 👋\n"
 "            <br/>\n"
 "            Verwenden Sie die Schaltflächen oben rechts in dieser Box, um "
 "meine Inhalte erneut zu verwenden.\n"
@@ -4031,7 +4031,7 @@ msgstr ""
 #. module: knowledge
 #: model_terms:knowledge.article,template_body:knowledge.knowledge_article_template_sales_playbook
 msgid "Hey ProspectName,"
-msgstr "Hallo NamedespotenziellenKunden,"
+msgstr "Guten Tag NamedespotenziellenKunden,"
 
 #. module: knowledge
 #. odoo-javascript
@@ -4719,7 +4719,7 @@ msgstr "Zuletzt aktualisiert am"
 #. module: knowledge
 #: model_terms:ir.ui.view,arch_db:knowledge.knowledge_article_view_search
 msgid "Late Activities"
-msgstr ""
+msgstr "Verspätete Aktivitäten"
 
 #. module: knowledge
 #. odoo-javascript
@@ -5252,7 +5252,7 @@ msgstr "Anzahl der Aktionen"
 #: model:ir.model.fields,field_description:knowledge.field_knowledge_article__message_has_error_counter
 #: model:ir.model.fields,field_description:knowledge.field_knowledge_article_thread__message_has_error_counter
 msgid "Number of errors"
-msgstr "Anzahl der Fehler"
+msgstr "Anzahl Fehler"
 
 #. module: knowledge
 #: model:ir.model.fields,help:knowledge.field_knowledge_article__message_needaction_counter
@@ -5264,7 +5264,7 @@ msgstr "Anzahl der Nachrichten, die eine Aktion erfordern"
 #: model:ir.model.fields,help:knowledge.field_knowledge_article__message_has_error_counter
 #: model:ir.model.fields,help:knowledge.field_knowledge_article_thread__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "Anzahl der Nachrichten mit Zustellungsfehler."
+msgstr "Anzahl Nachrichten mit Zustellungsfehler"
 
 #. module: knowledge
 #: model_terms:knowledge.article,template_body:knowledge.knowledge_article_template_account_management
@@ -6062,7 +6062,7 @@ msgstr "Teilen"
 #. odoo-javascript
 #: code:addons/knowledge/static/src/components/permission_panel_dialog/permission_panel_dialog.xml:0
 msgid "Share settings"
-msgstr ""
+msgstr "Freigabe-Einstellungen"
 
 #. module: knowledge
 #. odoo-javascript
@@ -6126,6 +6126,8 @@ msgstr "Wochenenden anzeigen?"
 #: model_terms:ir.ui.view,arch_db:knowledge.knowledge_article_view_search
 msgid "Show all records whose next activity date is past"
 msgstr ""
+"Zeigen Sie alle Datensätze aus, deren nächstes Aktivitätsdatum in der "
+"Vergangenheit liegt"
 
 #. module: knowledge
 #. odoo-javascript
@@ -6744,7 +6746,7 @@ msgstr "Um sicher zu gehen, dass Sie up to date sind, folgen Sie uns auf"
 #. module: knowledge
 #: model_terms:ir.ui.view,arch_db:knowledge.knowledge_article_view_search
 msgid "Today Activities"
-msgstr ""
+msgstr "Heutige Aktivitäten"
 
 #. module: knowledge
 #. odoo-javascript
@@ -6791,7 +6793,6 @@ msgstr "Geben Sie etwas in diesem Abschnitt ein"
 #. module: knowledge
 #. odoo-javascript
 #: code:addons/knowledge/static/src/components/form_status_indicator/form_status_indicator.xml:0
-#, fuzzy
 msgid "Unable to save. Correct the issue or discard all changes"
 msgstr ""
 "Speicherung nicht möglich. Korrigieren Sie den Fehler oder verwerfen Sie "

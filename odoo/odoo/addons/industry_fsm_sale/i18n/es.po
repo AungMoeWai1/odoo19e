@@ -3,13 +3,14 @@
 # * industry_fsm_sale
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:35+0000\n"
-"PO-Revision-Date: 2025-09-18 02:41+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2025-12-30 18:45+0000\n"
+"PO-Revision-Date: 2025-12-06 10:20+0000\n"
+"Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-19/"
 "industry_fsm_sale/es/>\n"
 "Language: es\n"
@@ -17,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: industry_fsm_sale
 #. odoo-python
@@ -50,10 +51,13 @@ msgid ""
 "<p class=\"o_view_nocontent_smiling_face\">\n"
 "                            No products found. Let's create one!\n"
 "                        </p><p>\n"
-"                            Keep track of the products you are using to complete your tasks, and invoice your customers for the goods.\n"
-"                            Tip: using kits, you can add multiple products at once.\n"
+"                            Keep track of the products you are using to "
+"complete your tasks, and invoice your customers for the goods.\n"
+"                            Tip: using kits, you can add multiple products "
+"at once.\n"
 "                        </p><p>\n"
-"                            When your task is marked as done, your stock will be updated automatically. Simply choose a warehouse\n"
+"                            When your task is marked as done, your stock "
+"will be updated automatically. Simply choose a warehouse\n"
 "                            in your profile from where to draw stock.\n"
 "                        </p>"
 msgstr ""
@@ -83,7 +87,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:industry_fsm_sale.project_view_form_inherit
 msgid ""
 "<span invisible=\"not is_fsm\">\n"
-"                    Define the service and the rate at which an employee's time is billed based on their expertise, skills or experience.\n"
+"                    Define the service and the rate at which an employee's "
+"time is billed based on their expertise, skills or experience.\n"
 "                </span>"
 msgstr ""
 "<span invisible=\"not is_fsm\">\n"
@@ -125,7 +130,7 @@ msgstr "<strong>Total</strong>"
 #. module: industry_fsm_sale
 #: model_terms:ir.ui.view,arch_db:industry_fsm_sale.worksheet_time_and_material
 msgid "<strong>Untaxed amount</strong>"
-msgstr "<strong>Base imponible</strong>"
+msgstr "<strong>Importe base</strong>"
 
 #. module: industry_fsm_sale
 #. odoo-python
@@ -171,7 +176,7 @@ msgstr "Línea analítica"
 #. odoo-javascript
 #: code:addons/industry_fsm_sale/static/src/components/product_catalog/kanban_controller.xml:0
 msgid "Back to Task"
-msgstr "Regresar a la tarea"
+msgstr "Volver a la tarea"
 
 #. module: industry_fsm_sale
 #: model:ir.model.fields,field_description:industry_fsm_sale.field_project_project__allow_billable
@@ -192,8 +197,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/industry_fsm_sale/static/src/js/tours/industry_fsm_sale_tour.js:0
 msgid ""
-"Choose a <b>name</b> for your product <i>(e.g. Bolts, Screws, Boiler, "
-"etc.).</i>"
+"Choose a <b>name</b> for your product <i>(e.g. Bolts, Screws, Boiler, etc.)."
+"</i>"
 msgstr ""
 "Elija un <b>nombre</b> para su producto <i>(e.g. pernos, tornillos, "
 "calentador, etc.).</i>"
@@ -536,8 +541,11 @@ msgstr "Línea de pedido de venta"
 #. module: industry_fsm_sale
 #: model:ir.model.fields,help:industry_fsm_sale.field_project_project__sale_line_id
 msgid ""
-"Sales order item that will be selected by default on the tasks and timesheets of this project, except if the employee set on the timesheets is explicitely linked to another sales order item on the project.\n"
-"It can be modified on each task and timesheet entry individually if necessary."
+"Sales order item that will be selected by default on the tasks and "
+"timesheets of this project, except if the employee set on the timesheets is "
+"explicitely linked to another sales order item on the project.\n"
+"It can be modified on each task and timesheet entry individually if "
+"necessary."
 msgstr ""
 "Elemento del pedido de venta que se seleccionará por defecto en las tareas y "
 "partes de horas de este proyecto, excepto si el empleado establecido en los "
@@ -637,7 +645,8 @@ msgstr ""
 #. module: industry_fsm_sale
 #: model_terms:ir.ui.view,arch_db:industry_fsm_sale.project_view_form_inherit
 msgid "Track the material used to complete tasks"
-msgstr "Lleve el seguimiento de los materiales utilizados para completar tareas"
+msgstr ""
+"Lleve el seguimiento de los materiales utilizados para completar tareas"
 
 #. module: industry_fsm_sale
 #: model:ir.model.fields,field_description:industry_fsm_sale.field_project_task__under_warranty
@@ -673,8 +682,20 @@ msgid ""
 "        !! Set the task a high priority\n"
 "        !!! Set the task a urgent priority\n"
 "\n"
-"        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
+"        Make sure to use the right format and order e.g. Improve the "
+"configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
+"Utiliza estas palabras clave en el título para establecer nuevas tareas:\n"
+"\n"
+"        30 h Asignar 30 horas a la tarea\n"
+"        #etiquetas Asignar etiquetas a la tarea\n"
+"        @usuario Asignar la tarea a un usuario\n"
+"        ! Asignar prioridad media a la tarea\n"
+"        !! Asignar prioridad alta a la tarea\n"
+"        !!! Asignar prioridad urgente a la tarea\n"
+"\n"
+"        Asegúrate de utilizar el formato y el orden correcto, por ejemplo: "
+"¡Mejorar la pantalla de configuración 5 h #función #v16 @Mitchell!"
 
 #. module: industry_fsm_sale
 #. odoo-javascript

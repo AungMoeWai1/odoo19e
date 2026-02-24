@@ -2,8 +2,12 @@ import { Component, onWillUnmount, useState, useSubEnv, useRef, onMounted } from
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { useService } from "@web/core/utils/hooks";
 import { AttributeSelection } from "@pos_self_order/app/components/attribute_selection/attribute_selection";
-import { computeProductPrice } from "../../services/card_utils";
 import { useScrollShadow } from "../../utils/scroll_shadow_hook";
+import {
+    getProductVariantByAttributes,
+    getAttributeValues,
+    getAttributeValuesExtraPrice,
+} from "@pos_self_order/app/services/card_utils";
 
 export class ProductPage extends Component {
     static template = "pos_self_order.ProductPage";
@@ -63,6 +67,16 @@ export class ProductPage extends Component {
         return this.props.productTemplate;
     }
 
+    shouldShowMissingDetails() {
+        const el = this.scrollContainerRef?.el;
+        if (!el) {
+            return false;
+        }
+        return (
+            el.scrollHeight > el.clientHeight && this.productTemplate.attribute_line_ids.length > 1
+        );
+    }
+
     changeQuantity(increase) {
         const currentQty = this.state.qty;
 
@@ -112,12 +126,31 @@ export class ProductPage extends Component {
     }
 
     getProductPrice() {
-        return computeProductPrice(
-            this.selfOrder,
+        const attributeIds = this.getSelectedAttributesValues();
+
+        const productVariant = getProductVariantByAttributes(
+            this.selfOrder.models,
             this.props.productTemplate,
-            this.getSelectedAttributesValues(),
-            this.state.qty
+            attributeIds
         );
+
+        const priceExtra = getAttributeValuesExtraPrice(
+            getAttributeValues(attributeIds, this.selfOrder.models)
+        );
+
+        const price = this.props.productTemplate.getPrice(
+            this.selfOrder.currentOrder.pricelist_id,
+            1,
+            priceExtra,
+            false,
+            productVariant
+        );
+        const taxDetails = this.props.productTemplate.getTaxDetails({
+            overridedValues: { price_unit: price, quantity: this.state.qty },
+        });
+        return this.selfOrder.isTaxesIncludedInPrice()
+            ? taxDetails.total_included
+            : taxDetails.total_excluded;
     }
 
     getSelectedAttributesValues() {

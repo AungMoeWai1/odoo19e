@@ -930,7 +930,7 @@ test("Autofill pivot keeps format but neither style nor border", async function 
     // Check that the format of E3 has been correctly applied to E4 but not the style nor the border
     const filledCell = getCell(model, "E4");
     expect(filledCell.style).toBe(undefined);
-    expect(model.getters.getCellBorder({ sheetId, col, row: row + 1 })).toEqual({});
+    expect(model.getters.getCellBorder({ sheetId, col, row: row + 1 })).toBe(null);
     expect(filledCell.format).toBe("#,##0.0");
 });
 
@@ -1004,6 +1004,19 @@ test("Can autofill pivot with collapsed dimensions", async () => {
         `=PIVOT.HEADER(1,"date:year",2016,"date:month",DATE(2016,12,1))`
     );
     expect(getCell(model, "A5").content).toBe(`=PIVOT.HEADER(1)`);
+});
+
+test("Autofill does not crash when autofilling wrong relational id", async () => {
+    const { model } = await createSpreadsheetWithPivot({
+        arch: /*xml*/ `
+                <pivot>
+                    <field name="product_id"  type="col"/>
+                    <field name="date" interval="month" type="row"/>
+                    <field name="probability" type="measure"/>
+                </pivot>`,
+    });
+    const formula = `=PIVOT.HEADER(1,"product_id",9999)`;
+    expect(model.getters.getTooltipFormula(formula)).toEqual([{ value: "Unknown" }]);
 });
 
 test("Can autofill pivot with custom groups", async () => {

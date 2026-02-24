@@ -4,6 +4,7 @@ import {
     X2MANY_TYPES,
     RAW_SYMBOL,
     convertRawToDateTime,
+    convertRawToDate,
     STORE_SYMBOL,
 } from "./utils";
 import { Base } from "./base";
@@ -47,15 +48,16 @@ export function processModelClasses(modelDefs, modelClasses = {}) {
             }
             const isRelationNotInModelDef = field.relation && !modelNames.has(field.relation);
             if (!RELATION_TYPES.has(field.type) || isRelationNotInModelDef) {
-                const isDateTime = DATE_TIME_TYPE.has(field.type);
-                if (!isDateTime) {
+                if (!DATE_TIME_TYPE.has(field.type)) {
                     excludedLazyGetters.push(fieldName);
                 }
                 Object.defineProperty(ModelRecordClass.prototype, fieldName, {
                     get: function () {
                         const value = this[RAW_SYMBOL][fieldName];
-                        if (isDateTime) {
-                            return convertRawToDateTime(this, value, field);
+                        if (DATE_TIME_TYPE.has(field.type)) {
+                            return field.type === "datetime"
+                                ? convertRawToDateTime(this, value, field)
+                                : convertRawToDate(this, value, field);
                         } else if (isRelationNotInModelDef && value instanceof Set) {
                             return unmodifiableArray(
                                 [...value],
@@ -144,29 +146,6 @@ export function createExtraField(record, extraFields, serverData, vals) {
             enumerable: true,
         });
     }
-}
-
-/**
- * Returns a function that computes backlinks for a given field.
- * This function iterates over related records and returns those that reference the current record's ID.
- */
-export function computeBackLinks(field) {
-    const isOneToMany = field.type === "one2many";
-    return function () {
-        // "this" is reactive instance
-        const result = [];
-        const recordsMap = this[STORE_SYMBOL].getRecordsMap(field.relation, "id");
-        for (const record of recordsMap.values()) {
-            const values = record[RAW_SYMBOL][field.inverse_name];
-            if (!values) {
-                continue;
-            }
-            if (isOneToMany ? values === this.id : values.has(this.id)) {
-                result.push(record);
-            }
-        }
-        return result || [];
-    };
 }
 
 function unmodifiableArray(arr, message) {

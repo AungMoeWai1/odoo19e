@@ -103,12 +103,9 @@ export class UserAgent extends Reactive {
         };
     }
 
-    async shouldPlayIncomingCallRingtone() {
+    get isInDoNotDisturbMode() {
         const dndUntil = this.voip.store.settings.do_not_disturb_until_dt;
-        const doNotDisturb = Boolean(dndUntil) && dndUntil > luxon.DateTime.now();
-        return (
-            this.hasCallInvitation && !doNotDisturb && (await this.multiTabService.isOnMainTab())
-        );
+        return Boolean(dndUntil) && dndUntil > luxon.DateTime.now();
     }
 
     async acceptIncomingCall() {
@@ -148,6 +145,9 @@ export class UserAgent extends Reactive {
     }
 
     async attemptReconnection(attemptCount = 0) {
+        if (this.voip.isUnloading) {
+            return;
+        }
         if (attemptCount > 5) {
             this.voip.triggerError(
                 _t("The WebSocket connection was lost and couldn't be reestablished.")
@@ -260,7 +260,7 @@ export class UserAgent extends Reactive {
     }
 
     /**
-     * @param {import("@voip/core/call_model").Call} call 
+     * @param {import("@voip/core/call_model").Call} call
      * @returns {Session}
      */
     invite(call) {
@@ -363,6 +363,12 @@ export class UserAgent extends Reactive {
         }
     }
 
+    requestIncomingRingtone() {
+        if (this.hasCallInvitation && !this.isInDoNotDisturbMode && this.activeSession.ringleader) {
+            this.ringtoneService.incoming.play();
+        }
+    }
+
     /**
      * Determines if the SDP contains the attributes required by DTLS.
      *
@@ -455,13 +461,16 @@ export class UserAgent extends Reactive {
             phone_number: phoneNumber,
         });
         const session = new Session(call, inviteSession);
+        session.controlHandle = inviteSession.request.getHeader("Call-ID");
         inviteSession.incomingInviteRequest.delegate = {
             onCancel: (message) => session._onIncomingInviteCanceled(message),
         };
         this.activeSession = this.mainSession = session;
-        this.softphone.show();
-        if (await this.shouldPlayIncomingCallRingtone()) {
-            this.ringtoneService.incoming.play();
+        if (navigator.userActivation.hasBeenActive) {
+            this.env.services["voip.worker"].send("VOIP:RING?", session.controlHandle);
+        }
+        if (!this.isInDoNotDisturbMode) {
+            this.softphone.show();
         }
     }
 

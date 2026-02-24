@@ -3,15 +3,16 @@
 # * mrp_mps
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:36+0000\n"
-"PO-Revision-Date: 2025-09-16 22:54+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
-"Language-Team: Thai <https://translate.odoo.com/projects/odoo-19/mrp_mps/th/>"
-"\n"
+"POT-Creation-Date: 2025-12-30 18:42+0000\n"
+"PO-Revision-Date: 2025-11-16 13:42+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Thai <https://translate.odoo.com/projects/odoo-19/mrp_mps/th/"
+">\n"
 "Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -110,7 +111,7 @@ msgstr "เส้นทางที่อนุญาต"
 #. module: mrp_mps
 #: model_terms:ir.ui.view,arch_db:mrp_mps.mrp_mps_forecast_suggestion_form_view
 msgid "Apply"
-msgstr ""
+msgstr "นำไปใช้"
 
 #. module: mrp_mps
 #. odoo-javascript
@@ -148,7 +149,7 @@ msgstr ""
 #. module: mrp_mps
 #: model:ir.model.fields,field_description:mrp_mps.field_mrp_mps_forecast_suggestion__based_on
 msgid "Based on"
-msgstr ""
+msgstr "อิงตาม"
 
 #. module: mrp_mps
 #: model:ir.model,name:mrp_mps.model_mrp_bom
@@ -236,8 +237,7 @@ msgstr "หน่วยวัดเริ่มต้นที่ใช้สำ
 #. module: mrp_mps
 #: model:ir.model.fields,help:mrp_mps.field_res_company__manufacturing_period
 #: model:ir.model.fields,help:mrp_mps.field_res_config_settings__manufacturing_period
-msgid ""
-"Default value for the time ranges in Master Production Schedule report."
+msgid "Default value for the time ranges in Master Production Schedule report."
 msgstr "ค่าเริ่มต้นสำหรับช่วงเวลาในรายงานกำหนดการผลิตหลัก"
 
 #. module: mrp_mps
@@ -256,7 +256,7 @@ msgstr "การคาดการณ์ความต้องการ"
 #. module: mrp_mps
 #: model_terms:ir.ui.view,arch_db:mrp_mps.mrp_mps_forecast_suggestion_form_view
 msgid "Discard"
-msgstr ""
+msgstr "ละทิ้ง"
 
 #. module: mrp_mps
 #: model:ir.model.fields,field_description:mrp_mps.field_res_company__mrp_mps_show_actual_demand
@@ -448,17 +448,17 @@ msgstr "เป็นเส้นทางการผลิต"
 #. module: mrp_mps
 #: model:ir.model.fields.selection,name:mrp_mps.selection__mrp_mps_forecast_suggestion__based_on__one_year
 msgid "Last 12 Months"
-msgstr ""
+msgstr "12 เดือนที่ผ่านมา"
 
 #. module: mrp_mps
 #: model:ir.model.fields.selection,name:mrp_mps.selection__mrp_mps_forecast_suggestion__based_on__three_months
 msgid "Last 3 Months"
-msgstr ""
+msgstr "3 เดือนที่ผ่านมา"
 
 #. module: mrp_mps
 #: model:ir.model.fields.selection,name:mrp_mps.selection__mrp_mps_forecast_suggestion__based_on__30_days
 msgid "Last 30 Days"
-msgstr ""
+msgstr "30 วันที่ผ่านมา"
 
 #. module: mrp_mps
 #: model:ir.model.fields,field_description:mrp_mps.field_mrp_mps_forecast_details__write_uid
@@ -543,8 +543,7 @@ msgstr "ช่วงเวลาการผลิต"
 msgid ""
 "Manufacturing Settings: Your Master Production Schedule must always display "
 "at least 1 period."
-msgstr ""
-"การตั้งค่าการผลิต: ตารางการผลิตหลักของคุณจะต้องแสดงอย่างน้อย 1 ช่วงเวลาเสมอ"
+msgstr "การตั้งค่าการผลิต: ตารางการผลิตหลักของคุณจะต้องแสดงอย่างน้อย 1 ช่วงเวลาเสมอ"
 
 #. module: mrp_mps
 #. odoo-javascript
@@ -677,7 +676,7 @@ msgstr ""
 #. module: mrp_mps
 #: model:ir.model.fields,field_description:mrp_mps.field_mrp_mps_forecast_suggestion__period
 msgid "Period"
-msgstr ""
+msgstr "ช่วงเวลา"
 
 #. module: mrp_mps
 #: model:ir.model.fields,field_description:mrp_mps.field_mrp_production_schedule__route_id
@@ -687,7 +686,7 @@ msgstr "เส้นทางที่ต้องการ"
 #. module: mrp_mps
 #: model:ir.model.fields.selection,name:mrp_mps.selection__mrp_mps_forecast_suggestion__based_on__last_year
 msgid "Previous Year"
-msgstr ""
+msgstr "ปีก่อนหน้า"
 
 #. module: mrp_mps
 #: model:ir.model.fields,field_description:mrp_mps.field_mrp_product_forecast__procurement_launched
@@ -749,7 +748,7 @@ msgstr "รายการคำสั่งซื้อ"
 #. module: mrp_mps
 #: model:ir.model.fields,field_description:mrp_mps.field_mrp_mps_forecast_suggestion__quantity
 msgid "Quantity"
-msgstr ""
+msgstr "ปริมาณ"
 
 #. module: mrp_mps
 #: model:ir.model.fields,field_description:mrp_mps.field_mrp_mps_forecast_suggestion__quantity_before_scale
@@ -777,8 +776,7 @@ msgstr "จำนวนจาก RFQ"
 msgid ""
 "Quantity predicted to be available for sale at the end of the period (= to "
 "replenish - actual demand)."
-msgstr ""
-"จำนวนที่คาดว่าจะพร้อมขายเมื่อสิ้นสุดระยะเวลา (= เพื่อเติมสินค้า - ความต้องการที่แท้จริง)"
+msgstr "จำนวนที่คาดว่าจะพร้อมขายเมื่อสิ้นสุดระยะเวลา (= เพื่อเติมสินค้า - ความต้องการที่แท้จริง)"
 
 #. module: mrp_mps
 #. odoo-python
@@ -954,8 +952,7 @@ msgstr ""
 msgid ""
 "The forecasted demand to fulfill the needs in components of the "
 "Manufacturing Orders."
-msgstr ""
-"ความต้องการที่พยากรณ์ไว้เพื่อตอบสนองความต้องการในส่วนประกอบของใบสั่งผลิต"
+msgstr "ความต้องการที่พยากรณ์ไว้เพื่อตอบสนองความต้องการในส่วนประกอบของใบสั่งผลิต"
 
 #. module: mrp_mps
 #. odoo-javascript
@@ -979,12 +976,13 @@ msgstr "จำนวนที่พยากรณ์ในสต็อกเม
 #. odoo-javascript
 #: code:addons/mrp_mps/static/src/components/main.xml:0
 msgid ""
-"The master schedule translates your sales and demand forecasts into a production and purchase planning for each component.\n"
-"                    It ensures everything gets scheduled on time, based on constraints such as: safety stock, production capacity, lead times.\n"
+"The master schedule translates your sales and demand forecasts into a "
+"production and purchase planning for each component.\n"
+"                    It ensures everything gets scheduled on time, based on "
+"constraints such as: safety stock, production capacity, lead times.\n"
 "                    It's the perfect tool to support your S&OP meetings."
 msgstr ""
-"กำหนดการหลักจะแปลงการพยากรณ์การขายและความต้องการเป็นการวางแผนการผลิตและการจัดซื้อสำหรั"
-"บแต่ละส่วนประกอบ\n"
+"กำหนดการหลักจะแปลงการพยากรณ์การขายและความต้องการเป็นการวางแผนการผลิตและการจัดซื้อสำหรับแต่ละส่วนประกอบ\n"
 "                    ช่วยให้มั่นใจว่าทุกอย่างได้รับการจัดและกำหนดที่ตรงเวลา ตามข้อจำกัด เช่น "
 "สต็อกความปลอดภัย กำลังการผลิต เวลานำสินค้า\n"
 "                    นี้เป็นเครื่องมือที่สมบูรณ์แบบในการสนับสนุนการประชุม S&OP ของคุณ"
@@ -1001,8 +999,10 @@ msgstr "จำนวนที่เติม โดยอิงตามคำ�
 #. odoo-javascript
 #: code:addons/mrp_mps/static/src/components/line.xml:0
 msgid ""
-"The quantity to replenish through Purchase Orders or Manufacturing Orders."
-msgstr "จำนวนที่จะเติมสินค้าผ่านคำสั่งซื้อหรือใบสั่งผลิต"
+"The quantity to replenish through Purchase Orders or Manufacturing Orders.\n"
+"Color code: Green if to replenish now, Red if existing replenishment is too "
+"high for the period, Orange if current replenishment is too low."
+msgstr ""
 
 #. module: mrp_mps
 #: model:ir.model.fields,help:mrp_mps.field_mrp_production_schedule__forecast_target_qty
@@ -1072,8 +1072,7 @@ msgstr "รายสัปดาห์"
 
 #. module: mrp_mps
 #: model:ir.model.fields,help:mrp_mps.field_mrp_production_schedule__is_indirect
-msgid ""
-"When checked, this product will not appear in the 'To Forecast' filter."
+msgid "When checked, this product will not appear in the 'To Forecast' filter."
 msgstr "เมื่อทำเครื่องหมายแล้ว ผลิตภัณฑ์นี้จะไม่ปรากฏในตัวกรอง 'เพื่อคาดการณ์'"
 
 #. module: mrp_mps
@@ -1101,9 +1100,13 @@ msgstr "โดย"
 #. module: mrp_mps
 #: model_terms:ir.ui.view,arch_db:mrp_mps.mrp_mps_forecast_suggestion_form_view
 msgid "units"
-msgstr ""
+msgstr "หน่วย"
 
 #. module: mrp_mps
 #: model_terms:ir.ui.view,arch_db:mrp_mps.mrp_mps_forecast_suggestion_form_view
 msgid "units x"
 msgstr ""
+
+#~ msgid ""
+#~ "The quantity to replenish through Purchase Orders or Manufacturing Orders."
+#~ msgstr "จำนวนที่จะเติมสินค้าผ่านคำสั่งซื้อหรือใบสั่งผลิต"

@@ -186,7 +186,9 @@ class SignRequest(models.Model):
         for item in self.template_id.sign_item_ids:
             if item.constant:
                 sign_values_by_role[item.responsible_id][str(item.id)] = {
-                    "name": item.name,
+                    # For constant strikethrough items, use "striked" instead of item name,
+                    # since item name returns "strikethrough" but we need "striked" to set the value correctly.
+                    "name": item.name if item.type_id.item_type != 'strikethrough' else 'striked',
                     "type_id": item.type_id.id,
                     "auto_field": item.type_id.sudo().auto_field
                 }
@@ -368,7 +370,7 @@ class SignRequest(models.Model):
         # check if frontend user or backend
         action = self.env["ir.actions.actions"]._for_xml_id("sign.sign_request_action")
         result = {"action": action, "label": _("Close"), "custom_action": False}
-        if self.reference_doc and self.reference_doc.exists():
+        if self.reference_doc and self.reference_doc.exists() and self.reference_doc.has_access('read'):
             action = self._get_linked_record_action(action)
             result = {"action": action, "label": _("Back to %s", self.reference_doc._description), "custom_action": True}
         return result

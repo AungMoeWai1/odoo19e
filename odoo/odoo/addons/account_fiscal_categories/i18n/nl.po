@@ -3,13 +3,17 @@
 # * account_fiscal_categories
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2025, 2026.
+# Bren Driesen <brdri@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Odoo Translation Bot <c3p@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:24+0000\n"
-"PO-Revision-Date: 2025-09-15 17:30+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2025-12-30 18:43+0000\n"
+"PO-Revision-Date: 2026-01-13 22:00+0000\n"
+"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/"
 "account_fiscal_categories/nl/>\n"
 "Language: nl\n"
@@ -17,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: account_fiscal_categories
 #: model:ir.model,name:account_fiscal_categories.model_account_account
@@ -29,7 +33,13 @@ msgstr "Rekening"
 #. module: account_fiscal_categories
 #: model:ir.model,name:account_fiscal_categories.model_account_fiscal_category
 msgid "Account Fiscal Category"
-msgstr ""
+msgstr "Fiscale Categorie van de rekening"
+
+#. module: account_fiscal_categories
+#. odoo-python
+#: code:addons/account_fiscal_categories/report/account_fiscal_report_handler.py:0
+msgid "Account(s) with Multiple Fiscal Rates"
+msgstr "Rekening(en) met meerdere belastingtarieven"
 
 #. module: account_fiscal_categories
 #: model:ir.model.fields,field_description:account_fiscal_categories.field_account_fiscal_category__active
@@ -39,7 +49,7 @@ msgstr "Actief"
 #. module: account_fiscal_categories
 #: model_terms:ir.actions.act_window,help:account_fiscal_categories.action_account_fiscal_category_list
 msgid "Add a Fiscal Category"
-msgstr ""
+msgstr "Een fiscale categorie toevoegen"
 
 #. module: account_fiscal_categories
 #: model:account.report.column,name:account_fiscal_categories.fiscal_report_total_amount
@@ -76,6 +86,11 @@ msgid "Created on"
 msgstr "Aangemaakt op"
 
 #. module: account_fiscal_categories
+#: model:ir.model.fields,field_description:account_fiscal_categories.field_account_account__current_rate
+msgid "Current Rate"
+msgstr "Huidige koers"
+
+#. module: account_fiscal_categories
 #: model:ir.model.fields,field_description:account_fiscal_categories.field_account_account__display_name
 #: model:ir.model.fields,field_description:account_fiscal_categories.field_account_account_fiscal_rate__display_name
 #: model:ir.model.fields,field_description:account_fiscal_categories.field_account_fiscal_category__display_name
@@ -98,12 +113,12 @@ msgstr "Fiscale categorieën"
 #: model:ir.model.fields,field_description:account_fiscal_categories.field_account_account__fiscal_category_id
 #: model_terms:ir.ui.view,arch_db:account_fiscal_categories.view_account_form
 msgid "Fiscal Category"
-msgstr ""
+msgstr "Fiscale categorie"
 
 #. module: account_fiscal_categories
 #: model:ir.model,name:account_fiscal_categories.model_account_account_fiscal_rate
 msgid "Fiscal Rate"
-msgstr ""
+msgstr "Fiscaal tarief"
 
 #. module: account_fiscal_categories
 #: model:ir.model.fields,field_description:account_fiscal_categories.field_account_account_fiscal_rate__rate
@@ -113,7 +128,7 @@ msgstr "Belastingpercentage (%)"
 #. module: account_fiscal_categories
 #: model_terms:ir.ui.view,arch_db:account_fiscal_categories.view_account_form
 msgid "Fiscal Rates"
-msgstr ""
+msgstr "Fiscale tarieven"
 
 #. module: account_fiscal_categories
 #: model:account.report,name:account_fiscal_categories.fiscal_report
@@ -125,12 +140,12 @@ msgstr "Fiscaal verslag"
 #. module: account_fiscal_categories
 #: model:ir.model,name:account_fiscal_categories.model_account_fiscal_report_handler
 msgid "Fiscal Report Custom Handler"
-msgstr ""
+msgstr "Fiscaal rapport Aangepaste Handler"
 
 #. module: account_fiscal_categories
 #: model:ir.model.constraint,message:account_fiscal_categories.constraint_account_fiscal_category_unique_code
 msgid "Fiscal category code should be unique."
-msgstr ""
+msgstr "De fiscale categoriecode moet uniek zijn."
 
 #. module: account_fiscal_categories
 #. odoo-python
@@ -141,9 +156,10 @@ msgstr "Grootboek"
 #. module: account_fiscal_categories
 #: model:account.return.check.template,description:account_fiscal_categories.account_return_check_template_meal_expense_adjustment
 msgid ""
-"General: Make sure the deduction for business meals is under the legal "
-"limit."
+"General: Make sure the deduction for business meals is under the legal limit."
 msgstr ""
+"Algemeen: Zorg ervoor dat de aftrek voor zakelijke maaltijden onder de "
+"wettelijke limiet blijft."
 
 #. module: account_fiscal_categories
 #: model:ir.model.fields,field_description:account_fiscal_categories.field_account_account__id
@@ -174,7 +190,7 @@ msgstr "Laatst bijgewerkt op"
 #. module: account_fiscal_categories
 #: model:account.return.check.template,name:account_fiscal_categories.account_return_check_template_meal_expense_adjustment
 msgid "Meal expense adjustments"
-msgstr ""
+msgstr "Aanpassingen maaltijdkosten"
 
 #. module: account_fiscal_categories
 #: model:ir.model.fields,field_description:account_fiscal_categories.field_account_fiscal_category__name
@@ -208,8 +224,8 @@ msgstr "Startdatum"
 #. module: account_fiscal_categories
 #. odoo-javascript
 #: code:addons/account_fiscal_categories/static/src/components/fiscal_report/warnings.xml:0
-msgid "There are multiple fiscal rates in this period"
-msgstr ""
+msgid "There are"
+msgstr "Er zijn"
 
 #. module: account_fiscal_categories
 #. odoo-python
@@ -226,3 +242,15 @@ msgstr "bijv. 1201"
 #: model_terms:ir.ui.view,arch_db:account_fiscal_categories.view_account_fiscal_category_form
 msgid "e.g. Non-Deductible Tax"
 msgstr "Bijv. Niet-aftrekbare btw"
+
+#. module: account_fiscal_categories
+#. odoo-javascript
+#: code:addons/account_fiscal_categories/static/src/components/fiscal_report/warnings.xml:0
+msgid "in this period."
+msgstr "in deze periode."
+
+#. module: account_fiscal_categories
+#. odoo-javascript
+#: code:addons/account_fiscal_categories/static/src/components/fiscal_report/warnings.xml:0
+msgid "multiple fiscal rates"
+msgstr "verschillende belastingtarieven"

@@ -276,4 +276,29 @@ describe("font types", () => {
         expect(".o-we-toolbar .btn[name='font']").toHaveText("Small");
         expect(editor.editable.querySelector("p")).toHaveClass("small");
     });
+
+    test("Should not be able to change tag of `o_editable` element", async () => {
+        const { getEditor } = await setupHTMLBuilder(`<h1 class="o_editable">abcd</h1>`);
+        const editor = getEditor();
+        const h1 = editor.editable.querySelector("h1");
+        setSelection({ anchorNode: h1, anchorOffset: 0, focusOffset: 1 });
+        await waitFor(".o-we-toolbar");
+        await expandToolbar();
+        expect(".o-we-toolbar .btn[name='font']").toHaveCount(0);
+    });
+
+    test("should cleanup whitespace after last element removal", async () => {
+        const { getEditor } = await setupHTMLBuilder(`
+            <section class="test_snippet" data-snippet="s_test" data-name="Test">
+                <p>Content to remove</p>
+            </section>
+        `);
+        const editor = getEditor();
+        const emptyStructureEl = editor.editable.querySelector(".oe_empty");
+        // The snippet is surrounded by new line text nodes.
+        expect(emptyStructureEl.childNodes.length).toBe(3);
+        await contains(":iframe .test_snippet").click();
+        await contains(".overlay .oe_snippet_remove").click();
+        expect(emptyStructureEl.childNodes.length).toBe(0);
+    });
 });

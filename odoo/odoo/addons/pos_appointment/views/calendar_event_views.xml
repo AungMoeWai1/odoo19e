@@ -25,8 +25,10 @@
                             <field name="stop" invisible="1"/><!--required for various things in custom js views and widgets-->
                         </div>
                         <div colspan="2">
-                            <label for="waiting_list_capacity" class="me-2"/>
-                            <field name="waiting_list_capacity" string="Reservation for" class="oe_inline ms-1"/>
+                            <label for="total_capacity_reserved" class="me-2" invisible="appointment_type_schedule_based_on != 'resources' or not appointment_type_manage_capacity"/>
+                            <field name="total_capacity_reserved" string="Reservation for" class="oe_inline ms-1" invisible="appointment_type_schedule_based_on != 'resources' or not appointment_type_manage_capacity"/>
+                            <label for="waiting_list_capacity" class="me-2" invisible="appointment_type_schedule_based_on == 'resources' and appointment_type_manage_capacity"/>
+                            <field name="waiting_list_capacity" string="Reservation for" class="oe_inline ms-1" invisible="appointment_type_schedule_based_on == 'resources' and appointment_type_manage_capacity"/>
                             <span>people</span>
                         </div>
                         <field name="phone_number" widget="phone"/>
@@ -37,13 +39,15 @@
                             <field name="duration" widget="float_time" string="Duration" class="oe_inline"/>
                             <span> hours</span>
                         </div>
-                        <field 
+                        <field
                             name="resource_ids" string="Resources" placeholder="Select Resources" options="{'no_create': True}"
                             invisible="not id and context.get('default_resource_ids')" widget="many2many_tags"
                             domain="[('appointment_type_ids', 'in', appointment_type_id)]"/>
                     </group>
                     <field name="answers"/>
-                    <field name="description" placeholder="Extra Comments..."/>
+                    <field name="description"
+                    type="html" 
+                    placeholder="Extra Comments..."/>
                 </group>
             </sheet>
             </form>
@@ -75,7 +79,7 @@
                             <li t-if="phone_number">
                                 <strong>Phone: </strong> <t t-out="phone_number"/>
                             </li>
-                            <li t-if="appointment_type_manage_capacity"><strong><t t-out="appointment_type_id[1]"/></strong> for: <t t-out="waiting_list_capacity"/></li>
+                            <li t-if="appointment_type_manage_capacity"><strong><t t-out="appointment_type_id.display_name"/></strong> for: <t t-out="waiting_list_capacity"/></li>
                             <li><strong>Start Date: </strong> <t t-out="start.toFormat('f')"/></li>
                             <t t-set="hours" t-value="Math.floor(duration)"/>
                             <t t-set="minutes" t-value="Math.floor((duration - hours) * 60)"/>

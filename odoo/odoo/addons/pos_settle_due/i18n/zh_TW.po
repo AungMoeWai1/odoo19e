@@ -1,24 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* pos_settle_due
-# 
+# * pos_settle_due
+#
 # Translators:
 # Wil Odoo, 2025
 # Tony Ng, 2025
-# 
+#
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-06 09:45+0000\n"
-"PO-Revision-Date: 2025-05-06 11:01+0000\n"
-"Last-Translator: Tony Ng, 2025\n"
-"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"POT-Creation-Date: 2025-12-30 18:42+0000\n"
+"PO-Revision-Date: 2025-11-08 19:43+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
+"projects/odoo-19/pos_settle_due/zh_Hant/>\n"
+"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: pos_settle_due
 #. odoo-javascript
@@ -114,8 +117,8 @@ msgstr "確定將 %s 存入 %s 嗎？"
 #. odoo-javascript
 #: code:addons/pos_settle_due/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid ""
-"Do you want to deposit money to a specific customer? If so, first select "
-"him/her."
+"Do you want to deposit money to a specific customer? If so, first select him/"
+"her."
 msgstr "想將款項存入至特定客戶？如果是，請先選擇客戶。"
 
 #. module: pos_settle_due
@@ -138,7 +141,6 @@ msgstr "空白訂單無法開立發票。"
 
 #. module: pos_settle_due
 #. odoo-javascript
-#: code:addons/pos_settle_due/static/src/app/screens/partner_list/partner_line/partner_line.js:0
 #: code:addons/pos_settle_due/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid "Error"
 msgstr "錯誤"
@@ -179,12 +181,6 @@ msgstr "日記賬記項"
 #: model:ir.model.fields,field_description:pos_settle_due.field_pos_order__settled_orders_count
 msgid "Number of settled orders"
 msgstr "已完成收款訂單數目"
-
-#. module: pos_settle_due
-#. odoo-javascript
-#: code:addons/pos_settle_due/static/src/app/screens/partner_list/partner_line/partner_line.js:0
-msgid "One of the selected orders is already being settled."
-msgstr "其中一張已選取的訂單，已進入付款階段。"
 
 #. module: pos_settle_due
 #: model:ir.model.fields,field_description:pos_settle_due.field_account_bank_statement_line__pos_order_line_ids
@@ -311,8 +307,8 @@ msgstr "訂單空白"
 #. odoo-javascript
 #: code:addons/pos_settle_due/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid ""
-"The selected customer is not in the list of partners of the ongoing settling"
-" orderlines."
+"The selected customer is not in the list of partners of the ongoing settling "
+"orderlines."
 msgstr "所選取的客戶，並非在正持續進行清繳的訂單資料行的合作夥伴清單中。"
 
 #. module: pos_settle_due
@@ -356,6 +352,12 @@ msgstr "是"
 #. module: pos_settle_due
 #. odoo-javascript
 #: code:addons/pos_settle_due/static/src/app/screens/payment_screen/payment_screen.js:0
+msgid "You can not deposit zero amount."
+msgstr "不可存入數值為零的金額。"
+
+#. module: pos_settle_due
+#. odoo-javascript
+#: code:addons/pos_settle_due/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid "You cannot refund a deposit/settling order."
 msgstr "訂金訂單或正在完成收款的訂單，不可作退款。"
 
@@ -364,3 +366,6 @@ msgstr "訂金訂單或正在完成收款的訂單，不可作退款。"
 #: code:addons/pos_settle_due/models/pos_order.py:0
 msgid "id"
 msgstr "id"
+
+#~ msgid "One of the selected orders is already being settled."
+#~ msgstr "其中一張已選取的訂單，已進入付款階段。"

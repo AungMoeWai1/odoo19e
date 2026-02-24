@@ -3,13 +3,14 @@
 # * delivery_shiprocket
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Odoo Translation Bot <c3p@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-01 12:09+0000\n"
-"PO-Revision-Date: 2025-09-15 23:08+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2025-12-30 18:42+0000\n"
+"PO-Revision-Date: 2025-11-27 18:17+0000\n"
+"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-19/"
 "delivery_shiprocket/vi/>\n"
 "Language: vi\n"
@@ -17,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: delivery_shiprocket
 #: model_terms:ir.ui.view,arch_db:delivery_shiprocket.view_delivery_carrier_form_inherit_delivery_shiprocket
@@ -36,8 +37,8 @@ msgstr ""
 #. module: delivery_shiprocket
 #: model_terms:ir.ui.view,arch_db:delivery_shiprocket.view_delivery_carrier_form_inherit_delivery_shiprocket
 msgid ""
-"<b>Fill the details and Click on Save Channel &amp; Test Connection "
-"button.</b>"
+"<b>Fill the details and Click on Save Channel &amp; Test Connection button.</"
+"b>"
 msgstr "<b>Điền thông tin và nhấp vào nút Lưu Kênh &amp; kiểm tra kết nối.</b>"
 
 #. module: delivery_shiprocket
@@ -46,9 +47,8 @@ msgid ""
 "<b>In Odoo configuration click on <i class=\"fa fa-refresh oe_inline\"/> "
 "icon near Shiprocket Channel to sync newly created channels.</b>"
 msgstr ""
-"<b>Trong cấu hình Odoo, nhấp vào biểu tượng <i class="
-"\"fa fa-refresh oe_inline\"/> gần Kênh Shiprocket để đồng bộ các kênh mới "
-"được tạo.</b>"
+"<b>Trong cấu hình Odoo, nhấp vào biểu tượng <i class=\"fa fa-refresh "
+"oe_inline\"/> gần Kênh Shiprocket để đồng bộ các kênh mới được tạo.</b>"
 
 #. module: delivery_shiprocket
 #: model_terms:ir.ui.view,arch_db:delivery_shiprocket.view_delivery_carrier_form_inherit_delivery_shiprocket
@@ -58,8 +58,10 @@ msgstr "<b>Now click on Add for MANUAL</b>"
 #. module: delivery_shiprocket
 #: model_terms:ir.ui.view,arch_db:delivery_shiprocket.view_delivery_carrier_form_inherit_delivery_shiprocket
 msgid ""
-"<b>Once your account is created, go to Settings &gt; API &gt; Configure. </b>\n"
-"                                <b>You can add new API User from the right side of the page.</b>\n"
+"<b>Once your account is created, go to Settings &gt; API &gt; Configure. </"
+"b>\n"
+"                                <b>You can add new API User from the right "
+"side of the page.</b>\n"
 "                                <br/>"
 msgstr ""
 "<b>Sau khi tạo tài khoản, hãy đi đến Cài đặt &gt; Cấu hình API &gt;.\n"
@@ -77,8 +79,7 @@ msgstr "<b>Để tạo một kênh, hãy đi đến Kênh Shiprocket.</b>"
 msgid ""
 "<i class=\"fa fa-exclamation-triangle\"/> In test environment, to avoid "
 "charges, your shippings are automatically <b>cancelled</b> after the label "
-"creation. The amount of cancelled shipment will be returned in next 3-4 "
-"days."
+"creation. The amount of cancelled shipment will be returned in next 3-4 days."
 msgstr ""
 "<i class=\"fa fa-exclamation-triangle\"/>Để tránh bị tính phí, thì trong môi "
 "trường kiểm thử, các lô hàng của bạn sẽ tự động <b>bị hủy</b> sau khi tạo "
@@ -87,8 +88,8 @@ msgstr ""
 #. module: delivery_shiprocket
 #: model:ir.model.fields,help:delivery_shiprocket.field_delivery_carrier__shiprocket_manifests_generate
 msgid ""
-"A manifest is a document that is required by some carriers to streamline the"
-" pickup process.particularly when shipping out a high-volume of ecommerce "
+"A manifest is a document that is required by some carriers to streamline the "
+"pickup process.particularly when shipping out a high-volume of ecommerce "
 "orders."
 msgstr ""
 "Bản khai báo hàng hoá là một tài liệu mà một số đơn vị vận chuyển yêu cầu để "
@@ -198,8 +199,8 @@ msgstr "Tạo người dùng API"
 #. module: delivery_shiprocket
 #: model:ir.model.fields,help:delivery_shiprocket.field_delivery_carrier__shiprocket_pickup_request
 msgid ""
-"Create a pickup request for your order shipment using Validate button of the"
-" Delivery Order."
+"Create a pickup request for your order shipment using Validate button of the "
+"Delivery Order."
 msgstr ""
 "Tạo yêu cầu lấy hàng cho lô hàng cần vận chuyển của bạn bằng cách sử dụng "
 "nút Xác thực trong Lệnh giao hàng."
@@ -294,8 +295,8 @@ msgstr ""
 #. module: delivery_shiprocket
 #: model:ir.model.fields,help:delivery_shiprocket.field_delivery_carrier__shiprocket_channel_id
 msgid ""
-"Get all the integrated channels from your Shiprocket account.This channel id"
-" is used to select or specify a custom channel at the time of Shiprocket "
+"Get all the integrated channels from your Shiprocket account.This channel id "
+"is used to select or specify a custom channel at the time of Shiprocket "
 "order creation."
 msgstr ""
 "Lấy tất cả kênh tích hợp từ tài khoản Shiprocket của bạn. ID kênh được sử "
@@ -479,7 +480,7 @@ msgstr "Cấu hình Shiprocket"
 #. module: delivery_shiprocket
 #: model:ir.model.fields,field_description:delivery_shiprocket.field_res_config_settings__module_delivery_shiprocket
 msgid "Shiprocket Connector"
-msgstr "Liên kết Shiprocket"
+msgstr "Đơn vị vận chuyển Shiprocket"
 
 #. module: delivery_shiprocket
 #: model:ir.model,name:delivery_shiprocket.model_shiprocket_courier

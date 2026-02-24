@@ -290,6 +290,52 @@ class TestTimeoffDefer(TestPayrollHolidaysBase):
         with self.assertRaises(UserError):
             leave.action_report_to_next_month()
 
+    def test_report_to_next_month_2_months_time_off(self):
+        """
+        In this test, we want to defer a timeoff with a not rounded duration (7.6h)
+        """
+        self.emp.version_ids.generate_work_entries(date(2026, 2, 1), date(2026, 2, 28))
+        resource_calendar = self.env['resource.calendar'].create({
+            'name': 'Test Two Week Calendar No Breaks',
+            'hours_per_day': 7.6,
+            'hours_per_week': 38,
+            'full_time_required_hours': 38,
+            'attendance_ids': [
+                (0, 0, {'name': 'Monday', 'dayofweek': '0', 'hour_from': 8, 'hour_to': 15.6, 'day_period': 'full_day'}),
+                (0, 0, {'name': 'Tuesday', 'dayofweek': '1', 'hour_from': 8, 'hour_to': 15.6, 'day_period': 'full_day'}),
+                (0, 0, {'name': 'Wednesday', 'dayofweek': '2', 'hour_from': 8, 'hour_to': 15.6, 'day_period': 'full_day'}),
+                (0, 0, {'name': 'Thursday', 'dayofweek': '3', 'hour_from': 8, 'hour_to': 15.6, 'day_period': 'full_day'}),
+                (0, 0, {'name': 'Friday', 'dayofweek': '4', 'hour_from': 8, 'hour_to': 15.6, 'day_period': 'full_day'}),
+            ],
+        })
+        self.emp.resource_calendar_id = resource_calendar
+        payslip = self.env['hr.payslip'].create({
+            'name': 'toto payslip',
+            'employee_id': self.emp.id,
+            'date_from': '2026-02-01',
+            'date_to': '2026-02-28',
+        })
+        payslip.compute_sheet()
+        payslip.action_payslip_done()
+        self.assertEqual(payslip.state, 'validated')
+
+        leave = self.env['hr.leave'].create([{
+            'name': 'Tennis',
+            'employee_id': self.emp.id,
+            'holiday_status_id': self.leave_type.id,
+            'request_date_from': date(2026, 2, 27),
+            'request_date_to': date(2026, 3, 5),
+        }])
+        leave.action_approve()
+        self.emp.version_ids.generate_work_entries(date(2026, 3, 1), date(2026, 3, 31))
+        self.assertEqual(leave.payslip_state, 'blocked', 'Leave should be to defer')
+        leave.action_report_to_next_month()
+        defered_work_entry = self.env['hr.work.entry'].search([
+            ('date', '=', date(2026, 3, 6)),
+            ('version_id', 'in', self.emp.version_ids.ids)
+        ])
+        self.assertEqual(defered_work_entry.work_entry_type_id.code, 'LEAVETEST300')
+
     def test_report_to_next_month_half_days(self):
         self.leave_type.request_unit = 'half_day'
         self.emp.version_ids.generate_work_entries(date(2022, 1, 1), date(2022, 2, 28))
@@ -329,7 +375,72 @@ class TestTimeoffDefer(TestPayrollHolidaysBase):
         ])
         self.assertEqual(len(reported_work_entries), 1)
         self.assertEqual(reported_work_entries[0].date, date(2022, 2, 1))
-        self.assertEqual(reported_work_entries[0].duration, 8)
+        self.assertEqual(reported_work_entries[0].duration, 4)
+
+        payslip = self.env['hr.payslip'].create({
+            'name': 'toto payslip',
+            'employee_id': self.emp.id,
+            'date_from': '2022-02-01',
+            'date_to': '2022-02-28',
+        })
+        payslip.compute_sheet()
+        self.assertEqual(2, len(payslip.worked_days_line_ids))
+        self.assertTrue(any(wd.work_entry_type_id == self.leave_type.work_entry_type_id for wd in payslip.worked_days_line_ids))
+        leave_worked_day_line = payslip.worked_days_line_ids.filtered(lambda wd: wd.work_entry_type_id == self.leave_type.work_entry_type_id)
+        self.assertEqual(0.5, leave_worked_day_line.number_of_days)
+        self.assertEqual(4, leave_worked_day_line.number_of_hours)
+
+    def test_report_to_next_month_hourly(self):
+        self.leave_type.request_unit = 'hour'
+        self.emp.version_ids.generate_work_entries(date(2022, 1, 1), date(2022, 2, 28))
+        payslip = self.env['hr.payslip'].create({
+            'name': 'toto payslip',
+            'employee_id': self.emp.id,
+            'date_from': '2022-01-01',
+            'date_to': '2022-01-31',
+        })
+        payslip.compute_sheet()
+        payslip.action_payslip_done()
+        self.assertEqual(payslip.state, 'validated')
+        leave = self.env['hr.leave'].new({
+            'name': 'Tennis',
+            'holiday_status_id': self.leave_type.id,
+            'employee_id': self.emp.id,
+            'request_date_from': date(2022, 1, 31),
+            'request_date_to': date(2022, 1, 31),
+            'request_hour_from': 10.0,
+            'request_hour_to': 12.0,
+        })
+        leave._compute_date_from_to()
+        leave = self.env['hr.leave'].create(leave._convert_to_write(leave._cache))
+
+        leave.action_approve()
+        self.assertEqual(leave.payslip_state, 'blocked', 'Leave should be to defer')
+
+        leave.action_report_to_next_month()
+        reported_work_entries = self.env['hr.work.entry'].search([
+            ('employee_id', '=', self.emp.id),
+            ('company_id', '=', self.env.company.id),
+            ('state', '=', 'draft'),
+            ('work_entry_type_id', '=', self.leave_type.work_entry_type_id.id),
+            ('date', '>=', Datetime.to_datetime('2022-02-01')),
+            ('date', '<=', datetime.combine(Datetime.to_datetime('2022-02-28'), datetime.max.time()))
+        ])
+        self.assertEqual(len(reported_work_entries), 1)
+        self.assertEqual(reported_work_entries[0].date, date(2022, 2, 1))
+        self.assertEqual(reported_work_entries[0].duration, 2)
+
+        payslip = self.env['hr.payslip'].create({
+            'name': 'toto payslip',
+            'employee_id': self.emp.id,
+            'date_from': '2022-02-01',
+            'date_to': '2022-02-28',
+        })
+        payslip.compute_sheet()
+        self.assertEqual(2, len(payslip.worked_days_line_ids))
+        self.assertTrue(any(wd.work_entry_type_id == self.leave_type.work_entry_type_id for wd in payslip.worked_days_line_ids))
+        leave_worked_day_line = payslip.worked_days_line_ids.filtered(lambda wd: wd.work_entry_type_id == self.leave_type.work_entry_type_id)
+        self.assertEqual(2, leave_worked_day_line.number_of_hours)
 
     def test_defer_next_month_double_time_off(self):
         """

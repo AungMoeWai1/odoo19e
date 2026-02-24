@@ -1,12 +1,13 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { click, tick, waitFor, waitForNone } from "@odoo/hoot-dom";
-import { setupEditor } from "./_helpers/editor";
+import { setupEditor, testEditor } from "./_helpers/editor";
 import { animationFrame } from "@odoo/hoot-mock";
 import { getContent, setContent, setSelection } from "./_helpers/selection";
-import { undo } from "./_helpers/user_actions";
+import { splitBlock, undo } from "./_helpers/user_actions";
 import { contains } from "@web/../tests/web_test_helpers";
 import { expectElementCount } from "./_helpers/ui_expectations";
 import { execCommand } from "./_helpers/userCommands";
+import { unformat } from "./_helpers/format";
 
 test("icon toolbar is displayed", async () => {
     const { el } = await setupEditor(`<p><span class="fa fa-glass"></span></p>`);
@@ -422,7 +423,38 @@ describe("selection", () => {
         setSelection({ anchorNode: icon, anchorOffset: 0 });
         await tick();
         expect(getContent(el)).toBe(
-            `<p contenteditable="false">abc[<span class="fa fa-glass" contenteditable="false">\u200b</span>]def</p>`
+            '<p data-selection-placeholder=""><br></p>' +
+                '<p contenteditable="false">abc[<span class="fa fa-glass" contenteditable="false">\u200b</span>]def</p>' +
+                '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>'
         );
+    });
+});
+
+test("should insert two empty paragraphs when Enter is pressed twice before the icon element", async () => {
+    const { el, editor } = await setupEditor(
+        `<p>[]<span class="fa fa-glass" contenteditable="false"></span></p>`
+    );
+    splitBlock(editor);
+    expect(getContent(el)).toBe(
+        `<p><br></p><p>\ufeff[]<span class="fa fa-glass" contenteditable="false">\u200B</span>\ufeff</p>`
+    );
+    splitBlock(editor);
+    expect(getContent(el)).toBe(
+        `<p><br></p><p><br></p><p>\ufeff[]<span class="fa fa-glass" contenteditable="false">\u200B</span>\ufeff</p>`
+    );
+});
+
+test("should wrap icons in feff when under list item", async () => {
+    await testEditor({
+        contentBefore: unformat(`
+                <ul>
+                    <li><span class="fa fa-glass" contenteditable="false"></span></li>
+                </ul>
+            `),
+        contentBeforeEdit: unformat(`
+            <ul>
+                <li>\ufeff<span class="fa fa-glass" contenteditable="false">\u200B</span>\ufeff</li>
+            </ul>
+        `),
     });
 });

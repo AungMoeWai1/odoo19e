@@ -3,13 +3,14 @@
 # * social_youtube
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Saara Hakanen <sahak@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-01 12:12+0000\n"
-"PO-Revision-Date: 2025-09-16 17:07+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2025-12-30 18:47+0000\n"
+"PO-Revision-Date: 2026-02-17 10:05+0000\n"
+"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
 "social_youtube/fi/>\n"
 "Language: fi\n"
@@ -17,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: social_youtube
 #: model:ir.model.fields,help:social_youtube.field_social_account__youtube_upload_playlist_id
@@ -46,8 +47,10 @@ msgstr "<span class=\"fw-bold\">YouTube-kanavasi</span>"
 #. module: social_youtube
 #: model_terms:ir.ui.view,arch_db:social_youtube.social_account_view_form
 msgid ""
-"<span>These are stored up to 30 days and refreshed often to provide you an accurate depiction of reality. </span>\n"
-"                        <span>To delete these from Odoo, simply delete this account.</span>"
+"<span>These are stored up to 30 days and refreshed often to provide you an "
+"accurate depiction of reality. </span>\n"
+"                        <span>To delete these from Odoo, simply delete this "
+"account.</span>"
 msgstr ""
 "<span>Nämä tallennetaan jopa 30 päivän ajaksi ja päivitetään usein, jotta "
 "saat tarkan kuvan todellisuudesta. </span>\n"
@@ -188,13 +191,13 @@ msgstr "Näyttönimi"
 #. odoo-javascript
 #: code:addons/social_youtube/static/src/js/social_youtube_upload_field.js:0
 msgid "Do you also want to remove the video from your YouTube account?"
-msgstr "Haluatko myös poistaa videon YouTube-tililtäsi?"
+msgstr "Haluatko poistaa videon myös YouTube-tililtäsi?"
 
 #. module: social_youtube
 #: model:ir.model.fields,help:social_youtube.field_social_account__youtube_token_expiration_date
 msgid ""
-"Expiration date of the Access Token provided by the YouTube API, this should"
-" never be set manually."
+"Expiration date of the Access Token provided by the YouTube API, this should "
+"never be set manually."
 msgstr ""
 "YouTube ohjelmointirajapinnan tarjoaman pääsytunnisteen viimeinen "
 "voimassaolopäivä; tätä ei saa koskaan asettaa manuaalisesti."
@@ -285,7 +288,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/social_youtube/models/social_media.py:0
 msgid ""
-"Oops! You currently don't have an active subscription. No worries, though! You can easily get one here: %s.\n"
+"Oops! You currently don't have an active subscription. No worries, though! "
+"You can easily get one here: %s.\n"
 "Grab a subscription and unlock a world of amazing features!"
 msgstr ""
 "Oho! Sinulla ei ole aktiivista tilausta. Ei hätää – voit helposti hankkia "
@@ -339,8 +343,7 @@ msgstr "Syy:"
 #. module: social_youtube
 #: model:ir.model.fields,help:social_youtube.field_social_account__youtube_refresh_token
 msgid ""
-"Refresh token provided by the YouTube API, this should never be set "
-"manually."
+"Refresh token provided by the YouTube API, this should never be set manually."
 msgstr ""
 "YouTube ohjelmointirajapinnan tarjoama päivitystunniste, jota ei koskaan "
 "tule asettaa manuaalisesti."
@@ -804,8 +807,8 @@ msgstr ""
 #. module: social_youtube
 #: model_terms:ir.ui.view,arch_db:social_youtube.social_post_view_form
 msgid ""
-"e.g. Engage your entire community with a single app! "
-"https://www.odoo.com/trial"
+"e.g. Engage your entire community with a single app! https://www.odoo.com/"
+"trial"
 msgstr ""
 "esim. Ota koko yhteisösi mukaan yhdellä sovelluksella! https://www.odoo.com/"
 "trial"

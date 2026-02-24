@@ -3,13 +3,14 @@
 # * sale_renting_planning
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:42+0000\n"
-"PO-Revision-Date: 2025-09-15 12:03+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-02-13 18:45+0000\n"
+"PO-Revision-Date: 2025-11-04 05:23+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
 "sale_renting_planning/ja/>\n"
 "Language: ja\n"
@@ -24,14 +25,14 @@ msgstr ""
 #: model:ir.model.fields,help:sale_renting_planning.field_planning_slot__role_sync_shift_rental
 msgid ""
 "- Create rental orders for your shifts.\n"
-"- Orders for products linked to this role can’t be confirmed if no resources are available to handle the shifts.\n"
+"- Orders for products linked to this role can’t be confirmed if no resources "
+"are available to handle the shifts.\n"
 "- On the website, users can’t select dates when no resources are available.\n"
 "- The order's rental period and the shift dates are synchronized."
 msgstr ""
 "- シフトのためにレンタル注文を作成します。\n"
-"- "
-"この役割に関連付けられたプロダクト用のオーダは、シフトを担当できるリソースが"
-"利用できない場合、確定できません。\n"
+"- この役割に関連付けられたプロダクト用のオーダは、シフトを担当できるリソース"
+"が利用できない場合、確定できません。\n"
 "- ウェブサイトでは、リソースが利用できない日付はユーザーが選択できません。\n"
 "- オーダのレンタル期間とシフトの日付は同期されます。"
 
@@ -57,6 +58,12 @@ msgid "ID"
 msgstr "ID"
 
 #. module: sale_renting_planning
+#. odoo-python
+#: code:addons/sale_renting_planning/models/planning_slot.py:0
+msgid "Impossible to generate a rental order for a shift in conflict."
+msgstr ""
+
+#. module: sale_renting_planning
 #: model_terms:ir.ui.view,arch_db:sale_renting_planning.planning_view_form_in_gantt_inherit
 msgid "New Order"
 msgstr "新規注文"
@@ -71,7 +78,7 @@ msgstr "レンタルオーダが見つかりません。"
 #. odoo-python
 #: code:addons/sale_renting_planning/models/planning_slot.py:0
 msgid "No resources are available for the shifts in: %s."
-msgstr ""
+msgstr "以下のシフトに利用可能なリソースがありません: %s。"
 
 #. module: sale_renting_planning
 #: model:ir.model,name:sale_renting_planning.model_planning_role
@@ -97,6 +104,12 @@ msgstr "販売オーダ明細"
 #. odoo-python
 #: code:addons/sale_renting_planning/models/planning_slot.py:0
 msgid "Shift added to last order"
+msgstr "シフトが直近のオーダに追加されました"
+
+#. module: sale_renting_planning
+#. odoo-python
+#: code:addons/sale_renting_planning/models/planning_slot.py:0
+msgid "Shift not rescheduled due to conflicts"
 msgstr ""
 
 #. module: sale_renting_planning
@@ -107,11 +120,20 @@ msgstr "シフトとレンタルオーダを同期"
 
 #. module: sale_renting_planning
 #. odoo-python
+#: code:addons/sale_renting_planning/models/planning_slot.py:0
+msgid ""
+"The shift should not be in conflict to be able to correctly add it to an "
+"existing rental order."
+msgstr ""
+
+#. module: sale_renting_planning
+#. odoo-python
 #: code:addons/sale_renting_planning/models/sale_order_line.py:0
 msgid ""
 "This Sales Order can't be confirmed. No enough resources are available for "
 "the shifts in: %(product_name)s."
-msgstr "この販売オーダは確定できません。以下のシフトに割り当てられるリソースが不足し"
+msgstr ""
+"この販売オーダは確定できません。以下のシフトに割り当てられるリソースが不足し"
 "ています： %(product_name)s"
 
 #. module: sale_renting_planning
@@ -120,5 +142,6 @@ msgstr "この販売オーダは確定できません。以下のシフトに割
 msgid ""
 "This Sales Order can't be confirmed. No resources are available for the "
 "shifts in: %(problematic_services)s."
-msgstr "この販売オーダは確定できません。以下のシフトには使用可能なリソースがありませ"
+msgstr ""
+"この販売オーダは確定できません。以下のシフトには使用可能なリソースがありませ"
 "ん: %(problematic_services)s"

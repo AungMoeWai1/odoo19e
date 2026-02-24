@@ -1,5 +1,6 @@
 import { patch } from "@web/core/utils/patch";
 import { accountTaxHelpers } from "@account/helpers/account_tax";
+import { roundPrecision } from "@web/core/utils/numbers";
 
 patch(accountTaxHelpers, {
     // EXTENDS 'account'
@@ -21,28 +22,38 @@ patch(accountTaxHelpers, {
             let new_base_line = this.prepare_base_line_for_taxes_computation(base_line, {
                 quantity: 1.0,
                 discount: 0.0,
+                l10n_it_epson_printer: false,
             });
             super.add_tax_details_in_base_line(new_base_line, company, {
                 rounding_method: rounding_method,
             });
             this.round_base_lines_tax_details([new_base_line], company);
-            let tax_details = new_base_line.tax_details;
-            const price_unit_included = tax_details.total_included_currency;
-            new_base_line = this.prepare_base_line_for_taxes_computation(base_line, {
-                price_unit: price_unit_included,
-                special_mode: "total_included",
-            });
+            const target_total_amount_currency = roundPrecision(
+                new_base_line.tax_details.total_included_currency *
+                    base_line.quantity *
+                    (1 - base_line.discount / 100.0),
+                base_line.currency_id.rounding
+            );
+            new_base_line = this.prepare_base_line_for_taxes_computation(base_line);
             super.add_tax_details_in_base_line(new_base_line, company, {
                 rounding_method: rounding_method,
             });
             this.round_base_lines_tax_details([new_base_line], company);
-            tax_details = new_base_line.tax_details;
-            base_line.manual_tax_amounts = {};
-            for (const tax_data of tax_details.taxes_data) {
-                base_line.manual_tax_amounts[tax_data.tax.id.toString()] = {
-                    tax_amount_currency: tax_data.tax_amount_currency,
-                    base_amount_currency: tax_data.base_amount_currency,
-                };
+            const reduced_base_lines = this.reduce_base_lines_to_target_amount(
+                [new_base_line],
+                company,
+                "fixed",
+                target_total_amount_currency
+            );
+            if (reduced_base_lines.length) {
+                this.fix_base_lines_tax_details_on_manual_tax_amounts(reduced_base_lines, company);
+                for (const key of [
+                    "manual_total_excluded_currency",
+                    "manual_total_excluded",
+                    "manual_tax_amounts",
+                ]) {
+                    base_line[key] = reduced_base_lines[0][key];
+                }
             }
         }
         super.add_tax_details_in_base_line(base_line, company, {

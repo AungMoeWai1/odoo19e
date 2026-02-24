@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-03 12:21+0000\n"
+"POT-Creation-Date: 2026-01-22 18:41+0000\n"
 "PO-Revision-Date: 2025-09-18 02:46+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
@@ -79,8 +79,14 @@ msgstr "İsim Göster"
 #. module: pos_pricer
 #. odoo-python
 #: code:addons/pos_pricer/models/pricer_store.py:0
-msgid "Error: %(status_code)s - %(message)s"
-msgstr "Hata: %(status_code)s - %(message)s"
+msgid "Error"
+msgstr ""
+
+#. module: pos_pricer
+#. odoo-python
+#: code:addons/pos_pricer/models/pricer_store.py:0
+msgid "Error: %(code)s - %(reason)s"
+msgstr ""
 
 #. module: pos_pricer
 #. odoo-python
@@ -91,10 +97,16 @@ msgstr "Hata: Pricer kimlik bilgilerini kontrol edin"
 #. module: pos_pricer
 #. odoo-python
 #: code:addons/pos_pricer/models/pricer_store.py:0
+msgid "Everything is already up to date with Pricer. No update needed."
+msgstr ""
+
+#. module: pos_pricer
+#. odoo-python
+#: code:addons/pos_pricer/models/pricer_store.py:0
 msgid "Failed to unlink Pricer tag %(pricer_tag)s at API url %(api_url)s"
 msgstr ""
-"API adresinde Pricer etiketi %(pricer_tag)s bağlantısı kaldırılamadı "
-"%(api_url)s"
+"API adresinde Pricer etiketi %(pricer_tag)s bağlantısı kaldırılamadı %"
+"(api_url)s"
 
 #. module: pos_pricer
 #: model:ir.model.fields,field_description:pos_pricer.field_pos_config__id
@@ -396,8 +408,8 @@ msgstr ""
 #: model:ir.model.fields,help:pos_pricer.field_pricer_tag__pricer_store_id
 #: model:ir.model.fields,help:pos_pricer.field_product_product__pricer_store_id
 msgid ""
-"This product will be linked to and displayed on the Pricer tags of the store"
-" selected here"
+"This product will be linked to and displayed on the Pricer tags of the store "
+"selected here"
 msgstr ""
 "Bu ürün, burada seçilen mağazanın Pricer etiketlerine bağlanacak ve bu "
 "etiketlerde görüntülenecektir."
@@ -410,11 +422,6 @@ msgid ""
 msgstr ""
 "Bu ürün, burada listelenen kimlikler ile Pricer etiketlerine bağlanacak ve "
 "görüntülenecektir. Bir barkod tarayıcı kullanılması önerilir"
-
-#. module: pos_pricer
-#: model_terms:ir.ui.view,arch_db:pos_pricer.pricer_pricer_store_view_list
-msgid "Update all tags"
-msgstr "Tüm etiketleri güncelle"
 
 #. module: pos_pricer
 #. odoo-python
@@ -431,3 +438,9 @@ msgstr "Etiketleri güncelleyin"
 #: model:ir.model.fields,help:pos_pricer.field_pricer_store__pricer_tenant_name
 msgid "Your company identifier at Pricer"
 msgstr "Pricer’daki şirket tanımlayıcınız"
+
+#~ msgid "Error: %(status_code)s - %(message)s"
+#~ msgstr "Hata: %(status_code)s - %(message)s"
+
+#~ msgid "Update all tags"
+#~ msgstr "Tüm etiketleri güncelle"

@@ -2,6 +2,7 @@
 from odoo import _, api, models, fields, Command
 from odoo.addons.l10n_mx_edi.models.l10n_mx_edi_document import CANCELLATION_REASON_SELECTION, CFDI_DATE_FORMAT, USAGE_SELECTION
 from odoo.exceptions import UserError, ValidationError
+from datetime import datetime
 
 
 class PosOrder(models.Model):
@@ -111,8 +112,9 @@ class PosOrder(models.Model):
                 order['l10n_mx_edi_cfdi_to_public'] = order.get('l10n_mx_edi_cfdi_to_public', False)
                 order['l10n_mx_edi_usage'] = order.get('l10n_mx_edi_usage', False)
             else:
-                # If no invoice set usage to default value
-                order['l10n_mx_edi_usage'] = 'G03'
+                partner_id = order.get('partner_id', False)
+                # Default to 'G03' when no partner, otherwise take partner's configured usage
+                order['l10n_mx_edi_usage'] = self.env['res.partner'].browse(partner_id).l10n_mx_edi_usage or 'G03'
 
         data = super().sync_from_ui(orders)
         if len(orders) > 0:
@@ -580,6 +582,10 @@ class PosOrder(models.Model):
             )
             Document._add_tax_objected_cfdi_values(cfdi_values, base_lines)
             Document._add_base_lines_cfdi_values(cfdi_values, base_lines)
+            # Force description as this is required for refunds of global invoices
+            for base_line in cfdi_values['base_lines']:
+                base_line['l10n_mx_cfdi_values']['description'] = "Devoluciones, descuentos o bonificaciones"
+
             Document._add_payment_policy_cfdi_values(cfdi_values, payment_method=self.l10n_mx_edi_payment_method_id)
             cfdi_values['condiciones_de_pago'] = None
 
@@ -677,7 +683,10 @@ class PosOrder(models.Model):
 
         # == Check the config ==
         orders = self.filtered(lambda order: not order.refunded_order_id)
-        orders |= self.env['pos.order.line'].search([('refunded_orderline_id.order_id', 'in', orders.ids)]).order_id
+        orders |= self.env['pos.order.line'].search([
+            ('refunded_orderline_id.order_id', 'in', orders.ids),
+            ('order_id.state', '!=', 'cancel'),
+        ]).order_id
         pos_journal = self.config_id.invoice_journal_id
         errors = []
         for order in orders:
@@ -768,9 +777,18 @@ class PosOrder(models.Model):
                 key=lambda x: x[0],
             )
             Document._add_payment_policy_cfdi_values(cfdi_values, payment_method=biggest_used_payment_method)
+
+            # Periodicity.
+            document_dates = []
+            for order in orders:
+                order_cfdi_values = dict(cfdi_values)
+                Document._add_date_cfdi_values(order_cfdi_values, order.date_order, journal=order.sale_journal)
+                document_dates.append(datetime.strptime(order_cfdi_values['fecha'], CFDI_DATE_FORMAT).date())
+
             Document._add_global_invoice_cfdi_values(
                 cfdi_values,
                 base_lines,
+                document_date=max(document_dates),
                 periodicity=periodicity,
                 origin=origin,
             )

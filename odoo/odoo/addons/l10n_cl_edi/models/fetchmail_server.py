@@ -47,7 +47,10 @@ class FetchmailServer(models.Model):
         # TODO This reimplements the logic from the mail module to connect to a
         # server, we should instead handle the message in `mail.thread.message_process`.
         # The logic seems to have drifted away, even before refactoring to use `commit_progress`.
-        for server in self.filtered(lambda s: s.l10n_cl_is_dte).try_lock_for_update():
+        for server in self.filtered(lambda s: s.l10n_cl_is_dte):
+            if not server.try_lock_for_update():
+                continue
+
             _logger.info('Start checking for new emails on %s IMAP server %s', server.server_type, server.name)
 
             # prevents the process from timing out when connecting for the first time
@@ -56,10 +59,10 @@ class FetchmailServer(models.Model):
             # based on their IMAP uid
             default_batch_size = kw.get('batch_limit') or 50
 
-            count, failed = 0, 0
+            fetched_messages = []
             imap_server = None
             try:
-                imap_server = server.connect()
+                imap_server = server._connect__()
                 imap_server.select()
 
                 result, data = imap_server.uid('search', None, '(UID %s:*)' % server.l10n_cl_last_uid)
@@ -86,37 +89,73 @@ class FetchmailServer(models.Model):
                         message = bytes(message.data)
                     if isinstance(message, str):
                         message = message.encode('utf-8')
-                    msg_txt = email.message_from_bytes(message, policy=email.policy.SMTP)
-                    try:
-                        with self.env.cr.savepoint():
-                            # using a savepoint instead of a new transaction to
-                            # avoid impacting this process while rolling back
-                            # properly on failures
-                            server._process_incoming_email(msg_txt)
-                            new_max_uid = max(new_max_uid, int(uid))
-                            server.write({'l10n_cl_last_uid': new_max_uid})
-                    except Exception:  # noqa: BLE001
-                        _logger.info('Failed to process mail from %s server %s.', server.server_type, server.name,
-                                     exc_info=True)
-                        failed += 1
-                    count += 1
-                    self.env.cr.commit()
-                server.write({'l10n_cl_last_uid': new_max_uid})
-                _logger.info('Fetched %d email(s) on %s server %s; %d succeeded, %d failed.', count, server.server_type,
-                             server.name, (count - failed), failed)
+                    fetched_messages.append((uid, message))
+
             except Exception:  # noqa: BLE001
-                _logger.info('General failure when trying to fetch mail from %s server %s.', server.server_type,
-                             server.name, exc_info=True)
+                _logger.info(
+                    'General failure when trying to fetch mail from %s server %s.',
+                    server.server_type,
+                    server.name,
+                    exc_info=True,
+                )
             finally:
                 if imap_server:
                     try:
                         imap_server.close()
                         imap_server.logout()
-                    except Exception:  # pylint: disable=broad-except
+                    except Exception:  # noqa: BLE001
                         _logger.warning('Failed to properly finish connection: %s.', server.name, exc_info=True)
+
+            for uid, message in fetched_messages:
+                msg_txt = email.message_from_bytes(message, policy=email.policy.SMTP)
+
+                # Because `_extend_with_attachments` (called by `_process_incoming_email`)
+                # commits the cursor, any failure will not rollback any invoice that
+                # is already successfully decoded.
+                server._process_incoming_email(msg_txt)
+                new_max_uid = max(new_max_uid, int(uid))
+                server.write({'l10n_cl_last_uid': new_max_uid})
+
+            _logger.info('Fetched %d email(s) on %s server %s.', len(fetched_messages), server.server_type, server.name)
+
             server.write({'date': fields.Datetime.now()})
             self.env.cr.commit()
         return super(FetchmailServer, self.filtered(lambda s: not s.l10n_cl_is_dte))._fetch_mail(**kw)
+
+    def _check_dte_already_processed(self, xml_tree):
+        """ Detect already imported bill """
+        for dte in xml_tree.xpath('//ns0:DTE', namespaces=XML_NAMESPACES):
+            document_number = dte.findtext('.//ns0:Folio', namespaces=XML_NAMESPACES)
+            partner_vat = (
+                dte.findtext('.//ns0:RUTEmisor', namespaces=XML_NAMESPACES).upper() or
+                dte.findtext('.//ns0:RutEmisor', namespaces=XML_NAMESPACES).upper()
+            )
+            partner = self.env["res.partner"].search([
+                ("vat", "=", partner_vat),
+                *self.env['res.partner']._check_company_domain(self.env.company),
+            ], limit=1)
+            document_type_code = dte.findtext('.//ns0:TipoDTE', namespaces=XML_NAMESPACES)
+            document_type = self.env['l10n_latam.document.type'].search(
+                [('code', '=', document_type_code), ('country_id.code', '=', 'CL')], limit=1)
+            move_search_domain = [
+                ('move_type', 'in', ['in_invoice', 'in_refund']),
+                ('l10n_latam_document_type_id', '=', document_type.id),
+                ('name', '=ilike', f'{document_type.doc_code_prefix}%{document_number}'),
+                ('company_id', '=', self.env.company.id),
+            ]
+            if partner:
+                move_search_domain += [
+                    ('partner_id', '=', partner.id),
+                ]
+            else:
+                move_search_domain += [
+                    ('partner_id', '=', False),
+                    ('narration', '=', partner_vat),
+                ]
+            move = self.env['account.move'].sudo().search(move_search_domain).filtered(lambda m: m.name.split()[1].lstrip('0') == document_number)
+            if move:
+                return document_number
+        return False
 
     def _process_incoming_email(self, msg_txt):
         parsed_values = self.env['mail.thread']._message_parse_extract_payload(msg_txt, {})
@@ -162,7 +201,7 @@ class FetchmailServer(models.Model):
         attachment = self.env['ir.attachment'].create({'name': file_data['name'], 'raw': file_data['raw']})
 
         # This will separate each DTE into a new attachment, and create a move for each DTE and call the decoder.
-        moves = self.env['account.move'].with_context(
+        Move = self.env['account.move'].with_context(
             default_invoice_source_email=from_address,
             default_move_type='in_invoice',
             default_company_id=company_id,
@@ -174,10 +213,32 @@ class FetchmailServer(models.Model):
                 ],
                 limit=1,
             ),
-        )._create_records_from_attachments(attachment)
+        )
 
-        _logger.info('Draft vendor bills with ids: %s have been filled from DTE %s', moves.ids, file_data['name'])
-        return moves
+        files_data = Move._to_files_data(attachment)
+        files_data.extend(Move._unwrap_attachments(files_data))
+        files_data = [file_data for file_data in files_data if not self._check_dte_already_processed(file_data['xml_tree'])]
+
+        records = Move.create([{}] * len(files_data))
+        for record, file_data in zip(records, files_data):
+            attachment_records = file_data['attachment']
+            attachment_records.write({
+                'res_model': record._name,
+                'res_id': record.id,
+            })
+            record.message_post(
+                body=self.env._("This document was created from the following attachment(s)."),
+                attachment_ids=attachment_records.ids
+            )
+
+            record._extend_with_attachments([file_data], new=True)
+
+        if records:
+            _logger.info('Draft vendor bills with ids: %s have been filled from DTE %s', records.ids, file_data['name'])
+        else:
+            attachment.unlink()
+
+        return records
 
     def _process_incoming_sii_dte_result(self, file_data):
         xml_tree = file_data['xml_tree']
@@ -205,17 +266,17 @@ class FetchmailServer(models.Model):
                 dte.findtext('.//ns0:RUTRecep', namespaces=XML_NAMESPACES).upper() or
                 dte.findtext('.//ns0:RutReceptor', namespaces=XML_NAMESPACES).upper()
             )
-            if not (partner := self.env["res.partner"].search([
+            if not (partners := self.env["res.partner"].search([
                 ("vat", "=", partner_vat),
                 *self.env['res.partner']._check_company_domain(company_id),
-            ], limit=1)):
+            ])):
                 _logger.warning('Partner for incoming customer claim has not been found for %s', partner_vat)
                 continue
             document_type_code = dte.findtext('.//ns0:TipoDTE', namespaces=XML_NAMESPACES)
             document_type = self.env['l10n_latam.document.type'].search(
                 [('code', '=', document_type_code), ('country_id.code', '=', 'CL')], limit=1)
             move = self.env['account.move'].sudo().search([
-                ('partner_id', '=', partner.id),
+                ('partner_id', 'in', partners.ids),
                 ('move_type', 'in', ['out_invoice', 'out_refund']),
                 ('l10n_latam_document_type_id', '=', document_type.id),
                 ('l10n_cl_dte_status', '=', 'accepted'),
@@ -224,13 +285,13 @@ class FetchmailServer(models.Model):
             ]).filtered(lambda m: m.name.split()[1].lstrip('0') == document_number)
 
             if not move:
-                _logger.warning('Move not found with partner: %s, document_number: %s, l10n_latam_document_type: %s, '
-                              'company_id: %s', partner.id, document_number, document_type.id, company_id)
+                _logger.warning('Move not found with partners: %s, document_number: %s, l10n_latam_document_type: %s, '
+                              'company_id: %s', partners.ids, document_number, document_type.id, company_id)
                 continue
 
             if len(move) > 1:
-                _logger.warning('Multiple moves found for partner: %s, document_number: %s, l10n_latam_document_type: %s, '
-                            'company_id: %s. Expected only one move.', partner.id, document_number, document_type.id, company_id)
+                _logger.warning('Multiple moves found for partners: %s, document_number: %s, l10n_latam_document_type: %s, '
+                            'company_id: %s. Expected only one move.', partners.ids, document_number, document_type.id, company_id)
                 continue
 
             status = {'incoming_acknowledge': 'received', 'incoming_commercial_accept': 'accepted'}.get(
@@ -255,7 +316,7 @@ class FetchmailServer(models.Model):
             xml_tag_by_type.get(origin_type), namespaces=XML_NAMESPACES)
         if not receiver_rut:
             return None
-        return self.env['res.company'].sudo().search([('vat', '=', receiver_rut[0].text)])
+        return self.env['res.company'].sudo().search([('vat', '=', receiver_rut[0].text)], limit=1)
 
     def _is_dte_enabled_company(self, company):
         return False if not company.l10n_cl_dte_service_provider else True

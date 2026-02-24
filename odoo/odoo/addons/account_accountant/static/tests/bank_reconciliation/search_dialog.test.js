@@ -1,15 +1,15 @@
-import { expect, test, before, describe } from "@odoo/hoot";
-import { click, queryAll, queryOne, queryAllTexts } from "@odoo/hoot-dom";
+import { mailModels } from "@mail/../tests/mail_test_helpers";
+import { beforeEach, describe, expect, test } from "@odoo/hoot";
+import { click, queryAll, queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { animationFrame, mockDate } from "@odoo/hoot-mock";
 import {
     contains,
-    mountWithCleanup,
     defineModels,
-    models,
     fields,
     getService,
+    models,
+    mountWithCleanup,
 } from "@web/../tests/web_test_helpers";
-import { mailModels } from "@mail/../tests/mail_test_helpers";
 import { WebClient } from "@web/webclient/webclient";
 
 import { BankRecSelectCreateDialog } from "@account_accountant/components/bank_reconciliation/search_dialog/search_dialog";
@@ -113,7 +113,7 @@ class Partner extends models.Model {
 // Due to dependency with mail module, we have to define their models for our tests.
 defineModels({ ...mailModels, AccountMoveLine, Partner });
 
-before(() => {
+beforeEach(() => {
     mockDate("2025-04-22 00:00:00");
 });
 
@@ -138,7 +138,7 @@ test("BankRecSelectCreateDialog footer with right information", async () => {
 
     const bankReconciliationInfoNode = queryOne("div[name='bank_reconciliation_info']").children;
     const bankReconciliationInfo = queryAllTexts(bankReconciliationInfoNode);
-    expect(bankReconciliationInfo[0]).toBe("4/22/2025");
+    expect(bankReconciliationInfo[0]).toBe("Apr 22");
     expect(bankReconciliationInfo[1]).toBe("A cool reference to display");
     expect(bankReconciliationInfo[2]).toBe("Balance: $ 233.33");
 });

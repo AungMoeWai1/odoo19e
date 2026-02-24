@@ -2,9 +2,6 @@ from unittest.mock import patch
 
 from odoo import Command, fields
 from odoo.tests.common import tagged
-from odoo.tools import misc
-from lxml import etree
-import datetime
 
 from . import common
 
@@ -303,6 +300,21 @@ class TestManual(common.TestUyEdi):
         self._send_and_print(invoice)
         self._check_cfe(invoice, "e-FC", "130_entrega_gratuita")
 
+    def test_135_entrega_gratuita_zero(self):
+        """ Create e-Invoice with line quantity 1.0 and price_unit/price_total = 0.0 (not need discount) """
+        invoice = self._create_move(
+            partner_id=self.partner_local.id,
+            l10n_latam_document_type_id=self.env.ref("l10n_uy.dc_e_inv").id,
+            invoice_line_ids=[Command.create({
+                "product_id": self.service_vat_22.id,
+                "price_unit": 0,
+            })],
+        )
+        self.assertEqual(invoice.l10n_latam_document_type_id.code, "111", "Not an e-invoice")
+        invoice.action_post()
+        self._send_and_print(invoice)
+        self._check_cfe(invoice, "e-FC", "135_entrega_gratuita_zero")
+
     def test_140_global_discount(self):
         """ Create e-Invoice with line with discount 100% and it should work """
         discount = self.env["product.product"].create({
@@ -353,7 +365,8 @@ class TestManual(common.TestUyEdi):
         invoice.action_post()
 
         with patch("odoo.addons.account.models.account_move.AccountMove._is_downpayment", return_value=True), \
-             patch("odoo.addons.sale.models.account_move.AccountMove._is_downpayment", return_value=True):
+             patch("odoo.addons.sale.models.account_move.AccountMove._is_downpayment", return_value=True), \
+             patch("odoo.addons.pos_sale.models.account_move.AccountMove._is_downpayment", return_value=True):
             self._send_and_print(invoice)
         self._check_cfe(invoice, "e-FC", "150_global_donwpayment")
 
@@ -464,3 +477,44 @@ class TestManual(common.TestUyEdi):
                 'invoice_partner_display_name': 'BANCO ITAU URUGUAY S.A.',
             },
         ])
+
+    def test_210_e_invoice_xml_with_reduced_vat_tax(self):
+        """ Create e-Invoice, and check that the pre-generated xml is the same as the one expected """
+        invoice = self._create_move(
+            partner_id=self.partner_local.id,
+            l10n_latam_document_type_id=self.env.ref("l10n_uy.dc_e_inv").id
+        )
+        invoice.invoice_line_ids = [Command.set(invoice.invoice_line_ids.ids)] + [
+            Command.create({
+                'product_id': self.service_reduced_vat.id,
+                'quantity': 1,
+                'price_unit': 20,
+            })
+        ]
+        invoice.action_post()
+        self._send_and_print(invoice)
+        self._check_cfe(invoice, "e-FC", "200_e_invoice_with_reduced_vat_tax")
+
+    def test_210_usd_company_uyu(self):
+        """ Test the behavior of invoices in UYU for a company in USD."""
+        self._configure_usd_company_currency()
+        invoice = self._create_move(currency_id=self.env.ref("base.UYU").id)
+        self.assertEqual(invoice.l10n_latam_document_type_id.code, "101", "Not e-ticket")
+        invoice.action_post()
+        self._send_and_print(invoice)
+        self._check_cfe(invoice, "e-TK", "20_e_ticket")
+
+    def test_215_usd_company_usd(self):
+        """Test the behavior of invoices in USD for a company in USD."""
+        self._configure_usd_company_currency()
+        invoice = self._create_move(
+            l10n_latam_document_type_id=self.env.ref("l10n_uy.dc_e_inv_exp").id,
+            partner_id=self.foreign_partner.id,
+            l10n_uy_edi_cfe_sale_mode="1",
+            l10n_uy_edi_cfe_transport_route="1",
+            currency_id=self.env.ref("base.USD").id,
+        )
+        self.assertEqual(invoice.l10n_latam_document_type_id.code, "121", "Not Expo e-invoice")
+        invoice.action_post()
+        self._send_and_print(invoice)
+        self._check_cfe(invoice, "e-FCE", "60_e_invoice_another_currency")

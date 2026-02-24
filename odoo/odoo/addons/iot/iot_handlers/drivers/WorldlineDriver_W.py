@@ -156,12 +156,11 @@ class WorldlineDriver(CtypesTerminalDriver):
                 card,  # char* card
                 error_code,  # char* error
             )
-            _logger.debug('finished transaction #%d with result %d', transaction_id, result)
-
             self.next_transaction_min_dt = datetime.datetime.now() + datetime.timedelta(seconds=self.DELAY_TIME_BETWEEN_TRANSACTIONS)
 
             if result == 1:
                 # Transaction successful
+                _logger.info('%s succesfully finished transaction #%d', self.device_name, transaction_id)
                 self.send_status(
                     response='Approved',
                     ticket=customer_receipt.value.decode(),
@@ -174,19 +173,22 @@ class WorldlineDriver(CtypesTerminalDriver):
                 # Transaction failed
                 error_code = error_code.value.decode('utf-8')
                 if error_code not in IGNORE_ERRORS:
-                    error_msg = '%s (Error code: %s)' % (TERMINAL_ERRORS.get(error_code, 'Transaction was not processed correctly'), error_code)
+                    error_msg = f'{self.device_name} transaction #{transaction_id} error: {error_code}: {TERMINAL_ERRORS.get(error_code, "Transaction Error")}'
+                    _logger.info(error_msg)
                     self.send_status(error=error_msg, request_data=transaction)
                 # Transaction was cancelled
                 else:
+                    _logger.info("%s transaction #%d cancelled by PoS user", self.device_name, transaction_id)
                     self.send_status(stage='Cancel', request_data=transaction)
             elif result == -1:
                 # Terminal disconnection, check status manually
+                _logger.warning("%s disconnected during transaction #%d", self.device_name, transaction_id)
                 self.send_status(disconnected=True, request_data=transaction)
 
         except OSError:
             _logger.exception("Failed to perform Worldline transaction. Check for potential segmentation faults")
             self.send_status(
-                error="An error has occured. Check the transaction result manually with the payment provider",
+                error=f"{self.device_name}. An error has occured. Check the transaction result manually with the payment provider",
                 request_data=transaction,
             )
 
@@ -196,10 +198,10 @@ class WorldlineDriver(CtypesTerminalDriver):
         self.send_status(stage='waitingCancel', request_data=transaction)
 
         error_code = create_ctypes_string_buffer()
-        _logger.info("cancel transaction request")
+        _logger.info("%s cancel transaction request", self.device_name)
         try:
             result = easyCTEP.abortTransaction(ctypes.cast(self.dev, ctypes.c_void_p), error_code)
-            _logger.debug("end cancel transaction request")
+            _logger.debug("%s end cancel transaction request", self.device_name)
 
             if not result:
                 error_code = error_code.value.decode('utf-8')
@@ -207,9 +209,9 @@ class WorldlineDriver(CtypesTerminalDriver):
                 _logger.info(error_msg)
                 self.send_status(stage='Cancel', error=error_msg, request_data=transaction)
         except OSError:
-            _logger.exception("Failed to cancel Worldline transaction. Check for potential segmentation faults.")
+            _logger.exception("%s. Failed to cancel Worldline transaction. Check for potential segmentation faults.", self.device_name)
             self.send_status(
                 stage='Cancel',
-                error="An error has occured when cancelling Worldline transaction. Check the transaction result manually with the payment provider",
+                error=f"{self.device_name}. An error has occured when cancelling Worldline transaction. Check the transaction result manually with the payment provider",
                 request_data=transaction,
             )

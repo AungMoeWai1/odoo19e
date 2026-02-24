@@ -110,6 +110,11 @@ class ResConfigSettings(models.TransientModel):
         return self.pos_config_id._urbanpiper_handle_response(combined_response)
 
     def action_refresh_webhooks(self):
+        """
+        If a webhook already exists on Atlas, refresh it; otherwise, create a new one.
+        and products become available for syncing again as fresh entries.
+        """
+        self.pos_config_id._reset_urbanpiper_product_linkages()
         self.pos_config_id._check_required_request_params()
         up = UrbanPiperClient(self.pos_config_id)
         response_json = up.request_refresh_webhooks()
@@ -131,3 +136,11 @@ class ResConfigSettings(models.TransientModel):
                 'config_id': self.pos_config_id.id
             }
         }
+
+    def action_flush_and_sync_menu(self):
+        """
+        Resets all existing UrbanPiper product linkages and performs a fresh menu sync.
+        """
+        self.ensure_one()
+        self.pos_config_id._reset_urbanpiper_product_linkages()
+        return self.with_context(flush=True).urbanpiper_sync_menu()

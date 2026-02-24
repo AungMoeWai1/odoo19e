@@ -3,13 +3,15 @@
 # * appointment_account_payment
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Manon Rondou (ronm)" <ronm@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:27+0000\n"
-"PO-Revision-Date: 2025-09-18 02:47+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2026-01-22 18:42+0000\n"
+"PO-Revision-Date: 2026-02-18 14:54+0000\n"
+"Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-19/"
 "appointment_account_payment/fr/>\n"
 "Language: fr\n"
@@ -17,38 +19,39 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: appointment_account_payment
 #. odoo-python
 #: code:addons/appointment_account_payment/models/calendar_booking.py:0
 msgid ""
 "%(name)s\n"
-"%(date_start)s at %(time_start)s to\n"
-"%(date_end)s at %(time_end)s (%(timezone)s)"
+"%(date_start)s at %(time_start)s to %(date_end)s at %(time_end)s (%"
+"(timezone)s)"
 msgstr ""
 "%(name)s\n"
-"%(date_start)s à %(time_start)s au\n"
-"%(date_end)s à %(time_end)s (%(timezone)s)"
+"Du %(date_start)s à %(time_start)s au %(date_end)s à %(time_end)s "
+"(%(timezone)s)"
 
 #. module: appointment_account_payment
 #. odoo-python
 #: code:addons/appointment_account_payment/models/calendar_booking.py:0
 msgid ""
 "%(name)s with %(staff_user)s\n"
-"%(date_start)s at %(time_start)s to\n"
-"%(date_end)s at %(time_end)s (%(timezone)s)"
+"%(date_start)s at %(time_start)s to %(date_end)s at %(time_end)s (%"
+"(timezone)s)"
 msgstr ""
 "%(name)s avec %(staff_user)s\n"
-"%(date_start)s à %(time_start)s au\n"
-"%(date_end)s à %(time_end)s (%(timezone)s)"
+"Du %(date_start)s à %(time_start)s au %(date_end)s à %(time_end)s "
+"(%(timezone)s)"
 
 #. module: appointment_account_payment
 #: model_terms:ir.ui.view,arch_db:appointment_account_payment.appointment_validated
-msgid "<i class=\"fa fa-check-circle text-success me-3\"/>Appointment Scheduled!"
+msgid ""
+"<i class=\"fa fa-check-circle text-success me-3\"/>Appointment Scheduled!"
 msgstr ""
-"<i class=\"fa fa-check-circle text-success me-3\"/>Le rendez-vous a été pris "
-"!"
+"<i class=\"fa fa-check-circle text-success me-3\"/>Le rendez-vous a été "
+"pris !"
 
 #. module: appointment_account_payment
 #: model_terms:ir.ui.view,arch_db:appointment_account_payment.appointment_payment
@@ -66,10 +69,11 @@ msgstr ""
 
 #. module: appointment_account_payment
 #: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view
-msgid "<i class=\"fa fa-times-circle text-danger me-3\"/>Appointment Unavailable!"
+msgid ""
+"<i class=\"fa fa-times-circle text-danger me-3\"/>Appointment Unavailable!"
 msgstr ""
-"<i class=\"fa fa-times-circle text-danger me-3\"/>Rendez-vous non disponible "
-"!"
+"<i class=\"fa fa-times-circle text-danger me-3\"/>Rendez-vous non "
+"disponible !"
 
 #. module: appointment_account_payment
 #: model_terms:ir.ui.view,arch_db:appointment_account_payment.appointment_type_view_form
@@ -84,11 +88,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:appointment_account_payment.appointment_type_view_form
 msgid ""
 "<span invisible=\"manage_capacity\" class=\"ms-1\">per booking</span>\n"
-"                            <span invisible=\"not manage_capacity\" class=\"ms-1\">per seat</span>"
+"                            <span invisible=\"not manage_capacity\" "
+"class=\"ms-1\">per seat</span>"
 msgstr ""
 "<span invisible=\"manage_capacity\" class=\"ms-1\">par réservation</span>\n"
-"                            <span invisible=\"not manage_capacity\" class="
-"\"ms-1\">par place</span>"
+"                            <span invisible=\"not manage_capacity\" "
+"class=\"ms-1\">par place</span>"
 
 #. module: appointment_account_payment
 #: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view
@@ -99,11 +104,12 @@ msgstr "<span>En ligne</span>"
 #: model_terms:ir.ui.view,arch_db:appointment_account_payment.appointment_progress_bar
 msgid ""
 "<span>Payment</span>\n"
-"            <span class=\"d-inline-block mx-sm-3 fa fa-angle-right text-muted fs-5\"/>"
+"            <span class=\"d-inline-block mx-sm-3 fa fa-angle-right text-"
+"muted fs-5\"/>"
 msgstr ""
 "<span>Paiement</span>\n"
-"            <span class="
-"\"d-inline-block mx-sm-3 fa fa-angle-right text-muted fs-5\"/>"
+"            <span class=\"d-inline-block mx-sm-3 fa fa-angle-right text-"
+"muted fs-5\"/>"
 
 #. module: appointment_account_payment
 #: model_terms:ir.ui.view,arch_db:appointment_account_payment.appointment_payment
@@ -139,7 +145,7 @@ msgstr "L'activation de l'étape de paiement nécessite un produit"
 #. module: appointment_account_payment
 #: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__allday
 msgid "Allday"
-msgstr ""
+msgstr "Toute la journée"
 
 #. module: appointment_account_payment
 #: model_terms:ir.ui.view,arch_db:appointment_account_payment.appointment_payment
@@ -257,12 +263,12 @@ msgstr "Nom du client"
 #. module: appointment_account_payment
 #: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__description
 msgid "Description"
-msgstr ""
+msgstr "Description"
 
 #. module: appointment_account_payment
 #: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view
 msgid "Details"
-msgstr ""
+msgstr "Détails"
 
 #. module: appointment_account_payment
 #: model_terms:appointment.type,message_intro:appointment_account_payment.appointment_type_online_cooking_lesson
@@ -319,7 +325,7 @@ msgstr "N'est pas disponible"
 #. module: appointment_account_payment
 #: model:ir.model,name:appointment_account_payment.model_account_move
 msgid "Journal Entry"
-msgstr "Pièce comptable"
+msgstr "Écriture comptable"
 
 #. module: appointment_account_payment
 #: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__write_uid
@@ -339,12 +345,16 @@ msgstr "Mis à jour le"
 msgid ""
 "Let customers book a fee per person for activities such as a theater, etc."
 msgstr ""
+"Permettez aux clients de réserver une activité avec un tarif par personne "
+"(théâtre, etc.)."
 
 #. module: appointment_account_payment
 #. odoo-python
 #: code:addons/appointment_account_payment/models/templates/appointment_type.py:0
 msgid "Let customers book a paid slot in your calendar with you"
 msgstr ""
+"Permettez aux clients de réserver un créneau payant dans votre calendrier "
+"avec vous"
 
 #. module: appointment_account_payment
 #: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__calendar_event_id
@@ -490,8 +500,8 @@ msgstr ""
 #. module: appointment_account_payment
 #: model:ir.model.fields,help:appointment_account_payment.field_appointment_type__product_lst_price
 msgid ""
-"The sale price is managed from the product template. Click on the 'Configure"
-" Variants' button to set the extra attribute prices."
+"The sale price is managed from the product template. Click on the 'Configure "
+"Variants' button to set the extra attribute prices."
 msgstr ""
 "Le prix de vente est géré à partir du modèle de produit. Cliquez sur le "
 "bouton 'Configurer les variantes' pour définir les prix des attributs "
@@ -577,3 +587,21 @@ msgstr "personnes"
 #: model_terms:ir.ui.view,arch_db:appointment_account_payment.appointment_info
 msgid "per seat"
 msgstr "par siège"
+
+#~ msgid ""
+#~ "%(name)s\n"
+#~ "%(date_start)s at %(time_start)s to\n"
+#~ "%(date_end)s at %(time_end)s (%(timezone)s)"
+#~ msgstr ""
+#~ "%(name)s\n"
+#~ "%(date_start)s à %(time_start)s au\n"
+#~ "%(date_end)s à %(time_end)s (%(timezone)s)"
+
+#~ msgid ""
+#~ "%(name)s with %(staff_user)s\n"
+#~ "%(date_start)s at %(time_start)s to\n"
+#~ "%(date_end)s at %(time_end)s (%(timezone)s)"
+#~ msgstr ""
+#~ "%(name)s avec %(staff_user)s\n"
+#~ "%(date_start)s à %(time_start)s au\n"
+#~ "%(date_end)s à %(time_end)s (%(timezone)s)"

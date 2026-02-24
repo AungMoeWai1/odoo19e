@@ -12,6 +12,7 @@ from odoo.tests.common import TransactionCase, freeze_time, tagged
 from odoo.tools import file_open
 
 from .mocked_invoice_response import generate_response
+from .mocked_credit_note_response import generate_response as credit_note_generate_response
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.l10n_br_avatax.models.account_external_tax_mixin import (
     AccountExternalTaxMixin,
@@ -170,6 +171,17 @@ class TestAvalaraBrCommon(AccountTestInvoicingCommon, TestBRMockedRequests):
             'l10n_br_tax_regime': 'individual',
         })
 
+        cls.partner_shipping_id = cls.env['res.partner'].create({
+            'type': 'delivery',
+            'street_name': 'Avenida Europa',
+            'street_number': '2048',
+            'street2': 'Jardim São Domingos',
+            'state_id': cls.env.ref('base.state_br_sp').id,
+            'city_id': cls.env.ref('l10n_br.city_br_124').id,
+            'country_id': cls.env.ref('base.br').id,
+            'city': 'Americana',
+        })
+
     @classmethod
     def _setup_products(cls):
         common = {
@@ -290,6 +302,25 @@ class TestAvalaraBrCommon(AccountTestInvoicingCommon, TestBRMockedRequests):
             ],
         })
 
+        return invoice
+
+    @classmethod
+    def _create_invoice_with_diff_partner_shipping(cls):
+        invoice = cls._create_invoice_02(operation_types=(False, ) * 4)
+        # Create a delivery address for partner
+        partner_shipping_id = cls.partner_shipping_id
+        invoice.partner_id.write({
+            'child_ids': (4, partner_shipping_id.id),
+            'l10n_br_tax_regime': 'realProfit',
+            'city_id': cls.env.ref("l10n_br.city_br_002"),
+        })
+        # Default document type is NF-e
+        invoice.write({
+            'invoice_date': TEST_DATETIME,
+            'l10n_latam_document_type_id': cls.env.ref('l10n_br.dt_55').id,
+            'l10n_br_cnae_code_id': cls.env.ref("l10n_br_avatax.cnae_6209100").id,
+            'partner_shipping_id': partner_shipping_id.id
+        })
         return invoice
 
 
@@ -606,6 +637,89 @@ class TestAvalaraBrInvoice(TestAvalaraBrInvoiceCommon):
             [term['company_amount'] for term in expected_untaxed_terms['line_ids']],
             "Installments should be sent without taxes."
         )
+
+    def test_11_service_invoice_with_discount(self):
+        invoice, response = self._create_invoice_01_and_expected_response()
+        invoice.invoice_line_ids.product_id.type = 'service'
+        invoice.l10n_latam_document_type_id = self.env.ref('l10n_br.dt_SE')
+        invoice.partner_id.city_id = self.env.ref('l10n_br.city_br_001')
+
+        with self._capture_request_br(return_value=response):
+            invoice.action_post()
+
+        self.assertEqual(
+            invoice.invoice_line_ids[0].price_total,
+            35.0,
+            "The discount shouldn't have been subtracted, it's already accounted for in lineNetFigure."
+        )
+
+    def test_13_service_invoice_with_rendered_address(self):
+        rio_city = self.env.ref("l10n_br.city_br_002")
+        ncm_code_id = self.env.ref('l10n_br_avatax.service_1_07')
+        # Make a service invoice
+        invoice = self._create_invoice_with_diff_partner_shipping()
+        invoice.l10n_latam_document_type_id = self.env.ref('l10n_br.dt_SE').id
+        # Configure the product to be a service type for rendered address
+        invoice.invoice_line_ids.mapped('product_id').write(
+            {
+                "type": "service",
+                "l10n_br_property_service_code_origin_id": self.env["l10n_br.service.code"].create(
+                    {"code": "1.07", "city_id": rio_city.id},
+                ),
+                "l10n_br_ncm_code_id": ncm_code_id,
+            },
+        )
+
+        with self._with_mocked_l10n_br_iap_request([
+            ("calculate_tax", "nfse_rendered_address_request", "nfse_rendered_address_response"),
+        ]):
+            invoice.action_post()
+
+    def test_14_goods_invoice_with_delivery_address(self):
+        invoice = self._create_invoice_with_diff_partner_shipping()
+        payload = invoice._prepare_l10n_br_avatax_document_service_call(invoice._get_l10n_br_avatax_service_params())
+        delivery = payload['header']['locations'].get('delivery')
+        self.assertTrue(delivery, "Delivery address should be sent in request when partner_shipping_id is not the same as partner_id")
+
+    def test_15_credit_note_with_included_tax(self):
+        product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'default_code': 'PROD2',
+            'list_price': 800.00,
+            'standard_price': 800.00,
+            'l10n_br_ncm_code_id': self.env.ref('l10n_br_avatax.02062990').id,
+            'l10n_br_source_origin': '0',
+            'l10n_br_sped_type': 'FOR PRODUCT',
+            'l10n_br_use_type': 'production',
+            'supplier_taxes_id': None,
+        })
+
+        credit_note = self.env['account.move'].create({
+            'move_type': 'out_refund',
+            'partner_id': self.partner.id,
+            'fiscal_position_id': self.fp_avatax.id,
+            'invoice_date': '2021-01-01',
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': product.id,
+                    'tax_ids': None,
+                    'price_unit': product.list_price,
+                }),
+            ],
+        })
+
+        response = credit_note_generate_response(credit_note.invoice_line_ids)
+        with self._capture_request_br(return_value=response):
+            credit_note.action_post()
+
+        expected_amounts = {
+            'amount_total': 800.0,
+            'amount_untaxed': 704.0,
+            'amount_tax': 96.0,
+        }
+        self.assertRecordValues(credit_note, [expected_amounts])
+        self.assertEqual(credit_note.tax_totals['total_amount_currency'], expected_amounts['amount_total'])
+        self.assertEqual(credit_note.tax_totals['base_amount_currency'], expected_amounts['amount_untaxed'])
 
 
 @tagged('post_install_l10n', '-at_install', 'post_install')

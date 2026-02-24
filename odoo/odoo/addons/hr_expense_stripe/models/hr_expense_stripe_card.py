@@ -3,7 +3,7 @@ import logging
 from collections import defaultdict
 
 from odoo import _, _lt, api, fields, models
-from odoo.exceptions import ValidationError, UserError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools import format_date
 
 from odoo.addons.hr_expense_stripe.utils import STRIPE_CURRENCY_MINOR_UNITS, make_request_stripe_proxy
@@ -310,9 +310,14 @@ class HrExpenseStripeCard(models.Model):
             payload.update({
                 'type': self.card_type,
                 'currency': currency_name or False,
-                'cardholder': self.employee_id.private_stripe_id,
+                'cardholder': self.employee_id.sudo().private_stripe_id,
             })
-        if self.card_type == 'physical' and self.shipping_status in (False, 'pending') and self.state in ('draft', 'pending'):
+        if (
+            self.card_type == 'physical'
+            and self.shipping_status in {False, 'pending'}
+            and self.state in {'draft', 'pending'}
+            and state in {'draft', 'inactive'}
+        ):
             payload.update({
                 "shipping[name]": self.delivery_address_id.name or self.employee_id.name,
                 "shipping[address][line1]": self.delivery_address_id.street,
@@ -322,8 +327,10 @@ class HrExpenseStripeCard(models.Model):
                 "shipping[address][postal_code]": self.delivery_address_id.zip,
                 "shipping[address][country]": self.delivery_address_id.country_id.code,
             })
-        payload = {key: value for key, value in payload.items() if value is not False}  # Else Stripe consider it a value
-        response = make_request_stripe_proxy(self.company_id.sudo(), route, route_params, payload, method='POST')
+        if not (state == 'canceled' and self.state == 'canceled'):
+            # When canceled by Stripe, we don't need to send anything
+            payload = {key: value for key, value in payload.items() if value is not False}  # Else Stripe consider it a value
+            response = make_request_stripe_proxy(self.company_id.sudo(), route, route_params, payload, method='POST')
 
         if not self.env.context.get('skip_local_update'):
             self._update_from_stripe(response)
@@ -361,6 +368,9 @@ class HrExpenseStripeCard(models.Model):
             # It's possible through the stripe dashboard but shouldn't happen through Odoo.
             elif self.card_type == 'virtual' or self.state != 'pending' or stripe_object['status'] != 'inactive':
                 new_vals['state'] = stripe_object['status']
+                if self.state == 'draft':
+                    # Only possible for virtual cards as physical cards are set to pending when draft
+                    emails_to_send.append('assigned')
         if not self.cancellation_reason:
             new_vals['cancellation_reason'] = stripe_object['cancellation_reason']
         if not self.last_4:
@@ -371,11 +381,15 @@ class HrExpenseStripeCard(models.Model):
             new_vals['expiration'] = f'{exp_month:02}/{exp_year:02}'
         if self.card_type == 'physical':
             if stripe_object['shipping']['status'] != self.shipping_status:
-                new_vals['shipping_status'] = stripe_object['shipping']['status']
-                if new_vals['shipping_status'] in ('canceled', 'failure', 'returned'):
-                    emails_to_send.append('canceled')
-                elif new_vals['shipping_status'] == 'shipped':
-                    emails_to_send.append('shipped')
+                # Since it's not possible to go back in shipping status, we only update it if it's a progression.
+                # In case the webhooks are received out of order.
+                states = {False: 0, 'submitted': 1, 'pending': 2, 'shipped': 3, 'delivered': 4, 'failure': 4, 'returned': 4, 'canceled': 4}
+                if states[stripe_object['shipping']['status']] > states[self.shipping_status]:
+                    new_vals['shipping_status'] = stripe_object['shipping']['status']
+                    if new_vals['shipping_status'] in {'canceled', 'failure', 'returned'}:
+                        emails_to_send.append('canceled')
+                    elif new_vals['shipping_status'] == 'shipped':
+                        emails_to_send.append('shipped')
             if not self.tracking_url:
                 new_vals['tracking_url'] = stripe_object['shipping']['tracking_url']
             if not self.tracking_number:
@@ -394,8 +408,8 @@ class HrExpenseStripeCard(models.Model):
         :param str email_type: ordered | shipped, type of the mail to send
         """
         self.ensure_one()
-        if email_type not in {'canceled', 'ordered', 'shipped'}:
-            raise UserError(self.env._("Invalid email type, must be 'canceled', 'ordered' or 'shipped'."))
+        if email_type not in {'canceled', 'ordered', 'assigned', 'shipped'}:
+            raise UserError(self.env._("Invalid email type, must be 'canceled', 'ordered', 'assigned' or 'shipped'."))
         template_ref = f'hr_expense_stripe.email_template_hr_expense_stripe_card_{email_type}'
 
         template_context = {
@@ -406,11 +420,19 @@ class HrExpenseStripeCard(models.Model):
             ),
         }
         delivery_address = self.delivery_address_id
-        if delivery_address and (delivery_address.is_company or delivery_address.parent_id.is_company or delivery_address.company_name):
+        if (
+            email_type in {'canceled', 'shipped'}
+            and delivery_address
+            and (delivery_address.is_company or delivery_address.parent_id.is_company or delivery_address.company_name)
+        ):
             # If we're delivering to a company building
             email_to = self.ordered_by.email_formatted
             email_cc = None
             template_context['recipient_name'] = self.ordered_by.name
+        elif email_type == 'assigned':
+            email_to = self.employee_id.work_email
+            email_cc = None
+            template_context['recipient_name'] = self.employee_id.name
         else:
             email_to = self.employee_id.work_email
             email_cc = self.ordered_by.email_formatted
@@ -430,6 +452,7 @@ class HrExpenseStripeCard(models.Model):
         :return: (can_pay, refusal_reason)
         :rtype: tuple[bool, str]
         """
+
         def process_existing_expenses_data(data_raw):
             """ Process the existing expenses data to get the amount spent in the different intervals and MCCs """
             today = fields.Date.context_today(self)
@@ -439,27 +462,13 @@ class HrExpenseStripeCard(models.Model):
                 'monthly': fields.Date.start_of(today, 'month'),
                 'yearly': fields.Date.start_of(today, 'year'),
             }
-            data = {
-                'daily': defaultdict(int),
-                'weekly': defaultdict(int),
-                'monthly': defaultdict(int),
-                'yearly': defaultdict(int),
-                'all_time': defaultdict(int),
-            }
-            for date, mcc_id, datum_amount in data_raw:
-                data['all_time'][mcc_id] += datum_amount
+            data = defaultdict(int)
+            for date, amount in data_raw:
+                data['all_time'] += amount
                 for interval in ('daily', 'weekly', 'monthly', 'yearly'):
-                    if today >= limit_interval_start_date[interval]:
-                        data[interval][mcc_id] += datum_amount
+                    if date >= limit_interval_start_date[interval]:
+                        data[interval] += amount
             return data
-
-        def get_already_spent(interval, mccs_to_check, existing_expenses_data):
-            """ Return the summed amount already spent in the given aggregated in the given interval MCCs """
-            return sum(
-                amount
-                for existing_mcc, amount in existing_expenses_data[interval].items()
-                if not mccs_to_check or existing_mcc in mccs_to_check
-            )
 
         card = self.ensure_one().with_company(self.company_id)
         # Validate employee
@@ -477,7 +486,7 @@ class HrExpenseStripeCard(models.Model):
         card_country_ids = set(card.spending_policy_country_tag_ids.ids)
         if not country:
             return False, _("No country found")
-        if country.id not in card_country_ids and card_country_ids:
+        if card_country_ids and country.id not in card_country_ids:
             return False, _("Country not allowed")
 
         # Validate MCC
@@ -488,21 +497,19 @@ class HrExpenseStripeCard(models.Model):
         if not valid_mcc:
             return False, self.env._("No MCC is properly set")
 
-        card_mccs = card.spending_policy_category_tag_ids or valid_mcc  # If no MCC is set, we allow all valid MCCs
-        if mcc not in card_mccs:
+        if mcc not in (card.spending_policy_category_tag_ids or valid_mcc):  # If no MCC is set, we allow all valid MCCs
             return False, _("MCC not allowed")
 
         # Validate Limits
         existing_expenses_data = process_existing_expenses_data(card.env['hr.expense']._read_group(
             domain=[('card_id', '=', card.id), ('state', '!=', 'refused')],
-            groupby=['date:day', 'mcc_tag_id'],
+            groupby=['date:day'],
             aggregates=['total_amount:sum'],
         ))
 
         if not card.currency_id.is_zero(card.spending_policy_interval_amount):
-            mccs = card_mccs
-            amount_already_spent = get_already_spent(card.spending_policy_interval, mccs, existing_expenses_data)
-            if card.currency_id.compare_amounts(amount_already_spent + amount, card.spending_policy_interval_amount) > 0:
+            total_spent = existing_expenses_data[card.spending_policy_interval] + amount
+            if card.currency_id.compare_amounts(total_spent, card.spending_policy_interval_amount) > 0:
                 return False, _("Transaction amount exceeds the interval limit")
 
         return True, _("Transaction accepted")
@@ -517,13 +524,12 @@ class HrExpenseStripeCard(models.Model):
         """ Activates the ability to pay with the card on Stripe and on the record """
         self.ensure_one()
 
-        if (
-            not self.env.user.has_group('hr_expense.group_hr_expense_manager')
-            and (self.state != 'pending' or self.sudo().employee_id.user_id == self.env.user)  # The employee can activate their own card when they receive it
-        ):
-            raise UserError(_("Operation only allowed for expense administrators."))
+        if not self.has_access('write') and (self.state != 'pending' or self.employee_id.sudo().user_id != self.env.user):
+            # The employee can activate their own card when they receive it
+            raise AccessError(self.env._("Operation only allowed for expense administrators."))
 
-        if not self.stripe_id and not self.employee_id.private_stripe_id:
+        employee_stripe_id = self.employee_id.sudo().private_stripe_id
+        if not self.stripe_id and not employee_stripe_id:
             return self.with_context({'stripe_card_action_activate': True}).action_open_cardholder_wizard()
 
         state = 'active'
@@ -545,7 +551,7 @@ class HrExpenseStripeCard(models.Model):
             response = make_request_stripe_proxy(
                 self.company_id.sudo(),
                 'cardholders/{cardholder_id}',
-                route_params={'cardholder_id': self.employee_id.sudo().private_stripe_id},
+                route_params={'cardholder_id': employee_stripe_id},
                 payload={'account': self.company_id.sudo().stripe_id},
                 method='GET',
             )

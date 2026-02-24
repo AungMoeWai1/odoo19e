@@ -1,12 +1,12 @@
+import { DocumentsModels } from "@documents/../tests/helpers/data";
 import {
+    defineSpreadsheetModels,
     getBasicData as getBasicSpreadsheetData,
     getBasicServerData as getBasicSpreadsheetServerData,
     SpreadsheetModels,
-    defineSpreadsheetModels,
 } from "@spreadsheet/../tests/helpers/data";
 import { defineActions, fields, models, onRpc, serverState } from "@web/../tests/web_test_helpers";
 import { Domain } from "@web/core/domain";
-import { DocumentsModels } from "@documents/../tests/helpers/data";
 
 const ACCESS_TOKEN_MY_SPREADSHEET = "accessTokenMyspreadsheet";
 const {
@@ -148,20 +148,24 @@ export class SpreadsheetTemplate extends models.Model {
 }
 
 onRpc(
-    "/spreadsheet/data/documents.document/*",
-    function (request) {
-        const resId = parseInt(request.url.split("/").at(-1));
-        const document = this.env["documents.document"].search_read([["id", "=", resId]])[0];
+    "/spreadsheet/data/<string:res_model>/<int:res_id>",
+    function (_request, { res_model, res_id }) {
+        const fields = this.env[res_model]._fields;
+        const domain = [["id", "=", parseInt(res_id)]];
+        if ("active" in fields) {
+            domain.push(["active", "in", [true, false]]);
+        }
+        const [record] = this.env[res_model].search_read(domain);
         return {
-            data: JSON.parse(document.spreadsheet_data),
-            name: document.name,
+            data: JSON.parse(record.spreadsheet_data),
+            name: record.name,
             revisions: [],
             isReadonly: false,
-            is_favorited: document.is_favorited,
-            folder_id: document.folder_id[0],
+            is_favorited: record.is_favorited,
+            is_archived: !record.active,
+            folder_id: record.folder_id?.[0],
         };
-    },
-    { pure: true }
+    }
 );
 
 export function defineDocumentSpreadsheetModels() {

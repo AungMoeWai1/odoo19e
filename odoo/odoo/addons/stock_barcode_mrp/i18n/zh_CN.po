@@ -3,13 +3,14 @@
 # * stock_barcode_mrp
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Chloe Wang (chwa)" <chwa@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:45+0000\n"
-"PO-Revision-Date: 2025-09-16 15:33+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2025-12-30 18:48+0000\n"
+"PO-Revision-Date: 2025-11-17 03:30+0000\n"
+"Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
 "projects/odoo-19/stock_barcode_mrp/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -22,8 +23,9 @@ msgstr ""
 #. module: stock_barcode_mrp
 #. odoo-javascript
 #: code:addons/stock_barcode_mrp/static/src/components/header.js:0
+#, fuzzy
 msgid "%(firstSN)s, %(secondSN)s, %(thirdSN)s, …, %(lastSN)s"
-msgstr ""
+msgstr "%(firstSN)s, %(secondSN)s, %(thirdSN)s, …, %(lastSN)s"
 
 #. module: stock_barcode_mrp
 #: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.res_config_settings_view_form
@@ -279,9 +281,10 @@ msgstr "扫描产品以筛选订单。"
 #. odoo-javascript
 #: code:addons/stock_barcode_mrp/static/src/kanban/stock_barcode_kanban_renderer.js:0
 msgid ""
-"Scan an %(bold_start)s order %(bold_end)s or a %(bold_start)s product "
-"%(bold_end)s to filter your records"
-msgstr "扫描一项%(bold_start)s订单%(bold_end)s或%(bold_start)s产品%(bold_end)s，以筛"
+"Scan an %(bold_start)s order %(bold_end)s or a %(bold_start)s product %"
+"(bold_end)s to filter your records"
+msgstr ""
+"扫描一项%(bold_start)s订单%(bold_end)s或%(bold_start)s产品%(bold_end)s，以筛"
 "选记录"
 
 #. module: stock_barcode_mrp
@@ -345,8 +348,10 @@ msgstr "单元"
 #. module: stock_barcode_mrp
 #: model:ir.model.fields,help:stock_barcode_mrp.field_stock_move_line__manual_consumption
 msgid ""
-"When activated, then the registration of consumption for that component is recorded manually exclusively.\n"
-"If not activated, and any of the components consumption is edited manually on the manufacturing order, Odoo assumes manual consumption also."
+"When activated, then the registration of consumption for that component is "
+"recorded manually exclusively.\n"
+"If not activated, and any of the components consumption is edited manually "
+"on the manufacturing order, Odoo assumes manual consumption also."
 msgstr ""
 "如果启用，则专门手动记录该组件的消耗登记。\n"
 "如果未启用，且任何组件消耗量在制造订单中手动编辑，Odoo会假定手动消耗。"

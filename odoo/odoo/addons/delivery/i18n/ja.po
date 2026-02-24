@@ -8,13 +8,15 @@
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2023
 # Ryoko Tsuda <ryoko@quartile.co>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Junko Augias (juau)" <juau@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Yoshi Tashiro <tashiro@quartile.co>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:55+0000\n"
-"PO-Revision-Date: 2025-10-03 02:31+0000\n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2026-02-02 13:43+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
 "delivery/ja/>\n"
@@ -23,7 +25,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: delivery
 #. odoo-python
@@ -61,8 +63,8 @@ msgid ""
 "                </p>"
 msgstr ""
 "<p class=\"o_view_nocontent\">\n"
-"                    "
-"今すぐOdoo企業版を購入して、より多くのプロバイダーを入手しましょう。\n"
+"                    今すぐOdoo企業版を購入して、より多くのプロバイダーを入手"
+"しましょう。\n"
 "                </p>"
 
 #. module: delivery
@@ -106,7 +108,8 @@ msgid ""
 "A description of the delivery method that you want to communicate to your "
 "customers on the Sales Order and sales confirmation email.E.g. instructions "
 "for customers to follow."
-msgstr "販売オーダと販売確認メールで顧客に伝えたい配送方法の説明。例：顧客に対する手"
+msgstr ""
+"販売オーダと販売確認メールで顧客に伝えたい配送方法の説明。例：顧客に対する手"
 "順の説明"
 
 #. module: delivery
@@ -117,7 +120,7 @@ msgstr "納品書の検証中のアクション"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__active
 msgid "Active"
-msgstr "アクティブ"
+msgstr "有効"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
@@ -169,8 +172,9 @@ msgstr "アーカイブ済"
 msgid ""
 "Are you sure you want the delivery to be free for this order? You might have "
 "forgotten to compute the rates."
-msgstr "このオーダの配送料を無料にしてもよろしいですか? "
-"送料の計算を忘れている可能性があります。"
+msgstr ""
+"このオーダの配送料を無料にしてもよろしいですか? 送料の計算を忘れている可能性"
+"があります。"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -185,7 +189,7 @@ msgstr "可能な配送業者"
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__delivery_type__base_on_rule
 msgid "Based on Rules"
-msgstr "計算規則に基づく"
+msgstr "計算ルールに基づく"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__can_generate_return
@@ -205,7 +209,8 @@ msgstr "配送業者"
 #: code:addons/delivery/models/delivery_carrier.py:0
 msgid ""
 "Carrier %s cannot have the same tag in both Must Have Tags and Excluded Tags."
-msgstr "配送業者%sは、必須タグと除外タグの両方に同じタグを持つことはできません。"
+msgstr ""
+"配送業者%sは、必須タグと除外タグの両方に同じタグを持つことはできません。"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__carrier_description
@@ -367,7 +372,7 @@ msgstr "送料"
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_price_rule
 msgid "Delivery Price Rules"
-msgstr "配送価格規則"
+msgstr "配送価格ルール"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__product_id
@@ -444,7 +449,7 @@ msgid ""
 msgstr ""
 "各配送会社（例：UPS）は、複数の配送方法\n"
 "　　　（例：UPSエクスプレス、UPSスタンダード）\n"
-"　　　  を持つことができ、各配送方法に料金規則が紐づけられています。"
+"　　　  を持つことができ、各配送方法に料金ルールが紐づけられています。"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__prod_environment
@@ -472,8 +477,8 @@ msgid ""
 "cost of theshipping will be updated on the SO after the delivery."
 msgstr ""
 "見積コスト：顧客に送料の見積コストが請求されます。\n"
-"実費: "
-"顧客に送料の実費が請求されます。送料は納品後に販売オーダで更新されます。"
+"実費: 顧客に送料の実費が請求されます。送料は納品後に販売オーダで更新されま"
+"す。"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__invoice_policy__estimated
@@ -496,7 +501,8 @@ msgstr ""
 msgid ""
 "Filling this form allows you to make the shipping method available according "
 "to the content of the order or its destination."
-msgstr "このフォームに記入することで、オーダの内容や配送先に応じて配送方法を選択する"
+msgstr ""
+"このフォームに記入することで、オーダの内容や配送先に応じて配送方法を選択する"
 "ことができます。"
 
 #. module: delivery
@@ -533,7 +539,7 @@ msgstr "レートの取得と出荷の作成"
 #. module: delivery
 #: model:ir.model,name:delivery.model_ir_http
 msgid "HTTP Routing"
-msgstr ""
+msgstr "HTTPルーティング"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__id
@@ -556,7 +562,8 @@ msgstr "ID"
 msgid ""
 "If the order total amount (shipping excluded) is above or equal to this "
 "value, the customer benefits from a free shipping"
-msgstr "オーダの合計金額（送料を除く）がこの金額以上の場合、顧客は送料無料の特典を受"
+msgstr ""
+"オーダの合計金額（送料を除く）がこの金額以上の場合、顧客は送料無料の特典を受"
 "けることができます。"
 
 #. module: delivery
@@ -697,7 +704,7 @@ msgstr "最大値"
 #. module: delivery
 #: model:ir.model,name:delivery.model_ir_module_module
 msgid "Module"
-msgstr ""
+msgstr "モジュール"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__must_have_tag_ids
@@ -719,7 +726,7 @@ msgstr "新規プロバイダー"
 #. odoo-python
 #: code:addons/delivery/models/sale_order.py:0
 msgid "No pick-up points are available for this delivery address."
-msgstr "その配送先住所では利用できる集荷ポイントがありません。"
+msgstr "その配送先では利用できる集荷ポイントがありません。"
 
 #. module: delivery
 #. odoo-javascript
@@ -758,7 +765,7 @@ msgstr "決済プロバイダー"
 #. module: delivery
 #: model:ir.model,name:delivery.model_payment_transaction
 msgid "Payment Transaction"
-msgstr "決済トランザクション"
+msgstr "支払取引"
 
 #. module: delivery
 #. odoo-javascript
@@ -809,7 +816,7 @@ msgstr "価格"
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_tree
 msgid "Price Rules"
-msgstr "価格規則"
+msgstr "価格ルール"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -819,7 +826,7 @@ msgstr "価格設定"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__price_rule_ids
 msgid "Pricing Rules"
-msgstr "価格設定規則"
+msgstr "価格設定ルール"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_product_category
@@ -912,8 +919,9 @@ msgstr "荷物重量"
 msgid ""
 "Shipping insurance is a service which may reimburse senders whose parcels "
 "are lost, stolen, and/or damaged in transit."
-msgstr "運送保険は、小包の紛失、盗難、および/または輸送中の損傷を補償するサービスです"
-"。"
+msgstr ""
+"運送保険は、小包の紛失、盗難、および/または輸送中の損傷を補償するサービスで"
+"す。"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -956,7 +964,8 @@ msgstr "配送時に配達員が支払を集金します。"
 msgid ""
 "The method is NOT available if at least one product of the order has one of "
 "these tags."
-msgstr "オーダの少なくとも1つのプロダクトにこれらのタグがある場合、この方法は使用でき"
+msgstr ""
+"オーダの少なくとも1つのプロダクトにこれらのタグがある場合、この方法は使用でき"
 "ません。"
 
 #. module: delivery
@@ -964,7 +973,8 @@ msgstr "オーダの少なくとも1つのプロダクトにこれらのタグ�
 msgid ""
 "The method is available only if at least one product of the order has one of "
 "these tags."
-msgstr "この方法は、オーダの少なくとも1つのプロダクトにこれらのタグがある場合にのみ使"
+msgstr ""
+"この方法は、オーダの少なくとも1つのプロダクトにこれらのタグがある場合にのみ使"
 "用できます。"
 
 #. module: delivery
@@ -1002,7 +1012,7 @@ msgid ""
 "            according to your settings; on the sales order (based on the\n"
 "            quotation) or the invoice (based on the delivery orders)."
 msgstr ""
-"これらの方法により、（見積書に基づいた）販売オーダまたは（配送オーダに基づい"
+"これらの方法により、（見積書に基づいた）販売オーダまたは（出荷オーダに基づい"
 "た）請求書上で、設定に応じた配送費用を自動的に計算することができます。"
 
 #. module: delivery
@@ -1016,8 +1026,8 @@ msgid ""
 "This option adds a link for the customer in the portal to track their "
 "package easily. Use <shipmenttrackingnumber> as a placeholder in your URL."
 msgstr ""
-"このオプションは、ポータルで顧客が簡単に梱包を追跡できるリンクを追加します。<"
-"shipmenttrackingnumber>をURLのプレースホルダとして使用します。"
+"このオプションは、ポータルで顧客が簡単に梱包を追跡できるリンクを追加します。"
+"<shipmenttrackingnumber>をURLのプレースホルダとして使用します。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__margin
@@ -1122,7 +1132,8 @@ msgstr ""
 msgid ""
 "You cannot delete the deliveries product category as it is used on the "
 "delivery carriers products."
-msgstr "配送プロダクトカテゴリは、輸送業者プロダクトで使用されているため、削除するこ"
+msgstr ""
+"配送プロダクトカテゴリは、輸送業者プロダクトで使用されているため、削除するこ"
 "とはできません。"
 
 #. module: delivery
@@ -1170,7 +1181,8 @@ msgstr "例. UPS Express"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "i.e. https://ekartlogistics.com/shipmenttrack/<shipmenttrackingnumber>"
-msgstr "つまり https://ekartlogistics.com/shipmenttrack/<shipmenttrackingnumber>"
+msgstr ""
+"つまり https://ekartlogistics.com/shipmenttrack/<shipmenttrackingnumber>"
 
 #~ msgid "<strong>Shipping Description:</strong>"
 #~ msgstr "<strong>配送概要:</strong>"

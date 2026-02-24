@@ -3,12 +3,14 @@
 # * ai_documents_account
 #
 # "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Odoo Translation Bot <c3p@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:26+0000\n"
-"PO-Revision-Date: 2025-10-02 02:42+0000\n"
+"POT-Creation-Date: 2025-12-30 18:43+0000\n"
+"PO-Revision-Date: 2025-12-10 10:31+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
 "ai_documents_account/ko/>\n"
@@ -17,49 +19,49 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: ai_documents_account
 #. odoo-python
 #: code:addons/ai_documents_account/wizard/ai_documents_sort.py:0
 msgid "%(b_open)sContracts & NDAs%(b_close)s go to the %(legal)s folder."
-msgstr ""
+msgstr "%(b_open)s계약서 및 NDA%(b_close)s %(legal)s 폴더로 이동합니다."
 
 #. module: ai_documents_account
 #. odoo-python
 #: code:addons/ai_documents_account/wizard/ai_documents_sort.py:0
 msgid ""
 "%(b_open)sInsurance contracts%(b_close)s go to the %(insurance)s folder."
-msgstr ""
+msgstr "%(b_open)s보험 계약서%(b_close)s를 %(insurance)s 폴더로 이동합니다."
 
 #. module: ai_documents_account
 #: model:ir.model.fields,field_description:ai_documents_account.field_documents_document__ai_document_or_env_company_id
 msgid "AI Company"
-msgstr ""
+msgstr "AI 회사"
 
 #. module: ai_documents_account
 #: model:ir.model,name:ai_documents_account.model_ai_documents_sort
 msgid "Ai Documents Sort"
-msgstr ""
+msgstr "Ai 문서 정렬"
 
 #. module: ai_documents_account
 #. odoo-python
 #: code:addons/ai_documents_account/wizard/ai_documents_sort.py:0
 msgid "Company > Email"
-msgstr ""
+msgstr "회사 > 이메일"
 
 #. module: ai_documents_account
 #. odoo-python
 #: code:addons/ai_documents_account/wizard/ai_documents_sort.py:0
 msgid "Company > Name"
-msgstr ""
+msgstr "회사 > 이름"
 
 #. module: ai_documents_account
 #: model:ir.model.fields,field_description:ai_documents_account.field_ai_documents_sort__display_name
 #: model:ir.model.fields,field_description:ai_documents_account.field_documents_document__display_name
 #: model:ir.model.fields,field_description:ai_documents_account.field_ir_actions_server__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "표시명"
 
 #. module: ai_documents_account
 #: model:ir.model,name:ai_documents_account.model_documents_document
@@ -103,9 +105,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/ai_documents_account/wizard/ai_documents_sort.py:0
 msgid ""
-"If it is true, add the tag %(b_open)s\"To Split\"%(b_close)s and stop there."
-" This way, we'll know we first need to manually split it into different "
-"files."
+"If it is true, add the tag %(b_open)s\"To Split\"%(b_close)s and stop there. "
+"This way, we'll know we first need to manually split it into different files."
 msgstr ""
 
 #. module: ai_documents_account
@@ -128,8 +129,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/ai_documents_account/wizard/ai_documents_sort.py:0
 msgid ""
-"If the customer of the invoice is us (%(company_name)s, with email "
-"%(company_email)s), create a Vendor Bill."
+"If the customer of the invoice is us (%(company_name)s, with email %"
+"(company_email)s), create a Vendor Bill."
 msgstr ""
 
 #. module: ai_documents_account
@@ -144,28 +145,28 @@ msgstr ""
 #. odoo-python
 #: code:addons/ai_documents_account/wizard/ai_documents_sort.py:0
 msgid ""
-"If the document is an %(b_open)sinvoice%(b_close)s, move it to the "
-"%(finance)s folder then trigger the relevant action:"
+"If the document is an %(b_open)sinvoice%(b_close)s, move it to the %"
+"(finance)s folder then trigger the relevant action:"
 msgstr ""
 
 #. module: ai_documents_account
 #. odoo-python
 #: code:addons/ai_documents_account/wizard/ai_documents_sort.py:0
 msgid "Is considered multipage"
-msgstr ""
+msgstr "페이지가 여러 장 있는 것으로 간주합니다."
 
 #. module: ai_documents_account
 #. odoo-python
 #: code:addons/ai_documents_account/wizard/ai_documents_sort.py:0
 msgid "Otherwise, %s"
-msgstr ""
+msgstr "또는, %s"
 
 #. module: ai_documents_account
 #: model:ir.model,name:ai_documents_account.model_ir_actions_server
 msgid "Server Action"
-msgstr ""
+msgstr "서버 작업"
 
 #. module: ai_documents_account
 #: model:documents.tag,name:ai_documents_account.documents_tag_to_split
 msgid "To Split"
-msgstr ""
+msgstr "분할하기"

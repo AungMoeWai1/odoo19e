@@ -53,6 +53,7 @@ export class DocumentsDocument extends models.Model {
     company_id = fields.Many2one({ relation: "res.company" });
     active = fields.Boolean({ default: true });
     activity_ids = fields.One2many({ relation: "mail.activity" });
+    my_activity_date_deadline = fields.Date();
     checksum = fields.Char();
     file_extension = fields.Char();
     thumbnail_status = fields.Selection({
@@ -78,6 +79,7 @@ export class DocumentsDocument extends models.Model {
         ],
         default: "binary",
     });
+    shortcut_document_id = fields.Many2one({ relation: "documents.document" });
     url = fields.Char();
     url_preview_image = fields.Char({ string: "URL preview image" });
     file_size = fields.Integer();
@@ -113,6 +115,7 @@ export class DocumentsDocument extends models.Model {
         ],
         default: "3_day",
     });
+    activity_user_id = fields.Many2one({ relation: "res.users" });
 
     get_deletion_delay() {
         return 30;
@@ -192,6 +195,7 @@ export class DocumentsDocument extends models.Model {
                 "partner_id",
                 "type",
                 "user_permission",
+                "access_token",
             ]
         )) {
             if (!isNaN(record.user_folder_id)) {
@@ -267,6 +271,10 @@ export class DocumentsDocument extends models.Model {
     toggle_lock(id) {
         const record = this.browse(id)[0];
         record.lock_uid = record.lock_uid ? false : serverState.odoobotId;
+    }
+
+    get_documents_actions(folder_id) {
+        return [];
     }
 }
 
@@ -404,7 +412,7 @@ export function getDocumentsTestServerModelsData(additionalRecords = []) {
             },
         ],
         "documents.document": [
-            makeDocumentRecordData(1, "Folder 1", { type: "folder" }),
+            makeDocumentRecordData(1, "Folder 1", { type: "folder", user_permission: "edit" }),
             ...additionalRecords,
         ],
         "documents.tag": [

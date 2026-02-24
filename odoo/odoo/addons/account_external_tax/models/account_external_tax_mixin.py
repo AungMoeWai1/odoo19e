@@ -85,7 +85,7 @@ class AccountExternalTaxMixin(models.AbstractModel):
             extra_tax_data = self.env["account.tax"]._export_base_line_extra_tax_data(base_line)
             line.write({
                 "extra_tax_data": extra_tax_data,
-                "tax_ids": [Command.set([int(tax_id) for tax_id in extra_tax_data["manual_tax_amounts"]])],
+                "tax_ids": [Command.set([int(tax_id) for tax_id in extra_tax_data.get("manual_tax_amounts", {})])],
             })
 
     @api.model
@@ -127,13 +127,17 @@ class AccountExternalTaxMixin(models.AbstractModel):
         tax_by_name = {}
         for tax_name, tax_values in tax_names.items():
             price_include_override_domain = []
+            type_tax_use_domain = []
             if 'price_include_override' in tax_values:
                 price_include_override_domain = [('price_include_override', '=', tax_values['price_include_override'])]
+            if 'type_tax_use' in tax_values:
+                type_tax_use_domain = [('type_tax_use', '=', tax_values['type_tax_use'])]
 
             existing_tax = self.env['account.tax'].with_context(active_test=not search_archived_taxes).search([
                 *self.env['account.tax']._check_company_domain(company),
                 (tax_key_field, 'in', tax_name),
                 *price_include_override_domain,
+                *type_tax_use_domain,
             ], limit=1)
             if existing_tax:
                 tax_by_name[existing_tax[tax_key_field]] = existing_tax
@@ -158,6 +162,11 @@ class AccountExternalTaxMixin(models.AbstractModel):
                 if tax_id in manual_tax_amounts:
                     manual_tax_amounts[tax_id]['tax_amount_currency'] += manual_amounts['tax_amount_currency']
                 else:
+                    if (
+                        base_line['manual_total_excluded_currency'] is None
+                        and 'base_amount_currency' in manual_amounts
+                    ):
+                        base_line['manual_total_excluded_currency'] = manual_amounts['base_amount_currency']
                     manual_tax_amounts[tax_id] = manual_amounts
 
         return {base_line['record']: base_line for base_line, _amount in base_line_with_tax_values}

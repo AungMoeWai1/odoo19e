@@ -1922,7 +1922,7 @@ class TestTaxReport(TestAccountReportsCommon):
             account = self.env['account.account'].search([('company_ids', '=', company.id), ('account_type', '=', account_types[tax.type_tax_use])], limit=1)
             # create one entry and it's reverse
             move_form = Form(self.env['account.move'].with_context(default_move_type='entry'))
-            with move_form.journal_line_ids.new() as line:
+            with move_form.line_ids.new() as line:
                 line.account_id = account
                 if tax.type_tax_use == 'sale':
                     line.credit = 1000
@@ -1932,7 +1932,7 @@ class TestTaxReport(TestAccountReportsCommon):
                 line.tax_ids.add(tax)
 
             # Create a third account.move.line for balance.
-            with move_form.journal_line_ids.new() as line:
+            with move_form.line_ids.new() as line:
                 line.account_id = account
                 if tax.type_tax_use == 'sale':
                     line.debit = 1200
@@ -2020,14 +2020,14 @@ class TestTaxReport(TestAccountReportsCommon):
                     .with_company(self.company_data['company']) \
                     .with_context(default_move_type='entry'))
         move_form.date = fields.Date.today()
-        with move_form.journal_line_ids.new() as base_line_form:
+        with move_form.line_ids.new() as base_line_form:
             base_line_form.name = "Base line"
             base_line_form.account_id = self.company_data['default_account_revenue']
             base_line_form.credit = 100
             base_line_form.tax_ids.clear()
             base_line_form.tax_ids.add(tax)
 
-        with move_form.journal_line_ids.new() as receivable_line_form:
+        with move_form.line_ids.new() as receivable_line_form:
             receivable_line_form.name = "Receivable line"
             receivable_line_form.account_id = self.company_data['default_account_receivable']
             receivable_line_form.debit = 142
@@ -2497,6 +2497,160 @@ class TestTaxReport(TestAccountReportsCommon):
                 (self.company_data['default_account_revenue'].display_name,                 310.0,     31.0),
                 (f'Total {tax_10.name} ({tax_10.amount}%)',                                    "",     31.0),
                 ('Total Sales',                                                                "",     31.0),
+            ],
+            options
+        )
+
+    def test_caba_negative_lines_with_multiple_accounts(self):
+        """ One invoice with 2 lines on 2 income acccounts, one with a negative total, both with a caba tax."""
+        self.company_data['company'].tax_exigibility = True
+        account_1 = self.company_data['default_account_revenue']
+        account_2 = self.company_data["default_account_assets"]
+        caba_tax_10 = self.env['account.tax'].create({
+            'name': "tax_10",
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+            'amount': 10.0,
+            'tax_exigibility': 'on_payment',
+            'cash_basis_transition_account_id': self.cash_basis_transfer_account.id,
+        })
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2019-01-01',
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'line1',
+                    'account_id': account_1.id,
+                    'price_unit': -1000.0,
+                    'tax_ids': [Command.set(caba_tax_10.ids)],
+                }),
+                Command.create({
+                    'name': 'line2',
+                    'account_id': account_2.id,
+                    'price_unit': 2000.0,
+                    'tax_ids': [Command.set(caba_tax_10.ids)],
+                }),
+            ]
+        })
+        invoice.action_post()
+
+        payment = self.env['account.payment'].create({
+            'payment_type': 'inbound',
+            'partner_type': 'customer',
+            'partner_id': self.partner_a.id,
+            'amount': 1100,
+            'date': invoice.date,
+            'journal_id': self.company_data['default_journal_bank'].id,
+        })
+        payment.action_post()
+
+        # Reconcile the move with a payment
+        (payment.move_id + invoice).line_ids.filtered(lambda x: x.account_id == self.company_data['default_account_receivable']).reconcile()
+
+        report = self.env.ref('account.generic_tax_report_account_tax')
+        options = self._generate_options(report, invoice.date, invoice.date)
+
+        self.assertLinesValues(
+            report._get_lines(options),
+            #   Name                                                                          Base      Tax
+            [   0,                                                                             1,        2],
+            [
+                ('Sales',                                                                     "",    100.0),
+                (account_2.display_name,                                                      "",    200.0),
+                (f'{caba_tax_10.name} ({caba_tax_10.amount}%)',                           2000.0,    200.0),
+                (f'Total {account_2.display_name}',                                           "",    200.0),
+                (account_1.display_name,                                                      "",   -100.0),
+                (f'{caba_tax_10.name} ({caba_tax_10.amount}%)',                          -1000.0,   -100.0),
+                (f'Total {account_1.display_name}',                                           "",   -100.0),
+                ('Total Sales',                                                               "",    100.0),
+            ],
+            options
+        )
+
+        report = self.env.ref("account.generic_tax_report_tax_account")
+        options['report_id'] = report.id
+
+        self.assertLinesValues(
+            report._get_lines(options),
+            #   Name                                                                           Base      Tax
+            [   0,                                                                              1,        2],
+            [
+                ('Sales',                                                                      "",    100.0),
+                (f'{caba_tax_10.name} ({caba_tax_10.amount}%)',                                "",    100.0),
+                (account_2.display_name,                                                   2000.0,    200.0),
+                (account_1.display_name,                                                  -1000.0,   -100.0),
+                (f'Total {caba_tax_10.name} ({caba_tax_10.amount}%)',                          "",    100.0),
+                ('Total Sales',                                                                "",    100.0),
+            ],
+            options
+        )
+
+    def test_caba_not_duplicated_in_tax_report_when_in_tax_group(self):
+        """
+            Test that the CABA tax amount is not duplicated in the general tax report
+            when it is part of a tax group.
+        """
+
+        self.env.company.tax_exigibility = True
+
+        regular_tax = self.env['account.tax'].create({
+            'name': 'Regular',
+            'amount': 10,
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+        })
+
+        caba_tax = self.env['account.tax'].create({
+            'name': 'Cash Basis',
+            'amount': 10,
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+            'tax_exigibility': 'on_payment',
+            'cash_basis_transition_account_id': self.cash_basis_transfer_account.id,
+        })
+
+        tax_group = self.env['account.tax'].create({
+            'name': "tax_group",
+            'amount_type': 'group',
+            'children_tax_ids': [Command.set((regular_tax + caba_tax).ids)],
+        })
+
+        invoice = self.init_invoice(
+            'out_invoice',
+            invoice_date='2026-01-01',
+            post=True,
+            amounts=[100],
+            taxes=tax_group,
+            company=self.company_data['company'],
+        )
+
+        report = self.env.ref("account.generic_tax_report")
+        options = self._generate_options(report, invoice.date, invoice.date)
+
+        self.assertLinesValues(
+            report._get_lines(options),
+            #   Name                                                                           Base      Tax
+            [0,                                                                        1,        2],
+            [
+                ('Sales',                                                                      "",       10.0),
+                (f'{regular_tax.name} ({regular_tax.amount}%)',                                100.0,    10.0),
+                ('Total Sales',                                                                "",       10.0),
+            ],
+            options
+        )
+
+        self._register_full_payment_for_invoice(invoice)
+
+        self.assertLinesValues(
+            report._get_lines(options),
+            #   Name                                                                           Base      Tax
+            [0,                                                                        1,        2],
+            [
+                ('Sales',                                                                      "",       20.0),
+                (f'{regular_tax.name} ({regular_tax.amount}%)',                                100.0,    10.0),
+                (f'{caba_tax.name} ({caba_tax.amount}%)',                                      100.0,    10.0),
+                ('Total Sales',                                                                "",       20.0),
             ],
             options
         )

@@ -3,13 +3,15 @@
 # * sale_commission
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Manon Rondou (ronm)" <ronm@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:41+0000\n"
-"PO-Revision-Date: 2025-09-18 02:47+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2026-01-30 18:49+0000\n"
+"PO-Revision-Date: 2026-02-18 14:56+0000\n"
+"Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-19/"
 "sale_commission/fr/>\n"
 "Language: fr\n"
@@ -17,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: sale_commission
 #. odoo-python
@@ -58,12 +60,12 @@ msgstr "Taux atteint"
 #. module: sale_commission
 #: model:ir.model.fields,help:sale_commission.field_sale_commission_achievement_report__commission_rate
 msgid "Achieved over the commission target amount"
-msgstr ""
+msgstr "Dépasse le montant cible de la commission"
 
 #. module: sale_commission
 #: model:ir.model.fields,help:sale_commission.field_sale_commission_achievement_report__target_rate
 msgid "Achieved over the target of that period, meaningless in group by"
-msgstr ""
+msgstr "Dépasse l’objectif de cette période, sans pertinence en regroupement"
 
 #. module: sale_commission
 #: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan__achievement_ids
@@ -273,7 +275,7 @@ msgstr "Détail des commissions : %(name)s"
 #: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_plan_view_search
 #: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_report_view_search
 msgid "Commission Plan"
-msgstr "Plan de comission"
+msgstr "Plan de commission"
 
 #. module: sale_commission
 #: model:ir.model,name:sale_commission.model_sale_commission_plan_achievement
@@ -305,12 +307,12 @@ msgstr "Utilisateur du plan de commission"
 #: model:ir.actions.act_window,name:sale_commission.sale_commission_action_plan
 #: model:ir.ui.menu,name:sale_commission.sale_commission_plan_menu
 msgid "Commission Plans"
-msgstr "Plans de comission"
+msgstr "Plans de commission"
 
 #. module: sale_commission
 #: model:ir.model.fields,field_description:sale_commission.field_sale_commission_achievement_report__commission_rate
 msgid "Commission Rate"
-msgstr ""
+msgstr "Taux de commission"
 
 #. module: sale_commission
 #: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_report_view_search
@@ -320,12 +322,12 @@ msgstr "Rapport des commissions"
 #. module: sale_commission
 #: model_terms:ir.ui.view,arch_db:sale_commission.sale_achievement_report_view_list
 msgid "Commission Target"
-msgstr ""
+msgstr "Objectif de commission"
 
 #. module: sale_commission
 #: model:ir.model.fields,field_description:sale_commission.field_sale_commission_achievement_report__commission_target_amount
 msgid "Commission Target Amount"
-msgstr ""
+msgstr "Montant de l’objectif de commission"
 
 #. module: sale_commission
 #: model:ir.model.fields,field_description:sale_commission.field_res_users__commission_plan_users_ids
@@ -443,7 +445,7 @@ msgstr "Période actuelle"
 #. module: sale_commission
 #: model:ir.model.fields,field_description:sale_commission.field_sale_commission_achievement_report__partner_id
 msgid "Customer"
-msgstr ""
+msgstr "Client"
 
 #. module: sale_commission
 #: model:ir.model.fields,field_description:sale_commission.field_sale_commission_achievement__date
@@ -710,7 +712,7 @@ msgstr "Note"
 #: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_target_forecast__notes
 #: model:ir.model.fields,field_description:sale_commission.field_sale_commission_report__notes
 msgid "Notes"
-msgstr ""
+msgstr "Notes"
 
 #. module: sale_commission
 #: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan__message_needaction_counter
@@ -763,9 +765,21 @@ msgid "Other plans"
 msgstr "Autres plans"
 
 #. module: sale_commission
+#. odoo-python
+#: code:addons/sale_commission/model/commission_plan_target.py:0
+msgid ""
+"Overlapping periods detected for plan '%(plan)s':\n"
+"- %(c_name)s [%(c_from)s → %(c_to)s]\n"
+"- %(n_name)s [%(n_from)s → %(n_to)s]"
+msgstr ""
+"Chevauchement de périodes détecté pour le plan \"%(plan)s\" :\n"
+"- %(c_name)s [%(c_from)s → %(c_to)s]\n"
+"- %(n_name)s [%(n_from)s → %(n_to)s]"
+
+#. module: sale_commission
 #: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_target__payment_amount
 msgid "Payment Amount"
-msgstr ""
+msgstr "Montant du paiement"
 
 #. module: sale_commission
 #: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_target__payment_date
@@ -897,6 +911,7 @@ msgstr "Commerciaux"
 #. module: sale_commission
 #: model:ir.model.fields,field_description:sale_commission.field_sale_commission_achievement_report__user_id
 #: model:ir.model.fields,field_description:sale_commission.field_sale_commission_report__user_id
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_plan_view_search
 msgid "Sales Person"
 msgstr "Vendeur"
 
@@ -946,12 +961,12 @@ msgstr "Soumettre"
 #. module: sale_commission
 #: model:ir.model.fields,help:sale_commission.field_sale_commission_plan_target__payment_amount
 msgid "Sum of amounts paid on the same payment date"
-msgstr ""
+msgstr "Somme des montants payés à la même date de paiement"
 
 #. module: sale_commission
 #: model:ir.model.fields,help:sale_commission.field_sale_commission_achievement_report__commission_target_amount
 msgid "Sum of target amount per plan paid on the same date"
-msgstr ""
+msgstr "Somme du montant cible par plan payé à la même date"
 
 #. module: sale_commission
 #: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan__target_ids
@@ -996,8 +1011,7 @@ msgstr "Objectifs"
 #. module: sale_commission
 #. odoo-python
 #: code:addons/sale_commission/model/commission_plan.py:0
-msgid ""
-"The plan should have at least one target with an achievement rate of 0%"
+msgid "The plan should have at least one target with an achievement rate of 0%"
 msgstr ""
 "Le plan doit avoir au moins un objectif avec un taux de réalisation de 0 %."
 
@@ -1006,6 +1020,16 @@ msgstr ""
 #: code:addons/sale_commission/model/commission_plan.py:0
 msgid "The start date must be before the end date."
 msgstr "La date de début doit être antérieure à la date de fin."
+
+#. module: sale_commission
+#. odoo-python
+#: code:addons/sale_commission/model/commission_plan_target.py:0
+msgid ""
+"The start date must be before the end date.\n"
+"Period: %s"
+msgstr ""
+"La date de début doit être antérieure à la date de fin.\n"
+"Période : %s"
 
 #. module: sale_commission
 #. odoo-python

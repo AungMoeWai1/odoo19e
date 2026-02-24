@@ -3,6 +3,7 @@ import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment
 import { patch } from "@web/core/utils/patch";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
+import { onWillUnmount } from "@odoo/owl";
 
 patch(PaymentScreen, {
     props: {
@@ -23,7 +24,28 @@ patch(PaymentScreen.prototype, {
                 (pm) => pm.type !== "pay_later"
             );
         }
+        onWillUnmount(this.onUnmount);
     },
+
+    onUnmount() {
+        /*
+         * When the settlement payment selection dialog is opened,
+         * `is_settling_account` is temporarily set to true.
+         *
+         * However, if the user exits the settlement process
+         * (without completing the payment) and returns to the previous screen,
+         * we must reset this flag to false.
+         *
+         * Failing to do so allows the same order to be used for
+         * non-settlement operations, which can cause inconsistencies—
+         * particularly in cases where invoices are mandatory
+         * for all payments except settlements.
+         */
+        if (this.currentOrder?.is_settling_account && this.currentOrder.state !== "paid") {
+            this.currentOrder.is_settling_account = false;
+        }
+    },
+
     toggleIsToInvoice() {
         if (
             !this.currentOrder.isToInvoice() &&
@@ -65,7 +87,7 @@ patch(PaymentScreen.prototype, {
     },
     async validateOrder(isForceValidate) {
         const order = this.currentOrder;
-        const change = order.getChange();
+        const change = -order.change;
         const settleLines = order.lines.filter(
             (line) => line.isSettleDueLine() || line.isSettleInvoiceLine()
         );
@@ -128,8 +150,12 @@ patch(PaymentScreen.prototype, {
                 confirmLabel: _t("Yes"),
             });
             if (confirmed) {
-                const paylaterPayment = order.addPaymentline(paylaterPaymentMethod);
-                paylaterPayment.setAmount(-amountToSettle);
+                const result = order.addPaymentline(paylaterPaymentMethod);
+                if (!result.status) {
+                    return false;
+                }
+
+                result.data.setAmount(-amountToSettle);
                 settleLines.forEach((line) => (line.qty = 0));
                 return super.validateOrder(...arguments);
             }
@@ -159,8 +185,12 @@ patch(PaymentScreen.prototype, {
                 taxes_id: [],
                 product_tmpl_id: this.pos.config.deposit_product_id,
             });
-            const paylaterPayment = order.addPaymentline(paylaterPaymentMethod);
-            paylaterPayment.setAmount(-change);
+            const result = order.addPaymentline(paylaterPaymentMethod);
+            if (!result.status) {
+                return false;
+            }
+
+            result.data.setAmount(-change);
             const depositLines = order.lines.filter((l) => l.isDepositLine());
             depositLines.forEach((line) => (line.qty = 0));
             return super.validateOrder(...arguments);

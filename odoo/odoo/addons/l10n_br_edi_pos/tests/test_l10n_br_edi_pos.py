@@ -9,6 +9,8 @@ from odoo.addons.l10n_br_edi_pos.tests.common import CommonPosBrEdiTest
 from odoo.addons.l10n_br_edi_pos.models.pos_order import PosOrder
 from odoo.exceptions import UserError
 from odoo.tests import tagged, freeze_time
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.addons.point_of_sale.tests.test_generic_localization import TestGenericLocalization
 
 # All tested POS orders are mocked to use this ID when calculating the access key
 TEST_POS_ORDER_ID = 548
@@ -41,6 +43,11 @@ class TestL10nBREDIPOSCommon(TestL10nBREDICommon, TestBRMockedRequests):
 
 @tagged("post_install_l10n", "post_install", "-at_install")
 class TestL10nBREDIPOS(TestL10nBREDIPOSCommon, CommonPosBrEdiTest):
+
+    def setUp(self):
+        super().setUp()
+        self.pos_config_usd.order_seq_id.write({'number_next_actual': 1})
+
     def test_01_access_key_check_digit(self):
         self.assertEqual(
             self.env["pos.order"]._l10n_br_calculate_access_key_check_digit("4323070738511100010255503000765973124086659"),
@@ -341,6 +348,55 @@ class TestL10nBREDIPOS(TestL10nBREDIPOSCommon, CommonPosBrEdiTest):
         }
         self.assertDictEqual(payload['header']['payment'], expected_dict, 'paymentMode should still be set for free orders!')
 
+    def test_09_order_name(self):
+        # Test that the order name uses the NFCE sequence number as expected
+        self.pos_config_usd.order_seq_id.write({'number_next_actual': 5})
+
+        self.pos_config_usd.open_ui()
+        order = self.env['pos.order'].create({
+            "name": "/",
+            "pos_reference": "Order 12345-123-1234",
+            'company_id': self.env.company.id,
+            'session_id': self.pos_config_usd.current_session_id.id,
+            'partner_id': self.partner_a.id,
+            'access_token': '1234567890',
+            'lines': [],
+            'amount_tax': 0,
+            'amount_total': 0,
+            'amount_paid': 0,
+            'amount_return': 0,
+        })
+        order.write({'state': 'paid'})
+        self.assertEqual(order.name, 'PoS Config USD - 5')
+
+        order_2 = self.env['pos.order'].create({
+            "name": "/",
+            "pos_reference": "Order 12345-123-1235",
+            'company_id': self.env.company.id,
+            'session_id': self.pos_config_usd.current_session_id.id,
+            'partner_id': self.partner_a.id,
+            'access_token': '1234567891',
+            'lines': [],
+            'amount_tax': 0,
+            'amount_total': 0,
+            'amount_paid': 0,
+            'amount_return': 0,
+        })
+        order_2.write({'state': 'paid'})
+        self.assertEqual(order_2.name, 'PoS Config USD - 6')
+
+    @freeze_time(TEST_DATETIME)
+    def test_10_refund_with_reference(self):
+        """
+        Tests that the refund has an invoice_refs, which is required to make a refund
+        """
+        refund_move = self.env['account.move'].create({
+            'move_type': 'out_refund',
+            'company_id': self.env.company.id,
+        })
+        res = refund_move._get_l10n_br_avatax_service_params()
+        self.assertTrue(res['invoice_refs'])
+
 
 @freeze_time(TEST_DATETIME)
 @tagged("post_install_l10n", "post_install", "-at_install")
@@ -416,3 +472,27 @@ class TestUi(TestL10nBREDIPOSCommon, TestPointOfSaleHttpCommon):
 
             order = self.env['pos.order'].search([], limit=1, order='id desc')
             self.assertEqual(order.is_invoiced, False)
+
+
+@tagged('post_install', '-at_install', 'post_install_l10n')
+class TestGenericBR(TestGenericLocalization, TestL10nBREDIPOSCommon):
+    @classmethod
+    @AccountTestInvoicingCommon.setup_country('br')
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.main_pos_config.company_id.name = 'Company BR'
+        cls.main_pos_config.write(
+            {
+                "l10n_br_is_nfce": True,
+                "l10n_br_invoice_serial": "1",
+            }
+        )
+        cls.main_pos_config.company_id.write({
+            "name": "Company BR"
+        })
+        cls.wall_shelf.write({
+            'taxes_id': False,
+        })
+        cls.whiteboard_pen.write({
+            'taxes_id': False,
+        })

@@ -7,13 +7,14 @@
 # Jolien De Paepe, 2022
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Bren Driesen <brdri@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 16:02+0000\n"
-"PO-Revision-Date: 2025-09-14 11:58+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2025-12-30 18:45+0000\n"
+"PO-Revision-Date: 2025-11-18 08:55+0000\n"
+"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/"
 "helpdesk_fsm/nl/>\n"
 "Language: nl\n"
@@ -22,11 +23,6 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 5.12.2\n"
-
-#. module: helpdesk_fsm
-#: model:ir.model.fields,field_description:helpdesk_fsm.field_helpdesk_create_fsm_task__company_id
-msgid "Company"
-msgstr "Bedrijf"
 
 #. module: helpdesk_fsm
 #: model:ir.model,name:helpdesk_fsm.model_helpdesk_ticket_convert_wizard
@@ -40,7 +36,6 @@ msgstr "Taak aanmaken & bekijken"
 
 #. module: helpdesk_fsm
 #: model_terms:ir.ui.view,arch_db:helpdesk_fsm.create_fsm_task_view_form
-#: model_terms:ir.ui.view,arch_db:helpdesk_fsm.helpdesk_ticket_view_form
 msgid "Create Task"
 msgstr "Taak aanmaken"
 
@@ -50,6 +45,16 @@ msgstr "Taak aanmaken"
 #: model:ir.model,name:helpdesk_fsm.model_helpdesk_create_fsm_task
 msgid "Create a Field Service task"
 msgstr "Maak een buitendienst taak"
+
+#. module: helpdesk_fsm
+#: model:ir.model,website_form_label:helpdesk_fsm.model_project_task
+msgid "Create a Task"
+msgstr "Taak aanmaken"
+
+#. module: helpdesk_fsm
+#: model:ir.model,website_form_label:helpdesk_fsm.model_helpdesk_ticket
+msgid "Create a Ticket"
+msgstr "Een ticket aanmaken"
 
 #. module: helpdesk_fsm
 #: model:ir.model.fields,field_description:helpdesk_fsm.field_helpdesk_create_fsm_task__create_uid
@@ -73,28 +78,17 @@ msgstr "Negeren"
 
 #. module: helpdesk_fsm
 #: model:ir.model.fields,field_description:helpdesk_fsm.field_helpdesk_create_fsm_task__display_name
+#: model:ir.model.fields,field_description:helpdesk_fsm.field_helpdesk_team__display_name
+#: model:ir.model.fields,field_description:helpdesk_fsm.field_helpdesk_ticket__display_name
+#: model:ir.model.fields,field_description:helpdesk_fsm.field_helpdesk_ticket_convert_wizard__display_name
+#: model:ir.model.fields,field_description:helpdesk_fsm.field_project_task__display_name
 msgid "Display Name"
-msgstr "Schermnaam"
-
-#. module: helpdesk_fsm
-#: model:ir.model.fields,field_description:helpdesk_fsm.field_project_task__display_helpdesk_ticket_button
-msgid "Display Ticket"
-msgstr "Ticket weergeven"
+msgstr "Weergavenaam"
 
 #. module: helpdesk_fsm
 #: model:ir.model.fields,field_description:helpdesk_fsm.field_helpdesk_team__fsm_project_id
 msgid "FSM Project"
 msgstr "Buitendienst project"
-
-#. module: helpdesk_fsm
-#: model:ir.model.fields,field_description:helpdesk_fsm.field_helpdesk_ticket__use_fsm
-msgid "Field Service"
-msgstr "Buitendienst"
-
-#. module: helpdesk_fsm
-#: model:ir.model.fields,field_description:helpdesk_fsm.field_helpdesk_ticket__fsm_task_count
-msgid "Fsm Task Count"
-msgstr "Aantal buitendienst-taken"
 
 #. module: helpdesk_fsm
 #: model:ir.model,name:helpdesk_fsm.model_helpdesk_team
@@ -108,6 +102,10 @@ msgstr "Helpdeskticket"
 
 #. module: helpdesk_fsm
 #: model:ir.model.fields,field_description:helpdesk_fsm.field_helpdesk_create_fsm_task__id
+#: model:ir.model.fields,field_description:helpdesk_fsm.field_helpdesk_team__id
+#: model:ir.model.fields,field_description:helpdesk_fsm.field_helpdesk_ticket__id
+#: model:ir.model.fields,field_description:helpdesk_fsm.field_helpdesk_ticket_convert_wizard__id
+#: model:ir.model.fields,field_description:helpdesk_fsm.field_project_task__id
 msgid "ID"
 msgstr "ID"
 
@@ -125,6 +123,17 @@ msgstr "Laatst bijgewerkt op"
 #: model:ir.model.fields,field_description:helpdesk_fsm.field_project_task__helpdesk_ticket_id
 msgid "Original Ticket"
 msgstr "Initieel ticket"
+
+#. module: helpdesk_fsm
+#: model_terms:ir.ui.view,arch_db:helpdesk_fsm.helpdesk_ticket_view_form
+msgid "Plan Intervention"
+msgstr "Plan interventie"
+
+#. module: helpdesk_fsm
+#. odoo-python
+#: code:addons/helpdesk_fsm/models/project_task.py:0
+msgid "Portal Ticket"
+msgstr "Portaal ticket"
 
 #. module: helpdesk_fsm
 #: model:ir.model.fields,field_description:helpdesk_fsm.field_helpdesk_create_fsm_task__project_id
@@ -152,8 +161,8 @@ msgstr "Taak"
 #. module: helpdesk_fsm
 #: model:mail.message.subtype,description:helpdesk_fsm.mt_ticket_task_canceled
 #: model:mail.message.subtype,name:helpdesk_fsm.mt_ticket_task_canceled
-msgid "Task Canceled"
-msgstr ""
+msgid "Task Cancelled"
+msgstr "Taak geannuleerd"
 
 #. module: helpdesk_fsm
 #: model:mail.message.subtype,description:helpdesk_fsm.mt_team_ticket_task_done
@@ -193,11 +202,13 @@ msgstr "Taken gegenereerd vanuit dit ticket"
 #. odoo-python
 #: code:addons/helpdesk_fsm/controllers/portal.py:0
 #: model_terms:ir.ui.view,arch_db:helpdesk_fsm.project_sharing_inherit_project_task_view_form
+#: model_terms:ir.ui.view,arch_db:helpdesk_fsm.view_task_form2_inherited_helpdesk_fsm
 msgid "Ticket"
 msgstr "Ticket"
 
 #. module: helpdesk_fsm
 #: model_terms:ir.ui.view,arch_db:helpdesk_fsm.project_sharing_inherit_project_task_view_form
+#: model_terms:ir.ui.view,arch_db:helpdesk_fsm.view_task_form2_inherited_helpdesk_fsm
 msgid "Ticket from this task"
 msgstr "Ticket vanuit deze taak"
 
@@ -210,3 +221,42 @@ msgstr "De klant van ticket wordt gekoppeld aan de taak"
 #: model:ir.model.fields,field_description:helpdesk_fsm.field_helpdesk_create_fsm_task__name
 msgid "Title"
 msgstr "Titel"
+
+#. module: helpdesk_fsm
+#: model:ir.model.fields,help:helpdesk_fsm.field_project_task__display_name
+msgid ""
+"Use these keywords in the title to set new tasks:\n"
+"\n"
+"        30h Allocate 30 hours to the task\n"
+"        #tags Set tags on the task\n"
+"        @user Assign the task to a user\n"
+"        ! Set the task a medium priority\n"
+"        !! Set the task a high priority\n"
+"        !!! Set the task a urgent priority\n"
+"\n"
+"        Make sure to use the right format and order e.g. Improve the "
+"configuration screen 5h #feature #v16 @Mitchell !"
+msgstr ""
+"Gebruik deze trefwoorden in de titel om nieuwe taken in te stellen:\n"
+"\n"
+"        30h Wijs 30 uur toe aan de taak\n"
+"        #label Stel labels in op de taak\n"
+"        @user Wijs de taak toe aan een gebruiker\n"
+"        ! Geef de taak een gemiddelde prioriteit\n"
+"        !! Geef de taak een hoge prioriteit\n"
+"        !!! Geef de taak een urgente prioriteit\n"
+"\n"
+"        Zorg ervoor dat je de juiste indeling en volgorde gebruikt, bv.: "
+"Verbeter het configuratiescherm 5h #feature #v16 @Mitchell !"
+
+#~ msgid "Company"
+#~ msgstr "Bedrijf"
+
+#~ msgid "Display Ticket"
+#~ msgstr "Ticket weergeven"
+
+#~ msgid "Field Service"
+#~ msgstr "Buitendienst"
+
+#~ msgid "Fsm Task Count"
+#~ msgstr "Aantal buitendienst-taken"

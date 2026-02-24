@@ -365,6 +365,7 @@ class AppointmentController(http.Controller):
                 )
         else:
             max_capacity_possible = 1
+        allowed_max_capacity = int(request.env['ir.config_parameter'].sudo().get_param('appointment.resource_max_capacity_allowed', default=12))
 
         return {
             'asked_capacity': int(kwargs['asked_capacity']) if kwargs.get('asked_capacity') else False,
@@ -374,7 +375,7 @@ class AppointmentController(http.Controller):
             'filter_resource_ids': kwargs.get('filter_resource_ids'),
             'hide_select_dropdown': len(users_possible if appointment_type.schedule_based_on == 'users' else resources_possible) <= 1,
             'invite_token': kwargs.get('invite_token'),
-            'max_capacity': min(12, max_capacity_possible),
+            'max_capacity': min(allowed_max_capacity, max_capacity_possible),
             'resource_default': resource_default,
             'resource_selected': resource_selected,
             'resources_possible': resources_possible,
@@ -949,6 +950,8 @@ class AppointmentController(http.Controller):
             :param resource_selected_id: id of the selected resource
             :return: int, the maximum capacity possible with the resources given
         """
+        if not resources:
+            return 1
         possible_combinations = resources._get_filtered_possible_capacity_combinations(1, {})
         capacity_to_resources = {
             resource_ids: capacity for resource_ids, capacity in possible_combinations
@@ -1057,7 +1060,12 @@ class AppointmentController(http.Controller):
         month_before_update = kwargs.get('month_before_update')
         month_kept_from_update = next((month['id'] for month in slots if month['month'] == month_before_update), False) if month_before_update else False
         formated_days = _formated_weekdays(get_lang(request.env).code)
-        max_possible_capacity = self._get_max_capacity_possible(filter_resources, resource_selected_id)
+        if not appointment_type.manage_capacity:
+            max_possible_capacity = 1
+        elif appointment_type.schedule_based_on == 'users':
+            max_possible_capacity = appointment_type.user_capacity
+        else:
+            max_possible_capacity = self._get_max_capacity_possible(filter_resources, resource_selected_id)
 
         return request.env['ir.qweb']._render('appointment.appointment_calendar', {
             'appointment_type': appointment_type,

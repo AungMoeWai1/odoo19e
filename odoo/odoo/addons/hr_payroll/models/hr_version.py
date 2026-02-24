@@ -170,7 +170,7 @@ class HrVersion(models.Model):
                 lambda c:
                 c != version and
                 (c.date_start <= date_today or include_future_contracts)
-            )  # hr.version(29, 37, 38, 39, 41) -> hr.version(29, 37, 39, 41)
+            ).sorted('date_start', reverse=True)  # hr.version(29, 37, 38, 39, 41) -> hr.version(29, 37, 39, 41)
             before_versions = all_versions.filtered(lambda c: c.date_start < version.date_start)  # hr.version(39, 41)
             before_versions = remove_gap(version, before_versions, before=True)
             after_versions = all_versions.filtered(lambda c: c.date_start > version.date_start).sorted(key='date_start')  # hr.version(37, 29)
@@ -302,8 +302,12 @@ class HrVersion(models.Model):
                 nearly_expired_versions_without_new_versions |= expired_version
         return nearly_expired_versions_without_new_versions
 
+    @api.model
+    def _get_whitelist_fields_from_template(self):
+        return super()._get_whitelist_fields_from_template() + ['payroll_properties']
+
     def write(self, vals):
-        if self:
+        if self and not self.env.context.get('tracking_disable'):
             # Force to track wage in employee form if any changes is found after version write
             self.employee_id._track_prepare({version.sudo()._get_contract_wage_field() for version in self})
         res = super().write(vals)
@@ -349,3 +353,9 @@ class HrVersion(models.Model):
             'target': 'new',
             'context': {'default_employee_ids': self.employee_id.ids}
         }
+
+    def action_configure_template_inputs(self):
+        self.ensure_one()
+        action = self.structure_id.action_get_structure_inputs()
+        action['domain'].append(('input_usage_employee', '=', True))
+        return action

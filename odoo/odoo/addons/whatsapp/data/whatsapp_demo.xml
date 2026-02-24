@@ -6,7 +6,7 @@
             <field name="app_uid">1234567890</field>
             <field name="app_secret">1234567890</field>
             <field name="account_uid">1234567890</field>
-            <field name="phone_uid">1234567890</field>
+            <field name="phone_uid">1234123455</field>
             <field name="phone_number">+1234567890</field>
             <field name="token">1234567890</field>
             <field name="notify_user_ids" eval="[Command.link(ref('base.user_demo'))]"/>

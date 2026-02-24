@@ -51,7 +51,7 @@
             <attribute name="t-out">partner_detail_map[partner_vals['partner'].id]['registration_number']</attribute>
         </xpath>
         <xpath expr="//MasterFiles/Customers/Customer/CustomerID" position="after">
-            <AccountID t-out="partner_vals['partner'].commercial_partner_id.property_account_payable_id.code"/>
+            <AccountID t-out="partner_vals['partner'].commercial_partner_id.property_account_receivable_id.code"/>
         </xpath>
 
         <!-- Suppliers must be shown, even if empty -->
@@ -173,8 +173,8 @@
         <xpath expr="//Transaction/t[1]" position="replace">
             <t t-set="partner_info" t-value="partner_detail_map[move_vals['partner_id']]"/>
             <t t-set="default_registration_number" t-value="partner_detail_map[company.partner_id.id]['registration_number']"/>
-            <CustomerID t-out="partner_info['registration_number'] if partner_info['type'] == 'customer' else default_registration_number"/>
-            <SupplierID t-out="partner_info['registration_number'] if partner_info['type'] == 'supplier' else default_registration_number"/>
+            <CustomerID t-out="partner_info['registration_number'] if 'customer' in partner_info['types'] else default_registration_number"/>
+            <SupplierID t-out="partner_info['registration_number'] if 'supplier' in partner_info['types'] else default_registration_number"/>
         </xpath>
 
         <!-- Line is renamed TransactionLine -->
@@ -185,8 +185,8 @@
                 <ValueDate t-out="move_vals['invoice_date']"/>
                 <SourceDocumentID t-out="move_vals['id']"/>
                 <t t-set="partner_info" t-value="partner_detail_map[line_vals['partner_id']]"/>
-                <CustomerID t-out="partner_info['registration_number'] if partner_info['type'] == 'customer' else default_registration_number"/>
-                <SupplierID t-out="partner_info['registration_number'] if partner_info['type'] == 'supplier' else default_registration_number"/>
+                <CustomerID t-out="partner_info['registration_number'] if 'customer' in partner_info['types'] else default_registration_number"/>
+                <SupplierID t-out="partner_info['registration_number'] if 'supplier' in partner_info['types'] else default_registration_number"/>
                 <Description t-out="(line_vals['name'] or move_vals['name'])[:256]"/>
                 <t t-call="l10n_ro_saft.saft_template_line_debit_credit_amount"/>
                 <t t-call="l10n_ro_saft.saft_template_tax_information"/>
@@ -388,13 +388,13 @@
             <InvoiceNo t-out="move_vals['name']"/>
             <t t-set="partner_info" t-value="partner_detail_map[move_vals['partner_id']]"/>
             <t t-set="partner" t-value="partner_info['partner']"/>
-            <CustomerInfo t-if="partner_info['type'] == 'customer'">
+            <CustomerInfo t-if="'customer' in partner_info['types']">
                 <CustomerID t-out="partner_info['registration_number']"/>
                 <BillingAddress t-foreach="partner_info['addresses']" t-as="partner_address">
                     <t t-call="account_saft.address"/>
                 </BillingAddress>
             </CustomerInfo>
-            <SupplierInfo t-if="partner_info['type'] == 'supplier'">
+            <SupplierInfo t-if="'supplier' in partner_info['types']">
                 <SupplierID t-out="partner_info['registration_number']"/>
                 <BillingAddress t-foreach="partner_info['addresses']" t-as="partner_address">
                     <t t-call="account_saft.address"/>

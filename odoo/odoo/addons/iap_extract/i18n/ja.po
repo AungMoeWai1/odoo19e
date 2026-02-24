@@ -3,13 +3,13 @@
 # * iap_extract
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Junko Augias (juau)" <juau@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:35+0000\n"
-"PO-Revision-Date: 2025-10-03 12:11+0000\n"
+"POT-Creation-Date: 2025-12-30 18:45+0000\n"
+"PO-Revision-Date: 2026-01-13 22:01+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
 "iap_extract/ja/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: iap_extract
 #: model:mail.template,body_html:iap_extract.iap_extract_no_credit
@@ -51,7 +51,8 @@ msgstr "要アクション"
 msgid ""
 "All fields will be automatically populated by Artificial Intelligence, it "
 "might take 5 seconds."
-msgstr "全ての項目は人工知能により自動入力されます。5秒ほどかかる場合があります。"
+msgstr ""
+"全ての項目は人工知能により自動入力されます。5秒ほどかかる場合があります。"
 
 #. module: iap_extract
 #. odoo-python
@@ -85,7 +86,8 @@ msgstr "ドキュメントからデータを抽出するための基本クラス
 #. module: iap_extract
 #: model:ir.model,name:iap_extract.model_extract_mixin_with_words
 msgid "Base class to extract data from documents with OCRed words saved"
-msgstr "OCR処理された単語が保存されたドキュメントからデータを抽出するための基底クラス"
+msgstr ""
+"OCR処理された単語が保存されたドキュメントからデータを抽出するための基底クラス"
 
 #. module: iap_extract
 #. odoo-javascript
@@ -112,9 +114,10 @@ msgstr "フロー完了"
 #. module: iap_extract
 #: model:iap.service,description:iap_extract.iap_service_ocr
 msgid ""
-"Digitize your scanned or PDF vendor bills, expenses and resumes with OCR and"
-" Artificial Intelligence."
-msgstr "仕入先請求書、経費、履歴書などのスキャン画像やPDFをOCRと人工知能でデジタル化"
+"Digitize your scanned or PDF vendor bills, expenses and resumes with OCR and "
+"Artificial Intelligence."
+msgstr ""
+"仕入先請求書、経費、履歴書などのスキャン画像やPDFをOCRと人工知能でデジタル化"
 "します。"
 
 #. module: iap_extract
@@ -167,7 +170,7 @@ msgstr "添付ファイルを抽出"
 #: model:ir.model.fields,field_description:iap_extract.field_extract_mixin__extract_state_processed
 #: model:ir.model.fields,field_description:iap_extract.field_extract_mixin_with_words__extract_state_processed
 msgid "Extract State Processed"
-msgstr "処理済状態を抽出"
+msgstr "抽出処理済み"
 
 #. module: iap_extract
 #: model:ir.model.fields,field_description:iap_extract.field_extract_mixin__extract_state
@@ -179,22 +182,22 @@ msgstr "抽出状態"
 #: model:ir.model.fields,field_description:iap_extract.field_extract_mixin__extract_status
 #: model:ir.model.fields,field_description:iap_extract.field_extract_mixin_with_words__extract_status
 msgid "Extract status"
-msgstr "抽出ステータス"
+msgstr "抽出状態"
 
 #. module: iap_extract
 #: model:ir.model.fields,field_description:iap_extract.field_extract_mixin_with_words__extracted_dates
 msgid "Extracted Dates"
-msgstr ""
+msgstr "抽出日付"
 
 #. module: iap_extract
 #: model:ir.model.fields,field_description:iap_extract.field_extract_mixin_with_words__extracted_numbers
 msgid "Extracted Numbers"
-msgstr ""
+msgstr "抽出された番号"
 
 #. module: iap_extract
 #: model:ir.model.fields,field_description:iap_extract.field_extract_mixin_with_words__extracted_words
 msgid "Extracted Words"
-msgstr "抽出された語句"
+msgstr "抽出語句"
 
 #. module: iap_extract
 #: model:ir.model.fields,field_description:iap_extract.field_extract_mixin__message_follower_ids
@@ -242,7 +245,7 @@ msgstr "チェックした場合は、新しいメッセージに注意が必要
 #: model:ir.model.fields,help:iap_extract.field_extract_mixin__message_has_error
 #: model:ir.model.fields,help:iap_extract.field_extract_mixin_with_words__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr "チェックした場合は、一部のメッセージに配信エラーが発生されました。"
+msgstr "有効にすると、一部のメッセージに配信エラーが発生します。"
 
 #. module: iap_extract
 #. odoo-python
@@ -328,7 +331,7 @@ msgstr "エラー数"
 #: model:ir.model.fields,help:iap_extract.field_extract_mixin__message_needaction_counter
 #: model:ir.model.fields,help:iap_extract.field_extract_mixin_with_words__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr "アクションを必要とするメッセージの数"
+msgstr "対応が必要なメッセージ数"
 
 #. module: iap_extract
 #: model:ir.model.fields,help:iap_extract.field_extract_mixin__message_has_error_counter
@@ -376,9 +379,10 @@ msgstr "すでにデジタル化されていたため、一部のドキュメン
 #. odoo-python
 #: code:addons/iap_extract/models/extract_mixin.py:0
 msgid ""
-"The 'invoice_ocr' IAP account token is invalid. Please delete it to let Odoo"
-" generate a new one or fill it with a valid token."
-msgstr "'invoice_ocr'のIAPアカウントトークンが無効です。削除して新しいトークンを生成"
+"The 'invoice_ocr' IAP account token is invalid. Please delete it to let Odoo "
+"generate a new one or fill it with a valid token."
+msgstr ""
+"'invoice_ocr'のIAPアカウントトークンが無効です。削除して新しいトークンを生成"
 "するか、有効なトークンを入力して下さい。"
 
 #. module: iap_extract
@@ -452,8 +456,9 @@ msgstr "ドキュメントからデータを抽出するには、クレジット
 #: code:addons/iap_extract/models/extract_mixin.py:0
 msgid ""
 "Your PDF file is protected by a password. The OCR can't extract data from it"
-msgstr "PDFファイルはパスワードで保護されています。 "
-"OCRはそこからデータを抽出できません"
+msgstr ""
+"PDFファイルはパスワードで保護されています。 OCRはそこからデータを抽出できませ"
+"ん"
 
 #. module: iap_extract
 #. odoo-python

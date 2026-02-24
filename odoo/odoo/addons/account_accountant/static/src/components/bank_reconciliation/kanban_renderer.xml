@@ -6,11 +6,12 @@
         </xpath>
         <xpath expr="//t[@t-as='groupOrRecord']" position="before">
             <BankRecStatementSummary
-                t-if="hasStatementLine and !hideCurrentBalance"
+                t-if="hasStatementLine > 1"
                 label="totalJournalLabel"
                 amount="globalState.totalJournalAmount"
                 action="() => this.actionOpenBankGL()"
                 journalId="globalState.journalId"
+                journalIsInvalid="globalState.totalIsInvalid"
             />
             <BankRecQuickCreate
                 t-if="isQuickCreateVisible"

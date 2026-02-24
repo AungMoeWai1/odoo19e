@@ -4,13 +4,13 @@
 import time
 
 from odoo import Command
-from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.addons.account_accountant.tests.test_account_bank_statement import TestAccountBankStatement
 from odoo.tests import tagged
 from odoo.exceptions import ValidationError
 
 
 @tagged('post_install', '-at_install')
-class TestBatchPayment(AccountTestInvoicingCommon):
+class TestBatchPayment(TestAccountBankStatement):
 
     @classmethod
     def setUpClass(cls):
@@ -108,63 +108,6 @@ class TestBatchPayment(AccountTestInvoicingCommon):
             },
         ])
 
-    def test_partner_account_batch_payments_without_journal_entry(self):
-        """ Test that account receivable is used for inbound payments and account payable for outbound ones
-            when no journal entry is linked to the payment
-        """
-        if self.env['account.move']._get_invoice_in_payment_state() == 'paid':
-            self.skipTest("`accountant` module is not installed. A journal entry will always be linked to the payment.")
-        for payment_type, account_a, account_b in [
-            ('inbound', self.partner_a.property_account_receivable_id, self.partner_b.property_account_receivable_id),
-            ('outbound', self.partner_a.property_account_payable_id, self.partner_b.property_account_payable_id),
-        ]:
-            payment_1 = self.env['account.payment'].create({
-                'date': '2015-01-01',
-                'payment_type': payment_type,
-                'partner_type': 'customer' if payment_type == 'inbound' else 'supplier',
-                'partner_id': self.partner_a.id,
-                'payment_method_line_id': self.batch_deposit.id,
-                'amount': 100.0,
-            })
-            payment_2 = self.env['account.payment'].create({
-                'date': '2015-01-01',
-                'payment_type': payment_type,
-                'partner_type': 'customer' if payment_type == 'inbound' else 'supplier',
-                'partner_id': self.partner_b.id,
-                'payment_method_line_id': self.batch_deposit.id,
-                'amount': 200.0,
-            })
-            payments = payment_1 + payment_2
-            payments.action_post()
-            batch = self.env['account.batch.payment'].create({
-                'batch_type': payment_type,
-                'journal_id': self.journal.id,
-                'payment_ids': [Command.set(payments.ids)],
-                'payment_method_id': self.batch_deposit_method.id,
-            })
-            batch.validate_batch()
-            st_line_amount = 300.0 if payment_type == 'inbound' else -300.0
-            st_line = self.env['account.bank.statement.line'].create({
-                'journal_id': self.journal.id,
-                'amount': st_line_amount,
-                'date': '2015-01-01',
-                'payment_ref': batch.name,
-            })
-            st_line.set_batch_payment_bank_statement_line(batch.id)
-            bank_account = self.journal.default_account_id
-            if payment_type == 'inbound':
-                self.assertRecordValues(st_line.move_id.line_ids.sorted('balance'), [
-                    {'account_id': account_b.id, 'partner_id': self.partner_b.id, 'balance': -200.0},
-                    {'account_id': account_a.id, 'partner_id': self.partner_a.id, 'balance': -100.0},
-                    {'account_id': bank_account.id, 'partner_id': False, 'balance': 300.0},
-                ])
-            else:
-                self.assertRecordValues(st_line.move_id.line_ids.sorted('balance'), [
-                    {'account_id': bank_account.id, 'partner_id': False, 'balance': -300.0},
-                    {'account_id': account_a.id, 'partner_id': self.partner_a.id, 'balance': 100.0},
-                    {'account_id': account_b.id, 'partner_id': self.partner_b.id, 'balance': 200.0},
-                ])
-
     def test_partner_account_batch_payments_with_journal_entry(self):
         """ Test the account for batch payments with a linked journal entry """
         for payment_type, account_a, account_b in [
@@ -245,6 +188,182 @@ class TestBatchPayment(AccountTestInvoicingCommon):
         ])
         self.assertEqual(st_line.line_ids.reconciled_lines_ids, payment.move_id.line_ids.filtered(lambda x: x.account_id.account_type == 'asset_current'))
 
+    def test_bank_rec_widget_batch_payment_delete_payment(self):
+        payment = self.create_payment(self.partner_a, 100, payment_method_line_id=self.batch_deposit.id)
+        payment.create_batch_payment()
+
+        st_line = self._create_st_line(amount=100)
+        st_line.set_batch_payment_bank_statement_line(payment.batch_payment_id.id)
+
+        # When removing the payment line, the payment should go back to in_process but the batch remains untouched
+        st_line.delete_reconciled_line(st_line.line_ids[-1].id)
+        self.assertEqual(payment.state, 'in_process')
+
+    def test_batch_reconciliation_multiple_installments_payment_term(self):
+        """ Test reconciliation of payments for multiple installments payment term lines """
+        payment_term = self.env['account.payment.term'].create({
+            'name': "20-80_payment_term",
+            'company_id': self.company_data['company'].id,
+            'line_ids': [
+                Command.create({'value': 'percent', 'value_amount': 20, 'nb_days': 0}),
+                Command.create({'value': 'percent', 'value_amount': 80, 'nb_days': 20}),
+            ],
+        })
+        invoice = self.init_invoice('out_invoice', partner=self.partner_a, amounts=[1000.0])
+        invoice.invoice_payment_term_id = payment_term
+        invoice.action_post()
+        # register payment for the first installment
+        payment_1 = self.env['account.payment.register'].with_context(
+            active_model='account.move',
+            active_ids=invoice.ids,
+        ).create({
+            'amount': 200.0,
+            'payment_date': '2015-01-01',
+            'payment_method_line_id': self.batch_deposit.id,
+        })._create_payments()
+        payment_1.create_batch_payment()
+        st_line_1 = self._create_st_line(amount=200.0, date='2015-01-01', partner_id=False)
+        st_line_1.set_batch_payment_bank_statement_line(payment_1.batch_payment_id.id)
+
+        self.assertRecordValues(st_line_1.move_id.line_ids.sorted('balance'), [
+            {'balance': -200.0},
+            {'balance': 200.0},
+        ])
+
+        # register payment for the second installment
+        payment_2 = self.env['account.payment.register'].with_context(
+            active_model='account.move',
+            active_ids=invoice.ids,
+        ).create({
+            'amount': 800.0,
+            'payment_date': '2015-01-01',
+            'payment_method_line_id': self.batch_deposit.id,
+        })._create_payments()
+        payment_2.create_batch_payment()
+        st_line_2 = self._create_st_line(amount=800.0, date='2015-01-01', partner_id=False)
+        st_line_2.set_batch_payment_bank_statement_line(payment_2.batch_payment_id.id)
+
+        self.assertRecordValues(st_line_2.move_id.line_ids.sorted('balance'), [
+            {'balance': -800.0},
+            {'balance': 800.0},
+        ])
+        self.assertRecordValues(invoice.line_ids.filtered(lambda l: l.display_type == 'payment_term').sorted('balance'), [
+            {'balance': 200.0, 'amount_residual': 0.0, 'reconciled': True},
+            {'balance': 800.0, 'amount_residual': 0.0, 'reconciled': True},
+        ])
+
+
+@tagged('post_install', '-at_install')
+class TestBatchPaymentAccountingOnly(TestBatchPayment):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        if cls.env['ir.module.module']._get('accountant').state != 'installed':
+            cls.skipTest(cls, "This class tests payment without entries, which happens only when Accounting is installed")
+
+    def test_partner_account_batch_payments_without_journal_entry(self):
+        """ Test that account receivable is used for inbound payments and account payable for outbound ones
+            when no journal entry is linked to the payment
+        """
+        for payment_type, account_a, account_b in [
+            ('inbound', self.partner_a.property_account_receivable_id, self.partner_b.property_account_receivable_id),
+            ('outbound', self.partner_a.property_account_payable_id, self.partner_b.property_account_payable_id),
+        ]:
+            payment_1 = self.env['account.payment'].create({
+                'date': '2015-01-01',
+                'payment_type': payment_type,
+                'partner_type': 'customer' if payment_type == 'inbound' else 'supplier',
+                'partner_id': self.partner_a.id,
+                'payment_method_line_id': self.batch_deposit.id,
+                'amount': 100.0,
+            })
+            payment_2 = self.env['account.payment'].create({
+                'date': '2015-01-01',
+                'payment_type': payment_type,
+                'partner_type': 'customer' if payment_type == 'inbound' else 'supplier',
+                'partner_id': self.partner_b.id,
+                'payment_method_line_id': self.batch_deposit.id,
+                'amount': 200.0,
+            })
+            payments = payment_1 + payment_2
+            payments.action_post()
+            batch = self.env['account.batch.payment'].create({
+                'batch_type': payment_type,
+                'journal_id': self.journal.id,
+                'payment_ids': [Command.set(payments.ids)],
+                'payment_method_id': self.batch_deposit_method.id,
+            })
+            batch.validate_batch()
+            st_line_amount = 300.0 if payment_type == 'inbound' else -300.0
+            st_line = self.env['account.bank.statement.line'].create({
+                'journal_id': self.journal.id,
+                'amount': st_line_amount,
+                'date': '2015-01-01',
+                'payment_ref': batch.name,
+            })
+            st_line.set_batch_payment_bank_statement_line(batch.id)
+            bank_account = self.journal.default_account_id
+            if payment_type == 'inbound':
+                self.assertRecordValues(st_line.move_id.line_ids.sorted('balance'), [
+                    {'account_id': account_b.id, 'partner_id': self.partner_b.id, 'balance': -200.0},
+                    {'account_id': account_a.id, 'partner_id': self.partner_a.id, 'balance': -100.0},
+                    {'account_id': bank_account.id, 'partner_id': False, 'balance': 300.0},
+                ])
+            else:
+                self.assertRecordValues(st_line.move_id.line_ids.sorted('balance'), [
+                    {'account_id': bank_account.id, 'partner_id': False, 'balance': -300.0},
+                    {'account_id': account_a.id, 'partner_id': self.partner_a.id, 'balance': 100.0},
+                    {'account_id': account_b.id, 'partner_id': self.partner_b.id, 'balance': 200.0},
+                ])
+
+    def test_bank_rec_widget_batch_with_epd_without_entries(self):
+        st_line = self._create_st_line(180.0, date='2019-01-05')
+        early_pay_acc = self.env.company.account_journal_early_pay_discount_loss_account_id
+        invoice_lines_with_epd = self._create_invoice_line(
+            'out_invoice',
+            invoice_date='2019-01-01',
+            invoice_payment_term_id=self.early_payment_term.id,
+            invoice_line_ids=[{'price_unit': 100.0}],
+        ) + self._create_invoice_line(
+            'out_invoice',
+            invoice_date='2019-01-01',
+            invoice_payment_term_id=self.early_payment_term.id,
+            invoice_line_ids=[{'price_unit': 100.0}],
+        )
+        payments = self.env['account.payment.register'].with_context(
+            active_model='account.move',
+            active_ids=invoice_lines_with_epd.move_id.ids,
+        ).create({
+            'payment_date': '2019-01-01',
+            'payment_method_line_id': self.batch_deposit.id,
+        })._create_payments()
+
+        batch = self.env['account.batch.payment'].create({
+                'batch_type': payments[0].payment_type,
+                'journal_id': self.journal.id,
+                'payment_ids': [Command.set(payments.ids)],
+                'payment_method_id': self.batch_deposit_method.id,
+            })
+        batch.validate_batch()
+
+        st_line.set_batch_payment_bank_statement_line(payments.batch_payment_id.id)
+        self.assertRecordValues(st_line.line_ids, [
+            {'account_id': st_line.journal_id.default_account_id.id, 'amount_currency': 180.0, 'balance': 180.0, 'reconciled': False},
+            {'account_id': invoice_lines_with_epd[0].account_id.id, 'amount_currency': -100.0, 'balance': -100.0, 'reconciled': True},
+            {'account_id': early_pay_acc.id, 'amount_currency': 10.0, 'balance': 10.0, 'reconciled': False},
+            {'account_id': invoice_lines_with_epd[1].account_id.id, 'amount_currency': -100.0, 'balance': -100.0, 'reconciled': True},
+            {'account_id': early_pay_acc.id, 'amount_currency': 10.0, 'balance': 10.0, 'reconciled': False},
+        ])
+        self.assertEqual(payments.mapped('state'), ['paid', 'paid'])
+        self.assertEqual(batch.state, 'reconciled')
+
+        st_line.delete_reconciled_line(st_line.line_ids[1].id)
+
+        self.assertEqual(payments[0].state, 'in_process')
+        self.assertEqual(batch.state, 'sent')
+
     def test_bank_rec_widget_batch_payment_without_entries(self):
         payment = self.create_payment(self.partner_a, 100, payment_method_line_id=self.batch_deposit.id)
         payment.create_batch_payment()
@@ -256,17 +375,6 @@ class TestBatchPayment(AccountTestInvoicingCommon):
             {'account_id': st_line.journal_id.default_account_id.id, 'name': st_line.payment_ref, 'amount_currency': 100.0, 'currency_id': self.company_data['currency'].id, 'balance': 100.0, 'reconciled': False},
             {'account_id': self.partner_a.property_account_receivable_id.id, 'name': payment.name, 'amount_currency': -100.0, 'currency_id': self.company_data['currency'].id, 'balance': -100.0, 'reconciled': False},
         ])
-
-    def test_bank_rec_widget_batch_payment_delete_payment(self):
-        payment = self.create_payment(self.partner_a, 100, payment_method_line_id=self.batch_deposit.id)
-        payment.create_batch_payment()
-
-        st_line = self._create_st_line(amount=100)
-        st_line.set_batch_payment_bank_statement_line(payment.batch_payment_id.id)
-
-        # When removing the payment line, the payment should go back to in_process but the batch remains untouched
-        st_line.delete_reconciled_line(st_line.line_ids[-1].id)
-        self.assertEqual(payment.state, 'in_process')
 
     def test_bank_rec_widget_batch_payment_without_entries_link_to_move(self):
         invoice = self.env['account.move'].create({
@@ -479,55 +587,62 @@ class TestBatchPayment(AccountTestInvoicingCommon):
             {'account_id': bills_2.line_ids[-1].account_id.id, 'amount_currency': 1000.0, 'balance': 1000.0, 'reconciled': True},
         ])
 
-    def test_batch_reconciliation_multiple_installments_payment_term(self):
-        """ Test reconciliation of payments for multiple installments payment term lines """
-        payment_term = self.env['account.payment.term'].create({
-            'name': "20-80_payment_term",
-            'company_id': self.company_data['company'].id,
-            'line_ids': [
-                Command.create({'value': 'percent', 'value_amount': 20, 'nb_days': 0}),
-                Command.create({'value': 'percent', 'value_amount': 80, 'nb_days': 20}),
-            ],
-        })
-        invoice = self.init_invoice('out_invoice', partner=self.partner_a, amounts=[1000.0])
-        invoice.invoice_payment_term_id = payment_term
-        invoice.action_post()
-        # register payment for the first installment
-        payment_1 = self.env['account.payment.register'].with_context(
+    def test_bank_rec_widget_batch_with_epd_with_exch_diff_without_entries(self):
+        """ Tests a batch payment of a grouped payment with an amount too large for:
+                - 1 invoice with an early payment discount AND exchange diff
+                - 1 invoice with an early payment discount
+            During reconciliation, a payment with move should be created for the first invoice (to correctly handle the EPD),
+            the second invoice should correctly be added to the widget, and the surplus should be added as a payment.
+        """
+        chf_currency = self.setup_other_currency('CHF', rates=[('2016-01-01', 2.0), ('2019-01-03', 4.0)])
+        st_line = self._create_st_line(200.0, date='2019-01-05', foreign_currency_id=chf_currency.id)
+        early_pay_acc = self.env.company.account_journal_early_pay_discount_loss_account_id
+        invoice_with_exch_diff = self._create_invoice_line(
+            'out_invoice',
+            invoice_date='2019-01-01',
+            invoice_payment_term_id=self.early_payment_term.id,
+            invoice_line_ids=[{'price_unit': 100.0}],
+            currency_id=chf_currency.id,
+        )
+        invoice_without_exch_diff = self._create_invoice_line(
+            'out_invoice',
+            invoice_date='2019-01-04',
+            invoice_payment_term_id=self.early_payment_term.id,
+            invoice_line_ids=[{'price_unit': 100.0}],
+            currency_id=chf_currency.id,
+        )
+        payment = self.env['account.payment.register'].with_context(
             active_model='account.move',
-            active_ids=invoice.ids,
+            active_ids=(invoice_with_exch_diff + invoice_without_exch_diff).move_id.ids,
         ).create({
-            'amount': 200.0,
-            'payment_date': '2015-01-01',
+            'group_payment': True,
+            'amount': 200,
+            'payment_date': '2019-01-04',
             'payment_method_line_id': self.batch_deposit.id,
         })._create_payments()
-        payment_1.create_batch_payment()
-        st_line_1 = self._create_st_line(amount=200.0, date='2015-01-01', partner_id=False)
-        st_line_1.set_batch_payment_bank_statement_line(payment_1.batch_payment_id.id)
+        outstanding_account = self.env['account.payment']._get_outstanding_account(payment.payment_type)
 
-        self.assertRecordValues(st_line_1.move_id.line_ids.sorted('balance'), [
-            {'balance': -200.0},
-            {'balance': 200.0},
-        ])
+        batch = self.env['account.batch.payment'].create({
+                'batch_type': payment.payment_type,
+                'journal_id': self.journal.id,
+                'payment_ids': [Command.set(payment.ids)],
+                'payment_method_id': self.batch_deposit_method.id,
+            })
+        batch.validate_batch()
+        self.assertEqual(batch.amount, 50.0)
 
-        # register payment for the second installment
-        payment_2 = self.env['account.payment.register'].with_context(
-            active_model='account.move',
-            active_ids=invoice.ids,
-        ).create({
-            'amount': 800.0,
-            'payment_date': '2015-01-01',
-            'payment_method_line_id': self.batch_deposit.id,
-        })._create_payments()
-        payment_2.create_batch_payment()
-        st_line_2 = self._create_st_line(amount=800.0, date='2015-01-01', partner_id=False)
-        st_line_2.set_batch_payment_bank_statement_line(payment_2.batch_payment_id.id)
-
-        self.assertRecordValues(st_line_2.move_id.line_ids.sorted('balance'), [
-            {'balance': -800.0},
-            {'balance': 800.0},
+        st_line.set_batch_payment_bank_statement_line(payment.batch_payment_id.id)
+        self.assertRecordValues(st_line.line_ids, [
+            {'account_id': st_line.journal_id.default_account_id.id,                'amount_currency': 200.0,   'balance': 200.0,   'reconciled': False},
+            # The first invoice and payment have been changed into a payment with move to handle the exchange diff. The next line comes from that move.
+            {'account_id': outstanding_account.id,                                  'amount_currency': -90.0,   'balance': -22.5,   'reconciled': True},
+            # The 2 following lines correspond to the second invoice + EPD.
+            {'account_id': invoice_without_exch_diff.account_id.id,                 'amount_currency': -100.0,  'balance': -25.0,   'reconciled': True},
+            {'account_id': early_pay_acc.id,                                        'amount_currency': 10.0,    'balance': 2.5,     'reconciled': False},
+            # The remaining amount from the payment is added as is.
+            {'account_id': payment.partner_id.property_account_receivable_id.id,   'amount_currency': -20.0,   'balance': -5.0,    'reconciled': False},
+            {'account_id': st_line.journal_id.suspense_account_id.id,               'amount_currency': -600.0,  'balance': -150.0,  'reconciled': False},
         ])
-        self.assertRecordValues(invoice.line_ids.filtered(lambda l: l.display_type == 'payment_term').sorted('balance'), [
-            {'balance': 200.0, 'amount_residual': 0.0, 'reconciled': True},
-            {'balance': 800.0, 'amount_residual': 0.0, 'reconciled': True},
-        ])
+        self.assertEqual(payment.state, 'paid')
+        self.assertEqual(batch.state, 'reconciled')
+        self.assertEqual(payment.amount, 110.0, "The creation of the payment with move during reconciliation should have diminished the grouped payment amount.")

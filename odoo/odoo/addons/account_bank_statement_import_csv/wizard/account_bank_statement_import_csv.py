@@ -4,7 +4,7 @@
 import contextlib
 import psycopg2
 
-from odoo import _, api, fields, models, tools, Command
+from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.addons.base_import.models.base_import import FIELDS_RECURSION_LIMIT
 
@@ -15,7 +15,7 @@ class Base_ImportImport(models.TransientModel):
     @api.model
     def get_fields_tree(self, model, depth=FIELDS_RECURSION_LIMIT):
         fields_list = super().get_fields_tree(model, depth=depth)
-        if self.env.context.get('bank_stmt_import', False):
+        if model == 'account.bank.statement.line' and self.env.context.get('bank_stmt_import', False):
             add_fields = [{
                 'id': 'balance',
                 'name': 'balance',
@@ -24,23 +24,28 @@ class Base_ImportImport(models.TransientModel):
                 'fields': [],
                 'type': 'monetary',
                 'model_name': model,
-            }, {
-                'id': 'debit',
-                'name': 'debit',
-                'string': 'Debit',
-                'required': False,
-                'fields': [],
-                'type': 'monetary',
-                'model_name': model,
-            }, {
-                'id': 'credit',
-                'name': 'credit',
-                'string': 'Credit',
-                'required': False,
-                'fields': [],
-                'type': 'monetary',
-                'model_name': model,
             }]
+            if not 'debit' in self.env['account.bank.statement.line'].fields_get():
+                add_fields.extend([
+                    {
+                        'id': 'debit',
+                        'name': 'debit',
+                        'string': 'Debit',
+                        'required': False,
+                        'fields': [],
+                        'type': 'monetary',
+                        'model_name': model,
+                    },
+                    {
+                        'id': 'credit',
+                        'name': 'credit',
+                        'string': 'Credit',
+                        'required': False,
+                        'fields': [],
+                        'type': 'monetary',
+                        'model_name': model,
+                    },
+                ])
             fields_list.extend(add_fields)
         return fields_list
 
@@ -129,21 +134,18 @@ class Base_ImportImport(models.TransientModel):
         return super().parse_preview(options, count=count)
 
     def execute_import(self, fields, columns, options, dryrun=False):
-        if options.get('bank_stmt_import'):
+        if options.get('bank_stmt_import') or self.res_model == 'account.bank.statement.line':
             savepoint = self.env.cr.savepoint()
-            res = super().execute_import(fields, columns, options, dryrun=dryrun)
+            res = super(Base_ImportImport, self.with_context(bank_stmt_import=True, auto_statement_processing=not dryrun)).execute_import(fields, columns, options, dryrun=dryrun)
             if not 'statement_id' in fields:
-                statement = self.env['account.bank.statement'].create({
+                self.env['account.bank.statement'].with_context(
+                    import_file=True,
+                    auto_statement_processing=not dryrun and res.get('ids'),
+                ).create({
                     'reference': self.file_name,
                     'line_ids': [Command.set(res.get('ids', []))],
                     **options.get('statement_vals', {}),
                 })
-                if not dryrun and statement.line_ids:
-                    # 'limit_time_real_cron' defaults to -1.
-                    # Manual fallback applied for non-POSIX systems where this key is disabled (set to None).
-                    cron_limit_time = tools.config['limit_time_real_cron'] or -1
-                    limit_time = cron_limit_time if 0 < cron_limit_time < 180 else 180
-                    statement.line_ids._cron_try_auto_reconcile_statement_lines(batch_size=100, limit_time=limit_time)
 
             with contextlib.suppress(psycopg2.InternalError):
                 savepoint.close(rollback=dryrun)

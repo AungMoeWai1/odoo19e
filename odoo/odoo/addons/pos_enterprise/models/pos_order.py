@@ -39,6 +39,28 @@ class PosOrder(models.Model):
 
         return data
 
+    @api.ondelete(at_uninstall=False)
+    def _notify_prep_display_on_order_delete(self):
+        prep_displays = self.env['pos.prep.display'].search([
+            '|',
+            ('pos_config_ids', '=', False),
+            ('pos_config_ids', 'in', self.config_id.ids)
+        ])
+        for prep_display in prep_displays:
+            prep_display._notify('POS_ORDER_DELETED', {'pos_order_ids': self.ids})
+
+    def action_pos_order_cancel(self):
+        orders = super().action_pos_order_cancel()
+        if not self.env.context.get('active_ids'):
+            return orders
+        # When an order is cancelled from the backend UI, ensure the preparation display
+        # is updated to reflect the cancellation
+        for order in orders['pos.order']:
+            if order['state'] != 'cancel':
+                continue
+            self.env['pos.prep.order'].process_order(order['id'], {'cancelled': True})
+        return orders
+
     def _process_preparation_changes(self, options):
         self.ensure_one()
         flag_change = False
@@ -57,10 +79,6 @@ class PosOrder(models.Model):
         pdis_ticket = False
         quantity_data = {}
         category_ids = set()
-        lopc_lines = {}   # last_order_preparation_change lines
-        if self.last_order_preparation_change:
-            lopc = json.loads(self.last_order_preparation_change)
-            lopc_lines = lopc.get('lines', {})
 
         unmerged_lines = reduce(
             lambda acc, line: {**acc, line["uuid"]: line["order_id"]},
@@ -76,6 +94,7 @@ class PosOrder(models.Model):
 
         order_line_filter = self.env.context.get('ppc_order_line_filter', lambda x: True)
         # create a dictionary with the key as a tuple of product_id, internal_note and attribute_value_ids
+        skip_unmerged_lines = {}
         for pdis_line in pdis_lines:
             key = (pdis_line.product_id.id, pdis_line.internal_note or '[]', json.dumps(pdis_line.attribute_value_ids.ids), pdis_line.pos_order_line_uuid)
             line_qty = pdis_line.quantity - pdis_line.cancelled
@@ -83,6 +102,10 @@ class PosOrder(models.Model):
             # and later unmerged back to its original table, it is not canceled if the order is sent to the kitchen again from Table 2.
             unmerged_line_order_id = unmerged_lines.get(pdis_line.pos_order_line_uuid)
             if unmerged_line_order_id and unmerged_line_order_id != self.id:
+                skip_product_id, skip_note, skip_attribute_value_ids, _skip_uuid = key
+                skip_key = (skip_product_id, skip_note, skip_attribute_value_ids)
+                skip_qty = pdis_line.quantity - pdis_line.cancelled
+                skip_unmerged_lines[skip_key] = skip_unmerged_lines.get(skip_key, 0) + skip_qty
                 continue
             if not quantity_data.get(key):
                 quantity_data[key] = {
@@ -101,18 +124,26 @@ class PosOrder(models.Model):
             key = (line.product_id.id, line_note, json.dumps(line.attribute_value_ids.ids), line.uuid)
 
             # Prevents quantity increase when an orderline is transferred to another table but was originally ordered in a previous table.
-            transferred_qty = lopc_lines.get(line.uuid + ' - ' + (line.note or ''), {}).get("transferredQty", 0)
             if not quantity_data.get(key):
                 quantity_data[key] = {
                     'attribute_value_ids': line.attribute_value_ids.ids,
                     'note': line_note,
                     'product_id': line.product_id.id,
                     'display': 0,
-                    'order': line.qty - transferred_qty,
+                    'order': line.qty,
                     'uuid': line.uuid,
                 }
             else:
-                quantity_data[key]['order'] += line.qty - transferred_qty
+                quantity_data[key]['order'] += line.qty
+
+        # Try to merge the quantity of this line to existing quantity_data entries
+        for skip_key, skip_qty in skip_unmerged_lines.items():
+            skip_product_id, skip_note, skip_attribute_value_ids = skip_key
+            for data_key, _data_value in quantity_data.items():
+                data_product_id, data_note, data_attribute_value_ids, _data_uuid = data_key
+                if skip_product_id == data_product_id and skip_note == data_note and skip_attribute_value_ids == data_attribute_value_ids:
+                    quantity_data[data_key]['display'] += skip_qty
+                    break
 
         # Update quantity_data with note_history
         if note_history:
@@ -213,7 +244,7 @@ class PosOrder(models.Model):
 
             elif data['order'] < data['display']:
                 qty_to_cancel = data['display'] - data['order']
-                for line in pdis_lines.filtered(lambda li: li.product_id.id == product_id and li.internal_note == data['note'] and li.attribute_value_ids.ids == data['attribute_value_ids'] and li.pos_order_line_uuid == data['uuid']):
+                for line in pdis_lines.filtered(lambda li: li.product_id.id == product_id and li.internal_note == data['note'] and li.attribute_value_ids.ids == data['attribute_value_ids']):
                     flag_change = True
                     line_qty = 0
                     pdis_qty = line.quantity - line.cancelled

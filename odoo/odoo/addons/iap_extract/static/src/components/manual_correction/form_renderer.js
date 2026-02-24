@@ -87,6 +87,14 @@ export const ExtractMixinFormRenderer = (T) => class extends T {
             }
         });
 
+        useExternalListener(window, "pointerdown", (event) => {
+            // For date fields, a calendar popup appear and listens on the pointerdown event to hide itself when a
+            // click occurs outside of it. This causes the loss of focus of the field and thus hides the boxes.
+            if (this.activeField && event.target.closest('.o-mail-Attachment')) {
+                event.stopImmediatePropagation();
+            }
+        }, { capture: true });
+
         onWillUnmount (() => {
             this.destroyBoxLayers();
         });
@@ -291,6 +299,9 @@ export const ExtractMixinFormRenderer = (T) => class extends T {
     }
 
     getBoxType(fullFieldName) {
+        if (!fullFieldName) {
+            return false;
+        }
         let modelFieldType;
         if (fullFieldName.includes('.')) {
             const [parentField, fieldName] = fullFieldName.split('.');
@@ -334,10 +345,10 @@ export const ExtractMixinFormRenderer = (T) => class extends T {
         return newFieldValue;
     }
 
-    async getNewRecordValues(record, line, field) {
+    async getNewRecordValues(record, line, field, boxType) {
         const value = await this.handleFieldChanged(
             record.fields[field],
-            this.getValueFromBoxes(line.boxes, this.activeBoxType),
+            this.getValueFromBoxes(line.boxes, boxType),
         );
         return { [field]: value };
     }
@@ -375,7 +386,7 @@ export const ExtractMixinFormRenderer = (T) => class extends T {
             newValue = registry.category("parsers").get("date")(newValue.split(' ')[0]);
         }
         else if (type === 'number') {
-            newValue = registry.category("parsers").get("float")(newValue.split(' ')[0]);
+            newValue = Number(newValue);
         }
         return newValue;
     }
@@ -549,6 +560,7 @@ export const ExtractMixinFormRenderer = (T) => class extends T {
                 });
 
                 const existingLines = this.x2ManyLines[parentField].filter((x2ManyLine) => x2ManyLine.line.page === pageNumber);
+                existingLines.sort((a, b) => a.line.minY - b.line.minY);
                 let i = 0;
                 const updates = {};
                 lines.forEach(async (line) => {
@@ -581,8 +593,9 @@ export const ExtractMixinFormRenderer = (T) => class extends T {
             if (!linesHandled && ['date', 'number'].includes(this.activeBoxType)) {
                 linesHandled = true;
 
+                const boxType = this.activeBoxType;
                 // Update the current record
-                this.getNewRecordValues(recordToUpdate, lines[0], fieldToUpdate).then((recordValues) => {
+                this.getNewRecordValues(recordToUpdate, lines[0], fieldToUpdate, boxType).then((recordValues) => {
                     recordToUpdate.update(recordValues);
                 });
                 if (!this.x2ManyLines[parentField]) {
@@ -596,7 +609,7 @@ export const ExtractMixinFormRenderer = (T) => class extends T {
                 // Create a new record for each additional line
                 lines.slice(1, lines.length).forEach((line) => {
                     this.props.record.data[parentField].addNewRecord({ mode: 'readonly', position: 'bottom' }).then(async (newRecord) => {
-                        const recordValues = await this.getNewRecordValues(newRecord, line, fieldToUpdate);
+                        const recordValues = await this.getNewRecordValues(newRecord, line, fieldToUpdate, boxType);
                         newRecord.update(recordValues);
                         this.x2ManyLines[parentField].push({
                             'record': newRecord,

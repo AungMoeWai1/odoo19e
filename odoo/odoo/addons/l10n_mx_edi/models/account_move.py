@@ -223,6 +223,7 @@ class AccountMove(models.Model):
         store=True,
         readonly=False,
     )
+    l10n_mx_edi_partner_address_complete = fields.Boolean(related="partner_id.l10n_mx_edi_partner_address_complete")
 
     def _auto_init(self):
         """
@@ -420,7 +421,7 @@ class AccountMove(models.Model):
 
         payment_way = cfdi_infos['cfdi_node'].attrib.get('FormaPago')
         if payment_way:
-            payment_method = self.env['l10n_mx_edi.payment.method'].search([('code', '=', payment_way)])
+            payment_method = self.env['l10n_mx_edi.payment.method'].search([('code', '=', payment_way)], limit=1)
             cfdi_infos['payment_way'] = f'{payment_way} - {payment_method.name}'
         cfdi_infos['usage_desc'] = dict(self._fields['l10n_mx_edi_usage']._description_selection(self.env)).get(cfdi_infos['usage'])
 
@@ -638,9 +639,10 @@ class AccountMove(models.Model):
             else:
                 move.l10n_mx_edi_update_sat_needed = False
                 continue
-            move.l10n_mx_edi_update_sat_needed = bool(documents.filtered_domain(
-                documents._get_update_sat_status_domain(from_cron=False)
-            ))
+            move.l10n_mx_edi_update_sat_needed = bool(
+                # sudo: pos_order_ids might appear in the domain and the accountant user might not have access to PoS
+                documents.sudo().filtered_domain(documents._get_update_sat_status_domain(from_cron=False))
+            )
 
     @api.depends('l10n_mx_edi_cfdi_attachment_id')
     def _compute_l10n_mx_edi_cfdi_uuid(self):
@@ -699,14 +701,18 @@ class AccountMove(models.Model):
             else:
                 move.l10n_mx_edi_payment_policy = False
 
-    @api.depends('l10n_mx_edi_is_cfdi_needed', 'l10n_mx_edi_cfdi_origin', 'partner_id', 'company_id')
+    @api.depends('l10n_mx_edi_is_cfdi_needed', 'l10n_mx_edi_cfdi_origin', 'partner_id', 'company_id', 'l10n_mx_edi_partner_address_complete')
     def _compute_l10n_mx_edi_cfdi_to_public(self):
         for move in self:
-            if move.move_type == 'out_refund' and 'global_sent' in set(move._l10n_mx_edi_get_refund_original_invoices().mapped('l10n_mx_edi_cfdi_state')):
+            if move.country_code != 'MX':
+                move.l10n_mx_edi_cfdi_to_public = False
+            elif (
+                move.move_type == 'out_refund'
+                and 'global_sent' in set(move._l10n_mx_edi_get_refund_original_invoices().mapped('l10n_mx_edi_cfdi_state'))
+            ) or (move.partner_id and not move.l10n_mx_edi_partner_address_complete):
                 move.l10n_mx_edi_cfdi_to_public = True
             elif (
-                not move.l10n_mx_edi_cfdi_to_public
-                and move.l10n_mx_edi_is_cfdi_needed
+                move.l10n_mx_edi_is_cfdi_needed
                 and move.partner_id
                 and move.company_id
             ):
@@ -730,7 +736,6 @@ class AccountMove(models.Model):
 
     @api.depends('journal_id', 'statement_line_id', 'partner_id')
     def _compute_l10n_mx_edi_payment_method_id(self):
-        otros_payment_method = self.env.ref('l10n_mx_edi.payment_method_otros', raise_if_not_found=False)
         transferencia_payment_method = self.env.ref('l10n_mx_edi.payment_method_transferencia', raise_if_not_found=False)
         for move in self:
             if move.country_code != 'MX':
@@ -743,8 +748,7 @@ class AccountMove(models.Model):
             move.l10n_mx_edi_payment_method_id = (
                 payment_method or
                 (move._l10n_mx_edi_is_cfdi_payment() and transferencia_payment_method) or
-                move.journal_id.l10n_mx_edi_payment_method_id or
-                otros_payment_method
+                move.journal_id.l10n_mx_edi_payment_method_id
             )
 
     @api.depends('partner_id')
@@ -1143,10 +1147,7 @@ class AccountMove(models.Model):
         else:
             raw_payment_rate = abs(total_in_company_curr / total_in_payment_curr) if total_in_payment_curr else 0.0
             payment_rate = float_round(raw_payment_rate, precision_digits=cfdi_values['tipo_cambio_dp'])
-
-            # Finkok/SwSapien CRP20211: MontoTotalPagos must be exactly equal to round(total_in_payment_curr * payment_rate)
-            if cfdi_values['root_company'].l10n_mx_edi_pac in {'finkok', 'sw'}:
-                total_in_company_curr = company_curr.round(total_in_payment_curr * payment_rate)
+            total_in_company_curr = company_curr.round(total_in_payment_curr * payment_rate)
 
         cfdi_values.update({
             'tipo_cambio': payment_rate,
@@ -1308,7 +1309,7 @@ class AccountMove(models.Model):
                         'impuesto': tax_values['impuesto'],
                         'tipo_factor': tax_values['tipo_factor'],
                         'tasa_o_cuota': tax_values['tasa_o_cuota'],
-                        'local_tax_name': tax_values['local_tax_name'],
+                        'local_tax_name': tax_values.get('local_tax_name'),
                     })
                     result_dict[tax_key]['importe'] += tax_values['importe'] / inv_rate
 
@@ -1329,7 +1330,7 @@ class AccountMove(models.Model):
                         'impuesto': tax_values['impuesto'],
                         'tipo_factor': tax_values['tipo_factor'],
                         'tasa_o_cuota': tax_values['tasa_o_cuota'],
-                        'local_tax_name': tax_values['local_tax_name'],
+                        'local_tax_name': tax_values.get('local_tax_name'),
                     })
                     tax_amount = tax_values['importe'] or 0.0
                     result_dict[tax_key]['base'] += tax_values['base'] / inv_rate
@@ -2548,7 +2549,9 @@ class AccountMove(models.Model):
         else:
             return
 
-        for document in documents.filtered_domain(documents._get_update_sat_status_domain(from_cron=False)):
+        # sudo: pos_order_ids might appear in the domain and the accountant user might not have access to PoS
+        documents = documents.sudo().filtered_domain(documents._get_update_sat_status_domain(from_cron=False)).sudo(flag=False)
+        for document in documents:
             document._update_sat_state()
 
     # -------------------------------------------------------------------------

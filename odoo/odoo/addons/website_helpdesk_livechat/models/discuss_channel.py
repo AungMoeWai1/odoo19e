@@ -1,11 +1,8 @@
-import json
 import re
 from markupsafe import Markup
 
 from odoo import api, fields, models, _
 from odoo.fields import Domain
-from odoo.tools import is_html_empty, plaintext2html
-from odoo.tools.mimetypes import get_extension
 from odoo.addons.mail.tools.discuss import Store
 
 
@@ -50,31 +47,12 @@ class DiscussChannel(models.Model):
             else:
                 customer = partners[:1]
                 list_value = key[1:]
-                description = ''
-                odoobot = self.env.ref('base.partner_root')
-                for message in self.message_ids.sorted(key=lambda r: r.id):
-                    if (not message.attachment_ids and is_html_empty(message.body)) or message.author_id == odoobot:
-                        continue
-                    name = message.author_id.name or 'Anonymous'
-                    if message.body:
-                        description += '%s: ' % name + '%s\n' % re.sub('<[^>]*>', '', message.body)
-                    attachment_author_shown = False
-                    for attachment in message.attachment_ids:
-                        if not message.body and not attachment_author_shown:
-                            description += '%s:\n' % name
-                            attachment_author_shown = True
-                        if attachment.mimetype.startswith('image/'):
-                            description += Markup('<img src="/web/content/%s" alt="%s" style="max-width: 75%%; height: auto; padding: 5px;"><br>') % (
-                               attachment.id, attachment.name)
-                        else:
-                            # Add non-image attachment names
-                            description += self._get_attachment_data(attachment)
                 team = self.env['helpdesk.team'].search([('use_website_helpdesk_livechat', '=', True)], order='sequence', limit=1)
                 team_id = team.id if team else False
                 helpdesk_ticket = self.env['helpdesk.ticket'].with_context(with_partner=True).create({
                     "origin_channel_id": self.id,
                     'name': ' '.join(list_value),
-                    'description': plaintext2html(description),
+                    'description': self._get_channel_history(),
                     'partner_id': customer.id if customer else False,
                     'team_id': team_id,
                 })
@@ -165,19 +143,6 @@ class DiscussChannel(models.Model):
                         i_end=Markup("</i>"),
                     )
         partner._bus_send_transient_message(self, msg)
-
-    def _get_attachment_data(self, attachment):
-        file_extension = get_extension(attachment.display_name)
-        attachment_data = {
-            'id': attachment.id,
-            'extension': file_extension.lstrip("."),
-            'mimetype': attachment.mimetype,
-            'filename': attachment.display_name,
-            'url': attachment.url,
-        }
-        return self.env['ir.qweb']._render('website_helpdesk_livechat.helpdesk_ticket_attachment_template', {
-            'props': json.dumps({"fileData": attachment_data}),
-        })
 
     def _get_livechat_session_fields_to_store(self):
         fields_to_store = super()._get_livechat_session_fields_to_store()

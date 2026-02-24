@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account.models.chart_template import template
-from odoo import models
+from odoo import models, modules
 
 
 class AccountChartTemplate(models.AbstractModel):
@@ -52,3 +52,15 @@ class AccountChartTemplate(models.AbstractModel):
             )
 
         return data
+
+    def _post_load_data(self, template_code, company, template_data):
+        super()._post_load_data(template_code, company, template_data)
+
+        sepa_countries = self.env.ref('base.sepa_zone').country_ids
+        if company.country_id in sepa_countries:
+            sepa_module = self.env['ir.module.module'].sudo().search([('name', '=', 'account_iso20022')], limit=1)
+            if sepa_module and sepa_module.state != 'installed':
+                if self.env.registry.ready and not self.env.registry._init and not modules.module.current_test:
+                    sepa_module.button_immediate_install()
+                else:
+                    sepa_module.button_install()

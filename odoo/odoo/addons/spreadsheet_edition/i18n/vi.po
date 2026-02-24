@@ -3,13 +3,15 @@
 # * spreadsheet_edition
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Thi Huong Nguyen (thng)" <thng@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:45+0000\n"
-"PO-Revision-Date: 2025-09-15 23:08+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-02-20 18:46+0000\n"
+"PO-Revision-Date: 2025-11-08 20:17+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-19/"
 "spreadsheet_edition/vi/>\n"
 "Language: vi\n"
@@ -105,7 +107,7 @@ msgstr "Đang hoạt động"
 #. odoo-javascript
 #: code:addons/spreadsheet_edition/static/src/bundle/pivot/side_panels/odoo_pivot_layout_configurator/odoo_pivot_layout_configurator.xml:0
 msgid "Add"
-msgstr ""
+msgstr "Thêm"
 
 #. module: spreadsheet_edition
 #. odoo-javascript
@@ -140,7 +142,7 @@ msgstr "Tăng dần"
 
 #. module: spreadsheet_edition
 #. odoo-javascript
-#: code:addons/spreadsheet_edition/static/src/bundle/global_filters/components/filter_editor/relation_filter_editor_side_panel.js:0
+#: code:addons/spreadsheet_edition/static/src/bundle/global_filters/components/filter_editor/filter_editor_side_panel.js:0
 msgid ""
 "At least one data source has an invalid model. Please delete it before "
 "editing this global filter."
@@ -306,6 +308,18 @@ msgstr "Hoãn cập nhật"
 
 #. module: spreadsheet_edition
 #. odoo-javascript
+#: code:addons/spreadsheet_edition/static/src/bundle/chart/side_panels/common/config_panel.xml:0
+msgid "Delete Chart"
+msgstr ""
+
+#. module: spreadsheet_edition
+#. odoo-javascript
+#: code:addons/spreadsheet_edition/static/src/bundle/list/side_panels/list_details_side_panel.xml:0
+msgid "Delete List"
+msgstr ""
+
+#. module: spreadsheet_edition
+#. odoo-javascript
 #: code:addons/spreadsheet_edition/static/src/bundle/pivot/side_panels/pivot_details_side_panel.xml:0
 msgid "Delete Pivot"
 msgstr "Xoá pivot"
@@ -320,8 +334,8 @@ msgstr "Giảm dần"
 #. odoo-javascript
 #: code:addons/spreadsheet_edition/static/src/bundle/components/locale_status/locale_status.js:0
 msgid ""
-"Difference between user locale (%(user_locale)s) and spreadsheet locale "
-"(%(spreadsheet_locale)s). This spreadsheet is using the formats below:"
+"Difference between user locale (%(user_locale)s) and spreadsheet locale (%"
+"(spreadsheet_locale)s). This spreadsheet is using the formats below:"
 msgstr ""
 "Sự khác biệt giữa ngôn ngữ người dùng (%(user_locale)s) và ngôn ngữ bảng "
 "tính (%(spreadsheet_locale)s). Bảng tính này đang sử dụng các định dạng dưới "
@@ -331,10 +345,9 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet_edition/static/src/assets/components/spreadsheet_selector_dialog/spreadsheet_selector_dialog.xml:0
 msgid "Discard"
-msgstr ""
+msgstr "Huỷ bỏ"
 
 #. module: spreadsheet_edition
-#: model:ir.model.fields,field_description:spreadsheet_edition.field_ir_model__display_name
 #: model:ir.model.fields,field_description:spreadsheet_edition.field_ir_websocket__display_name
 #: model:ir.model.fields,field_description:spreadsheet_edition.field_spreadsheet_cell_thread__display_name
 #: model:ir.model.fields,field_description:spreadsheet_edition.field_spreadsheet_mixin__display_name
@@ -452,6 +465,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet_edition/static/src/bundle/global_filters/filter_component.xml:0
 msgid "Global Filters"
+msgstr "Bộ lọc chung"
+
+#. module: spreadsheet_edition
+#. odoo-javascript
+#: code:addons/spreadsheet_edition/static/src/bundle/components/collaborative_status/collaborative_status.js:0
+msgid "Go to %(userName)s"
 msgstr ""
 
 #. module: spreadsheet_edition
@@ -472,7 +491,6 @@ msgid "Heads up!"
 msgstr "Chuẩn bị!"
 
 #. module: spreadsheet_edition
-#: model:ir.model.fields,field_description:spreadsheet_edition.field_ir_model__id
 #: model:ir.model.fields,field_description:spreadsheet_edition.field_ir_websocket__id
 #: model:ir.model.fields,field_description:spreadsheet_edition.field_spreadsheet_cell_thread__id
 #: model:ir.model.fields,field_description:spreadsheet_edition.field_spreadsheet_mixin__id
@@ -512,7 +530,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet_edition/static/src/assets/components/spreadsheet_selector_dialog/spreadsheet_selector_dialog.xml:0
 msgid "Insert"
-msgstr ""
+msgstr "Chèn"
 
 #. module: spreadsheet_edition
 #. odoo-javascript
@@ -738,11 +756,6 @@ msgid "Model"
 msgstr "Mô hình"
 
 #. module: spreadsheet_edition
-#: model:ir.model,name:spreadsheet_edition.model_ir_model
-msgid "Models"
-msgstr "Mô hình"
-
-#. module: spreadsheet_edition
 #. odoo-javascript
 #: code:addons/spreadsheet_edition/static/src/assets/pivot_view/pivot_view.js:0
 msgid "Month"
@@ -879,6 +892,7 @@ msgstr "Giai đoạn"
 #. module: spreadsheet_edition
 #. odoo-javascript
 #: code:addons/spreadsheet_edition/static/src/assets/pivot_view/pivot_view.js:0
+#: code:addons/spreadsheet_edition/static/src/bundle/pivot/side_panels/odoo_pivot_layout_configurator/odoo_pivot_layout_configurator.js:0
 msgid "Pivot contains duplicate groupbys"
 msgstr "Pivot chứa các groupby trùng lặp"
 
@@ -886,7 +900,7 @@ msgstr "Pivot chứa các groupby trùng lặp"
 #. odoo-javascript
 #: code:addons/spreadsheet_edition/static/src/assets/components/spreadsheet_selector_dialog/spreadsheet_selector_dialog.js:0
 msgid "Pivot name"
-msgstr ""
+msgstr "Tên pivot"
 
 #. module: spreadsheet_edition
 #. odoo-javascript
@@ -982,7 +996,7 @@ msgstr "ID bản ghi"
 #. odoo-javascript
 #: code:addons/spreadsheet_edition/static/src/assets/components/spreadsheet_selector_dialog/spreadsheet_selector_dialog.xml:0
 msgid "Records"
-msgstr ""
+msgstr "Bản ghi"
 
 #. module: spreadsheet_edition
 #. odoo-javascript
@@ -1141,7 +1155,7 @@ msgstr "Chọn số lượng bản ghi cần chèn"
 #. odoo-javascript
 #: code:addons/spreadsheet_edition/static/src/bundle/global_filters/global_filter_side_panel.xml:0
 msgid "Selection"
-msgstr ""
+msgstr "Lựa chọn"
 
 #. module: spreadsheet_edition
 #. odoo-javascript
@@ -1225,8 +1239,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet_edition/static/src/bundle/chart/side_panels/common/config_panel.js:0
 msgid ""
-"The model (%(model)s) of this chart is not valid (it may have been "
-"renamed/deleted). Please re-insert a new chart."
+"The model (%(model)s) of this chart is not valid (it may have been renamed/"
+"deleted). Please re-insert a new chart."
 msgstr ""
 "Mô hình (%(model)s) của biểu đồ này không hợp lệ (nó có thể đã được đổi tên/"
 "xóa). Vui lòng chèn lại biểu đồ mới."
@@ -1235,18 +1249,18 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet_edition/static/src/bundle/list/side_panels/list_details_side_panel.js:0
 msgid ""
-"The model (%(model)s) of this list is not valid (it may have been "
-"renamed/deleted). Please re-insert a new list."
+"The model (%(model)s) of this list is not valid (it may have been renamed/"
+"deleted). Please re-insert a new list."
 msgstr ""
-"Mô hình (%(model)s) của danh sách này không hợp lệ (nó có thể đã được đổi tê"
-"n/xóa). Vui lòng chèn lại danh sách mới."
+"Mô hình (%(model)s) của danh sách này không hợp lệ (nó có thể đã được đổi "
+"tên/xóa). Vui lòng chèn lại danh sách mới."
 
 #. module: spreadsheet_edition
 #. odoo-javascript
 #: code:addons/spreadsheet_edition/static/src/bundle/pivot/side_panels/pivot_details_side_panel.js:0
 msgid ""
-"The model (%(model)s) of this pivot is not valid (it may have been "
-"renamed/deleted). Please re-insert a new pivot."
+"The model (%(model)s) of this pivot is not valid (it may have been renamed/"
+"deleted). Please re-insert a new pivot."
 msgstr ""
 "Mô hình (%(model)s) của pivot này không hợp lệ (nó có thể đã được đổi tên/"
 "xóa). Vui lòng chèn lại pivot mới."
@@ -1265,7 +1279,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet_edition/static/src/bundle/version_history/version_history_action.js:0
 msgid ""
-"There are missing revisions that prevent to restore the whole edition history.\n"
+"There are missing revisions that prevent to restore the whole edition "
+"history.\n"
 "\n"
 "Would you like to load the more recent modifications?"
 msgstr ""
@@ -1309,6 +1324,12 @@ msgstr "Trang tính này"
 #: code:addons/spreadsheet_edition/static/src/bundle/pivot/plugins/pivot_autofill_plugin.js:0
 msgid "Total"
 msgstr "Tổng"
+
+#. module: spreadsheet_edition
+#. odoo-javascript
+#: code:addons/spreadsheet_edition/static/src/bundle/pivot/plugins/pivot_autofill_plugin.js:0
+msgid "Unknown"
+msgstr ""
 
 #. module: spreadsheet_edition
 #. odoo-javascript
@@ -1385,3 +1406,6 @@ msgstr "không bao giờ"
 #: model:ir.model,name:spreadsheet_edition.model_ir_websocket
 msgid "websocket message handling"
 msgstr "xử lý thông báo websocket"
+
+#~ msgid "Models"
+#~ msgstr "Mô hình"

@@ -11,7 +11,7 @@ from werkzeug.urls import url_quote, url_encode
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import consteq, email_normalize, formataddr, groupby, get_lang, is_html_empty
+from odoo.tools import consteq, email_normalize, formataddr, groupby, get_lang, html2plaintext, is_html_empty
 from odoo.tools.misc import hmac
 from odoo.tools.urls import urljoin as url_join
 
@@ -435,7 +435,10 @@ class SignRequestItem(models.Model):
         """
         self.ensure_one()
         sign_user = self.partner_id.user_ids[:1]
-        if sign_user and signature_type in ['sign_signature', 'sign_initials']:
+        current_user_sign = False
+        if self.env.user._is_public() or sign_user and sign_user == self.env.user:
+            current_user_sign = True
+        if current_user_sign and signature_type in ['sign_signature', 'sign_initials']:
             return sign_user[signature_type]
         return False
 
@@ -508,6 +511,7 @@ class SignRequestItem(models.Model):
         self.ensure_one()
         item_type_sudo = self.env['sign.item.type'].sudo().browse(item_type['id'])
         record = None
+        field_record_sudo = None
         if item_type_sudo.model_id.model == 'res.partner':
             record = self.partner_id
         else:
@@ -520,8 +524,12 @@ class SignRequestItem(models.Model):
                 return ''
             record = linked_record
         try:
+            if record:
+                field_record_sudo = self.env['ir.model.fields'].sudo()._get(record._name, item_type_sudo.auto_field)
             auto_field = record.mapped(item_type['auto_field'])
             auto_value = auto_field[0] if auto_field and not isinstance(auto_field, models.BaseModel) else ''
+            if field_record_sudo and field_record_sudo.ttype == 'html':
+                auto_value = html2plaintext(auto_value)
         except (KeyError, TypeError):
             auto_value = ""
         return auto_value

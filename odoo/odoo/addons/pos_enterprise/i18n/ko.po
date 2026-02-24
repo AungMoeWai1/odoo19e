@@ -3,13 +3,15 @@
 # * pos_enterprise
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Odoo Translation Bot <c3p@odoo.com>, 2025.
+# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:38+0000\n"
-"PO-Revision-Date: 2025-09-16 12:14+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-01-02 18:43+0000\n"
+"PO-Revision-Date: 2026-01-05 18:44+0000\n"
+"Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
 "pos_enterprise/ko/>\n"
 "Language: ko\n"
@@ -17,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: pos_enterprise
 #: model_terms:ir.ui.view,arch_db:pos_enterprise.preparation_display_view_kanban
@@ -76,8 +78,9 @@ msgstr "전체 카테고리"
 msgid ""
 "Archive all preparation display's orders for a fresh start. This will not "
 "affect the PoS order history."
-msgstr "다시 시작하기 위해 준비 화면의 주문 전체를 보관 처리합니다. POS의 주문 "
-"내역에는 영향이 없습니다."
+msgstr ""
+"다시 시작하기 위해 준비 화면의 주문 전체를 보관 처리합니다. POS의 주문 내역에"
+"는 영향이 없습니다."
 
 #. module: pos_enterprise
 #: model:ir.model.fields,field_description:pos_enterprise.field_pos_prep_display__auto_clear
@@ -387,7 +390,7 @@ msgstr "최근 갱신 일자"
 #. odoo-javascript
 #: code:addons/pos_enterprise/static/src/app/components/orderline/orderline.xml:0
 msgid "Line Customer Note"
-msgstr ""
+msgstr "줄 고객 메모"
 
 #. module: pos_enterprise
 #. odoo-javascript
@@ -605,6 +608,12 @@ msgid "Preparation display"
 msgstr "준비 화면"
 
 #. module: pos_enterprise
+#. odoo-javascript
+#: code:addons/pos_enterprise/static/src/app/components/preparation_display/preparation_display.xml:0
+msgid "Preset"
+msgstr "사전 설정"
+
+#. module: pos_enterprise
 #: model:ir.model.fields,field_description:pos_enterprise.field_preparation_time_report__product_id
 msgid "Product"
 msgstr "품목"
@@ -751,7 +760,8 @@ msgstr "명령줄 상태, 실행 여부"
 msgid ""
 "The transactions are processed by Tyro. Set your Tyro credentials on the "
 "related payment method."
-msgstr "거래가 Tyro를 통해 처리됩니다. Tyro 자격 증명을 관련 결제 수단에 설정하세요."
+msgstr ""
+"거래가 Tyro를 통해 처리됩니다. Tyro 자격 증명을 관련 결제 수단에 설정하세요."
 
 #. module: pos_enterprise
 #. odoo-javascript
@@ -811,7 +821,8 @@ msgstr "작업 세부사항"
 msgid ""
 "You cannot modify the stages of a preparation display that has an active "
 "sessions."
-msgstr "준비 디스플레이 단계에서 활성화된 세션이 있는 경우에는 수정할 수 없습니다."
+msgstr ""
+"준비 디스플레이 단계에서 활성화된 세션이 있는 경우에는 수정할 수 없습니다."
 
 #. module: pos_enterprise
 #: model:ir.actions.server,name:pos_enterprise.preparation_display_delete_cron_ir_actions_server

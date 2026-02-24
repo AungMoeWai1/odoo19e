@@ -3,14 +3,15 @@
 # * hr_contract_salary
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025.
-# "Patricia Gutiérrez (pagc)" <pagc@odoo.com>, 2025.
+# "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025, 2026.
+# "Patricia Gutiérrez (pagc)" <pagc@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-12 18:45+0000\n"
-"PO-Revision-Date: 2025-10-03 02:41+0000\n"
+"POT-Creation-Date: 2026-01-30 18:46+0000\n"
+"PO-Revision-Date: 2026-02-14 10:04+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-19/hr_contract_salary/es_419/>\n"
@@ -19,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: hr_contract_salary
 #: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_personal_info__impacts_net_salary
@@ -89,18 +90,18 @@ msgstr ""
 "                Haz clic en el siguiente enlace para configurar tu paquete "
 "salarial.<br/>\n"
 "                <t t-if=\"ctx.get('validity_end')\">\n"
-"                    El enlace vencerá el <t t-out=\"ctx.get('validity_end')\""
-"/>.\n"
+"                    El enlace vencerá el <t t-out=\"ctx.get('validity_end')"
+"\"/>.\n"
 "                </t>\n"
 "                <div style=\"padding: 16px 0px 16px 0px;\">\n"
 "                    <a t-att-href=\"'/salary_package/simulation/offer/%s%s' "
-"% (                             ctx.get('offer_id')"
-",                             ('?token=' + ctx.get('access_token')) if "
-"ctx.get('access_token') else ''                         )\" target=\"_blank\""
-" t-attf-style=\"background-color: {{object.company_id.email_secondary_color "
-"or '#875A7B'}}; text-decoration: none; color: {{"
-"object.company_id.email_primary_color or '#FFFFFF'}}; padding: 8px 16px 8px "
-"16px; border-radius: 5px;\">\n"
+"% "
+"(                             ctx.get('offer_id'),                             "
+"('?token=' + ctx.get('access_token')) if ctx.get('access_token') else "
+"''                         )\" target=\"_blank\" t-attf-style=\"background-"
+"color: {{object.company_id.email_secondary_color or '#875A7B'}}; text-"
+"decoration: none; color: {{object.company_id.email_primary_color or "
+"'#FFFFFF'}}; padding: 8px 16px 8px 16px; border-radius: 5px;\">\n"
 "                        Configura tu paquete\n"
 "                    </a>\n"
 "                </div>\n"
@@ -135,16 +136,16 @@ msgstr ""
 "                Haz clic en el siguiente enlace para configurar tu paquete "
 "salarial.<br/>\n"
 "                <t t-if=\"ctx.get('validity_end')\">\n"
-"                    El enlace vencerá el <t t-out=\"ctx.get('validity_end')\""
-"/>.\n"
+"                    El enlace vencerá el <t t-out=\"ctx.get('validity_end')"
+"\"/>.\n"
 "                </t>\n"
 "                <div style=\"padding: 16px 0px 16px 0px;\">\n"
 "                    <a t-attf-href=\"/salary_package/simulation/offer/"
-"{{ctx.get('offer_id')}}?token={{ctx.get('access_token')}}\" target=\"_blank\""
-" t-attf-style=\"background-color: {{object.company_id.email_secondary_color "
-"or '#875A7B'}}; text-decoration: none; color: {{"
-"object.company_id.email_primary_color or '#FFFFFF'}}; padding: 8px 16px 8px "
-"16px; border-radius: 5px;\">Configura tu paquete</a>\n"
+"{{ctx.get('offer_id')}}?token={{ctx.get('access_token')}}\" "
+"target=\"_blank\" t-attf-style=\"background-color: "
+"{{object.company_id.email_secondary_color or '#875A7B'}}; text-decoration: "
+"none; color: {{object.company_id.email_primary_color or '#FFFFFF'}}; "
+"padding: 8px 16px 8px 16px; border-radius: 5px;\">Configura tu paquete</a>\n"
 "                </div>\n"
 "            </div>\n"
 "        "
@@ -246,10 +247,10 @@ msgstr ""
 "pueden modificar este campo, contáctelos si el campo necesita alguna "
 "modificación.\n"
 "                                </span>\n"
-"                                <span invisible="
-"\"requested_documents_fields_string\">\n"
-"                                    No hay campos solicitados por el momento."
-"\n"
+"                                <span "
+"invisible=\"requested_documents_fields_string\">\n"
+"                                    No hay campos solicitados por el "
+"momento.\n"
 "                                </span>"
 
 #. module: hr_contract_salary
@@ -780,7 +781,7 @@ msgstr "País de nacimiento"
 
 #. module: hr_contract_salary
 #: model_terms:ir.actions.act_window,help:hr_contract_salary.hr_contract_salary_offer_action
-msgid "Create a Offer"
+msgid "Create an Offer"
 msgstr "Crear una oferta"
 
 #. module: hr_contract_salary
@@ -980,6 +981,7 @@ msgstr "Descartar"
 #: model:ir.model.fields,field_description:hr_contract_salary.field_hr_version__display_name
 #: model:ir.model.fields,field_description:hr_contract_salary.field_refuse_offer_wizard__display_name
 #: model:ir.model.fields,field_description:hr_contract_salary.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:hr_contract_salary.field_sign_item__display_name
 #: model:ir.model.fields,field_description:hr_contract_salary.field_sign_request__display_name
 msgid "Display Name"
 msgstr "Mostrar nombre"
@@ -1127,7 +1129,7 @@ msgstr "Presupuesto del empleador"
 #. module: hr_contract_salary
 #: model:hr.contract.salary.resume,name:hr_contract_salary.hr_contract_salary_resume_final_yearly_costs
 msgid "Employer Cost"
-msgstr "Costo del empleador"
+msgstr "Costo para el empleador"
 
 #. module: hr_contract_salary
 #: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_view_employee_form
@@ -1188,6 +1190,11 @@ msgstr "Nombre del campo"
 #: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_study_field
 msgid "Field of Study"
 msgstr "Campo de estudio"
+
+#. module: hr_contract_salary
+#: model:ir.model,name:hr_contract_salary.model_sign_item
+msgid "Fields to be sign on Document"
+msgstr "Campos a firmar en el documento"
 
 #. module: hr_contract_salary
 #: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume__fixed_value
@@ -1326,6 +1333,7 @@ msgstr "Oculta información personal de los hijos si se selecciona."
 #: model:ir.model.fields,field_description:hr_contract_salary.field_hr_version__id
 #: model:ir.model.fields,field_description:hr_contract_salary.field_refuse_offer_wizard__id
 #: model:ir.model.fields,field_description:hr_contract_salary.field_res_config_settings__id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_sign_item__id
 #: model:ir.model.fields,field_description:hr_contract_salary.field_sign_request__id
 msgid "ID"
 msgstr "ID"
@@ -2017,8 +2025,8 @@ msgid ""
 "category Monthly Benefits"
 msgstr ""
 "Elige cómo se calcula el valor de la información:\n"
-"Valor fijo: Establece un valor determinado y estático para todos los enlaces."
-"\n"
+"Valor fijo: Establece un valor determinado y estático para todos los "
+"enlaces.\n"
 "Valor del registro del empleado: Obtiene el valor de un campo del registro "
 "del empleado.\n"
 "Valor del recibo de nómina: Obtiene el valor de un campo del registro del "
@@ -2204,7 +2212,7 @@ msgstr "Error en el envío del SMS"
 #. module: hr_contract_salary
 #: model:ir.model.fields,field_description:hr_contract_salary.field_hr_payroll_structure_type__salary_benefits_ids
 msgid "Salary Benefits"
-msgstr "Beneficios del sueldo"
+msgstr "Beneficios salariales"
 
 #. module: hr_contract_salary
 #: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_form
@@ -2767,6 +2775,12 @@ msgstr ""
 #. module: hr_contract_salary
 #. odoo-python
 #: code:addons/hr_contract_salary/controllers/main.py:0
+msgid "This offer has been fully signed, you can not sign it again.."
+msgstr "Esta oferta ya fue firmada, no la puedes firmar de nuevo."
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
 msgid "This offer has been updated, please request an updated link.."
 msgstr "Se actualizó esta oferta, solicite un enlace actualizado..."
 
@@ -3011,14 +3025,22 @@ msgid ""
 "{{ object.company_id.name }}: Job Offer - "
 "{{ object.applicant_id.partner_name }}"
 msgstr ""
-"{{ object.company_id.name }}: Oferta de trabajo - {{ "
-"object.applicant_id.partner_name }}"
+"{{ object.company_id.name }}: Oferta de trabajo - "
+"{{ object.applicant_id.partner_name }}"
 
 #. module: hr_contract_salary
 #: model:mail.template,subject:hr_contract_salary.mail_template_send_offer
-msgid ""
-"{{ object.company_id.name }}: Job Offer - "
-"{{ object.employee_version_id.name }}"
+msgid "{{ object.company_id.name }}: Job Offer - {{ object.employee_id.name }}"
 msgstr ""
-"{{ object.company_id.name }}: Oferta de trabajo - {{ "
-"object.employee_version_id.name }}"
+"{{ object.company_id.name }}: Oferta de trabajo - "
+"{{ object.employee_id.name }}"
+
+#~ msgid ""
+#~ "{{ object.company_id.name }}: Job Offer - "
+#~ "{{ object.employee_version_id.name }}"
+#~ msgstr ""
+#~ "{{ object.company_id.name }}: Oferta de trabajo - "
+#~ "{{ object.employee_version_id.name }}"
+
+#~ msgid "Create a Offer"
+#~ msgstr "Crear una oferta"

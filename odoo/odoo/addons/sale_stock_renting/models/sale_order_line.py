@@ -551,11 +551,11 @@ class SaleOrderLine(models.Model):
 
         return outgoing_moves, incoming_moves
 
-    def _compute_qty_delivered(self):
-        super()._compute_qty_delivered()
+    def _prepare_qty_delivered(self):
+        delivered_qties = super()._prepare_qty_delivered()
 
         if not self._are_rental_pickings_enabled():
-            return
+            return delivered_qties
 
         for line in self:
             if line.is_rental and line.product_id.type == 'consu':
@@ -565,7 +565,8 @@ class SaleOrderLine(models.Model):
                     if move.state != 'done':
                         continue
                     qty += move.product_uom._compute_quantity(move.quantity, line.product_uom_id, rounding_method='HALF-UP')
-                line.qty_delivered = qty
+                delivered_qties[line] = qty
+        return delivered_qties
 
     @api.depends('pickedup_lot_ids', 'returned_lot_ids', 'reserved_lot_ids')
     def _compute_unavailable_lots(self):
@@ -618,3 +619,9 @@ class SaleOrderLine(models.Model):
     @api.model
     def _are_rental_pickings_enabled(self):
         return self.env['res.groups']._is_feature_enabled('sale_stock_renting.group_rental_stock_picking')
+
+    def _prepare_procurement_values(self):
+        values = super()._prepare_procurement_values()
+        if self._are_rental_pickings_enabled() and self.is_rental:
+            values['to_refund'] = False
+        return values

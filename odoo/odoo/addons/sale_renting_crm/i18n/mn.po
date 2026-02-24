@@ -1,19 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* sale_renting_crm
+# * sale_renting_crm
 #
+# Bayarkhuu Bataa <bbayarkhuu@gmail.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-20 10:33+0000\n"
-"PO-Revision-Date: 2025-02-20 10:33+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"POT-Creation-Date: 2025-12-30 18:47+0000\n"
+"PO-Revision-Date: 2025-11-17 03:37+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Mongolian <https://translate.odoo.com/projects/odoo-19/"
+"sale_renting_crm/mn/>\n"
+"Language: mn\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: sale_renting_crm
 #: model_terms:ir.ui.view,arch_db:sale_renting_crm.crm_case_form_view_oppor
@@ -28,12 +33,12 @@ msgstr ""
 #. module: sale_renting_crm
 #: model_terms:ir.ui.view,arch_db:sale_renting_crm.crm_lead_rental_view_form
 msgid "Cancel"
-msgstr ""
+msgstr "Цуцлах"
 
 #. module: sale_renting_crm
 #: model_terms:ir.ui.view,arch_db:sale_renting_crm.crm_lead_rental_view_form
 msgid "Confirm"
-msgstr ""
+msgstr "Батлах"
 
 #. module: sale_renting_crm
 #: model:ir.model,name:sale_renting_crm.model_crm_lead_rental
@@ -43,12 +48,12 @@ msgstr ""
 #. module: sale_renting_crm
 #: model:ir.model.fields.selection,name:sale_renting_crm.selection__crm_lead_rental__action__create
 msgid "Create a new customer"
-msgstr ""
+msgstr "Шинэ захиалагч үүсгэх"
 
 #. module: sale_renting_crm
 #: model:ir.model,website_form_label:sale_renting_crm.model_crm_lead
 msgid "Create an Opportunity"
-msgstr ""
+msgstr "Боломж үүсгэх"
 
 #. module: sale_renting_crm
 #: model_terms:ir.ui.view,arch_db:sale_renting_crm.crm_case_form_view_oppor
@@ -58,56 +63,56 @@ msgstr ""
 #. module: sale_renting_crm
 #: model:ir.model.fields,field_description:sale_renting_crm.field_crm_lead_rental__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Үүсгэсэн этгээд"
 
 #. module: sale_renting_crm
 #: model:ir.model.fields,field_description:sale_renting_crm.field_crm_lead_rental__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Үүсгэсэн огноо"
 
 #. module: sale_renting_crm
 #: model:ir.model.fields,field_description:sale_renting_crm.field_crm_lead_rental__partner_id
 msgid "Customer"
-msgstr ""
+msgstr "Үйлчлүүлэгч"
 
 #. module: sale_renting_crm
 #: model:ir.model.fields,field_description:sale_renting_crm.field_crm_lead__display_name
 #: model:ir.model.fields,field_description:sale_renting_crm.field_crm_lead_rental__display_name
 #: model:ir.model.fields,field_description:sale_renting_crm.field_sale_order__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Дэлгэрэнгүй нэр"
 
 #. module: sale_renting_crm
 #: model:ir.model.fields.selection,name:sale_renting_crm.selection__crm_lead_rental__action__nothing
 msgid "Do not link to a customer"
-msgstr ""
+msgstr "Захиалагчтай битгий холбо"
 
 #. module: sale_renting_crm
 #: model:ir.model.fields,field_description:sale_renting_crm.field_crm_lead__id
 #: model:ir.model.fields,field_description:sale_renting_crm.field_crm_lead_rental__id
 #: model:ir.model.fields,field_description:sale_renting_crm.field_sale_order__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: sale_renting_crm
 #: model:ir.model.fields,field_description:sale_renting_crm.field_crm_lead_rental__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Сүүлд зассан этгээд"
 
 #. module: sale_renting_crm
 #: model:ir.model.fields,field_description:sale_renting_crm.field_crm_lead_rental__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Сүүлд зассан огноо"
 
 #. module: sale_renting_crm
 #: model:ir.model,name:sale_renting_crm.model_crm_lead
 msgid "Lead"
-msgstr ""
+msgstr "Сэжим"
 
 #. module: sale_renting_crm
 #: model:ir.model.fields.selection,name:sale_renting_crm.selection__crm_lead_rental__action__exist
 msgid "Link to an existing customer"
-msgstr ""
+msgstr "Байгаа захиалагчид холбох"
 
 #. module: sale_renting_crm
 #: model:ir.actions.act_window,name:sale_renting_crm.crm_lead_to_rental_action
@@ -129,7 +134,7 @@ msgstr ""
 #. module: sale_renting_crm
 #: model:ir.model.fields,field_description:sale_renting_crm.field_sale_order__opportunity_id
 msgid "Opportunity"
-msgstr ""
+msgstr "Боломж"
 
 #. module: sale_renting_crm
 #: model:ir.model.fields,field_description:sale_renting_crm.field_crm_lead_rental__action
@@ -146,12 +151,12 @@ msgstr ""
 #. module: sale_renting_crm
 #: model_terms:ir.ui.view,arch_db:sale_renting_crm.crm_case_form_view_oppor
 msgid "Rentals"
-msgstr ""
+msgstr "Түрээс"
 
 #. module: sale_renting_crm
 #: model:ir.model,name:sale_renting_crm.model_sale_order
 msgid "Sales Order"
-msgstr ""
+msgstr "Борлуулалтын захиалга"
 
 #. module: sale_renting_crm
 #: model:ir.model.fields,field_description:sale_renting_crm.field_crm_lead__rental_amount_total
@@ -161,7 +166,7 @@ msgstr ""
 #. module: sale_renting_crm
 #: model:ir.model.fields,help:sale_renting_crm.field_crm_lead__rental_amount_total
 msgid "Untaxed Total of Confirmed Orders"
-msgstr ""
+msgstr "Баталгаажсан захиалгын нийт татваргүй дүн"
 
 #. module: sale_renting_crm
 #. odoo-python

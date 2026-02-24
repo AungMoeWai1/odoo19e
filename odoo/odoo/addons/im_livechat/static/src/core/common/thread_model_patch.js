@@ -3,11 +3,13 @@ import { Thread } from "@mail/core/common/thread_model";
 
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
+import { url } from "@web/core/utils/urls";
 
 patch(Thread.prototype, {
     setup() {
         super.setup();
         this.livechat_end_dt = fields.Datetime();
+        this.livechat_lang_id = fields.One("res.lang");
         this.livechat_operator_id = fields.One("res.partner");
         this.livechat_conversation_tag_ids = fields.Many("im_livechat.conversation.tag");
         this.livechatVisitorMember = fields.One("discuss.channel.member", {
@@ -42,14 +44,17 @@ patch(Thread.prototype, {
     },
     get autoOpenChatWindowOnNewMessage() {
         return (
-            (this.channel_type === "livechat" && !this.store.chatHub.compact) ||
+            (this.channel_type === "livechat" &&
+                !this.store.chatHub.compact &&
+                this.self_member_id) ||
             super.autoOpenChatWindowOnNewMessage
         );
     },
     get showCorrespondentCountry() {
         if (this.channel_type === "livechat") {
             return (
-                this.livechat_operator_id?.eq(this.store.self) && Boolean(this.correspondentCountry)
+                this.correspondent?.livechat_member_type === "visitor" &&
+                Boolean(this.correspondentCountry)
             );
         }
         return super.showCorrespondentCountry;
@@ -75,12 +80,17 @@ patch(Thread.prototype, {
             ? _t("This livechat conversation has ended")
             : "";
     },
+
+    get transcriptUrl() {
+        return url(`/im_livechat/download_transcript/${this.id}`);
+    },
+
     /**
      * @override
      * @param {import("models").Persona} persona
      */
     getPersonaName(persona) {
-        if (this.channel_type === "livechat" && persona.user_livechat_username) {
+        if (this.channel_type === "livechat" && persona?.user_livechat_username) {
             return persona.user_livechat_username;
         }
         return super.getPersonaName(persona);

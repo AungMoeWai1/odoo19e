@@ -7,13 +7,16 @@
 # Ryoko Tsuda <ryoko@quartile.co>, 2023
 # Andy Yiu, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Junko Augias (juau)" <juau@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Yoshi Tashiro <tashiro@quartile.co>, 2025.
+# Odoo Translation Bot <c3p@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-13 21:41+0000\n"
-"PO-Revision-Date: 2025-09-23 12:11+0000\n"
+"POT-Creation-Date: 2025-12-30 18:41+0000\n"
+"PO-Revision-Date: 2026-02-02 13:40+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
 "web_studio/ja/>\n"
@@ -22,7 +25,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: web_studio
 #. odoo-python
@@ -49,15 +52,14 @@ msgstr ""
 "                <p class=\"o_view_nocontent_smiling_face\">\n"
 "                    これはあなたの新しいアクションです。\n"
 "                </p>\n"
-"                "
-"<p>デフォルトでは、リストビューとフォームビューが含まれており、\n"
-"                    "
-"モデルで選択したオプションに応じて他のビュータイプも含まれる場合があります。"
-"\n"
+"                <p>デフォルトでは、リストビューとフォームビューが含まれてお"
+"り、\n"
+"                    モデルで選択したオプションに応じて他のビュータイプも含ま"
+"れる場合があります。\n"
 "                </p>\n"
 "                <p>\n"
-"                    画面右上の Studio "
-"アイコンをクリックすることで、これらの画面をカスタマイズできます。\n"
+"                    画面右上の Studio アイコンをクリックすることで、これらの"
+"画面をカスタマイズできます。\n"
 "                    (このヘルプメッセージもそこから編集可能です)。\n"
 "                </p>\n"
 "            "
@@ -73,9 +75,8 @@ msgid ""
 msgstr ""
 "\n"
 "    現在のモデルに関連したmany2oneフィールドはありません。\n"
-"    "
-"現在のモデルにone2manyフィールドを作成するには、最初に関連付けたいモデルに対"
-"応するmany2oneを作成する必要があります。\n"
+"    現在のモデルにone2manyフィールドを作成するには、最初に関連付けたいモデル"
+"に対応するmany2oneを作成する必要があります。\n"
 
 #. module: web_studio
 #. odoo-python
@@ -130,8 +131,8 @@ msgid ""
 "%(user_name)s has set approval rights from %(previous_approvers)s to %"
 "(next_approvers)s"
 msgstr ""
-"%(user_name)s は承認権を %(previous_approvers)s から %(next_approvers)s "
-"に設定しました。"
+"%(user_name)s は承認権を %(previous_approvers)s から %(next_approvers)s に設"
+"定しました。"
 
 #. module: web_studio
 #. odoo-python
@@ -143,7 +144,7 @@ msgstr "%(user_name)sは %(revoked_users)sから委任権を撤回しました�
 #. odoo-python
 #: code:addons/web_studio/controllers/main.py:0
 msgid "%s (Copy)"
-msgstr ""
+msgstr "%s (コピー)"
 
 #. module: web_studio
 #. odoo-python
@@ -189,8 +190,8 @@ msgid ""
 "            "
 msgstr ""
 "<p>\n"
-"                "
-"モデルの機能を強化するために、新しいサーバアクションを作成しましょう。\n"
+"                モデルの機能を強化するために、新しいサーバアクションを作成し"
+"ましょう。\n"
 "            </p>\n"
 "            "
 
@@ -208,18 +209,18 @@ msgstr "同じ名前のフィールドがすでに存在します。"
 #. module: web_studio
 #: model:ir.model.constraint,message:web_studio.constraint_studio_approval_entry_uniq_combination
 msgid "A rule can only be approved/rejected once per record."
-msgstr "規則は、レコードごとに1回だけ承認/拒否できます。"
+msgstr "ルールは、レコードごとに1回だけ承認/拒否できます。"
 
 #. module: web_studio
 #: model:ir.model.constraint,message:web_studio.constraint_studio_approval_rule_method_or_action_together
 msgid "A rule must apply to an action or a method (but not both)."
-msgstr "規則は、アクションまたはメソッドに適用する必要があります(両方ではありません)"
-"。"
+msgstr "ルールは、アクションまたはメソッドに適用する必要があります(両方ではありません"
+")。"
 
 #. module: web_studio
 #: model:ir.model.constraint,message:web_studio.constraint_studio_approval_rule_method_or_action_not_null
 msgid "A rule must apply to an action or a method."
-msgstr "規則は、アクションまたはメソッドに適用する必要があります。"
+msgstr "ルールは、アクションまたはメソッドに適用する必要があります。"
 
 #. module: web_studio
 #: model:ir.model.fields,field_description:web_studio.field_ir_model__abstract
@@ -317,7 +318,7 @@ msgstr "アクションサーバ"
 #: code:addons/web_studio/static/src/client_action/editor/new_view_dialogs/map_new_view_dialog.xml:0
 #: code:addons/web_studio/static/src/client_action/editor/new_view_dialogs/new_view_dialog.xml:0
 msgid "Activate View"
-msgstr "ビューをアクティブ化"
+msgstr "ビューを有効化"
 
 #. module: web_studio
 #. odoo-python
@@ -325,7 +326,7 @@ msgstr "ビューをアクティブ化"
 #: model:ir.model.fields,field_description:web_studio.field_studio_approval_rule__active
 #: model_terms:ir.ui.view,arch_db:web_studio.studio_approval_rule_search_view
 msgid "Active"
-msgstr "アクティブ"
+msgstr "有効"
 
 #. module: web_studio
 #. odoo-javascript
@@ -428,7 +429,8 @@ msgstr "エクスポートする追加モデル"
 msgid ""
 "Additional models you may choose to export in addition to the Studio "
 "customizations"
-msgstr "スタジオのカスタマイズに加えて、エクスポートする追加モデルを選択できます"
+msgstr ""
+"スタジオのカスタマイズに加えて、エクスポートする追加モデルを選択できます"
 
 #. module: web_studio
 #. odoo-javascript
@@ -448,7 +450,8 @@ msgstr "終日"
 msgid ""
 "All changes done to the report's structure will be discarded and the report "
 "will be reset to its factory settings."
-msgstr "レポートの構造に加えられた全ての変更は破棄され、レポートは工場出荷時の設定に"
+msgstr ""
+"レポートの構造に加えられた全ての変更は破棄され、レポートは工場出荷時の設定に"
 "リセットされます。"
 
 #. module: web_studio
@@ -510,7 +513,7 @@ msgstr "承認オーダ"
 #: model:ir.model.fields,field_description:web_studio.field_studio_approval_request__rule_id
 #: model:ir.model.fields,field_description:web_studio.field_studio_approval_rule_delegate__approval_rule_id
 msgid "Approval Rule"
-msgstr "承認規則"
+msgstr "承認ルール"
 
 #. module: web_studio
 #: model:ir.model,name:web_studio.model_studio_approval_rule_approver
@@ -525,7 +528,7 @@ msgstr "承認規則委任"
 #. module: web_studio
 #: model_terms:ir.ui.view,arch_db:web_studio.studio_approval_rule_button_configuration_search_view
 msgid "Approval Rules"
-msgstr "承認規則"
+msgstr "承認ルール"
 
 #. module: web_studio
 #. odoo-javascript
@@ -758,13 +761,13 @@ msgstr "空白"
 #. odoo-python
 #: code:addons/web_studio/models/ir_model.py:0
 msgid "Blocked"
-msgstr "不許可"
+msgstr "ブロック中"
 
 #. module: web_studio
 #. odoo-javascript
 #: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/properties/field_properties/field_properties.xml:0
 msgid "Bold"
-msgstr "ボールド"
+msgstr "太字"
 
 #. module: web_studio
 #. odoo-javascript
@@ -886,7 +889,7 @@ msgstr "画像を変更する"
 #. odoo-javascript
 #: code:addons/web_studio/static/src/client_action/report_editor/report_editor_wysiwyg/editor_plugins/report_editor_plugin.js:0
 msgid "Change the placeholder or the expression for an existing field"
-msgstr ""
+msgstr "既存フィールドのプレースホルダまたは式を変更します"
 
 #. module: web_studio
 #. odoo-javascript
@@ -933,7 +936,7 @@ msgstr "クラス"
 #. odoo-javascript
 #: code:addons/web_studio/static/src/approval/studio_approval.xml:0
 msgid "Click to see all approval rules."
-msgstr "クリックすると、全ての承認規則が表示されます。"
+msgstr "クリックすると、全ての承認ルールが表示されます。"
 
 #. module: web_studio
 #. odoo-javascript
@@ -1013,7 +1016,7 @@ msgstr "条件付き"
 #. module: web_studio
 #: model:ir.model.fields,field_description:web_studio.field_studio_approval_rule__conditional
 msgid "Conditional Rule"
-msgstr "条件付き規則"
+msgstr "条件付きルール"
 
 #. module: web_studio
 #. odoo-python
@@ -1033,7 +1036,8 @@ msgstr "モデルの構成"
 msgid ""
 "Configure additional models to export with Studio, such as records that hold "
 "configuration information or demo data."
-msgstr "設定情報やデモデータを保持するレコードなど、スタジオでエクスポートする追加の"
+msgstr ""
+"設定情報やデモデータを保持するレコードなど、スタジオでエクスポートする追加の"
 "モデルを設定します。"
 
 #. module: web_studio
@@ -1554,7 +1558,8 @@ msgstr "完了"
 #: code:addons/web_studio/static/src/js/tours/web_studio_tour.js:0
 msgid ""
 "Drag & drop <b>another field</b>. Let's try with a <i>selection field</i>."
-msgstr "<b>別のフィールドを</b>ドラッグアンドドロップします。<i>選択フィールド</i>で"
+msgstr ""
+"<b>別のフィールドを</b>ドラッグアンドドロップします。<i>選択フィールド</i>で"
 "試してみましょう。"
 
 #. module: web_studio
@@ -1567,7 +1572,7 @@ msgstr "サブメニューを作成するには、メニューを右にドラッ
 #. odoo-javascript
 #: code:addons/web_studio/static/src/client_action/view_editor/editors/kanban/kanban_editor_record_menu.xml:0
 msgid "Dropdown menu"
-msgstr ""
+msgstr "ドロップダウンメニュー"
 
 #. module: web_studio
 #: model_terms:ir.ui.view,arch_db:web_studio.act_report_xml_view_kanban
@@ -1620,7 +1625,7 @@ msgstr "値の編集"
 #. odoo-javascript
 #: code:addons/web_studio/static/src/client_action/report_editor/report_editor_wysiwyg/editor_plugins/report_editor_plugin.js:0
 msgid "Edit field"
-msgstr ""
+msgstr "フィールドを編集"
 
 #. module: web_studio
 #. odoo-javascript
@@ -1640,8 +1645,9 @@ msgstr "ソースの編集"
 msgid ""
 "Editing a built-in file through this editor is not advised, as it will "
 "prevent it from being updated during future App upgrades."
-msgstr "今後のアプリアップグレード時に更新されないのでこのエディタを使って組み込みフ"
-"ァイルを編集することはおすすめしません。"
+msgstr ""
+"今後のアプリアップグレード時に更新されないのでこのエディタを使って組み込み"
+"ファイルを編集することはおすすめしません。"
 
 #. module: web_studio
 #. odoo-javascript
@@ -1694,7 +1700,7 @@ msgstr "終了日"
 #: model:ir.model.fields,field_description:web_studio.field_studio_approval_rule__entry_ids
 #: model_terms:ir.ui.view,arch_db:web_studio.studio_approval_rule_form_view
 msgid "Entries"
-msgstr "仕訳"
+msgstr "エントリ"
 
 #. module: web_studio
 #. odoo-javascript
@@ -1834,7 +1840,7 @@ msgstr "フィルター"
 #: code:addons/web_studio/controllers/main.py:0
 #: code:addons/web_studio/static/src/client_action/editor/editor_menu/editor_menu.js:0
 msgid "Filter Rules"
-msgstr "フィルタ規則"
+msgstr "フィルタルール"
 
 #. module: web_studio
 #. odoo-javascript
@@ -1889,7 +1895,8 @@ msgstr "フッタ"
 msgid ""
 "For compatibility purpose with base_automation,approvals on 'create', "
 "'write' and 'unlink' methods are forbidden."
-msgstr "base_automationとの互換性のため、'作成'、'書く'、'リンク解除'メソッドでの承認"
+msgstr ""
+"base_automationとの互換性のため、'作成'、'書く'、'リンク解除'メソッドでの承認"
 "は禁止されています。"
 
 #. module: web_studio
@@ -2044,7 +2051,8 @@ msgstr "メッセージあり"
 msgid ""
 "Header and footer are shared with other reports which may be impacted by the "
 "reset."
-msgstr "ヘッダーとフッターは、リセットの影響を受ける可能性のある他のレポートと共有さ"
+msgstr ""
+"ヘッダーとフッターは、リセットの影響を受ける可能性のある他のレポートと共有さ"
 "れます。"
 
 #. module: web_studio
@@ -2086,7 +2094,7 @@ msgstr "デフォルトで非表示"
 #. odoo-python
 #: code:addons/web_studio/models/ir_model.py:0
 msgid "High Priority"
-msgstr "優先度が高い"
+msgstr "高優先度"
 
 #. module: web_studio
 #. odoo-javascript
@@ -2185,7 +2193,7 @@ msgstr "チェックした場合は、新しいメッセージに注意が必要
 #: model:ir.model.fields,help:web_studio.field_studio_approval_rule__message_has_error
 #: model:ir.model.fields,help:web_studio.field_studio_approval_rule__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "チェックした場合は、一部のメッセージに配信エラーが発生されました。"
+msgstr "有効にすると、一部のメッセージに配信エラーが発生します。"
 
 #. module: web_studio
 #. odoo-javascript
@@ -2201,27 +2209,33 @@ msgid ""
 "as pictures, files, etc.\n"
 "        Include the corresponding fields in the export to get them."
 msgstr ""
+"設定すると、エクスポートされたレコードに関連する添付ファイルが含まれます。\n"
+"        ただし、画像やファイルなどのバイナリフィールドにアップロードされた添"
+"付ファイルは含まれません。\n"
+"        それらを取得するには、エクスポート時に該当するフィールドを含めてくだ"
+"さい。"
 
 #. module: web_studio
 #: model:ir.model.fields,help:web_studio.field_studio_export_model__is_demo_data
 msgid ""
 "If set, the exported records will be considered as demo data during the "
 "import."
-msgstr "設定されている場合、エクスポートされたレコードはインポート時にデモデータとみ"
+msgstr ""
+"設定されている場合、エクスポートされたレコードはインポート時にデモデータとみ"
 "なされます。"
 
 #. module: web_studio
 #: model:ir.model.fields,help:web_studio.field_studio_approval_rule__domain
 msgid "If set, the rule will only apply on records that match the domain."
-msgstr "設定されている場合、規則はドメインに一致するレコードにのみ適用されます。"
+msgstr "設定されている場合、ルールはドメインに一致するレコードにのみ適用されます。"
 
 #. module: web_studio
 #: model:ir.model.fields,help:web_studio.field_studio_approval_rule__exclusive_user
 msgid ""
 "If set, the user who approves this rule will not be able to approve other "
 "rules for the same record"
-msgstr "設定されている場合、この規則を承認するユーザは、同じレコードの他の規則を承認"
-"できなくなります"
+msgstr "設定されている場合、このルールを承認するユーザは、同じレコードの他のルールを"
+"承認できなくなります"
 
 #. module: web_studio
 #. odoo-javascript
@@ -2229,7 +2243,8 @@ msgstr "設定されている場合、この規則を承認するユーザは、
 msgid ""
 "If you discard the current edits, all unsaved changes will be lost. You can "
 "cancel to return to edit mode."
-msgstr "現在の編集を破棄した場合、未保存の全ての変更が失われます。キャンセルして編集"
+msgstr ""
+"現在の編集を破棄した場合、未保存の全ての変更が失われます。キャンセルして編集"
 "モードに戻られます。"
 
 #. module: web_studio
@@ -2290,7 +2305,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web_studio/static/src/client_action/report_editor/report_editor_wysiwyg/editor_plugins/studio_dynamic_placeholder_popover.xml:0
 msgid "Insert"
-msgstr ""
+msgstr "挿入"
 
 #. module: web_studio
 #. odoo-javascript
@@ -2389,7 +2404,7 @@ msgstr "かんばん色"
 #. odoo-python
 #: code:addons/web_studio/models/ir_model.py:0
 msgid "Kanban State"
-msgstr "かんばん状態"
+msgstr "かんばんステータス"
 
 #. module: web_studio
 #. odoo-javascript
@@ -2446,8 +2461,9 @@ msgstr "別のアクションを実行してスタジオを出る"
 msgid ""
 "Let's check the result. Close Odoo Studio to get an <b>overview of your app</"
 "b>."
-msgstr "結果を確認してみましょう。 "
-"Odooスタジオを閉じて<b>、アプリの概要を確認します</b>。"
+msgstr ""
+"結果を確認してみましょう。 Odooスタジオを閉じて<b>、アプリの概要を確認します"
+"</b>。"
 
 #. module: web_studio
 #. odoo-javascript
@@ -2485,7 +2501,7 @@ msgstr "リスト"
 #. odoo-javascript
 #: code:addons/web_studio/static/src/client_action/model_configurator/model_configurator.js:0
 msgid "Manually sort records in the kanban and list view"
-msgstr ""
+msgstr "かんばんビューとリストビューでレコードを手動で並べ替え"
 
 #. module: web_studio
 #. odoo-javascript
@@ -2693,12 +2709,12 @@ msgstr "月の精度"
 #: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/properties/sidebar_properties_toolbox/sidebar_properties_toolbox.xml:0
 #: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/sidebar_view_toolbox/sidebar_view_toolbox.xml:0
 msgid "More"
-msgstr "さらに"
+msgstr "その他"
 
 #. module: web_studio
 #. odoo-javascript
 #: code:addons/web_studio/static/src/client_action/view_editor/editors/components/view_fields.js:0
-msgid "Multine Text"
+msgid "Multiline Text"
 msgstr "複数行テキスト"
 
 #. module: web_studio
@@ -2768,13 +2784,13 @@ msgstr "新しい承認エントリ"
 #. odoo-javascript
 #: code:addons/web_studio/static/src/client_action/view_editor/editors/components/field_selector_dialog.xml:0
 msgid "New Field"
-msgstr "新しい分野"
+msgstr "新しいフィールド"
 
 #. module: web_studio
 #. odoo-javascript
 #: code:addons/web_studio/static/src/client_action/view_editor/editors/components/view_fields.xml:0
 msgid "New Fields"
-msgstr "新しい分野"
+msgstr "新しいフィールド"
 
 #. module: web_studio
 #. odoo-javascript
@@ -2827,8 +2843,8 @@ msgid ""
 "Nicely done! Let's build your screen now; <b>drag</b> a <i>text field</i> "
 "and <b>drop</b> it in your view, on the right."
 msgstr ""
-"よくできました!今すぐ画面を作成しましょう。<i>テキストフィールド</i>を<b>ドラ"
-"ッグ</b>して、ビューの右側に<b>ドロップ</b>します。"
+"よくできました!今すぐ画面を作成しましょう。<i>テキストフィールド</i>を<b>ド"
+"ラッグ</b>して、ビューの右側に<b>ドロップ</b>します。"
 
 #. module: web_studio
 #. odoo-javascript
@@ -2840,7 +2856,8 @@ msgstr "集計なし"
 #. odoo-python
 #: code:addons/web_studio/models/studio_approval.py:0
 msgid "No approval found for this rule, record and user combination."
-msgstr "この規則、レコード、およびユーザの組み合わせに対する承認は見つかりませんでし"
+msgstr ""
+"この規則、レコード、およびユーザの組み合わせに対する承認は見つかりませんでし"
 "た。"
 
 #. module: web_studio
@@ -2878,8 +2895,9 @@ msgstr "通知先:"
 #. odoo-javascript
 #: code:addons/web_studio/static/src/js/tours/web_studio_tour.js:0
 msgid "Now you're on your own. Enjoy your <b>super power</b>."
-msgstr "ではご自分でやってみましょう。 "
-"<b>スーパーパワー</b>とも言える有能な機能をお楽しみ下さい。"
+msgstr ""
+"ではご自分でやってみましょう。 <b>スーパーパワー</b>とも言える有能な機能をお"
+"楽しみ下さい。"
 
 #. module: web_studio
 #. odoo-javascript
@@ -2895,7 +2913,7 @@ msgstr "アクション数"
 #. module: web_studio
 #: model:ir.model.fields,field_description:web_studio.field_studio_approval_rule__entries_count
 msgid "Number of Entries"
-msgstr "仕訳数"
+msgstr "エントリ数"
 
 #. module: web_studio
 #: model:ir.model.fields,field_description:web_studio.field_studio_approval_rule__message_has_error_counter
@@ -2905,7 +2923,7 @@ msgstr "エラー数"
 #. module: web_studio
 #: model:ir.model.fields,help:web_studio.field_studio_approval_rule__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr "アクションを必要とするメッセージの数"
+msgstr "対応が必要なメッセージ数"
 
 #. module: web_studio
 #: model:ir.model.fields,help:web_studio.field_studio_approval_rule__message_has_error_counter
@@ -2944,7 +2962,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web_studio/static/src/client_action/report_editor/report_editor_wysiwyg/editor_plugins/studio_dynamic_placeholder_popover.xml:0
 msgid "Only visible during the edition of the report"
-msgstr ""
+msgstr "レポートの編集中のみ表示"
 
 #. module: web_studio
 #. odoo-javascript
@@ -3313,7 +3331,7 @@ msgstr "必須"
 #. module: web_studio
 #: model:ir.model.fields,field_description:web_studio.field_studio_export_wizard_data__res_id
 msgid "Res"
-msgstr "リセット"
+msgstr "対象レコード"
 
 #. module: web_studio
 #. odoo-javascript
@@ -3406,8 +3424,9 @@ msgstr "規則"
 msgid ""
 "Rules with existing entries cannot be deleted since it would delete existing "
 "approval entries. You should archive the rule instead."
-msgstr "既存の承認エントリが削除されるため、既存のエントリを持つ規則は削除できません"
-"。代わりに、規則をアーカイブする必要があります。"
+msgstr ""
+"既存の承認エントリが削除されるため、既存のエントリを持つ規則は削除できませ"
+"ん。代わりに、規則をアーカイブする必要があります。"
 
 #. module: web_studio
 #. odoo-python
@@ -3415,7 +3434,8 @@ msgstr "既存の承認エントリが削除されるため、既存のエント
 msgid ""
 "Rules with existing entries cannot be modified since it would break existing "
 "approval entries. You should archive the rule and create a new one instead."
-msgstr "既存の承認エントリが破損するため、既存のエントリを持つ規則は変更できません。"
+msgstr ""
+"既存の承認エントリが破損するため、既存のエントリを持つ規則は変更できません。"
 "規則をアーカイブして、代わりに新しい規則を作成する必要があります。"
 
 #. module: web_studio
@@ -3427,7 +3447,7 @@ msgstr "サーバーアクションを実行"
 #. module: web_studio
 #: model:ir.model.fields,field_description:web_studio.field_studio_approval_rule__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr "SMS配信エラー"
+msgstr "SMS送信エラー"
 
 #. module: web_studio
 #. odoo-javascript
@@ -3563,7 +3583,7 @@ msgid ""
 "on\n"
 "                tasks when a specific tag is added."
 msgstr ""
-"オブジェクトの状態が変更されたときに電子メールを送信したり、1か月間\n"
+"オブジェクトのステータスが変更されたときに電子メールを送信したり、1か月間\n"
 "　　　活動がない場合にアーカイブしたり、特定のタグが追加されたときに\n"
 "　　　タスクのフォローアップをリマインドしたりできます。"
 
@@ -3665,7 +3685,8 @@ msgstr "見つからない承認があります"
 msgid ""
 "Some records were skipped because approvals were missing "
 "to                                    proceed with your request: "
-msgstr "リクエストを進めるための承認が不足していたため、いくつかのレコードがスキップ"
+msgstr ""
+"リクエストを進めるための承認が不足していたため、いくつかのレコードがスキップ"
 "されました: "
 
 #. module: web_studio
@@ -3895,7 +3916,7 @@ msgstr "スタジオミックスイン"
 #. odoo-javascript
 #: code:addons/web_studio/static/src/client_action/view_editor/view_editor_model.js:0
 msgid "Subview %(viewType)s"
-msgstr ""
+msgstr "サブビュー%(viewType)s"
 
 #. module: web_studio
 #. odoo-javascript
@@ -3941,7 +3962,7 @@ msgstr "技術名称"
 #. odoo-javascript
 #: code:addons/web_studio/static/src/client_action/report_editor/report_editor_wysiwyg/editor_plugins/studio_dynamic_placeholder_popover.xml:0
 msgid "Technical name"
-msgstr ""
+msgstr "技術名"
 
 #. module: web_studio
 #. odoo-python
@@ -4053,7 +4074,8 @@ msgstr "承認を依頼するボタンに、ステップの説明が表示され
 msgid ""
 "The user who approves this step will not be able to approve other steps for "
 "the same record."
-msgstr "このステップを承認するユーザーは、同じレコードの他のステップを承認することは"
+msgstr ""
+"このステップを承認するユーザーは、同じレコードの他のステップを承認することは"
 "できません。"
 
 #. module: web_studio
@@ -4087,7 +4109,8 @@ msgstr "方法%(method)sがモデル %(model_name)s (%(model_id)s)にありま�
 msgid ""
 "There is no record on which this report can be previewed. Create at least "
 "one record to preview the report."
-msgstr "このレポートをプレビューできるレコードがありません。レポートをプレビューする"
+msgstr ""
+"このレポートをプレビューできるレコードがありません。レポートをプレビューする"
 "ために少なくとも1つのレコードを作成して下さい。"
 
 #. module: web_studio
@@ -4104,7 +4127,8 @@ msgstr "プレビューするレコードがありません。"
 msgid ""
 "These users are able to approve or reject the step and will be assigned to "
 "an activity when their approval is requested."
-msgstr "これらのユーザはステップを承認または拒否することができ、承認が求められた際に"
+msgstr ""
+"これらのユーザはステップを承認または拒否することができ、承認が求められた際に"
 "活動に割当てられます。"
 
 #. module: web_studio
@@ -4114,7 +4138,8 @@ msgstr "これらのユーザはステップを承認または拒否すること
 msgid ""
 "These users will receive a notification via internal note when the step is "
 "approved or rejected"
-msgstr "これらのユーザには、ステップが承認または拒否された際に、社内通知が送信されま"
+msgstr ""
+"これらのユーザには、ステップが承認または拒否された際に、社内通知が送信されま"
 "す。"
 
 #. module: web_studio
@@ -4148,8 +4173,9 @@ msgstr ""
 msgid ""
 "This could also be due to the absence of a real record to render the report "
 "with."
-msgstr "これは、レポートをレンダリングするための実際のレコードがないためでもあります"
-"。"
+msgstr ""
+"これは、レポートをレンダリングするための実際のレコードがないためでもありま"
+"す。"
 
 #. module: web_studio
 #. odoo-javascript
@@ -4250,7 +4276,7 @@ msgstr "更新可"
 #. odoo-javascript
 #: code:addons/web_studio/static/src/client_action/report_editor/report_editor_wysiwyg/editor_plugins/studio_dynamic_placeholder_popover.xml:0
 msgid "Update"
-msgstr ""
+msgstr "更新"
 
 #. module: web_studio
 #. odoo-javascript
@@ -4258,7 +4284,8 @@ msgstr ""
 msgid ""
 "Use Bootstrap or any other custom classes to customize the style and the "
 "display of the element."
-msgstr "Bootstrapやその他のカスタムクラスを使用して、要素のスタイルと表示をカスタマイ"
+msgstr ""
+"Bootstrapやその他のカスタムクラスを使用して、要素のスタイルと表示をカスタマイ"
 "ズします。"
 
 #. module: web_studio
@@ -4435,9 +4462,9 @@ msgstr ""
 msgid ""
 "Wow, nice! And I'm sure you can make it even better! Use this icon to open "
 "<b>Odoo Studio</b> and customize any screen."
-msgstr "素晴らしい! "
-"さらに改善するには、このアイコンを使用して<b>Odooスタジオ</b>を開き、スクリー"
-"ンをカスタマイズしましょう。"
+msgstr ""
+"素晴らしい! さらに改善するには、このアイコンを使用して<b>Odooスタジオ</b>を開"
+"き、スクリーンをカスタマイズしましょう。"
 
 #. module: web_studio
 #. odoo-javascript
@@ -4470,22 +4497,22 @@ msgstr "この規則を承認できません。"
 msgid ""
 "You cannot cancel an approval you didn't set yourself or you don't belong to "
 "an higher level rule's approvers."
-msgstr "自分が設定していない承認や、上位レベルの規則の承認者に属していない承認はキャ"
+msgstr ""
+"自分が設定していない承認や、上位レベルの規則の承認者に属していない承認はキャ"
 "ンセルできません。"
 
 #. module: web_studio
 #. odoo-javascript
 #: code:addons/web_studio/static/src/client_action/action_editor/action_editor.js:0
 msgid "You cannot deactivate this view as it is the last one active."
-msgstr ""
-"このビューは最後にアクティブになっているため、非アクティブにすることはできま"
-"せん。"
+msgstr "このビューは最後に有効になっているため、無効にすることはできません。"
 
 #. module: web_studio
 #. odoo-javascript
 #: code:addons/web_studio/static/src/client_action/report_editor/report_editor.js:0
 msgid "You cannot edit a report while there is no %(model_name)s (%(model)s)"
-msgstr "%(model_name)s (%(model)s)がない場合は、レポートを編集することができません"
+msgstr ""
+"%(model_name)s (%(model)s)がない場合は、レポートを編集することができません"
 
 #. module: web_studio
 #. odoo-python
@@ -4564,6 +4591,9 @@ msgstr "x_studio_"
 #: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/field_configuration/selection_content_dialog.xml:0
 msgid "{{ item.isInEdition ? 'Add selection' : 'Edit selection' }}"
 msgstr "{{ item.isInEdition ? 'Add selection' : 'Edit selection' }}"
+
+#~ msgid "Multine Text"
+#~ msgstr "複数行テキスト"
 
 #~ msgid ""
 #~ " <p class=\"o_view_nocontent_smiling_face\">\n"

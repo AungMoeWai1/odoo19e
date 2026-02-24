@@ -79,6 +79,7 @@ export class MrpDisplay extends Component {
             firstLoad: firstLoad,
         });
         this.recordCacheIds = [];
+        this.showCaseId = undefined;
 
         const params = this._makeModelParams();
 
@@ -160,6 +161,7 @@ export class MrpDisplay extends Component {
         if (this.recordCacheIds.length) {
             this.recordCacheIds = [];
         }
+        this.showCaseId = undefined;
     }
 
     async close() {
@@ -244,6 +246,7 @@ export class MrpDisplay extends Component {
     }
 
     _onWorkorderBarcodeScanned(workorder) {
+        workorder.component.env.searchModel.removeMOFilter();
         return workorder.component.onClickHeader();
     }
 
@@ -333,10 +336,16 @@ export class MrpDisplay extends Component {
                 : recordsNotInCache.push(record);
         }
 
-        // Sort records already in cache by their position in this cache.
+        // Sort records already in cache by their position in this cache, keeping show case at first position
         recordsAlreadyInCache.sort((rec1, rec2) => {
-            const index1 = this.recordCacheIds.indexOf(rec1.id);
-            const index2 = this.recordCacheIds.indexOf(rec2.id);
+            if (rec1.resId == this.showCaseId) {
+                return -1;
+            }
+            if (rec2.resId == this.showCaseId) {
+                return +1;
+            }
+            const index1 = this.recordCacheIds.indexOf(rec1.resId);
+            const index2 = this.recordCacheIds.indexOf(rec2.resId);
             return index1 - index2;
         });
 
@@ -389,6 +398,7 @@ export class MrpDisplay extends Component {
         await this.useEmployee.getConnectedEmployees();
         if (showcaseId) {
             this.recordCacheIds.push(showcaseId);
+            this.showCaseId = showcaseId;
         }
         this.state.activeWorkcenter = Number(workcenterId);
         localStorage.setItem(this.env.localStorageName + `.activeWC`, Number(workcenterId));
@@ -482,7 +492,9 @@ export class MrpDisplay extends Component {
     _onPagerChanged({ offset, limit }) {
         this.state.offset = offset;
         this.state.limit = limit;
+        const showCaseId = this.showCaseId;
         this.invalidateRecordIdsCache();
+        this.showCaseId = showCaseId;
         this.env.reload();
     }
 
@@ -494,7 +506,7 @@ export class MrpDisplay extends Component {
     }
 
     get appName() {
-        return encodeURIComponent(this.menu.getCurrentApp().name);
+        return encodeURIComponent(this.menu.getCurrentApp()?.name || _t("Shop Floor"));
     }
 
     get displayBackButton() {

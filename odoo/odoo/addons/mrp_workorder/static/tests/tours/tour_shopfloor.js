@@ -343,8 +343,10 @@ registry.category("web_tour.tours").add("test_shop_floor_auto_select_workcenter"
         ...stepUtils.clickOnWorkcenterButton("Furnace"),
         { trigger: ".o_mrp_display_record .card-footer button.o_btn_icon", run: "click" },
         { trigger: 'button[name="openMO"]', run: "click" },
+        // In the MO form view, click the breadcrumb “Shop Floor”, to go back to ShopFloor
         { trigger: ".o_breadcrumb a:contains('Shop Floor')", run: "click" },
         {
+            content: "Check the active Work-Center is Furnace",
             trigger: ".o_work_centers",
             run: () => {
                 helper.assertWorkcenterButtons([
@@ -368,6 +370,33 @@ registry.category("web_tour.tours").add("test_shop_floor_auto_select_workcenter"
             trigger: ".o_action.o_mrp_display",
             run: () => {
                 helper.assertWorkcenterButtons([{ name: "Furnace", count: 1, active: true }]);
+            },
+        },
+        {
+            content: "Start the workorder",
+            trigger:
+                ".o_mrp_display_record:contains(TWH/MO/00001):not(:has(.o_active)) .o_mrp_display_record_start_btn",
+            run: "click",
+        },
+        {
+            content: "Check that the default search filter is set to the current MO",
+            trigger: ".o_mrp_display_record:contains(TWH/MO/00001).o_active",
+            run() {
+                helper.assertSearchFacets([
+                    { label: "Manufacturing Order", value: "TWH/MO/00001" },
+                ]);
+            },
+        },
+        {
+            content: "Scan the operation",
+            trigger: ".o_mrp_display_records",
+            run: "scan bake it lovely",
+        },
+        {
+            content: "Check the default search filter has been removed",
+            trigger: ".o_mrp_display_record:contains(TWH/MO/00002)",
+            run() {
+                helper.assertSearchFacets([]);
             },
         },
     ],
@@ -417,7 +446,8 @@ registry.category("web_tour.tours").add("test_shop_floor_my_wo_filter_with_pin_u
         ...stepUtils.clickOnWorkcenterButton("My WO"),
         // Check the right WO is displayed.
         {
-            trigger: ".o_mrp_display_content",
+            trigger:
+                ".o_mrp_display_content:not(:has(.o_mrp_display_record:contains(TWH/MO/00001)))",
             run: () => {
                 const currentEmployeeEl = document.querySelector(".o_admin_user div span.fw-bold");
                 assert(currentEmployeeEl.innerText, "John Snow");
@@ -439,8 +469,9 @@ registry.category("web_tour.tours").add("test_shop_floor_my_wo_filter_with_pin_u
         // Select the second employee and check only the right WO is shown.
         { trigger: ".o_mrp_employees_panel li:contains(Queen Elsa)", run: "click" },
         ...stepUtils.enterPIN("41213"),
+        { trigger: ".o_admin_user:contains(Queen Elsa)" },
         {
-            trigger: ".o_admin_user:contains(Queen Elsa)",
+            trigger: ".o_mrp_display_record:contains(TWH/MO/00001)",
             run: () => {
                 const currentEmployeeEl = document.querySelector(".o_admin_user div span.fw-bold");
                 assert(currentEmployeeEl.innerText, "Queen Elsa");
@@ -461,8 +492,9 @@ registry.category("web_tour.tours").add("test_shop_floor_my_wo_filter_with_pin_u
         },
         // Select again the first employee and check again only its WO is displayed.
         { trigger: ".o_mrp_employees_panel li:contains(John Snow)", run: "click" },
+        { trigger: ".o_admin_user:contains(John Snow)" },
         {
-            trigger: ".o_admin_user:contains(John Snow)",
+            trigger: ".o_mrp_display_record:contains(TWH/MO/00002)",
             run: () => {
                 const currentEmployeeEl = document.querySelector(".o_admin_user div span.fw-bold");
                 assert(currentEmployeeEl.innerText, "John Snow");
@@ -486,74 +518,72 @@ registry.category("web_tour.tours").add("test_shop_floor_my_wo_filter_with_pin_u
 
 registry.category("web_tour.tours").add("test_generate_serials_in_shopfloor", {
     steps: () => [
+        ...stepUtils.openWorkcentersSelector(),
+        ...stepUtils.addWorkcenterToDisplay("Assembly Line"),
+        ...stepUtils.confirmWorkcentersSelection(),
+        ...stepUtils.clickOnWorkcenterButton("Assembly Line"),
         {
-            content: "Make sure workcenter is available",
-            trigger: '.form-check:has(input[name="Assembly Line"])',
+            content: "Start the workorder",
+            trigger: ".o_mrp_display_record:not(o_active) .card-header",
             run: "click",
         },
+        { trigger: ".o_mrp_display_record.o_active" },
         {
-            trigger: '.form-check:has(input[name="Assembly Line"]:checked)',
-        },
-        {
-            content: "Confirm workcenter",
-            trigger: 'button:contains("Confirm")',
-            run: "click",
-        },
-        {
-            content: "Select workcenter",
-            trigger: 'button.btn-light:contains("Assembly Line")',
-            run: "click",
-        },
-        {
-            content: "Open the wizard",
-            trigger: '.o_mrp_record_line .text-truncate:contains("Register byprod")',
-            run: "click",
-        },
-        {
-            content: "Open the serials generation wizard",
-            trigger: ".o_widget_generate_serials button",
+            content: "Open the by-product wizard",
+            trigger: ".o_mrp_record_line:contains('By-product: byprod')",
             run: "click",
         },
         {
             content: "Input a serial",
-            trigger: "#next_serial_0",
+            trigger: ".o_field_many2one[name='lot_id'] input",
             run: "edit 00001",
         },
         {
             content: "Generate the serials",
-            trigger: 'button.btn-primary:contains("Generate")',
+            trigger: "li.o_m2o_dropdown_option_create a",
             run: "click",
         },
         {
             content: "Save and close the wizard",
-            trigger: '.o_form_button_save:contains("Save")',
+            trigger: ".modal-footer button.o_form_button_save",
             run: "click",
         },
         {
             trigger:
-                ".o_mrp_display_record:first .o_mrp_record_line.text-muted:contains(Register byprod)",
+                ".o_mrp_display_record .o_mrp_record_line .o_line_label.text-decoration-line-through:contains('By-product: byprod')",
         },
         {
             content: "Set production as done",
-            trigger: 'button.btn-primary:contains("Close Production")',
+            trigger: ".card-footer button.btn-primary[barcode_trigger='CLMO']",
             run: "click",
         },
+        { trigger: ".o_view_nocontent" },
     ],
 });
 
-registry.category("web_tour.tours").add("test_canceled_wo", {
+registry.category("web_tour.tours").add("test_partial_backorder_with_multiple_operations", {
     steps: () => [
         // Make sure workcenter is available.
         ...stepUtils.openWorkcentersSelector(),
         ...stepUtils.addWorkcenterToDisplay("Assembly Line"),
         ...stepUtils.confirmWorkcentersSelection(),
         {
-            content: "Check MO",
+            content: "Select workcenter",
             trigger: 'button.btn-light:contains("Assembly Line")',
-            run: () => {
-                const mo = helper.getRecord();
-                helper.assertProductionWorkorderCount(mo, 1);
-            },
+            run: "click",
+        },
+        {
+            trigger:
+                ".o_mrp_display_record:has(.card-title:contains(MOBACK-002)) .o_quantity:contains(3 Units)",
+        },
+        {
+            trigger:
+                ".o_mrp_display_record:has(.card-title:contains(MOBACK-002)) button:contains(Mark as Done)",
+            run: "click",
+        },
+        {
+            trigger:
+                ".o_mrp_display_record:has(.card-title:contains(MOBACK-002)) .o_quantity:contains(5 Units)",
         },
     ],
 });
@@ -952,6 +982,130 @@ registry.category("web_tour.tours").add("test_shop_floor_unsynced_bom", {
         {
             content: "Check that there are no open work orders",
             trigger: ".o_nocontent_help",
+        },
+    ],
+});
+
+registry.category("web_tour.tours").add("test_product_consumption", {
+    steps: () => [
+        ...stepUtils.openWorkcentersSelector(),
+        ...stepUtils.addWorkcenterToDisplay("Workcenter1"),
+        ...stepUtils.confirmWorkcentersSelection(),
+        ...stepUtils.clickOnWorkcenterButton("Workcenter1"),
+        {
+            content: "Click on consumption button",
+            trigger: ".o_mrp_record_line button.btn .fa-plus",
+            run: "click",
+        },
+        {
+            content: "Check lot from TWH2 warehouse is not visible in the list",
+            trigger: "table.o_list_table:not(:has([data-tooltip='TWH2/Stock']))",
+        },
+        {
+            content: "Select first lot",
+            trigger: '.o_data_row .o_data_cell[data-tooltip="Lot 1"]',
+            run: "click",
+        },
+        {
+            content: "Close the production order",
+            trigger: 'button.btn-primary:contains("Close Production")',
+            run: "click",
+        },
+        {
+            content: "Check that there are no open work orders",
+            trigger: ".o_nocontent_help",
+        },
+    ],
+});
+
+registry.category("web_tour.tours").add("test_add_component_from_shop_floor", {
+    steps: () => [
+        ...stepUtils.openWorkcentersSelector(),
+        ...stepUtils.addWorkcenterToDisplay("Lovecenter"),
+        ...stepUtils.confirmWorkcentersSelection(),
+        {
+            content: "Check that we are in the MO view",
+            trigger:
+                ".o_mrp_display_record:contains('First Love') .o_mrp_record_line:contains(Lovecenter)",
+        },
+        {
+            content: "Add Product 1 to the MO components",
+            trigger: ".o_mrp_display_record:contains('First Love') .card-footer button.o_btn_icon",
+            run: "click",
+        },
+        {
+            trigger: ".modal:not(.o_inactive_modal) button[name=addComponent]",
+            run: "click",
+        },
+        {
+            content: "Ensure the catalog is opened",
+            trigger: ".modal:not(.o_inactive_modal) .o_product_kanban_catalog_view",
+        },
+        {
+            trigger: ".modal-content .o_kanban_record:contains('Product 1')",
+            run: "click",
+        },
+        {
+            content: "Await for the Component to be added",
+            trigger: ".modal-content .o_kanban_record:contains('Product 1') .fa-trash",
+        },
+        {
+            trigger: ".modal-content button.btn-close",
+            run: "click",
+        },
+        {
+            content: "Check that the Product 1 are visible on the MO",
+            trigger:
+                ".o_mrp_display_record:contains('First Love') .o_mrp_record_line:contains('Product 1')",
+        },
+        {
+            content: "Swap to the WO view of the Lovecenter",
+            trigger:
+                ".o_mrp_display_record:contains('First Love') .o_mrp_record_line:contains(Lovecenter)",
+            run: "click",
+        },
+        {
+            content: "Check that we are in the WO view",
+            trigger: ".o_mrp_display_record:contains('First Love') .o_mrp_display_record_start_btn",
+        },
+        {
+            content: "Add Product 2 to the WO components",
+            trigger: ".o_mrp_display_record:contains('First Love') .card-footer button.o_btn_icon",
+            run: "click",
+        },
+        {
+            trigger: ".modal:not(.o_inactive_modal) button[name=addComponent]",
+            run: "click",
+        },
+        {
+            content: "Ensure the catalog is opened",
+            trigger: ".modal:not(.o_inactive_modal) .o_product_kanban_catalog_view",
+        },
+        {
+            trigger: ".modal-content .o_kanban_record:contains('Product 2')",
+            run: "click",
+        },
+        {
+            content: "Await for the Component to be added",
+            trigger: ".modal-content .o_kanban_record:contains('Product 2') .fa-trash",
+        },
+        {
+            content: "Add some Product 1 once more",
+            trigger: ".modal-content .o_kanban_record:contains('Product 1')",
+            run: "click",
+        },
+        {
+            trigger:
+                ".modal-content .o_kanban_record:contains('Product 1') div[name=o_kanban_qty_available_and_on_hand]:contains(8)",
+        },
+        {
+            trigger: ".modal-content button.btn-close",
+            run: "click",
+        },
+        {
+            content: "Check that the Product 2 are visible on the WO",
+            trigger:
+                ".o_mrp_display_record:contains('First Love') .o_mrp_record_line:contains('Product 2')",
         },
     ],
 });

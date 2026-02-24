@@ -347,10 +347,14 @@ class ProjectTask(models.Model):
 
     @api.depends('planned_date_begin', 'depend_on_ids.date_deadline')
     def _compute_dependency_warning(self):
-        if not self._origin or not self.allow_task_dependencies:
+        if not (
+            self._origin
+            and (tasks_with_task_dependencies := self.filtered('allow_task_dependencies'))
+        ):
             self.dependency_warning = False
             return
 
+        (self - tasks_with_task_dependencies).dependency_warning = False
         self.flush_model(['planned_date_begin', 'date_deadline'])
         query = """
             SELECT t1.id,
@@ -366,12 +370,12 @@ class ProjectTask(models.Model):
                AND t2.date_deadline > t1.planned_date_begin
           GROUP BY t1.id
 	    """
-        self.env.cr.execute(query, (tuple(self.ids),))
+        self.env.cr.execute(query, (tuple(tasks_with_task_dependencies.ids),))
         depends_on_names_for_id = {
             group['id']: group['depends_on_names']
             for group in self.env.cr.dictfetchall()
         }
-        for task in self:
+        for task in tasks_with_task_dependencies:
             depends_on_names = depends_on_names_for_id.get(task.id)
             task.dependency_warning = depends_on_names and _(
                 'This task cannot be planned before the following tasks on which it depends: %(task_list)s',
@@ -554,12 +558,12 @@ class ProjectTask(models.Model):
             return additional_users
         start_date = self.env.context.get('gantt_start_date')
         scale = self.env.context.get('gantt_scale')
-        if not (start_date and scale) or any(elem.field_expr == 'user_ids' for elem in Domain(domain).iter_conditions()):
+        if not (start_date and scale):
             return additional_users
         domain = filter_domain_leaf(domain, lambda field: field not in ['planned_date_begin', 'date_deadline', 'state'])
         search_on_comodel = self._search_on_comodel(domain, "user_ids", "res.users")
         if search_on_comodel:
-            return search_on_comodel | self.env.user
+            return search_on_comodel
         start_date = fields.Datetime.from_string(start_date)
         delta = get_timedelta(1, scale)
         domain_expand = (
@@ -772,6 +776,19 @@ class ProjectTask(models.Model):
         delta_hours = 160 if scale == "year" else 24 / cell_part
 
         sorted_tasks = topological_sort(self._get_dependencies_dict())
+
+        def update_used_intervals(valid_intervals_per_user, intervals, user_ids):
+            used_intervals = Intervals(intervals)
+            if not user_ids:
+                valid_intervals_per_user[False] -= used_intervals
+            else:
+                for user_id in valid_intervals_per_user:
+                    if not user_id:
+                        continue
+
+                    if set(user_id) & set(user_ids):
+                        valid_intervals_per_user[user_id] -= used_intervals
+
         for task in sorted_tasks:
             hours_to_plan = task._get_hours_to_plan()
 
@@ -795,9 +812,10 @@ class ProjectTask(models.Model):
             if user_ids:
                 hours_to_plan /= len(user_ids)
 
+            temp_valid_intervals_per_user = valid_intervals_per_user.copy()
+            used_intervals = []
             while not compute_date_end or hours_to_plan > 0:
-                used_intervals = []
-                for start_date, end_date, _dummy in valid_intervals_per_user[user_ids]:
+                for start_date, end_date, _dummy in temp_valid_intervals_per_user[user_ids]:
                     if first_possible_start_date:
                         if end_date <= first_possible_start_date:
                             continue
@@ -852,7 +870,9 @@ class ProjectTask(models.Model):
                 if fetch_date_end < end_loop:
                     new_fetch_date_end = min(fetch_date_end + relativedelta(months=1), end_loop)
                     valid_intervals_per_user, flex_user_work_hours_per_day, flex_user_work_hours_per_week = self._web_gantt_get_valid_intervals(fetch_date_end, new_fetch_date_end, users, [], True, valid_intervals_per_user)
+                    temp_valid_intervals_per_user = valid_intervals_per_user.copy()
                     fetch_date_end = new_fetch_date_end
+                    update_used_intervals(temp_valid_intervals_per_user, used_intervals, user_ids)
                 else:
                     if 'no_intervals' not in warnings:
                         warnings['no_intervals'] = _("Some tasks weren't planned because the closest available starting date was too far ahead in the future")
@@ -871,16 +891,7 @@ class ProjectTask(models.Model):
             for next_task in task.dependent_ids:
                 first_possible_date_per_task[next_task.id] = max(first_possible_date_per_task.get(next_task.id, compute_date_end), compute_date_end)
 
-            used_intervals = Intervals(used_intervals)
-            if not user_ids:
-                valid_intervals_per_user[False] -= used_intervals
-            else:
-                for user_id in valid_intervals_per_user:
-                    if not user_id:
-                        continue
-
-                    if set(user_id) & set(user_ids):
-                        valid_intervals_per_user[user_id] -= used_intervals
+            update_used_intervals(valid_intervals_per_user, used_intervals, user_ids)
 
         for task in tasks_to_write:
             old_vals_per_task_id[task.id] = {
@@ -1137,7 +1148,7 @@ class ProjectTask(models.Model):
 
         flex_resources = self.env["resource.resource"].browse(flex_resources_ids)
         flex_resources_work_intervals, hours_per_day, hours_per_week = flex_resources._get_flexible_resource_valid_work_intervals(start_date, end_date)
-        users_work_intervals, calendar_work_intervals = regular_resources_users._get_valid_work_intervals(start_date, end_date)
+        users_work_intervals, calendar_work_intervals = regular_resources_users.sudo()._get_valid_work_intervals(start_date, end_date)
 
         locale = babel_locale_parse(get_lang(self.env).code)
         if flex_resources:
@@ -1585,7 +1596,8 @@ class ProjectTask(models.Model):
         # to anticipate the case of a resource added later for the same employee and company
         user_resource_mapping = {resource.user_id.id: resource.id for resource in resources}
         leaves_mapping = resources._get_unavailable_intervals(start, stop)
-        company_leaves = self.env.company.resource_calendar_id._unavailable_intervals(start.replace(tzinfo=utc), stop.replace(tzinfo=utc))
+        company_calendar = self.env.company.resource_calendar_id
+        company_leaves = [] if company_calendar.flexible_hours else company_calendar._unavailable_intervals(start.replace(tzinfo=utc), stop.replace(tzinfo=utc))
 
         cell_dt = timedelta(hours=1) if scale in ['day', 'week'] else timedelta(hours=12)
 

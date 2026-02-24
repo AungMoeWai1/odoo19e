@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:47+0000\n"
+"POT-Creation-Date: 2026-01-30 18:49+0000\n"
 "PO-Revision-Date: 2025-09-16 22:57+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-19/web_gantt/"
@@ -132,18 +132,6 @@ msgid "Focus Today"
 msgstr ""
 
 #. module: web_gantt
-#. odoo-javascript
-#: code:addons/web_gantt/static/src/gantt_scale_selector.xml:0
-msgid "From"
-msgstr "จาก"
-
-#. module: web_gantt
-#. odoo-javascript
-#: code:addons/web_gantt/static/src/gantt_renderer_controls.js:0
-msgid "From: %(from_date)s to: %(to_date)s"
-msgstr ""
-
-#. module: web_gantt
 #: model:ir.model.fields.selection,name:web_gantt.selection__ir_actions_act_window_view__view_mode__gantt
 #: model:ir.model.fields.selection,name:web_gantt.selection__ir_ui_view__type__gantt
 msgid "Gantt"
@@ -225,8 +213,8 @@ msgid ""
 "Invalid attributes (%(invalid_attributes)s) in gantt view. Attributes must "
 "be in (%(valid_attributes)s)"
 msgstr ""
-"แอตทริบิวต์ไม่ถูกต้อง (%(invalid_attributes)s) ในมุมมองแกนต์ แอตทริบิวต์ต้องอยู่ใน "
-"(%(valid_attributes)s)"
+"แอตทริบิวต์ไม่ถูกต้อง (%(invalid_attributes)s) ในมุมมองแกนต์ แอตทริบิวต์ต้องอยู่ใน (%"
+"(valid_attributes)s)"
 
 #. module: web_gantt
 #. odoo-python
@@ -428,8 +416,8 @@ msgstr "นาที"
 msgid "months"
 msgstr "เดือน"
 
-#. module: web_gantt
-#. odoo-javascript
-#: code:addons/web_gantt/static/src/gantt_scale_selector.xml:0
-msgid "to"
-msgstr "ถึง"
+#~ msgid "From"
+#~ msgstr "จาก"
+
+#~ msgid "to"
+#~ msgstr "ถึง"

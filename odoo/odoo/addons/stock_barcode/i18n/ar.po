@@ -7,13 +7,15 @@
 # Martin Trigaux, 2022
 # Malaz Abuidris <msea@odoo.com>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-13 21:41+0000\n"
-"PO-Revision-Date: 2025-09-16 13:39+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2025-12-30 18:42+0000\n"
+"PO-Revision-Date: 2026-01-06 10:37+0000\n"
+"Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/"
 "stock_barcode/ar/>\n"
 "Language: ar\n"
@@ -22,7 +24,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: stock_barcode
 #. odoo-javascript
@@ -51,8 +53,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-lg fa-long-arrow-right me-3\" title=\"Scrap "
 "Location\"/>"
 msgstr ""
-"<i class=\"fa fa-fw fa-lg fa-long-arrow-right me-3\" title="
-"\"موقع مخلفات التصنيع \"/>"
+"<i class=\"fa fa-fw fa-lg fa-long-arrow-right me-3\" title=\"موقع مخلفات "
+"التصنيع \"/>"
 
 #. module: stock_barcode
 #: model_terms:ir.ui.view,arch_db:stock_barcode.scrap_product_selector
@@ -199,8 +201,8 @@ msgid ""
 "An error occured with field '%(field_name)s': the corresponding AI '%"
 "(ai_code)s' was not found in the element_string"
 msgstr ""
-"حدث خطأ في الحقل '%(field_name)s': لم يتم العثور على الذكاء الاصطناعي "
-"'%(ai_code)s' المقابل في element_string"
+"حدث خطأ في الحقل '%(field_name)s': لم يتم العثور على الذكاء الاصطناعي '%"
+"(ai_code)s' المقابل في element_string"
 
 #. module: stock_barcode
 #. odoo-python
@@ -209,8 +211,8 @@ msgid ""
 "An error occured: value of company_prefix_length (%(company_prefix_length)s) "
 "must be between 6 and 12 inclusive."
 msgstr ""
-"حدث خطأ ما: يجب أن تكون قيمة company_prefix_length "
-"(%(company_prefix_length)s) بين 6 و12 شاملة كلتا القيمتين."
+"حدث خطأ ما: يجب أن تكون قيمة company_prefix_length (%"
+"(company_prefix_length)s) بين 6 و12 شاملة كلتا القيمتين."
 
 #. module: stock_barcode
 #. odoo-python
@@ -246,7 +248,7 @@ msgstr "لقد تم مسح نوع طرد غير موجود. لا يمكن معا
 #. odoo-javascript
 #: code:addons/stock_barcode/static/src/components/confirm_quant_dialog.xml:0
 msgid "Apply Now"
-msgstr ""
+msgstr "قم بالتقديم الآن"
 
 #. module: stock_barcode
 #: model_terms:ir.ui.view,arch_db:stock_barcode.stock_barcode_cancel_operation_view
@@ -830,7 +832,7 @@ msgstr "مواقع المخزون"
 #. odoo-javascript
 #: code:addons/stock_barcode/static/src/components/confirm_quant_dialog.xml:0
 msgid "Inventory Reason"
-msgstr ""
+msgstr "سبب الجرد"
 
 #. module: stock_barcode
 #: model:ir.model.fields,field_description:stock_barcode.field_stock_picking_type__is_barcode_picking_type
@@ -1140,8 +1142,8 @@ msgid ""
 "Partition table %(table_name)s not found, available tables are : %"
 "(table_list)s)"
 msgstr ""
-"لم يتم العثور على الطاولة %(table_name)s، الطاولات المتوفرة هي: "
-"%(table_list)s)"
+"لم يتم العثور على الطاولة %(table_name)s، الطاولات المتوفرة هي: %"
+"(table_list)s)"
 
 #. module: stock_barcode
 #. odoo-javascript
@@ -1363,6 +1365,9 @@ msgid ""
 "(bold_s)s lot%(bold_e)s, a %(bold_s)s packaging%(bold_e)s, or a %(bold_s)s "
 "package%(bold_e)s to filter your records"
 msgstr ""
+"قم بمسح %(bold_s)s شحنة%(bold_e)s أو %(bold_s)s منتج%(bold_e)s أو%(bold_s)s "
+"مجموعة%(bold_e)s أو %(bold_s)s عبوة%(bold_e)s أو %(bold_s)s طرد%(bold_e)s "
+"ضوئياً لتصفية سجلاتك"
 
 #. module: stock_barcode
 #. odoo-javascript
@@ -1372,6 +1377,8 @@ msgid ""
 "(bold_s)s lot%(bold_e)s, or a %(bold_s)s package%(bold_e)s to filter your "
 "records"
 msgstr ""
+"قم بمسح %(bold_s)s شحنة%(bold_e)s أو %(bold_s)s منتج%(bold_e)s أو %(bold_s)s "
+"مجموعة%(bold_e)s أو %(bold_s)s طرد%(bold_e)s ضوئياً لتصفية سجلاتك"
 
 #. module: stock_barcode
 #. odoo-javascript
@@ -1381,6 +1388,8 @@ msgid ""
 "(bold_s)s lot%(bold_e)s, or a %(bold_s)s packaging%(bold_e)s to filter your "
 "records"
 msgstr ""
+"قم بمسح %(bold_s)s شحنة%(bold_e)s أو %(bold_s)s منتج%(bold_e)s أو %(bold_s)s "
+"مجموعة%(bold_e)s أو %(bold_s)s تغليف%(bold_e)s ضوئياً لتصفية سجلاتك"
 
 #. module: stock_barcode
 #. odoo-javascript
@@ -1390,6 +1399,8 @@ msgid ""
 "(bold_s)s packaging%(bold_e)s, or a %(bold_s)s package%(bold_e)s to filter "
 "your records"
 msgstr ""
+"قم بمسح %(bold_s)s شحنة%(bold_e)s أو %(bold_s)s منتج%(bold_e)s أو %(bold_s)s "
+"تغليف%(bold_e)s أو %(bold_s)s طرد%(bold_e)s ضوئياً لتصفية سجلاتك"
 
 #. module: stock_barcode
 #. odoo-javascript
@@ -1813,8 +1824,8 @@ msgid ""
 "Technical field used to compute whether the \"Final Validation\" group "
 "should be displayed, to support combined groups/invisible complexity."
 msgstr ""
-"حقل تقني يُستخدم لاحتساب ما إذا كان يجب عرض مجموعة \"التصديق النهائي\"  أم لا،"
-" لتقليل تعقيد المجموعات المجمعة/المخفية."
+"حقل تقني يُستخدم لاحتساب ما إذا كان يجب عرض مجموعة \"التصديق النهائي\"  أم "
+"لا، لتقليل تعقيد المجموعات المجمعة/المخفية."
 
 #. module: stock_barcode
 #. odoo-python
@@ -1875,6 +1886,14 @@ msgstr "لا يوجد ما يمكن تطبيقه في هذه الصفحة."
 #: code:addons/stock_barcode/static/src/models/barcode_quant_model.js:0
 msgid "There is nothing to print in this page."
 msgstr "لا يوجد ما يمكن طباعته في هذه الصفحة."
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+msgid ""
+"This package contains extra products and extra products are not allowed on "
+"this operation."
+msgstr ""
 
 #. module: stock_barcode
 #. odoo-javascript
@@ -1970,7 +1989,7 @@ msgstr "الوحدة"
 #. odoo-javascript
 #: code:addons/stock_barcode/static/src/components/package_line.xml:0
 msgid "Unpack"
-msgstr ""
+msgstr "تفريغ"
 
 #. module: stock_barcode
 #: model_terms:ir.ui.view,arch_db:stock_barcode.view_stock_quant_tree
@@ -2055,7 +2074,8 @@ msgstr ""
 msgid ""
 "You are expected to scan one or more products or a package available at the "
 "picking location"
-msgstr "من المتوقع أن تقوم بمسح منتج واحد أو أكثر أو طرد متوفر في موقع الانتقاء"
+msgstr ""
+"من المتوقع أن تقوم بمسح منتج واحد أو أكثر أو طرد متوفر في موقع الانتقاء"
 
 #. module: stock_barcode
 #. odoo-javascript

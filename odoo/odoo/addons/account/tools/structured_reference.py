@@ -69,6 +69,45 @@ def is_valid_structured_reference_no_se(reference):
     return no_se_ref and luhn.is_valid(ref)
 
 
+def is_valid_structured_reference_nl(reference):
+    """ Generates a valid Dutch structured payment reference (betalingskenmerk)
+        by ensuring it follows the correct format.
+
+        Valid reference lengths:
+        - 7 digits: Simple reference with no check digit.
+        - 9-14 digits: Includes a check digit and a length code.
+        - 16 digits: Contains only a check digit, commonly used for wire transfers.
+
+        :param reference: the reference to check
+        :return: True if reference is a structured reference, False otherwise
+    """
+    sanitized_reference = sanitize_structured_reference(reference)
+
+    if re.fullmatch(r'\d{7}', sanitized_reference):
+        return True
+
+    if not re.fullmatch(r'\d{9,16}', sanitized_reference):
+        return False
+
+    if len(sanitized_reference) == 15:
+        return False
+
+    check, reference_to_check = sanitized_reference[0], sanitized_reference[1:]
+    weigths = [2, 4, 8, 5, 10, 9, 7, 3, 6, 1]
+    reference_to_check = reference_to_check.zfill(16)[::-1]
+
+    total = sum(
+        int(digit) * weigths[index % len(weigths)]
+        for index, digit in enumerate(reference_to_check)
+    )
+    computed_check = 11 - (total % 11)
+    if computed_check == 11:
+        computed_check = 0
+    elif computed_check == 10:
+        computed_check = 1
+
+    return computed_check == int(check)
+
 def is_valid_structured_reference_si(reference):
     """ Validates a Slovenian structured reference using Model 01 (SI01).
 
@@ -126,5 +165,28 @@ def is_valid_structured_reference(reference):
         is_valid_structured_reference_fi(reference) or
         is_valid_structured_reference_no_se(reference) or
         is_valid_structured_reference_si(reference) or
+        is_valid_structured_reference_nl(reference) or
         is_valid_structured_reference_iso(reference)
     ) if reference else False
+
+
+def is_valid_structured_reference_for_country(reference, country_code=''):
+    """Check the validity of the reference's structure for a specific country or ISO 11649 as a fallback.
+
+    :param reference: the reference to check
+    :param country_code: the country code to check against
+    :return: True if reference is a structured reference for the given country or ISO 11649, False otherwise
+    """
+    check_per_country = {
+        'BE': is_valid_structured_reference_be,
+        'FI': is_valid_structured_reference_fi,
+        'NO': is_valid_structured_reference_no_se,
+        'SE': is_valid_structured_reference_no_se,
+        'NL': is_valid_structured_reference_nl,
+        'SI': is_valid_structured_reference_si,
+    }
+
+    reference = sanitize_structured_reference(reference or '')
+    if check := check_per_country.get(country_code.upper()):
+        return check(reference)
+    return is_valid_structured_reference_iso(reference)

@@ -175,7 +175,7 @@ class ProductProduct(models.Model):
 
     @api.depends('type')
     def _compute_l10n_ke_packaging_unit_id(self):
-        service_packaging = self.env.ref('l10n_ke_edi_oscu.packaging_type_ou', raise_if_not_found=False)
+        service_packaging = self.env.ref('l10n_ke_edi_oscu.code_17_OU', raise_if_not_found=False)
         for product in self.filtered(lambda p: not p.l10n_ke_packaging_unit_id):
             product.l10n_ke_packaging_unit_id = service_packaging if product.type == 'service' else None
 
@@ -276,7 +276,6 @@ class ProductProduct(models.Model):
             'type': 'ir.actions.act_window',
             'res_model': 'product.product',
             'domain': [('id', 'in', self.ids)],
-            'view_mode': 'list',
             'views': [(self.env.ref('l10n_ke_edi_oscu.l10n_ke_kra_product_tree').id, 'list'), (False, 'form')],
             'context': {'create': False, 'delete': False},
         }
@@ -327,10 +326,11 @@ class ProductProduct(models.Model):
         }
         return content
 
-    def _l10n_ke_oscu_save_item(self):
+    def _l10n_ke_oscu_save_item(self, company=None):
         """ Register a product with eTIMS. """
+        company = company or self.env.company
         content = self._l10n_ke_oscu_save_item_content()
-        error, _data, _date = self.env.company._l10n_ke_call_etims('saveItem', content)
+        error, _data, _date = company._l10n_ke_call_etims('saveItem', content)
         if not error:
             self.l10n_ke_item_code = content['itemCd']
         return error, content

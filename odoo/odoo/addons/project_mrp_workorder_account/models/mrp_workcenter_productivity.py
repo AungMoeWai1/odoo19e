@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, api
+from odoo import models, api, Command
 
 
 class MrpWorkcenterProductivity(models.Model):
@@ -31,7 +31,7 @@ class MrpWorkcenterProductivity(models.Model):
         line_vals = self.env['account.analytic.account']._perform_analytic_distribution(
             self.workorder_id.production_id.project_id.sudo()._get_analytic_distribution(), amount, duration, employee_aal, self, not distribution_update)
         if line_vals:
-            self.workorder_id.employee_analytic_account_line_ids += self.env['account.analytic.line'].sudo().create(line_vals)
+            self.workorder_id.sudo().employee_analytic_account_line_ids = [Command.create(line_val) for line_val in line_vals]
 
     def unlink(self):
         for time in self:
@@ -43,7 +43,7 @@ class MrpWorkcenterProductivity(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         work_center_productivities = super().create(vals_list)
-        for work_order, productivities in work_center_productivities.grouped('workorder_id').items():
+        for work_order, productivities in work_center_productivities.sudo().grouped('workorder_id').items():
             if (
                 work_order.production_id.project_id.sudo()._get_analytic_distribution()
                 or work_order.employee_analytic_account_line_ids
@@ -60,9 +60,9 @@ class MrpWorkcenterProductivity(models.Model):
         res = super().write(vals)
         # if a value triggers a change of duration we adapt the aals
         if {'date_start', 'date_end'} & vals.keys():
-            for work_order, productivities in self.grouped('workorder_id').items():
+            for work_order, productivities in self.sudo().grouped('workorder_id').items():
                 if (
-                    work_order.production_id.project_id.sudo()._get_analytic_distribution()
+                    work_order.production_id.project_id._get_analytic_distribution()
                     or work_order.employee_analytic_account_line_ids
                 ):
                     for productivity in productivities:

@@ -60,6 +60,7 @@ export class Message extends Record {
         },
     });
     composer = fields.One("Composer", { inverse: "message", onDelete: (r) => r.delete() });
+    composerAsReplyToMessage = fields.One("Composer", { inverse: "replyToMessage" });
     date = fields.Datetime();
     /** @type {string} */
     default_subject;
@@ -320,7 +321,7 @@ export class Message extends Record {
     }
 
     get hasTextContent() {
-        return !this.isBodyEmpty;
+        return !this.isBodyEmpty || this.edited;
     }
 
     isEmpty = fields.Attr(false, {
@@ -430,7 +431,6 @@ export class Message extends Record {
         return Boolean(
             !this.is_transient &&
                 !this.isPending &&
-                this.thread &&
                 this.store.self_partner?.main_user_id?.share === false &&
                 this.persistent
         );
@@ -539,18 +539,18 @@ export class Message extends Record {
         attachments = [],
         { mentionedChannels = [], mentionedPartners = [], mentionedRoles = [] } = {}
     ) {
-        const bodyEl = createElementWithContent("div", this.body);
-        bodyEl.querySelector("span.o-mail-Message-edited")?.remove();
-        if (
-            createElementWithContent("div", body).innerHTML === bodyEl.innerHTML &&
-            attachments.length === 0
-        ) {
+        const messageBodyEl = createElementWithContent("div", this.body);
+        const updatedBodyEl = createElementWithContent("div", body);
+        messageBodyEl.querySelector("span.o-mail-Message-edited")?.remove();
+        updatedBodyEl.querySelector("span.o-mail-Message-edited")?.remove();
+        if (updatedBodyEl.innerHTML === messageBodyEl.innerHTML && attachments.length === 0) {
             return;
         }
         const validMentions = this.store.getMentionsFromText(body, {
             mentionedChannels,
             mentionedPartners,
             mentionedRoles,
+            thread: this.thread,
         });
         const hadLink = this.hasLink; // to remove old previews if message no longer contains any link
         const updateData = {
@@ -589,6 +589,9 @@ export class Message extends Record {
                 )
             )
         ).filter((channel) => channel?.exists());
+        const validRoles = Array.from(
+            doc.querySelectorAll(".o-discuss-mention[data-oe-model='res.role']")
+        ).map((el) => this.store["res.role"].get(el.dataset.oeId));
         const text = convertBrToLineBreak(this.body);
         if (thread?.messageInEdition) {
             thread.messageInEdition.composer = undefined;
@@ -597,6 +600,7 @@ export class Message extends Record {
             composerHtml: getNonEditableMentions(this.body),
             mentionedChannels: validChannels,
             mentionedPartners: this.partner_ids,
+            mentionedRoles: validRoles,
             selection: {
                 start: text.length,
                 end: text.length,
@@ -621,7 +625,12 @@ export class Message extends Record {
      * @returns {string}
      */
     getPersonaName(persona) {
-        return this.thread?.getPersonaName(persona) || persona.displayName || persona.name;
+        return (
+            this.thread?.getPersonaName(persona) ||
+            persona?.displayName ||
+            persona?.name ||
+            _t("Unnamed")
+        );
     }
 
     async onClickToggleTranslation() {

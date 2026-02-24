@@ -3,13 +3,14 @@
 # * approvals
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:28+0000\n"
-"PO-Revision-Date: 2025-09-15 12:02+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2025-12-30 18:42+0000\n"
+"PO-Revision-Date: 2026-02-14 10:06+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
 "approvals/ja/>\n"
 "Language: ja\n"
@@ -17,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: approvals
 #. odoo-python
@@ -48,22 +49,22 @@ msgstr "1200"
 #. module: approvals
 #: model_terms:ir.ui.view,arch_db:approvals.approval_request_view_kanban
 msgid "<i class=\"fa fa-check text-success me-1\"/>Approve"
-msgstr ""
+msgstr "<i class=\"fa fa-check text-success me-1\"/>承認する"
 
 #. module: approvals
 #: model_terms:ir.ui.view,arch_db:approvals.approval_request_view_kanban
 msgid "<i class=\"fa fa-times text-danger me-1\"/>Refuse"
-msgstr ""
+msgstr "<i class=\"fa fa-times text-danger me-1\"/>拒否"
+
+#. module: approvals
+#: model_terms:ir.ui.view,arch_db:approvals.report_aprroval_request_document
+msgid "<span class=\"col-2 fw-bold\">Description:</span>"
+msgstr "<span class=\"col-2 fw-bold\">説明:</span>"
 
 #. module: approvals
 #: model_terms:ir.ui.view,arch_db:approvals.approval_category_view_form
 msgid "<span class=\"fa fa-warning\" title=\"Invalid minimum approvals\"/>"
 msgstr "<span class=\"fa fa-warning\" title=\"Invalid minimum approvals\"/>"
-
-#. module: approvals
-#: model_terms:ir.ui.view,arch_db:approvals.report_aprroval_request_document
-msgid "<span class=\"fw-bold\">Description:</span>"
-msgstr "<span class=\"fw-bold\">説明:</span>"
 
 #. module: approvals
 #: model_terms:ir.ui.view,arch_db:approvals.report_aprroval_request_document
@@ -73,7 +74,7 @@ msgstr "<span class=\"fw-bold\">宛先:</span>"
 #. module: approvals
 #: model_terms:ir.ui.view,arch_db:approvals.approval_request_view_kanban
 msgid "<span class=\"mx-1\">-</span>"
-msgstr ""
+msgstr "<span class=\"mx-1\">-</span>"
 
 #. module: approvals
 #: model:ir.model.fields,field_description:approvals.field_approval_request__message_needaction
@@ -84,7 +85,7 @@ msgstr "要アクション"
 #: model:ir.model.fields,field_description:approvals.field_approval_category__active
 #: model:ir.model.fields,field_description:approvals.field_approval_request__active
 msgid "Active"
-msgstr "アクティブ"
+msgstr "有効"
 
 #. module: approvals
 #: model:ir.model.fields,field_description:approvals.field_approval_request__activity_ids
@@ -99,12 +100,12 @@ msgstr "活動"
 #. module: approvals
 #: model:ir.model.fields,field_description:approvals.field_approval_request__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "例外活動文字装飾"
+msgstr "例外の活動を示す装飾"
 
 #. module: approvals
 #: model:ir.model.fields,field_description:approvals.field_approval_request__activity_state
 msgid "Activity State"
-msgstr "活動状態"
+msgstr "活動ステータス"
 
 #. module: approvals
 #: model:ir.model,name:approvals.model_mail_activity_type
@@ -114,7 +115,7 @@ msgstr "活動タイプ"
 #. module: approvals
 #: model:ir.model.fields,field_description:approvals.field_approval_request__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "活動種別アイコン"
+msgstr "活動タイプアイコン"
 
 #. module: approvals
 #: model:ir.model.fields,help:approvals.field_approval_category__has_product
@@ -161,7 +162,7 @@ msgstr "申請で特定されるべき追加参照"
 #. module: approvals
 #: model:ir.model.constraint,message:approvals.constraint_approval_approver_unique_request_user
 msgid "An approver with the same user already exists for this request."
-msgstr ""
+msgstr "この申請には、同じユーザの承認者がすでに存在します。"
 
 #. module: approvals
 #. odoo-python
@@ -392,7 +393,7 @@ msgstr "キャンセル"
 #: model:ir.model.fields.selection,name:approvals.selection__approval_request__user_status__cancel
 #: model_terms:ir.ui.view,arch_db:approvals.approval_search_view_search
 msgid "Canceled"
-msgstr "キャンセル済"
+msgstr "取消済"
 
 #. module: approvals
 #: model:approval.category,name:approvals.approval_category_data_car_rental_application
@@ -608,6 +609,11 @@ msgid "From:"
 msgstr "開始:"
 
 #. module: approvals
+#: model_terms:ir.ui.view,arch_db:approvals.approval_search_view_search
+msgid "Future Activities"
+msgstr "今後の活動"
+
+#. module: approvals
 #: model:approval.category,name:approvals.approval_category_data_general_approval
 msgid "General Approval"
 msgstr "その他承認"
@@ -683,7 +689,8 @@ msgid ""
 "\n"
 "        Empty: do nothing\n"
 "        Is Approver: the employee's manager will be in the approver list\n"
-"        Is Required Approver: the employee's manager will be required to approve the request.\n"
+"        Is Required Approver: the employee's manager will be required to "
+"approve the request.\n"
 "    "
 msgstr ""
 "このタイプの承認に対する従業員の上司の役割\n"
@@ -724,7 +731,7 @@ msgstr "チェックした場合は、新しいメッセージに注意が必要
 #: model:ir.model.fields,help:approvals.field_approval_request__message_has_error
 #: model:ir.model.fields,help:approvals.field_approval_request__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "チェックした場合は、一部のメッセージに配信エラーが発生されました。"
+msgstr "有効にすると、一部のメッセージに配信エラーが発生します。"
 
 #. module: approvals
 #: model:ir.model.fields,help:approvals.field_approval_category__automated_sequence
@@ -738,8 +745,8 @@ msgstr "有効化されると、承認依頼は設定されたコードで自動
 #: model:ir.model.fields,help:approvals.field_approval_category__approver_sequence
 #: model:ir.model.fields,help:approvals.field_approval_request__approver_sequence
 msgid ""
-"If checked, the approvers have to approve in sequence (one after the other)."
-" If Employee's Manager is selected as approver, they will be the first in "
+"If checked, the approvers have to approve in sequence (one after the other). "
+"If Employee's Manager is selected as approver, they will be the first in "
 "line."
 msgstr ""
 "チェックした場合、承認者は順番に(相次いで)承認する必要があります。従業員のマ"
@@ -799,6 +806,11 @@ msgstr "最終更新者"
 #: model:ir.model.fields,field_description:approvals.field_approval_request__write_date
 msgid "Last Updated on"
 msgstr "最終更新日"
+
+#. module: approvals
+#: model_terms:ir.ui.view,arch_db:approvals.approval_search_view_search
+msgid "Late Activities"
+msgstr "期限超過の活動"
 
 #. module: approvals
 #: model_terms:ir.actions.act_window,help:approvals.approval_request_action
@@ -988,7 +1000,7 @@ msgstr "エラー数"
 #. module: approvals
 #: model:ir.model.fields,help:approvals.field_approval_request__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr "アクションを必要とするメッセージの数"
+msgstr "対応が必要なメッセージ数"
 
 #. module: approvals
 #: model:ir.model.fields,help:approvals.field_approval_request__message_has_error_counter
@@ -1148,34 +1160,34 @@ msgstr "却下済"
 #: model:ir.model.fields,field_description:approvals.field_approval_approver__request_id
 #: model_terms:ir.ui.view,arch_db:approvals.approval_request_view_form
 msgid "Request"
-msgstr "要求"
+msgstr "申請"
 
 #. module: approvals
 #: model_terms:ir.ui.view,arch_db:approvals.report_aprroval_request_document
 msgid "Request By:"
-msgstr "依頼者:"
+msgstr "申請者:"
 
 #. module: approvals
 #: model:ir.model.fields,field_description:approvals.field_approval_request__request_owner_id
 #: model_terms:ir.ui.view,arch_db:approvals.approval_search_view_search
 msgid "Request Owner"
-msgstr "依頼者"
+msgstr "申請所有者"
 
 #. module: approvals
 #: model_terms:ir.ui.view,arch_db:approvals.approval_request_view_tree
 msgid "Request Start"
-msgstr "依頼開始"
+msgstr "申請開始"
 
 #. module: approvals
 #: model:ir.model.fields,field_description:approvals.field_approval_request__request_status
 #: model_terms:ir.ui.view,arch_db:approvals.approval_search_view_search
 msgid "Request Status"
-msgstr "依頼ステータス"
+msgstr "申請ステータス"
 
 #. module: approvals
 #: model_terms:ir.ui.view,arch_db:approvals.approval_request_view_tree
 msgid "Request To"
-msgstr "要求先"
+msgstr "申請先"
 
 #. module: approvals
 #: model:ir.model.fields,field_description:approvals.field_approval_approver__required
@@ -1201,7 +1213,7 @@ msgstr "担当ユーザ"
 #. module: approvals
 #: model:ir.model.fields,field_description:approvals.field_approval_request__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr "SMS配信エラー"
+msgstr "SMS送信エラー"
 
 #. module: approvals
 #: model:ir.model.fields,field_description:approvals.field_approval_approver__sequence
@@ -1221,7 +1233,8 @@ msgstr "シーケンス %(code)s"
 msgid ""
 "Simple users should not be able to remove themselves as approvers because "
 "they will lose access to the record if they misclick."
-msgstr "通常ユーザは、誤クリックすると記録へのアクセス権を失うので、承認者として自分"
+msgstr ""
+"通常ユーザは、誤クリックすると記録へのアクセス権を失うので、承認者として自分"
 "を削除できないようにする必要があります。"
 
 #. module: approvals
@@ -1233,7 +1246,7 @@ msgstr "開始日は終了日より前にして下さい。"
 #. module: approvals
 #: model:ir.model.fields,field_description:approvals.field_approval_approver__status
 msgid "Status"
-msgstr "状態"
+msgstr "ステータス"
 
 #. module: approvals
 #: model:ir.model.fields,help:approvals.field_approval_request__activity_state
@@ -1244,7 +1257,7 @@ msgid ""
 "Planned: Future activities."
 msgstr ""
 "活動に基づくステータス\n"
-"遅延: 期限が既に過ぎています\n"
+"期限超過：期限日がすでに過ぎています\n"
 "今日: 活動日は今日です\n"
 "予定: 将来の活動。"
 
@@ -1288,7 +1301,8 @@ msgstr "テスト参照番号"
 #. odoo-python
 #: code:addons/approvals/models/approval_request.py:0
 msgid "The request %(request_name)s for %(request_owner)s has been approved"
-msgstr "リクエスト %(request_name)s (対象: %(request_owner)s) が承認されました。"
+msgstr ""
+"リクエスト %(request_name)s (対象: %(request_owner)s) が承認されました。"
 
 #. module: approvals
 #. odoo-python
@@ -1302,16 +1316,17 @@ msgstr "リクエスト %(request_name)s (対象:%(request_owner)s)が却下さ�
 msgid ""
 "The request created on %(create_date)s by %(request_owner)s has been "
 "approved."
-msgstr "%(create_date)sに %(request_owner)s "
-"によって作成されたリクエストが承認されました。"
+msgstr ""
+"%(create_date)sに %(request_owner)s によって作成されたリクエストが承認されま"
+"した。"
 
 #. module: approvals
 #. odoo-python
 #: code:addons/approvals/models/approval_request.py:0
 msgid ""
-"The request created on %(create_date)s by %(request_owner)s has been "
-"refused."
-msgstr "リクエスト(作成日:%(create_date)s 作成者: %(request_owner)s )が却下されました"
+"The request created on %(create_date)s by %(request_owner)s has been refused."
+msgstr ""
+"リクエスト(作成日:%(create_date)s 作成者: %(request_owner)s )が却下されました"
 
 #. module: approvals
 #. odoo-python
@@ -1335,8 +1350,9 @@ msgstr "このユーザーは承認設定にアクセスできます。"
 msgid ""
 "This request needs to be approved by your manager. There is no manager "
 "linked to your employee profile."
-msgstr "この申請はマネジャーの承認が必要です。あなたの従業員プロファイルにはマネジャ"
-"ーはリンクされていません。"
+msgstr ""
+"この申請はマネジャーの承認が必要です。あなたの従業員プロファイルにはマネ"
+"ジャーはリンクされていません。"
 
 #. module: approvals
 #. odoo-python
@@ -1344,8 +1360,9 @@ msgstr "この申請はマネジャーの承認が必要です。あなたの従
 msgid ""
 "This request needs to be approved by your manager. There is no user linked "
 "to your manager."
-msgstr "この申請はマネジャーの承認が必要です。あなたのマネジャーにリンクされているユ"
-"ーザがいません。"
+msgstr ""
+"この申請はマネジャーの承認が必要です。あなたのマネジャーにリンクされている"
+"ユーザがいません。"
 
 #. module: approvals
 #. odoo-python
@@ -1353,7 +1370,8 @@ msgstr "この申請はマネジャーの承認が必要です。あなたのマ
 msgid ""
 "This request needs to be approved by your manager. Your manager is not in "
 "the approvers list."
-msgstr "この申請はマネジャーの承認が必要です。あなたのマネジャーは承認リストに入って"
+msgstr ""
+"この申請はマネジャーの承認が必要です。あなたのマネジャーは承認リストに入って"
 "いません。"
 
 #. module: approvals
@@ -1372,6 +1390,11 @@ msgid "To Submit"
 msgstr "未申請"
 
 #. module: approvals
+#: model_terms:ir.ui.view,arch_db:approvals.approval_search_view_search
+msgid "Today Activities"
+msgstr "本日の活動"
+
+#. module: approvals
 #: model:ir.model.fields,help:approvals.field_approval_request__activity_exception_decoration
 msgid "Type of the exception activity on record."
 msgstr "記録上の例外活動の種類。"
@@ -1379,7 +1402,7 @@ msgstr "記録上の例外活動の種類。"
 #. module: approvals
 #: model_terms:ir.ui.view,arch_db:approvals.approval_category_view_kanban
 msgid "Unarchive"
-msgstr "アーカイブキャンセル"
+msgstr "アーカイブ解除"
 
 #. module: approvals
 #: model:ir.model.fields,field_description:approvals.field_approval_product_line__product_uom_id
@@ -1449,11 +1472,18 @@ msgstr "前の承認者より前に承認することはできません。"
 
 #. module: approvals
 #. odoo-python
+#: code:addons/approvals/models/approval_approver.py:0
+msgid "You cannot change approval request."
+msgstr "承認申請を変更することはできません。"
+
+#. module: approvals
+#. odoo-python
 #: code:addons/approvals/models/ir_attachment.py:0
 msgid ""
 "You cannot unlink an attachment which is linked to a validated, refused or "
 "cancelled approval request."
-msgstr "許可、拒否、またはキャンセルされた承認依頼にリンクされている添付ファイルのリ"
+msgstr ""
+"許可、拒否、またはキャンセルされた承認依頼にリンクされている添付ファイルのリ"
 "ンクを解除することはできません。"
 
 #. module: approvals
@@ -1521,3 +1551,6 @@ msgstr "新規申請"
 #: model_terms:ir.ui.view,arch_db:approvals.approval_request_view_form
 msgid "to:"
 msgstr "宛先:"
+
+#~ msgid "<span class=\"fw-bold\">Description:</span>"
+#~ msgstr "<span class=\"fw-bold\">説明:</span>"

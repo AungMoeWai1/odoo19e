@@ -8,13 +8,15 @@
 # Larissa Manderfeld, 2023
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-13 21:41+0000\n"
-"PO-Revision-Date: 2025-09-15 21:11+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2025-12-30 18:41+0000\n"
+"PO-Revision-Date: 2026-02-14 10:03+0000\n"
+"Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/"
 "web_studio/de/>\n"
 "Language: de\n"
@@ -22,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: web_studio
 #. odoo-python
@@ -121,7 +123,8 @@ msgstr "“ fehlgeschlagen."
 #. odoo-python
 #: code:addons/web_studio/models/studio_approval.py:0
 msgid "%(user_name)s delegated approval rights to %(delegate_to)s"
-msgstr "%(user_name)s hat die Genehmigungsrechte auf %(delegate_to)s übertragen"
+msgstr ""
+"%(user_name)s hat die Genehmigungsrechte auf %(delegate_to)s übertragen"
 
 #. module: web_studio
 #. odoo-python
@@ -130,8 +133,8 @@ msgid ""
 "%(user_name)s has set approval rights from %(previous_approvers)s to %"
 "(next_approvers)s"
 msgstr ""
-"%(user_name)s hat Genehmigungsregeln von %(previous_approvers)s auf "
-"%(next_approvers)s geändert"
+"%(user_name)s hat Genehmigungsregeln von %(previous_approvers)s auf %"
+"(next_approvers)s geändert"
 
 #. module: web_studio
 #. odoo-python
@@ -145,7 +148,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/web_studio/controllers/main.py:0
 msgid "%s (Copy)"
-msgstr ""
+msgstr "%s (Kopie)"
 
 #. module: web_studio
 #. odoo-python
@@ -200,8 +203,8 @@ msgstr ""
 #: model_terms:web_tour.tour,rainbow_man_message:web_studio.web_studio_new_app_tour
 msgid "<span><b>Good job!</b> You went through all steps of this tour.</span>"
 msgstr ""
-"<span><b>Gut gemacht!</b> Sie haben alle Schritte dieser Tour "
-"absolviert.</span>"
+"<span><b>Gut gemacht!</b> Sie haben alle Schritte dieser Tour absolviert.</"
+"span>"
 
 #. module: web_studio
 #. odoo-javascript
@@ -272,7 +275,7 @@ msgstr "Aktion"
 #. module: web_studio
 #: model:ir.model.fields,field_description:web_studio.field_studio_approval_rule__message_needaction
 msgid "Action Needed"
-msgstr "Aktion notwendig"
+msgstr "Aktion erforderlich"
 
 #. module: web_studio
 #: model:ir.model,name:web_studio.model_ir_actions_act_window
@@ -898,6 +901,7 @@ msgstr "Bild ändern"
 #: code:addons/web_studio/static/src/client_action/report_editor/report_editor_wysiwyg/editor_plugins/report_editor_plugin.js:0
 msgid "Change the placeholder or the expression for an existing field"
 msgstr ""
+"Ändern Sie den Platzhalter oder die Bezeichnung für ein vorhandenes Feld"
 
 #. module: web_studio
 #. odoo-javascript
@@ -1101,7 +1105,7 @@ msgstr "Kontaktfeld erforderlich"
 #. odoo-javascript
 #: code:addons/web_studio/static/src/client_action/model_configurator/model_configurator.js:0
 msgid "Contact details"
-msgstr "Kontaktinformationen"
+msgstr "Kontaktdaten"
 
 #. module: web_studio
 #. odoo-javascript
@@ -1590,7 +1594,7 @@ msgstr "Schieben Sie ein Menü nach rechts, um ein Untermenü zu erstellen"
 #. odoo-javascript
 #: code:addons/web_studio/static/src/client_action/view_editor/editors/kanban/kanban_editor_record_menu.xml:0
 msgid "Dropdown menu"
-msgstr ""
+msgstr "Drop-down-Menü"
 
 #. module: web_studio
 #: model_terms:ir.ui.view,arch_db:web_studio.act_report_xml_view_kanban
@@ -1643,7 +1647,7 @@ msgstr "Werte bearbeiten"
 #. odoo-javascript
 #: code:addons/web_studio/static/src/client_action/report_editor/report_editor_wysiwyg/editor_plugins/report_editor_plugin.js:0
 msgid "Edit field"
-msgstr ""
+msgstr "Feld bearbeiten"
 
 #. module: web_studio
 #. odoo-javascript
@@ -1990,8 +1994,8 @@ msgstr "Weiter so, fast geschafft!"
 #: code:addons/web_studio/static/src/js/tours/web_studio_tour.js:0
 msgid "Good job! To add more <b>fields</b>, come back to the <i>Add tab</i>."
 msgstr ""
-"Gut gemacht! Um weitere <b>Felder</b> hinzuzufügen, gehen Sie zurück zum <i"
-">Hinzufügen-Reiter</i>."
+"Gut gemacht! Um weitere <b>Felder</b> hinzuzufügen, gehen Sie zurück zum "
+"<i>Hinzufügen-Reiter</i>."
 
 #. module: web_studio
 #. odoo-python
@@ -2233,6 +2237,12 @@ msgid ""
 "as pictures, files, etc.\n"
 "        Include the corresponding fields in the export to get them."
 msgstr ""
+"Wenn aktiviert, werden Anhänge zu den exportierten Datensätzen mit "
+"einbezogen.\n"
+"        Anhänge, die in binären Feldern wie Bilder, Dateien usw. hochgeladen "
+"wurden, sind davon ausgenommen.\n"
+"        Um diese zu exportieren, fügen Sie die entsprechenden Felder dem "
+"Export hinzu."
 
 #. module: web_studio
 #: model:ir.model.fields,help:web_studio.field_studio_export_model__is_demo_data
@@ -2329,7 +2339,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web_studio/static/src/client_action/report_editor/report_editor_wysiwyg/editor_plugins/studio_dynamic_placeholder_popover.xml:0
 msgid "Insert"
-msgstr ""
+msgstr "Einfügen"
 
 #. module: web_studio
 #. odoo-javascript
@@ -2525,7 +2535,7 @@ msgstr "Liste"
 #. odoo-javascript
 #: code:addons/web_studio/static/src/client_action/model_configurator/model_configurator.js:0
 msgid "Manually sort records in the kanban and list view"
-msgstr ""
+msgstr "Datensätze manuell in der Kanban- und Listenansicht sortieren"
 
 #. module: web_studio
 #. odoo-javascript
@@ -2738,7 +2748,7 @@ msgstr "Mehr"
 #. module: web_studio
 #. odoo-javascript
 #: code:addons/web_studio/static/src/client_action/view_editor/editors/components/view_fields.js:0
-msgid "Multine Text"
+msgid "Multiline Text"
 msgstr "Mehrzeiliger Text"
 
 #. module: web_studio
@@ -2941,7 +2951,7 @@ msgstr "Anzahl der Einträge"
 #. module: web_studio
 #: model:ir.model.fields,field_description:web_studio.field_studio_approval_rule__message_has_error_counter
 msgid "Number of errors"
-msgstr "Anzahl der Fehler"
+msgstr "Anzahl Fehler"
 
 #. module: web_studio
 #: model:ir.model.fields,help:web_studio.field_studio_approval_rule__message_needaction_counter
@@ -2951,7 +2961,7 @@ msgstr "Anzahl der Nachrichten, die eine Aktion erfordern"
 #. module: web_studio
 #: model:ir.model.fields,help:web_studio.field_studio_approval_rule__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "Anzahl der Nachrichten mit Zustellungsfehler."
+msgstr "Anzahl Nachrichten mit Zustellungsfehler"
 
 #. module: web_studio
 #. odoo-javascript
@@ -2986,7 +2996,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web_studio/static/src/client_action/report_editor/report_editor_wysiwyg/editor_plugins/studio_dynamic_placeholder_popover.xml:0
 msgid "Only visible during the edition of the report"
-msgstr ""
+msgstr "Nur bei Bearbeitung des Berichts sichtbar"
 
 #. module: web_studio
 #. odoo-javascript
@@ -3952,7 +3962,7 @@ msgstr "Studio-Mixin"
 #. odoo-javascript
 #: code:addons/web_studio/static/src/client_action/view_editor/view_editor_model.js:0
 msgid "Subview %(viewType)s"
-msgstr ""
+msgstr "Unteransicht %(viewType)s"
 
 #. module: web_studio
 #. odoo-javascript
@@ -3998,7 +4008,7 @@ msgstr "Technische Bezeichnung"
 #. odoo-javascript
 #: code:addons/web_studio/static/src/client_action/report_editor/report_editor_wysiwyg/editor_plugins/studio_dynamic_placeholder_popover.xml:0
 msgid "Technical name"
-msgstr ""
+msgstr "Technische Bezeichnung"
 
 #. module: web_studio
 #. odoo-python
@@ -4328,7 +4338,7 @@ msgstr "Aktualisierbar"
 #. odoo-javascript
 #: code:addons/web_studio/static/src/client_action/report_editor/report_editor_wysiwyg/editor_plugins/studio_dynamic_placeholder_popover.xml:0
 msgid "Update"
-msgstr ""
+msgstr "Aktualisieren"
 
 #. module: web_studio
 #. odoo-javascript
@@ -4646,6 +4656,9 @@ msgstr "x_studio_"
 #: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/field_configuration/selection_content_dialog.xml:0
 msgid "{{ item.isInEdition ? 'Add selection' : 'Edit selection' }}"
 msgstr "{{ item.isInEdition ? 'Add selection' : 'Edit selection' }}"
+
+#~ msgid "Multine Text"
+#~ msgstr "Mehrzeiliger Text"
 
 #~ msgid ""
 #~ " <p class=\"o_view_nocontent_smiling_face\">\n"

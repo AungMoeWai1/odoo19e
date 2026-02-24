@@ -474,12 +474,13 @@ class TestDocumentsAccess(TransactionCaseDocuments, MockEmail):
 
     @users('documents@example.com')
     def test_moving_documents(self):
-        """Check that documents can be moved to a new location and have their rights updated."""
+        """Check that documents can be moved to a new location and have their rights updated except discoverability."""
         self.folder_b.write({
             'access_internal': 'none',
             'access_via_link': 'none',
+            'is_access_via_link_hidden': True,
         })
-        self.folder_a.write({'access_via_link': 'view'})
+        self.folder_a.write({'access_via_link': 'view', 'is_access_via_link_hidden': False})
         self.folder_a_a.folder_id = self.folder_b.id
         self.assertEqual(self.folder_a_a.folder_id, self.folder_b)
 
@@ -488,6 +489,7 @@ class TestDocumentsAccess(TransactionCaseDocuments, MockEmail):
         self.assertEqual(self.folder_b.folder_id, self.folder_a)
         self.assertEqual(self.folder_b.access_internal, 'view', 'Internal access should have been updated.')
         self.assertEqual(self.folder_b.access_via_link, 'view', 'link access should have been updated.')
+        self.assertEqual(self.folder_b.is_access_via_link_hidden, True, 'Discoverability should not be updated')
 
         self.document_gif.folder_id = False
         shortcut = self.folder_b.with_user(self.doc_user).action_create_shortcut(location_user_folder_id='MY')
@@ -513,60 +515,6 @@ class TestDocumentsAccess(TransactionCaseDocuments, MockEmail):
         # Unless user is the owner
         self.document_gif.owner_id = self.internal_user
         self.document_gif.with_user(self.internal_user).folder_id = self.folder_a
-
-    def test_ir_actions_server(self):
-        """Check the behavior of the documents actions.
-
-        To be able to use those actions, they need to be embedded on the folder of
-        the documents on which we execute the action.
-        """
-        self.internal_user.group_ids |= self.env.ref('documents.group_documents_user')
-        document = self.document_gif.with_user(self.internal_user)
-        document.sudo().access_internal = 'edit'
-
-        # Sanity check
-        self.assertEqual(document.user_permission, 'edit')
-        self.assertEqual(document.folder_id.user_permission, 'view')
-        self.assertEqual(self.folder_a.user_permission, 'edit')
-        with self.assertRaises(AccessError):
-            document.folder_id = self.folder_a
-
-        action_base_values = {
-            'name': 'Test Action',
-            'model_id': self.env['ir.model']._get_id('documents.document'),
-            'update_path': 'folder_id',
-            'usage': 'documents_embedded',
-            'resource_ref': f'documents.document,{self.folder_a.id}',
-        }
-
-        action = self.env['ir.actions.server'].create({
-            **action_base_values,
-            'state': 'multi',
-            # Check that the child actions can be executed
-            'child_ids': [Command.create({
-                **action_base_values,
-                'state': 'multi',
-                'child_ids': [Command.create({
-                    **action_base_values,
-                    'state': 'object_write',
-                })],
-            })],
-        }).with_user(self.internal_user)
-
-        # We can not execute the action because it's not pinned on the folder
-        with self.assertRaises(UserError):
-            action.with_context(active_model='documents.document', active_id=document.id).run()
-
-        # Pin the action on the folder, so we can execute it
-        self.env['documents.document'].action_folder_embed_action(document.folder_id.id, action.id)
-
-        # We can move the documents even if we have no write access on the initial folder
-        action.with_context(active_model='documents.document', active_id=document.id).run()
-        self.assertEqual(document.folder_id, self.folder_a)
-
-        # Check that we can not execute the action if it's pinned on a different folder
-        with self.assertRaises(UserError):
-            action.with_context(active_model='documents.document', active_id=document.id).run()
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.addons.base.models.ir_rule')
     def test_create_document_access(self):
@@ -749,6 +697,10 @@ class TestDocumentsAccess(TransactionCaseDocuments, MockEmail):
         self.folder_a.with_user(self.internal_user).sudo().user_folder_id = "COMPANY"
         # with SUDO, a normal user can move a pinned a folder
         self.folder_a.with_user(self.internal_user).sudo().owner_id = self.internal_user
+
+        # Internal user cannot copy a company root folder
+        with self.assertRaises(AccessError):
+            self.company_root_folder.with_user(self.internal_user).copy(default={'user_folder_id': "COMPANY"})
 
     @mute_logger('odoo.addons.base.models.ir_rule')
     def test_unlink_with_children(self):
@@ -1677,3 +1629,128 @@ class TestDocumentsAccess(TransactionCaseDocuments, MockEmail):
         self.assertIn(
             (self.internal_user.partner_id, 'view'),
             self.document_txt.access_ids.mapped(lambda a: (a.partner_id, a.role)))
+
+    def test_members_invitation(self):
+        Access = self.env['documents.access']
+        internal_access = Access.create({
+            'document_id': self.folder_a.id,
+            'partner_id': self.internal_user.partner_id.id,
+            'last_access_date': fields.Datetime.now(),
+            'role': 'view',
+        })
+        with self.assertRaises(UserError):
+            internal_access._get_member_signup_token()
+
+        portal_access = Access.create({
+            'document_id': self.folder_a.id,
+            'partner_id': self.portal_user.partner_id.id,
+            'last_access_date': fields.Datetime.now(),
+            'role': 'view',
+        })
+        with self.assertRaises(UserError):
+            portal_access._get_member_signup_token()
+
+        public_access = Access.create({
+            'document_id': self.folder_a.id,
+            'partner_id': self.env["res.partner"].create({'name': 'Test'}).id,
+            'last_access_date': fields.Datetime.now(),
+            'role': 'view',
+        })
+        token = public_access._get_member_signup_token()
+        self.assertEqual(Access._get_member_from_token(public_access.id, token), public_access)
+        self.assertNotEqual(Access._get_member_from_token(public_access.id, 'invalid' + token), public_access)
+
+        public_access.expiration_date = fields.Datetime.now() + datetime.timedelta(days=1)
+        token = public_access._get_member_signup_token()
+        self.assertEqual(Access._get_member_from_token(public_access.id, token), public_access)
+
+        # use an old token
+        token = public_access._get_member_signup_token()
+        public_access.expiration_date = fields.Datetime.now() - datetime.timedelta(days=1)
+        self.assertFalse(Access._get_member_from_token(public_access.id, token))
+
+        public_access = Access.create({
+            'document_id': self.folder_a.id,
+            'partner_id': self.env["res.partner"].create({'name': 'Test'}).id,
+            'last_access_date': fields.Datetime.now(),
+        })
+        with self.assertRaises(UserError):
+            public_access._get_member_signup_token()
+
+    def test_permissions_internal_propagation_on_folder_moves(self):
+        not_secret_folder = self.env['documents.document'].create({
+            'name': 'Not Secret Folder',
+            'type': 'folder',
+            'access_internal': 'edit',
+            'children_ids': [
+                Command.create({
+                    'name': 'Secret Folder',
+                    'type': 'folder',
+                    'access_internal': 'none',
+                }),
+            ],
+            'owner_id': self.document_manager.id  # not odoobot
+        })
+        secret_folder = not_secret_folder.children_ids[0]
+        self.assertEqual(secret_folder.with_user(self.internal_user).user_permission, 'none')
+        none = self.env['documents.document'].with_user(self.internal_user).create({
+            'name': 'none',
+            'type': 'folder',
+            'access_internal': 'none',
+        })
+        editor = self.env['documents.document'].with_user(self.internal_user).create({
+            'name': 'editor',
+            'type': 'folder',
+            'access_internal': 'edit',
+        })
+
+        not_secret_folder.with_user(self.internal_user).action_move_folder(target=str(none.id))
+        none.with_user(self.internal_user).action_move_folder(target=str(editor.id))
+        with self.assertRaises(AccessError):
+            secret_folder.with_user(self.internal_user).check_access('read')
+        self.assertEqual(secret_folder.access_internal, 'none')
+
+    def test_permissions_member_and_owner_propagation_on_folder_moves(self):
+        member_folder = self.env['documents.document'].create({
+            'name': 'Member Folder',
+            'type': 'folder',
+            'access_internal': 'none',
+            'children_ids': [
+                Command.create({
+                    'name': 'Secret Folder',
+                    'type': 'folder',
+                    'access_internal': 'none',
+                    'access_ids': False,
+                }),
+            ],
+            'access_ids': [Command.create({'partner_id': self.internal_user.partner_id.id, 'role': 'edit'})],
+            'owner_id': self.document_manager.id  # not odoobot
+        })
+        secret_folder = member_folder.children_ids[0]
+        self.assertEqual(secret_folder.with_user(self.doc_user).user_permission, 'none')
+        none = self.env['documents.document'].with_user(self.internal_user).create({
+            'name': 'none',
+            'type': 'folder',
+            'access_internal': 'none',
+        })
+        doc_user_editor = self.env['documents.document'].with_user(self.internal_user).create({
+            'name': 'editor',
+            'type': 'folder',
+            'access_internal': 'none',
+            'access_ids': [Command.create({'partner_id': self.doc_user.partner_id.id, 'role': 'edit'})]
+        })
+
+        member_folder.with_user(self.internal_user).action_move_folder(target=str(none.id))
+        none.with_user(self.internal_user).action_move_folder(target=str(doc_user_editor.id))
+
+        none.with_user(self.doc_user).check_access('read')
+        member_folder.with_user(self.doc_user).check_access("read")
+        self.assertIn(self.doc_user.partner_id, member_folder.access_ids.partner_id)
+
+        with self.assertRaises(AccessError):
+            secret_folder.with_user(self.internal_user).check_access('read')
+        with self.assertRaises(AccessError):
+            secret_folder.with_user(self.doc_user).check_access('read')
+
+        self.assertNotIn(self.internal_user.partner_id, secret_folder.access_ids.partner_id)
+        self.assertNotIn(self.doc_user.partner_id, secret_folder.access_ids.partner_id)

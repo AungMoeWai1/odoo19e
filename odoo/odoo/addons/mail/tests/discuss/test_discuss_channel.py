@@ -67,20 +67,11 @@ class TestChannelInternals(MailCommon, HttpCase):
                 [
                     (self.cr.dbname, "discuss.channel", test_group.id),
                     (self.cr.dbname, "res.partner", self.test_partner.id),
-                    (self.cr.dbname, "discuss.channel", test_group.id),
                     (self.cr.dbname, "res.partner", self.partner_employee.id),
                     (self.cr.dbname, "discuss.channel", test_group.id),
                     (self.cr.dbname, "discuss.channel", test_group.id),
                 ],
                 [
-                    {
-                        "type": "mail.record/insert",
-                        "payload": {
-                            "discuss.channel": [
-                                {"id": test_group.id, "last_interest_dt": "2020-03-22 10:42:06"},
-                            ],
-                        },
-                    },
                     {
                         "type": "discuss.channel/new_message",
                         "payload": {
@@ -917,7 +908,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                         "mail.message": [
                             {
                                 "attachment_ids": [],
-                                "body": ['markup', '<p>Test update</p><span class="o-mail-Message-edited"></span>'],
+                                "body": ['markup', '<p>Test update <span class="o-mail-Message-edited"></span></p>'],
                                 "id": message.id,
                                 "parent_id": False,
                                 "partner_ids": message.partner_ids.ids,

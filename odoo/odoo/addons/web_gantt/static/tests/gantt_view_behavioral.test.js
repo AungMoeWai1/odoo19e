@@ -8,6 +8,7 @@ import {
     press,
     queryAllTexts,
     queryOne,
+    queryRect,
     scroll,
     waitFor,
 } from "@odoo/hoot-dom";
@@ -30,6 +31,7 @@ import {
     CLASSES,
     SELECTORS,
     clickCell,
+    cssClassPresencePerCellInColumn,
     dragPill,
     editPill,
     focusToday,
@@ -84,7 +86,7 @@ test("date navigation with timezone (1h)", async () => {
 
     expect.verifySteps(["&,start,<,2019-02-28 23:00:00,stop,>,2018-11-30 23:00:00"]);
 
-    expect(getGridContent().range).toBe("From: 12/01/2018 to: 02/28/2019");
+    expect(getGridContent().range).toBe("12/01/2018 -> 02/28/2019");
 
     // switch to day view and check day navigation
     await selectRange("Day");
@@ -186,6 +188,23 @@ test("select cells to create a task", async () => {
     expect.verifySteps(["[dialog] Create"]);
 });
 
+test("can cancel selection", async () => {
+    await mountGanttView({
+        resModel: "tasks",
+        arch: '<gantt date_start="start" date_stop="stop"/>',
+    });
+    const { cancel, moveTo } = await contains(getCell("19", "December 2018")).drag();
+    await moveTo(getCell("21", "December 2018"), { position: { x: 30 }, relative: true });
+    await animationFrame();
+
+    expect(".o_cell_ghost").toHaveCount();
+
+    await cancel();
+    await animationFrame();
+
+    expect(".o_cell_ghost").not.toHaveCount();
+});
+
 test("drag and drop on the same cell to create a task", async () => {
     mockService("dialog", {
         add(_, props) {
@@ -266,7 +285,7 @@ test("select cells to plan a task: 1-level grouped", async () => {
     const { moveTo, drop } = await contains(getCell("11", "December 2018")).drag();
     moveTo(getCell("12", "December 2018"));
     await runAllTimers(); // Pointer move is subjected to throttleForAnimation in gantt
-    drop();
+    await drop();
 
     expect.verifySteps(["[dialog] Create"]);
 });
@@ -310,7 +329,7 @@ test("select cells to plan a task: 2-level grouped", async () => {
     const dragAndDrop2 = await contains(getCell("11", "December 2018", "Project 1")).drag();
     dragAndDrop2.moveTo(getCell("12", "December 2018", "Project 1"));
     await advanceTime(20);
-    dragAndDrop2.drop();
+    await dragAndDrop2.drop();
 
     expect.verifySteps(["[dialog] Create"]);
 });
@@ -2033,6 +2052,92 @@ test("drag&drop on other pill in grouped view", async () => {
     ]);
 });
 
+test("disable drop of pill on groups by readonly field", async () => {
+    // Group "Work Order" by: color > cost (readonly) > employee > size
+    // Pills can be only be dropped in the same "child groups" (employee & size)
+    // or any group above the highest readonly parent (color)
+    await mountGanttView({
+        resModel: "workorders",
+        arch: '<gantt date_start="start" date_stop="stop" />',
+        groupBy: ["color", "cost", "employee", "size"],
+    });
+
+    /*  Structure is the following:
+
+        color (1)
+        └── cost (86)
+            ├── employee (Jordan)
+            │   └── size (198) --> Work Order 1
+            └── employee (Michael)
+                └── size (198) --> Work Order 3
+        color (2)
+        └── cost (420)
+            └── employee (Jordan)
+                └── size (183) --> Work Order 2
+
+        Before drag, all but color rows should have the readonly class.
+    */
+    expect(cssClassPresencePerCellInColumn("o_gantt_readonly", ["16", "December 2018"])).toEqual([
+        false, // "color" is not readonly
+        true, // "cost" is readonly
+        true, // "employee"(Jordan) is not readonly but parent "cost" is
+        true, // "size"(198) is not readonly but parent "cost" is
+        true, // "employee"(Michael) is not readonly but parent "cost" is
+        true, // "size"(198) is not readonly but parent "cost" is
+        false, // "color" is not readonly
+        true, // "cost" is readonly
+        true, // "employee" is not readonly but parent "cost" is
+        true, // "size" is not readonly but parent "cost" is
+    ]);
+
+    const { drop, moveTo } = await dragPill("Work Order 1");
+    await moveTo({ pill: "Work Order 3" });
+    await advanceTime(20); // Pointer move is subjected to throttleForAnimation in gantt
+
+    // // During drag, the user should be able to drop in
+    // //  - the child groups (employee & size), so rows 3 to 6
+    // //  - the group above the highest readonly parent (color), so rows 1 & 7
+    expect(cssClassPresencePerCellInColumn("o_gantt_readonly", ["16", "December 2018"])).toEqual([
+        false,
+        true,
+        false, // part of child group
+        false, // original row of the pill
+        false, // part of child group
+        false, // part of child group
+        false,
+        true,
+        true, // NOT part of the child group so should remain readonly
+        true, // NOT part of the child group so should remain readonly
+    ]);
+
+    await drop({ pill: "Work Order 3" });
+    await advanceTime(20);
+
+    /*  After drop, structure should be the following:
+
+        color (1)
+        └── cost (86)
+            └── employee (Michael)
+                └── size (198) --> Work Order 1 & Work Order 3
+        color (2)
+        └── cost (420)
+            └── employee (Jordan)
+                └── size (183) --> Work Order 2
+
+        Again, all but color rows should have the readonly class
+    */
+    expect(cssClassPresencePerCellInColumn("o_gantt_readonly", ["16", "December 2018"])).toEqual([
+        false,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+    ]);
+});
+
 test("display mode button", async () => {
     onRpc("get_gantt_data", () => {
         expect.step("get_gantt_data");
@@ -2675,7 +2780,7 @@ test("focus today with range change (in range & outside)", async () => {
     expect(".o_gantt_cell.o_gantt_today").toBeVisible();
     expect(queryOne(".o_gantt_cell.o_gantt_today")).toBe(getCell("20", "December 2018"));
     let gridContent = getGridContent();
-    expect(gridContent.range).toBe("From: 12/01/2018 to: 02/28/2019");
+    expect(gridContent.range).toBe("12/01/2018 -> 02/28/2019");
     expect(gridContent.columnHeaders).toHaveLength(29);
     expect(gridContent.columnHeaders[0].title).toBe("01"); // December
     expect(gridContent.columnHeaders.at(-1).title).toBe("29"); // December
@@ -2685,7 +2790,7 @@ test("focus today with range change (in range & outside)", async () => {
     expect(".o_gantt_cell.o_gantt_today").toBeVisible();
     expect(queryOne(".o_gantt_cell.o_gantt_today")).toBe(getCell("20", "December 2018"));
     gridContent = getGridContent();
-    expect(gridContent.range).toBe("From: 11/15/2018 to: 02/15/2019");
+    expect(gridContent.range).toBe("11/15/2018 -> 02/15/2019");
     expect(gridContent.columnHeaders).toHaveLength(32);
     expect(gridContent.columnHeaders[0].title).toBe("28"); // November
     expect(gridContent.columnHeaders.at(-1).title).toBe("29"); // December
@@ -2699,7 +2804,7 @@ test("focus today with range change (in range & outside)", async () => {
     expect(gridContent.columnHeaders.at(-1).title).toBe("17"); // January
 
     await selectCustomRange({ startDate: "2019-01-01", stopDate: "2019-02-28" });
-    expect(getGridContent().range).toBe("From: 01/01/2019 to: 02/28/2019");
+    expect(getGridContent().range).toBe("01/01/2019 -> 02/28/2019");
     expect.verifySteps(["get_gantt_data"]);
     expect(".o_gantt_cell.o_gantt_today").not.toHaveCount();
 
@@ -2707,7 +2812,7 @@ test("focus today with range change (in range & outside)", async () => {
     await ganttControlsChanges();
     expect.verifySteps(["get_gantt_data"]);
     expect(".o_gantt_cell.o_gantt_today").toBeVisible();
-    expect(getGridContent().range).toBe("From: 11/21/2018 to: 01/17/2019");
+    expect(getGridContent().range).toBe("11/21/2018 -> 01/17/2019");
 });
 
 test("set start/stop date: should keep focused date", async () => {
@@ -2765,7 +2870,7 @@ test("Select a range via the range menu", async () => {
         arch: '<gantt date_start="start" date_stop="stop"/>',
     });
     let content = getGridContent();
-    expect(content.range).toBe("From: 12/01/2018 to: 02/28/2019");
+    expect(content.range).toBe("12/01/2018 -> 02/28/2019");
 
     await selectRange("Day");
     content = getGridContent();
@@ -3154,4 +3259,16 @@ test("markup html server values", async function () {
 
     await contains(".o_popover .popover-header i.fa.fa-close").click();
     expect(".o_popover").toHaveCount(0);
+});
+
+test("group header width is capped by available space", async () => {
+    await mountGanttView({
+        resModel: "tasks",
+        arch: '<gantt date_start="start" date_stop="stop"/>',
+        groupBy: ["user_id"],
+    });
+    const titleWidth = queryRect(".o_gantt_title").width;
+    expect(".o_gantt_header_title:first").toHaveStyle({
+        maxWidth: document.body.clientWidth - titleWidth,
+    });
 });

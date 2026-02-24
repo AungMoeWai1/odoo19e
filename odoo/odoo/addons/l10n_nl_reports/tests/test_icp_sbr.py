@@ -21,6 +21,12 @@ class TestNlICPSBR(AccountSalesReportCommon):
             'l10n_nl_reports_sbr_ob_nummer': '987654321B09',
         })
 
+        cls.partner_c = cls.env['res.partner'].create({
+            'name': 'Partner C',
+            'country_id': cls.env.ref('base.de').id,
+            'vat': 'DE123456788',
+        })
+
     @freeze_time('2019-02-23 18:45')
     def test_icp_xbrl_export(self):
         # Create a new partner for the representative and link it to the company.
@@ -52,6 +58,8 @@ class TestNlICPSBR(AccountSalesReportCommon):
         })
         self.init_invoice('out_invoice', partner=self.partner_a, invoice_date=fields.Date.from_string('2019-02-15'), post=True, products=[self.product_a, product_service, product_triangular])
         self.init_invoice('out_invoice', partner=self.partner_b, invoice_date=fields.Date.from_string('2019-06-20'), post=True, products=[self.product_a, product_service])
+        # Credit note for a fictitious invoice in a previous month, tests that negative values are also included in the export
+        self.init_invoice('out_refund', partner=self.partner_c, invoice_date=fields.Date.from_string('2019-06-30'), post=True, products=[product_triangular])
         self.env['account.move.line'].flush_model()
 
         report = self.env.ref('l10n_nl_reports.dutch_icp_report')
@@ -68,12 +76,12 @@ class TestNlICPSBR(AccountSalesReportCommon):
         expected_xbrl = self.get_xml_tree_from_string('''
             <xbrli:xbrl xmlns:link="http://www.xbrl.org/2003/linkbase"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
-                xmlns:bd-t="http://www.nltaxonomie.nl/nt19/bd/20241211/dictionary/bd-tuples"
-                xmlns:bd-i="http://www.nltaxonomie.nl/nt19/bd/20241211/dictionary/bd-data"
+                xmlns:bd-t="http://www.nltaxonomie.nl/nt20/bd/20251210/dictionary/bd-tuples"
+                xmlns:bd-i="http://www.nltaxonomie.nl/nt20/bd/20251210/dictionary/bd-data"
                 xmlns:xbrli="http://www.xbrl.org/2003/instance" xmlns:iso4217="http://www.xbrl.org/2003/iso4217"
                 xml:lang="nl">
                 <link:schemaRef xlink:type="simple"
-                    xlink:href="http://www.nltaxonomie.nl/nt19/bd/20241211/entrypoints/bd-rpt-icp-opgaaf-2025.xsd" />
+                    xlink:href="http://www.nltaxonomie.nl/nt20/bd/20251210/entrypoints/bd-rpt-icp-opgaaf-2026.xsd" />
                 <xbrli:context id="CD_Opgaaf">
                     <xbrli:entity>
                         <xbrli:identifier scheme="www.belastingdienst.nl/omzetbelastingnummer">987654321B09</xbrli:identifier>
@@ -124,6 +132,11 @@ class TestNlICPSBR(AccountSalesReportCommon):
                     <bd-i:CountryCodeISO-EC contextRef="CD_Opgaaf">FR</bd-i:CountryCodeISO-EC>
                     <bd-i:SuppliesAmount contextRef="CD_Opgaaf" unitRef="EUR" decimals="INF">500</bd-i:SuppliesAmount>
                     <bd-i:VATIdentificationNumberNational contextRef="CD_Opgaaf">23334175221</bd-i:VATIdentificationNumberNational>
+                </bd-t:IntraCommunityABCSupplies>
+                <bd-t:IntraCommunityABCSupplies>
+                    <bd-i:CountryCodeISO-EC contextRef="CD_Opgaaf">DE</bd-i:CountryCodeISO-EC>
+                    <bd-i:SuppliesAmount contextRef="CD_Opgaaf" unitRef="EUR" decimals="INF">-500</bd-i:SuppliesAmount>
+                    <bd-i:VATIdentificationNumberNational contextRef="CD_Opgaaf">123456788</bd-i:VATIdentificationNumberNational>
                 </bd-t:IntraCommunityABCSupplies>
             </xbrli:xbrl>
         ''')

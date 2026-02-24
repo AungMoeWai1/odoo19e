@@ -41,6 +41,7 @@ import {
     diffColumn,
     getBadges,
     getCellColor,
+    getCellsOnRow,
     getColorIndex,
     getHoveredCellPart,
     localEndOf,
@@ -311,7 +312,7 @@ export class GanttRenderer extends Component {
             hoveredCell: this.cellForDrag,
             elements: ".o_draggable",
             ignore: ".o_resize_handle,.o_connector_creator_bullet",
-            cells: ".o_gantt_cell",
+            cells: ".o_gantt_cell:not(.o_gantt_readonly)",
             // Style classes
             cellDragClassName: "o_gantt_cell o_drag_hover",
             ghostClassName: "o_dragged_pill_ghost",
@@ -328,33 +329,18 @@ export class GanttRenderer extends Component {
                 this.initBadges(pill);
                 this.popover.close();
                 this.setStickyPill(pill);
+                this.toggleRowsReadonly(false);
                 this.interaction.mode = "drag";
             },
             onDrag: this.updateBadges.bind(this),
             onDragEnd: () => {
                 this.clearBadges();
+                this.toggleRowsReadonly(true);
                 this.setStickyPill();
                 this.removeStickyCoordinates();
                 this.interaction.mode = null;
             },
             onDrop: (params) => this.dragPillDrop(params),
-        });
-
-        // Un-draggable pills
-        const unDragState = useGanttUndraggable({
-            // Refs and selectors
-            ref: this.gridRef,
-            elements: ".o_undraggable",
-            ignore: ".o_resize_handle,.o_connector_creator_bullet",
-            edgeScrolling: { enabled: false },
-            onWillStartDrag: this.cleanMultiSelection.bind(this),
-            // Handlers
-            onDragStart: () => {
-                this.interaction.mode = "locked";
-            },
-            onDragEnd: () => {
-                this.interaction.mode = null;
-            },
         });
 
         // Resizable pills
@@ -442,7 +428,27 @@ export class GanttRenderer extends Component {
             },
         });
 
-        this.dragStates = [dragState, unDragState, resizeState];
+        this.dragStates = [dragState, resizeState];
+
+        if (!this.model.hasMultiCreate) {
+            // Un-draggable pills
+            const unDragState = useGanttUndraggable({
+                // Refs and selectors
+                ref: this.gridRef,
+                elements: ".o_undraggable",
+                ignore: ".o_resize_handle,.o_connector_creator_bullet",
+                edgeScrolling: { enabled: false },
+                onWillStartDrag: this.cleanMultiSelection.bind(this),
+                // Handlers
+                onDragStart: () => {
+                    this.interaction.mode = "locked";
+                },
+                onDragEnd: () => {
+                    this.interaction.mode = null;
+                },
+            });
+            this.dragStates.push(unDragState);
+        }
 
         this.prepareSelectionFeature();
 
@@ -703,6 +709,12 @@ export class GanttRenderer extends Component {
             );
         };
 
+        /**
+         * Variable used to indicate whether the "dragend" event should invoke cleanups
+         * on the current selection. This can be the case in multi-select when the
+         * "drop" event was called, since we want to keep the selection in that case.
+         */
+        let shouldCleanupOnDragEnd = true;
         // Cells selection
         const selectState = useGanttSelectable({
             enable: () =>
@@ -711,7 +723,8 @@ export class GanttRenderer extends Component {
                 (this.model.metaData.canCellCreate || this.model.hasMultiCreate),
             ref: this.gridRef,
             hoveredCell: this.cellForDrag,
-            elements: ".o_gantt_cell",
+            elements: ".o_gantt_cells",
+            ignore: ".o_gantt_pill_wrapper,.o_gantt_connector",
             edgeScrolling: {
                 speed: 40,
                 threshold: 150,
@@ -728,14 +741,55 @@ export class GanttRenderer extends Component {
             onDrop: ({ rowId, startCol, endCol, startRow, endRow }) => {
                 if (this.model.hasMultiCreate) {
                     this.updateMultiSelection({ startCol, endCol, startRow, endRow }, action);
+                    shouldCleanupOnDragEnd = false;
                 } else {
-                    this.removeCellGhost();
-                    this.clearBadges();
                     this.onCreate(rowId, startCol, endCol - 1);
                 }
                 action = null;
             },
+            onDragEnd: () => {
+                if (!shouldCleanupOnDragEnd) {
+                    shouldCleanupOnDragEnd = true;
+                    return;
+                }
+                if (this.model.hasMultiCreate) {
+                    this.removeCellGhosts();
+                    this.cleanMultiSelection();
+                } else {
+                    this.removeCellGhost();
+                }
+                this.clearBadges();
+            },
         });
+
+        if (this.model.hasMultiCreate) {
+            const pillSelectState = useGanttSelectable({
+                enable: () =>
+                    Boolean(this.cellForDrag.el) &&
+                    !this.cellForDrag.el.classList.contains("o_gantt_group"),
+                ref: this.gridRef,
+                hoveredCell: this.cellForDrag,
+                elements: ".o_undraggable",
+                edgeScrolling: {
+                    speed: 40,
+                    threshold: 150,
+                    direction: undefined,
+                },
+                hasMultiCreate: () => true,
+                rtl,
+                scale,
+                onDragStart: ({ startCol, endCol, startRow, endRow }) => {
+                    action = this.ctrlPressed ? "add" : "replace";
+                    update({ startCol, endCol, startRow, endRow });
+                },
+                onDrag: update,
+                onDrop: ({ startCol, endCol, startRow, endRow }) => {
+                    this.updateMultiSelection({ startCol, endCol, startRow, endRow }, action);
+                    action = null;
+                },
+            });
+            this.dragStates.push(pillSelectState);
+        }
 
         useBus(this.model.bus, "update", this.cleanMultiSelection.bind(this));
 
@@ -1214,7 +1268,7 @@ export class GanttRenderer extends Component {
             this.totalWidth = null;
             return;
         }
-        const visibleCellContainerWidth = this.contentRefWidth - this.rowHeaderWidth;
+        this.visibleCellContainerWidth = this.contentRefWidth - this.rowHeaderWidth;
         const hiddenColumnsCount =
             this.offHoursState.foldedColumns?.reduce(
                 (sum, folded) => (folded ? sum + 1 : sum),
@@ -1223,7 +1277,7 @@ export class GanttRenderer extends Component {
         const foldedColumnsCount =
             this.foldedGridColumnCount + hiddenColumnsCount - this.columnCount;
         const columnWidth = Math.floor(
-            (visibleCellContainerWidth - 36 * foldedColumnsCount) /
+            (this.visibleCellContainerWidth - 36 * foldedColumnsCount) /
                 (this.foldedGridColumnCount - foldedColumnsCount)
         );
         const rectifiedColumnWidth = Math.max(columnWidth, minimalColumnWidth);
@@ -1413,7 +1467,11 @@ export class GanttRenderer extends Component {
         let copyResId;
         let fallbackSchedule;
         if (isCopyMode) {
-            copyResId = await this.model.copy(record.id, schedule, this.openPlanDialogCallback.bind(this));
+            copyResId = await this.model.copy(
+                record.id,
+                schedule,
+                this.openPlanDialogCallback.bind(this)
+            );
         } else {
             const fallbackParams = {
                 ...this.getUndoAfterDragRecordData(record),
@@ -1427,7 +1485,11 @@ export class GanttRenderer extends Component {
                     this.rescheduleAccordingToDependencyCallback.bind(this)
                 );
             } else {
-                await this.model.reschedule(record.id, schedule, this.openPlanDialogCallback.bind(this));
+                await this.model.reschedule(
+                    record.id,
+                    schedule,
+                    this.openPlanDialogCallback.bind(this)
+                );
             }
         }
 
@@ -1722,6 +1784,7 @@ export class GanttRenderer extends Component {
             o_gantt_group: row.isGroup,
             o_gantt_hoverable: this.isHoverable(row),
             o_group_open: !this.model.isClosed(row.id),
+            o_gantt_readonly: row.readonly,
         };
     }
 
@@ -1872,6 +1935,13 @@ export class GanttRenderer extends Component {
             style.push(`grid-${key}:${prefix}${first}/${prefix}${last}`);
         }
         return style.join(";");
+    }
+
+    /**
+     * @param {{ column?: [number, number], row?: [number, number] }} position
+     */
+    getGroupHeaderStyle(position) {
+        return this.getGridPosition(position) + `;max-width: ${this.visibleCellContainerWidth}px`;
     }
 
     setSomeGridStyleProperties() {
@@ -2468,6 +2538,10 @@ export class GanttRenderer extends Component {
             }
         }
 
+        if (this.containsReadonlyGroup()) {
+            this.setupInitialReadonly();
+        }
+
         delete this.shouldComputeSomeWidths;
         delete this.shouldComputeGridColumns;
         delete this.shouldComputeGridRows;
@@ -2806,6 +2880,79 @@ export class GanttRenderer extends Component {
      */
     setStickyPill(pillEl) {
         this.stickyPillId = pillEl ? pillEl.dataset.pillId : null;
+    }
+
+    /**
+     * @returns {boolean}: whether one of the "groupedBy" fields of the model is readonly
+     */
+    containsReadonlyGroup() {
+        return this.model.metaData.groupedBy.some(
+            (groupedByField) => this.model.metaData.fields[groupedByField].readonly
+        );
+    }
+
+    /**
+     * For all rows to render, specify whether the row is grouped by a readonly
+     * field or is a child of a row grouped by a readonly field - by setting its'
+     * 'readonly' and 'readonlyChild' properties.
+     */
+    setupInitialReadonly() {
+        let foundReadonlyField = false;
+        const readonlyGroups = [];
+        const readonlyChildren = [];
+        for (const groupedByField of this.props.model.metaData.groupedBy) {
+            // Field itself is readonly
+            if (this.model.metaData.fields[groupedByField].readonly) {
+                foundReadonlyField = true;
+                readonlyGroups.push(groupedByField);
+            }
+            // There is a readonly parent group
+            else if (foundReadonlyField) {
+                readonlyChildren.push(groupedByField);
+            }
+        }
+
+        for (const row of this.rowsToRender) {
+            row.readonlyChild = readonlyChildren.includes(row.groupedByField);
+            row.readonly = readonlyGroups.includes(row.groupedByField) || row.readonlyChild;
+        }
+    }
+
+    /**
+     * @param {boolean} addReadonly: whether to add or remove the readonly class
+     */
+    toggleRowsReadonly(addReadonly) {
+        if (!this.stickyPillId || !this.containsReadonlyGroup()) {
+            return;
+        }
+        const startingRowId = this.pills[this.stickyPillId].rowId;
+        const rowIdx = this.rows.findIndex((r) => r.id === startingRowId);
+        this.toggleReadonly(this.rows[rowIdx], addReadonly);
+        // Also update rows that are part of the same "child group"
+        if (this.rows[rowIdx].readonlyChild) {
+            for (const row of this.rows.slice(0, rowIdx).reverse()) {
+                if (!row.readonlyChild) {
+                    break;
+                }
+                this.toggleReadonly(row, addReadonly);
+            }
+            for (const row of this.rows.slice(rowIdx + 1, this.rows.length)) {
+                if (!row.readonlyChild) {
+                    break;
+                }
+                this.toggleReadonly(row, addReadonly);
+            }
+        }
+    }
+
+    toggleReadonly(row, addReadonly) {
+        for (const cell of getCellsOnRow(this.gridRef.el, row.id)) {
+            if (addReadonly) {
+                cell.classList.add("o_gantt_readonly");
+            } else {
+                cell.classList.remove("o_gantt_readonly");
+            }
+        }
     }
 
     /**

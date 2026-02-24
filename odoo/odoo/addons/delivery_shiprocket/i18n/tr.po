@@ -3,13 +3,16 @@
 # * delivery_shiprocket
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# DeepL <noreply-mt-deepl@weblate.org>, 2025.
+# Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-01 12:09+0000\n"
-"PO-Revision-Date: 2025-09-18 02:47+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2025-12-30 18:42+0000\n"
+"PO-Revision-Date: 2025-11-21 14:20+0000\n"
+"Last-Translator: Odoo Turkish Import <dyki+tr@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
 "delivery_shiprocket/tr/>\n"
 "Language: tr\n"
@@ -36,8 +39,8 @@ msgstr ""
 #. module: delivery_shiprocket
 #: model_terms:ir.ui.view,arch_db:delivery_shiprocket.view_delivery_carrier_form_inherit_delivery_shiprocket
 msgid ""
-"<b>Fill the details and Click on Save Channel &amp; Test Connection "
-"button.</b>"
+"<b>Fill the details and Click on Save Channel &amp; Test Connection button.</"
+"b>"
 msgstr ""
 "<b>Detayları doldurun ve Kanalı Kaydet ve &amp; Bağlantıyı Test Et butonuna "
 "tıklayın.</b>"
@@ -60,8 +63,10 @@ msgstr "<b>Şimdi MANUEL için Ekle’ye tıklayın</b>"
 #. module: delivery_shiprocket
 #: model_terms:ir.ui.view,arch_db:delivery_shiprocket.view_delivery_carrier_form_inherit_delivery_shiprocket
 msgid ""
-"<b>Once your account is created, go to Settings &gt; API &gt; Configure. </b>\n"
-"                                <b>You can add new API User from the right side of the page.</b>\n"
+"<b>Once your account is created, go to Settings &gt; API &gt; Configure. </"
+"b>\n"
+"                                <b>You can add new API User from the right "
+"side of the page.</b>\n"
 "                                <br/>"
 msgstr ""
 "<b>Hesabınız oluşturulduktan sonra Ayarlar > API > Yapılandır menüsüne "
@@ -80,8 +85,7 @@ msgstr "<b>Bir kanal oluşturmak için Shiprocket Kanallarına gidin</b>"
 msgid ""
 "<i class=\"fa fa-exclamation-triangle\"/> In test environment, to avoid "
 "charges, your shippings are automatically <b>cancelled</b> after the label "
-"creation. The amount of cancelled shipment will be returned in next 3-4 "
-"days."
+"creation. The amount of cancelled shipment will be returned in next 3-4 days."
 msgstr ""
 "<i class=\"fa fa-exclamation-triangle\"/> Test ortamında, ücretlerden "
 "kaçınmak için, etiket oluşturulduktan sonra nakliyeleriniz otomatik olarak "
@@ -91,8 +95,8 @@ msgstr ""
 #. module: delivery_shiprocket
 #: model:ir.model.fields,help:delivery_shiprocket.field_delivery_carrier__shiprocket_manifests_generate
 msgid ""
-"A manifest is a document that is required by some carriers to streamline the"
-" pickup process.particularly when shipping out a high-volume of ecommerce "
+"A manifest is a document that is required by some carriers to streamline the "
+"pickup process.particularly when shipping out a high-volume of ecommerce "
 "orders."
 msgstr ""
 "Manifest, bazı taşıyıcıların alım sürecini kolaylaştırmak için talep ettiği, "
@@ -201,8 +205,8 @@ msgstr "API Kullanıcısı Oluştur"
 #. module: delivery_shiprocket
 #: model:ir.model.fields,help:delivery_shiprocket.field_delivery_carrier__shiprocket_pickup_request
 msgid ""
-"Create a pickup request for your order shipment using Validate button of the"
-" Delivery Order."
+"Create a pickup request for your order shipment using Validate button of the "
+"Delivery Order."
 msgstr ""
 "Nakliye Emrinin Doğrula butonunu kullanarak sipariş nakliyesi için bir alım "
 "talebi oluşturun."
@@ -296,8 +300,8 @@ msgstr ""
 #. module: delivery_shiprocket
 #: model:ir.model.fields,help:delivery_shiprocket.field_delivery_carrier__shiprocket_channel_id
 msgid ""
-"Get all the integrated channels from your Shiprocket account.This channel id"
-" is used to select or specify a custom channel at the time of Shiprocket "
+"Get all the integrated channels from your Shiprocket account.This channel id "
+"is used to select or specify a custom channel at the time of Shiprocket "
 "order creation."
 msgstr ""
 "Shiprocket hesabınızdan tüm entegre kanalları alın. Bu kanal kimliği, "
@@ -376,13 +380,13 @@ msgstr "Paket Türü"
 #. module: delivery_shiprocket
 #: model:ir.model,name:delivery_shiprocket.model_payment_provider
 msgid "Payment Provider"
-msgstr ""
+msgstr "Ödeme Sağlayıcı"
 
 #. module: delivery_shiprocket
 #. odoo-python
 #: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
 msgid "Phone is required!"
-msgstr ""
+msgstr "Telefon numarası zorunlu!"
 
 #. module: delivery_shiprocket
 #: model:ir.model.fields,field_description:delivery_shiprocket.field_delivery_carrier__shiprocket_pickup_request
@@ -552,6 +556,8 @@ msgstr "Gönderimi iptal etmek üzere Shiprocket sipariş(ler)i bulunamadı!"
 #: code:addons/delivery_shiprocket/models/payment_provider.py:0
 msgid "Shiprocket provider is configured to use only Collect on Delivery."
 msgstr ""
+"Shiprocket bağlantısı yalnızca \"Teslimatta Al\" seçeneğini kullanacak "
+"şekilde yapılandırılmıştır."
 
 #. module: delivery_shiprocket
 #: model:ir.model.fields,help:delivery_shiprocket.field_delivery_carrier__shiprocket_default_package_type_id

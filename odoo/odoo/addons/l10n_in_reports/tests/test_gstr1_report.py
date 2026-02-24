@@ -39,6 +39,8 @@ class TestReports(L10nInTestAccountReportsCommon):
         ChartTemplate = cls.env['account.chart.template']
         cls.partner_foreign.l10n_in_gst_treatment = "overseas"
         cls.comp_sgst_18 = ChartTemplate.ref('sgst_sale_18')
+        cls.comp_export_wp = ChartTemplate.ref('igst_sale_18_sez_exp')
+        cls.comp_export_wop = ChartTemplate.ref('igst_sale_18_sez_lut')
         cls.exempt_tax = ChartTemplate.ref('exempt_sale')
         cls.nil_rated_tax = ChartTemplate.ref('nil_rated_sale')
         cls.non_gst_supplies = ChartTemplate.ref('non_gst_supplies_sale')
@@ -105,6 +107,12 @@ class TestReports(L10nInTestAccountReportsCommon):
         # b2b invoice with special economic zone
         b2b_sez_invoice_gst_and_nil_rated_tax = b2b_invoice_gst_and_nil_rated_tax.copy(default={'l10n_in_gst_treatment': 'special_economic_zone', 'invoice_date': invoice_date})
         b2b_sez_invoice_gst_and_nil_rated_tax.action_post()
+        # Export invoices with and without payment of IGST
+        export_invoice_wp = self._init_inv(partner=self.partner_foreign, taxes=self.comp_export_wp, line_vals={'price_unit': 500, 'quantity': 2}, invoice_date=invoice_date)
+        reverse_inv_func(inv=export_invoice_wp, line_vals={'quantity': 1})
+
+        export_invoice_wop = self._init_inv(partner=self.partner_foreign, taxes=self.comp_export_wop, line_vals={'price_unit': 500, 'quantity': 2}, invoice_date=invoice_date)
+        reverse_inv_func(inv=export_invoice_wop, line_vals={'quantity': 1})
 
     def _create_gstr_report(self, company=None):
         account_return_type = self.env.ref('l10n_in_reports.in_gstr1_return_type')
@@ -194,3 +202,12 @@ class TestReports(L10nInTestAccountReportsCommon):
         })
         gstr1_json = gstr1_report._get_l10n_in_gstr1_json()
         self.assertDictEqual(gstr1_json, self._read_mock_json('gstr1_new_hsn_schema_response.json'))
+
+    def test_taxes_with_sez_exp_lut_and_rcm(self):
+        self.invoice_with_sez_lut.invoice_date = self.test_date
+        self.invoice_with_sez_lut.action_post()
+        self.invoice_with_rcm.invoice_date = self.test_date
+        self.invoice_with_rcm.action_post()
+        gstr1_report = self._create_gstr_report()
+        gstr1_json = gstr1_report._get_l10n_in_gstr1_json()
+        self.assertDictEqual(gstr1_json, self._read_mock_json('gstr1_sez_lut_and_rcm_response.json'))

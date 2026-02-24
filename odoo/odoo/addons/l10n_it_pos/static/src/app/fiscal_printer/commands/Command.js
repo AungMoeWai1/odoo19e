@@ -27,6 +27,11 @@ const tags = [
     "directIO",
     "printDuplicateReceipt",
     "openDrawer",
+    "printContentByNumbers",
+    "printerNonFiscal",
+    "printNormal",
+    "beginNonFiscal",
+    "endNonFiscal",
 ];
 
 const attributes = [
@@ -41,6 +46,8 @@ const attributes = [
     "documentNumber",
     "graphicFormat",
     "statusType",
+    "fromNumber",
+    "toNumber",
 ];
 
 class Command extends String {

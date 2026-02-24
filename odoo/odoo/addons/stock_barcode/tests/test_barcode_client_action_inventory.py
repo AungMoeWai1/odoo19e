@@ -71,8 +71,12 @@ class TestInventoryAdjustmentBarcodeClientAction(TestBarcodeClientAction):
         ])
 
     def test_inventory_adjustment_multi_company(self):
-        """ When doing an Inventory Adjustment, ensures only products belonging
-        to current company or to no company can be scanned."""
+        """ When doing an Inventory Adjustment in Barcode:
+        - ensures only products belonging to the current company or to no
+          company can be scanned;
+        - ensures that only request counts of the current company are displayed
+          in the Barcode main menu.
+        """
         # Creates two companies and assign them to the user.
         company_a = self.env['res.company'].create({'name': 'Comp A - F2 FTW'})
         company_b = self.env['res.company'].create({'name': 'Comp B - F3 Wee-Wee Pool'})
@@ -88,6 +92,15 @@ class TestInventoryAdjustmentBarcodeClientAction(TestBarcodeClientAction):
             'is_storable': True,
             'barcode': 'product_no_company',
         })
+        # Create a quant, then request_count in the company A.
+        company_a_location = self.env['stock.location'].search([('company_id', '=', company_a.id), ('usage', '=', 'internal')], limit=1)
+        self.env['stock.quant']._update_available_quantity(product_no_company, company_a_location, 2)
+        wizard_request_count = self.env['stock.request.count'].create({
+            'user_id': self.env.user.id,
+            'quant_ids': product_no_company.stock_quant_ids.ids,
+            'show_expected_quantity': True,
+        })
+        wizard_request_count.action_request_count()
         self.start_tour("/odoo", 'test_inventory_adjustment_multi_company', login='admin', timeout=180)
         # Checks an inventory adjustment was correctly validated for each company.
         inventory_moves = self.env['stock.move'].search([
@@ -164,6 +177,7 @@ class TestInventoryAdjustmentBarcodeClientAction(TestBarcodeClientAction):
         self.assertEqual(mls_with_lot.filtered(lambda ml: ml.lot_id.name == 'lot2').qty_done, 1)
         self.assertEqual(mls_with_lot.filtered(lambda ml: ml.lot_id.name == 'lot3').qty_done, 1)
         self.assertEqual(set(mls_with_sn.mapped('lot_id.name')), {'serial1', 'serial2', 'serial3'})
+        self.assertFalse(moves_with_sn.lot_ids.company_id)
 
     def test_inventory_adjustment_tracked_product_multilocation(self):
         """ This test ensures two things:
@@ -285,7 +299,7 @@ class TestInventoryAdjustmentBarcodeClientAction(TestBarcodeClientAction):
             'show_expected_quantity': True,
         })
         wizard_request_count.action_request_count()
-        self.start_tour("/odoo/barcode?debug=assets", 'test_inventory_dialog_not_counted_serial_numbers', login='admin', timeout=180)
+        self.start_tour("/odoo/barcode", 'test_inventory_dialog_not_counted_serial_numbers', login='admin')
         self.assertRecordValues(quants, [
             {'product_id': self.productserial1.id, 'lot_id': serial1_sns[0].id, 'quantity': 1, 'location_id': self.shelf1.id},
             {'product_id': self.productserial1.id, 'lot_id': serial1_sns[1].id, 'quantity': 1, 'location_id': self.shelf1.id},
@@ -432,6 +446,10 @@ class TestInventoryAdjustmentBarcodeClientAction(TestBarcodeClientAction):
         self.env['stock.quant']._update_available_quantity(self.product1, self.shelf1, 40.0)
         self.env['stock.quant']._update_available_quantity(self.product1, self.shelf2, 80.0)
 
+        self.start_tour("/odoo/barcode", "test_inventory_packaging_location", login="admin")
+        # Relaunch the same tour with a mobile device config.
+        self.browser_size = '375x667'
+        self.touch_enabled = True
         self.start_tour("/odoo/barcode", "test_inventory_packaging_location", login="admin")
 
     def test_inventory_owner_scan_package(self):
@@ -581,6 +599,8 @@ class TestInventoryAdjustmentBarcodeClientAction(TestBarcodeClientAction):
         self.assertEqual(productlot1_quant.quantity, 1.0)
         self.assertEqual(productlot1_quant.lot_id.name, 'toto-42')
         self.assertEqual(productlot1_quant.location_id.id, self.stock_location.id)
+        inventory_move_line = self.env['stock.move.line'].search([('product_id', '=', self.product1.id), ('is_inventory', '=', True)], limit=1)
+        self.assertEqual(inventory_move_line.reference, 'Very important reason')
 
     def test_inventory_adjustment_with_no_internal_location_quant(self):
         self.env.user.write({'group_ids': [Command.link(self.env.ref('stock.group_stock_multi_locations').id)]})
@@ -849,7 +869,7 @@ class TestInventoryAdjustmentBarcodeClientAction(TestBarcodeClientAction):
         })
         self.env["stock.quant"].create({
             'product_id': product.id,
-            'location_id': self.env.ref('stock.stock_location_stock').id,
+            'location_id': self.stock_location.id,
             'quantity': 10,
             'package_id': self.env['stock.package'].create({
                 'name': 'Package-test',
@@ -871,7 +891,7 @@ class TestInventoryAdjustmentBarcodeClientAction(TestBarcodeClientAction):
         shelf1 = self.env['stock.location'].create({
             'name': 'Shelf 11',
             'barcode': 'Shelf11',
-            'location_id': self.env.ref('stock.warehouse0').lot_stock_id.id,
+            'location_id': self.warehouse.lot_stock_id.id,
         })
         product = self.env['product.product'].create({
             'name': 'Product',

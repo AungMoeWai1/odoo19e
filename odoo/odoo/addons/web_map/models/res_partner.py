@@ -41,8 +41,12 @@ class ResPartner(models.Model):
                 partners_data[(partner['partner_latitude'], partner['partner_longitude'])].append(partner['id'])
 
         for values, partner_ids in partners_data.items():
-            # NOTE this should be done in sudo to avoid crashing as soon as the view is used
-            self.browse(partner_ids).sudo().write({
+            if self.env.user.has_group('base.group_user'):
+                partners = self.browse(partner_ids).sudo()
+            else:
+                partners = self.browse(partner_ids)
+            # NOTE this should be done in sudo if internal user to avoid crashing as soon as the view is used
+            partners.write({
                 'partner_latitude': values[0],
                 'partner_longitude': values[1],
             })
@@ -54,12 +58,14 @@ class ResPartner(models.Model):
         self.partner_latitude = False
         self.partner_longitude = False
 
-    @api.depends('street', 'zip', 'city', 'country_id')
+    @api.depends('street', 'street2', 'zip', 'city', 'country_id')
     def _compute_complete_address(self):
         for record in self:
             record.contact_address_complete = ''
             if record.street:
                 record.contact_address_complete += record.street + ', '
+            if record.street2:
+                record.contact_address_complete += record.street2 + ', '
             if record.zip:
                 record.contact_address_complete += record.zip + ' '
             if record.city:

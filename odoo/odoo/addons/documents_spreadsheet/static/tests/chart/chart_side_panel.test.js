@@ -9,12 +9,7 @@ import { animationFrame } from "@odoo/hoot-mock";
 import { registries } from "@odoo/o-spreadsheet";
 import { addGlobalFilter, createBasicChart } from "@spreadsheet/../tests/helpers/commands";
 import * as dsHelpers from "@web/../tests/core/tree_editor/condition_tree_editor_test_helpers";
-import {
-    contains,
-    makeServerError,
-    onRpc,
-    fields,
-} from "@web/../tests/web_test_helpers";
+import { contains, makeServerError, onRpc, fields } from "@web/../tests/web_test_helpers";
 import { Partner } from "@spreadsheet/../tests/helpers/data";
 
 defineDocumentSpreadsheetModels();
@@ -387,8 +382,8 @@ test("geo chart", async () => {
         type: "FeatureCollection",
         features: [{ type: "Feature", id: "BE", properties: { name: "Belgium" }, geometry: {} }],
     };
-    onRpc("/spreadsheet/static/topojson/world.topo.json", () => mockGeoJson, { pure: true });
-    onRpc("/spreadsheet/static/topojson/europe.topo.json", () => mockGeoJson, { pure: true });
+    onRpc("/spreadsheet/static/topojson/world.topo.json", () => mockGeoJson);
+    onRpc("/spreadsheet/static/topojson/europe.topo.json", () => mockGeoJson);
 
     const { model, env } = await createSpreadsheetFromGraphView({
         additionalContext: {
@@ -659,6 +654,24 @@ test("Show values", async () => {
     expect(model.getters.getChartDefinition(chartId).showValues).toBe(true);
     options = model.getters.getChartRuntime(chartId).chartJsConfig.options;
     expect(options.plugins.chartShowValuesPlugin.showValues).toBe(true);
+});
+
+test("Use compact format (humanize numbers)", async () => {
+    const { model, env } = await createSpreadsheetFromGraphView();
+    const sheetId = model.getters.getActiveSheetId();
+    const chartId = model.getters.getChartIds(sheetId)[0];
+    await openChartSidePanel(model, env);
+    await contains(".o-panel-design").click();
+
+    expect(model.getters.getChartDefinition(chartId).humanize).toBe(true);
+    let options = model.getters.getChartRuntime(chartId).chartJsConfig.options;
+    expect(options.scales.y.ticks.callback(100000)).toBe("100k");
+
+    await contains("input[name='humanizeNumbers']").click();
+
+    expect(model.getters.getChartDefinition(chartId).humanize).toBe(false);
+    options = model.getters.getChartRuntime(chartId).chartJsConfig.options;
+    expect(options.scales.y.ticks.callback(100000)).toBe("100,000");
 });
 
 describe("Can edit chart data series", () => {

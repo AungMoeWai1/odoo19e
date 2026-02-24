@@ -51,7 +51,10 @@ export class MrpDisplayRecord extends Component {
         this.record = this.props.record.data;
         this.props.record.component = this;
 
-        this.quantityToProduce = this.record.product_qty || this.props.production.data.product_qty;
+        this.quantityToProduce =
+            this.record.qty_remaining ||
+            this.record.product_qty ||
+            this.props.production.data.product_qty;
         this.displayUOM = this.props.groups.uom;
 
         onWillUpdateProps((nextProps) => {
@@ -170,7 +173,7 @@ export class MrpDisplayRecord extends Component {
 
     get moves() {
         const moMoves = this.props.production.data.move_raw_ids.records.filter(
-            (move) => !move.data.scrapped && !move.data.bom_line_id && !move.data.operation_id
+            (move) => !move.data.scrapped && !move.data.bom_line_id && !move.data.workorder_id
         );
         if (this.resModel === "mrp.production") {
             return moMoves;
@@ -178,7 +181,7 @@ export class MrpDisplayRecord extends Component {
         const woMovesNoCheck = this.props.record.data.move_raw_ids.records.filter(
             (move) =>
                 !move.data.scrapped &&
-                move.data.operation_id.id === this.props.record.data.operation_id.id &&
+                move.data.workorder_id.id === this.props.record.data.id &&
                 !move.data.check_id.count
         );
         return [...woMovesNoCheck, ...moMoves];
@@ -227,6 +230,7 @@ export class MrpDisplayRecord extends Component {
                     : this.props.production.data.move_byproduct_ids;
             subRecord = moves.records.find((m) => m.data.check_id.resIds.includes(subRecord.resId));
             props.displayUOM = this.displayUOM;
+            props.production = this.props.production;
             props.startWorking = this.startWorking.bind(this);
             props.production = this.props.production;
         } else if (subRecord.resModel === "stock.move") {
@@ -283,7 +287,6 @@ export class MrpDisplayRecord extends Component {
     }
 
     onClickHeader() {
-        this.env.searchModel.removeMOFilter();
         return this.startWorking(true);
     }
 

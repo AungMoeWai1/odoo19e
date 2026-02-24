@@ -690,10 +690,18 @@ export class PivotAutofillPlugin extends UIPlugin {
     _tooltipHeader(dataSource, domain) {
         const subDomain = dataSource.parseArgsToPivotDomain(domain);
         if (!domainHasNoRecordAtThisPosition(subDomain)) {
-            const formattedValue = dataSource.getPivotHeaderFormattedValue(subDomain);
+            const formattedValue = this._getPivotHeaderFormattedValue(dataSource, subDomain);
             return { value: formattedValue };
         } else {
             return { value: "" };
+        }
+    }
+
+    _getPivotHeaderFormattedValue(dataSource, domain) {
+        try {
+            return dataSource.getPivotHeaderFormattedValue(domain);
+        } catch {
+            return _t("Unknown");
         }
     }
 

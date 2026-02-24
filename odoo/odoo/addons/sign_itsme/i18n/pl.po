@@ -3,13 +3,14 @@
 # * sign_itsme
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:43+0000\n"
-"PO-Revision-Date: 2025-09-18 02:46+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2025-12-30 18:47+0000\n"
+"PO-Revision-Date: 2025-11-16 13:54+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/"
 "sign_itsme/pl/>\n"
 "Language: pl\n"
@@ -25,17 +26,17 @@ msgstr ""
 msgid ""
 "<small>Name: The signatory has provided this identity through itsme®</small>"
 msgstr ""
-"<small>Nazwa: Sygnatariusz podał tę tożsamość za pośrednictwem "
-"itsme®.</small>"
+"<small>Nazwa: Sygnatariusz podał tę tożsamość za pośrednictwem itsme®.</"
+"small>"
 
 #. module: sign_itsme
 #: model:iap.service,description:sign_itsme.iap_service_itsme_proxy
 msgid ""
 "Ask document signatories in Odoo Sign to provide their identity using the "
-"itsme® identity platform. By combining Odoo Sign with itsme®️, you can add "
-"an identification step in your signature flows and ask signatories to "
-"provide their identity through the itsme®️ platform, using their mobile "
-"device. Available in Belgium and in the Netherlands."
+"itsme® identity platform. By combining Odoo Sign with itsme®️, you can add an "
+"identification step in your signature flows and ask signatories to provide "
+"their identity through the itsme®️ platform, using their mobile device. "
+"Available in Belgium and in the Netherlands."
 msgstr ""
 "Poproś sygnatariuszy dokumentu w Odoo Podpisy o podanie swojej tożsamości za "
 "pomocą platformy tożsamości itsme®️. Łącząc Odoo Podpisy z itsme®️, możesz "
@@ -121,7 +122,7 @@ msgstr "Pozycja wniosku o znak nie jest jeszcze zatwierdzona."
 #. module: sign_itsme
 #: model:ir.model,name:sign_itsme.model_sign_send_request
 msgid "Sign send request"
-msgstr ""
+msgstr "Podpisz i wyślij prośbę"
 
 #. module: sign_itsme
 #: model:ir.model,name:sign_itsme.model_sign_item_role
@@ -142,8 +143,8 @@ msgstr "Podpis Pozycja żądania"
 #. odoo-javascript
 #: code:addons/sign_itsme/static/src/components/document_signable.js:0
 msgid ""
-"The itsme® identification data could not be forwarded to Odoo, the signature"
-" could not be saved."
+"The itsme® identification data could not be forwarded to Odoo, the signature "
+"could not be saved."
 msgstr ""
 "Nie udało się przekazać danych identyfikacyjnych itsme® do Odoo, nie udało "
 "się zapisać podpisu."
@@ -157,8 +158,8 @@ msgstr "Via itsme®"
 #. odoo-javascript
 #: code:addons/sign_itsme/static/src/components/document_signable.js:0
 msgid ""
-"You have rejected the identification request or took too long to process it."
-" You can try again to finalize your signature."
+"You have rejected the identification request or took too long to process it. "
+"You can try again to finalize your signature."
 msgstr ""
 "Odrzuciłeś żądanie identyfikacji lub jego przetwarzanie trwało zbyt długo. "
 "Możesz spróbować ponownie, aby sfinalizować swój podpis."

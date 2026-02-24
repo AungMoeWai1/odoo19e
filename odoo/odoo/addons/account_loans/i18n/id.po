@@ -3,13 +3,14 @@
 # * account_loans
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Abe Manyo (abem)" <abem@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:25+0000\n"
-"PO-Revision-Date: 2025-09-15 23:01+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2025-12-30 18:42+0000\n"
+"PO-Revision-Date: 2025-12-06 10:02+0000\n"
+"Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-19/"
 "account_loans/id/>\n"
 "Language: id\n"
@@ -17,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: account_loans
 #: model_terms:ir.ui.view,arch_db:account_loans.account_loan_form_view
@@ -48,21 +49,23 @@ msgstr "30U/360"
 #: model_terms:ir.ui.view,arch_db:account_loans.account_loan_form_view
 msgid ""
 "<span class=\"oe_inline\" invisible=\"duration == 1\">months</span>\n"
-"                                        <span class=\"oe_inline\" invisible=\"duration != 1\">month</span>"
+"                                        <span class=\"oe_inline\" "
+"invisible=\"duration != 1\">month</span>"
 msgstr ""
 "<span class=\"oe_inline\" invisible=\"duration == 1\">bulan</span>\n"
-"                                        <span class=\"oe_inline\" invisible="
-"\"duration != 1\">bulan</span>"
+"                                        <span class=\"oe_inline\" "
+"invisible=\"duration != 1\">bulan</span>"
 
 #. module: account_loans
 #: model_terms:ir.ui.view,arch_db:account_loans.view_account_loan_compute_wizard
 msgid ""
 "<span class=\"oe_inline\" invisible=\"loan_term == 1\">years</span>\n"
-"                                    <span class=\"oe_inline\" invisible=\"loan_term != 1\">year</span>"
+"                                    <span class=\"oe_inline\" "
+"invisible=\"loan_term != 1\">year</span>"
 msgstr ""
 "<span class=\"oe_inline\" invisible=\"loan_term == 1\">tahun</span>\n"
-"                                    <span class=\"oe_inline\" invisible="
-"\"loan_term != 1\">tahun</span>"
+"                                    <span class=\"oe_inline\" "
+"invisible=\"loan_term != 1\">tahun</span>"
 
 #. module: account_loans
 #: model_terms:ir.ui.view,arch_db:account_loans.view_account_loan_compute_wizard
@@ -239,9 +242,11 @@ msgstr "Konfirmasi"
 #. module: account_loans
 #: model:account.return.check.template,description:account_loans.account_return_check_template_loans_recording
 msgid ""
-"Confirm that all loans recorded in the accounts actually exist and match the"
-" loan agreements."
+"Confirm that all loans recorded in the accounts actually exist and match the "
+"loan agreements."
 msgstr ""
+"Konfirmasi bahwa semua pinjaman direkam di akun yang sebetulnya nyata dan "
+"cocok dengan persetujuan pinjaman."
 
 #. module: account_loans
 #: model:ir.model.fields,field_description:account_loans.field_account_loan__count_linked_assets
@@ -350,10 +355,15 @@ msgstr "Akhir Bulan"
 #. module: account_loans
 #: model:account.return.check.template,description:account_loans.account_return_check_template_loans_classification
 msgid ""
-"Ensure that loans are properly classified as current vs. non-current, and disclosed in accordance with Belgian GAAP. \n"
+"Ensure that loans are properly classified as current vs. non-current, and "
+"disclosed in accordance with Belgian GAAP. \n"
 "Loans payable within 1 year → Account 42\n"
 "Loans > 1 year → Account 17"
 msgstr ""
+"Pastikan pinjaman diklasifikasikan dengan tepat sebagai aset lancar vs tidak "
+"lancar, dan diungkapkan sesuai dengan GAAP Belgia. \n"
+"Pinjaman dibiayar dalam 1 tahun → Account 42\n"
+"Pinjaman > 1 tahun → Account 17"
 
 #. module: account_loans
 #: model:ir.model.fields,help:account_loans.field_account_loan_line__generated_move_ids
@@ -629,12 +639,12 @@ msgstr "Analisis Pinjaman"
 #. module: account_loans
 #: model:account.return.check.template,name:account_loans.account_return_check_template_loans_classification
 msgid "Loans classification"
-msgstr ""
+msgstr "Klasifikasi pinjaman"
 
 #. module: account_loans
 #: model:account.return.check.template,name:account_loans.account_return_check_template_loans_recording
 msgid "Loans recording"
-msgstr ""
+msgstr "Perekaman pinjaman"
 
 #. module: account_loans
 #: model:ir.model.fields,field_description:account_loans.field_account_loan__long_term_account_id
@@ -914,8 +924,8 @@ msgid ""
 "The loan amount %(loan_amount)s should be equal to the sum of the "
 "principals: %(principal_sum)s (difference %(principal_difference)s)"
 msgstr ""
-"Jumlah pinjaman %(loan_amount)s harus sama dengan jumlah pokok-pokok: "
-"%(principal_sum)s (perbedaan %(principal_difference)s)"
+"Jumlah pinjaman %(loan_amount)s harus sama dengan jumlah pokok-pokok: %"
+"(principal_sum)s (perbedaan %(principal_difference)s)"
 
 #. module: account_loans
 #. odoo-python
@@ -1003,8 +1013,7 @@ msgstr "File diunggah"
 msgid ""
 "Upon confirmation of the loan, Odoo will ignore the loan lines that are up "
 "to this date (included) and not create entries for them. This is useful if "
-"you have already manually created entries prior to the creation of this "
-"loan."
+"you have already manually created entries prior to the creation of this loan."
 msgstr ""
 "Setelah konfirmasi pinjaman, Odoo akan mengabaikan baris-baris pinjaman yang "
 "sampai tanggal ini (inklusif) dan tidak membuat entri untuk mereka. Ini "

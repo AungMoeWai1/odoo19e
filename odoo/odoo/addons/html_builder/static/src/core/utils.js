@@ -18,6 +18,10 @@ import { useBus } from "@web/core/utils/hooks";
 import { effect } from "@web/core/utils/reactive";
 import { useDebounced } from "@web/core/utils/timing";
 
+/**
+ * @typedef { import("../../../../html_editor/static/src/editor").EditorContext } EditorContext
+ */
+
 function isConnectedElement(el) {
     return el && el.isConnected && !!el.ownerDocument.defaultView;
 }
@@ -239,7 +243,7 @@ export function useSelectableComponent(id, { onItemChange } = {}) {
     });
 
     function refreshCurrentItem() {
-        if (env.editor.isDestroyed) {
+        if (env.editor.isDestroyed || env.editor.shared.history.getIsPreviewing()) {
             return;
         }
         let currentItem;
@@ -455,6 +459,31 @@ function useWithLoadingEffect(getAllActions) {
     return withLoadingEffect;
 }
 
+function useCanTimeout(getAllActions) {
+    const env = useEnv();
+    const getAction = env.editor.shared.builderActions.getAction;
+    let canTimeout = true;
+    for (const descr of getAllActions()) {
+        if (descr.actionId) {
+            const action = getAction(descr.actionId);
+            if (action.canTimeout === false) {
+                canTimeout = false;
+            }
+        }
+    }
+
+    return canTimeout;
+}
+
+export function revertPreview(editor) {
+    if (editor.isDestroyed) {
+        return;
+    }
+    // The `next` will cancel the previous operation, which will revert
+    // the operation in case of a preview.
+    return editor.shared.operation.next();
+}
+
 export function useClickableBuilderComponent() {
     useBuilderComponent();
     const comp = useComponent();
@@ -472,17 +501,24 @@ export function useClickableBuilderComponent() {
     const operationWithReload = useOperationWithReload(callApply, reload);
 
     const withLoadingEffect = useWithLoadingEffect(getAllActions);
+    const canTimeout = useCanTimeout(getAllActions);
 
     let preventNextPreview = false;
     const operation = {
         commit: () => {
             preventNextPreview = false;
             if (reload) {
-                callOperation(operationWithReload);
+                callOperation(operationWithReload, {
+                    operationParams: {
+                        withLoadingEffect: withLoadingEffect,
+                        canTimeout: canTimeout,
+                    },
+                });
             } else {
                 callOperation(applyOperation.commit, {
                     operationParams: {
                         withLoadingEffect: withLoadingEffect,
+                        canTimeout: canTimeout,
                     },
                 });
             }
@@ -498,14 +534,13 @@ export function useClickableBuilderComponent() {
                 operationParams: {
                     cancellable: true,
                     cancelPrevious: () => applyOperation.revert(),
+                    canTimeout: canTimeout,
                 },
             });
         },
         revert: () => {
             preventNextPreview = false;
-            // The `next` will cancel the previous operation, which will revert
-            // the operation in case of a preview.
-            comp.env.editor.shared.operation.next();
+            revertPreview(comp.env.editor);
         },
     };
 
@@ -616,7 +651,7 @@ function useOperationWithReload(callApply, reload) {
         await callApply(...args);
         env.editor.shared.history.addStep();
         await env.editor.shared.savePlugin.save();
-        const target = env.editor.shared["builderOptions"].getReloadSelector(editingElement);
+        const target = env.editor.shared.builderOptions.getReloadSelector(editingElement);
         const url = reload.getReloadUrl?.();
         await env.editor.config.reloadEditor({ target, url });
     };
@@ -646,6 +681,13 @@ export function useInputBuilderComponent({
     const { reload } = useReloadAction(getAllActions);
 
     const withLoadingEffect = useWithLoadingEffect(getAllActions);
+    const canTimeout = useCanTimeout(getAllActions);
+
+    onWillUpdateProps((nextProps) => {
+        if ("default" in nextProps) {
+            defaultValue = nextProps.default;
+        }
+    });
 
     async function callApply(applySpecs, isPreviewing) {
         const proms = [];
@@ -686,11 +728,20 @@ export function useInputBuilderComponent({
         userInputValue = getValueWithDefault(userInputValue, defaultValue, formatRawValue);
         const rawValue = parseDisplayValue(userInputValue);
         if (reload) {
-            callOperation(operationWithReload, { userInputValue: rawValue });
+            callOperation(operationWithReload, {
+                userInputValue: rawValue,
+                operationParams: {
+                    withLoadingEffect: withLoadingEffect,
+                    canTimeout: canTimeout,
+                },
+            });
         } else {
             callOperation(applyOperation.commit, {
                 userInputValue: rawValue,
-                withLoadingEffect: withLoadingEffect,
+                operationParams: {
+                    withLoadingEffect: withLoadingEffect,
+                    canTimeout: canTimeout,
+                },
             });
         }
         if (rawValue === null || (rawValue === defaultValue && rawValue === state.value)) {
@@ -712,6 +763,7 @@ export function useInputBuilderComponent({
                 operationParams: {
                     cancellable: true,
                     cancelPrevious: () => applyOperation.revert(),
+                    canTimeout: canTimeout,
                 },
             });
         }
@@ -990,15 +1042,39 @@ export function convertParamToObject(param) {
     }
     return param;
 }
+
 export class BaseOptionComponent extends Component {
     static components = {};
     static props = {};
     static template = "";
 
     setup() {
+        /** @type {EditorContext} */
+        const context = this.env.editor.shared.builderOptions.getBuilderOptionContext(
+            this.constructor
+        );
+        /** @type { EditorContext['document'] } **/
+        this.document = context.document;
+        this.window = context.document.defaultView;
+        /** @type { EditorContext['editable'] } **/
+        this.editable = context.editable;
+        /** @type { EditorContext['config'] } **/
+        this.config = context.config;
+        /** @type { EditorContext['services'] } **/
+        this.services = context.services;
+        /** @type { EditorContext['dependencies'] } **/
+        this.dependencies = context.dependencies;
+        /** @type { EditorContext['getResource'] } **/
+        this.getResource = context.getResource;
+        /** @type { EditorContext['dispatchTo'] } **/
+        this.dispatchTo = context.dispatchTo;
+        /** @type { EditorContext['delegateTo'] } **/
+        this.delegateTo = context.delegateTo;
+
         this.isActiveItem = useIsActiveItem();
         const comp = useComponent();
         const editor = comp.env.editor;
+
         if (!comp.constructor.components) {
             comp.constructor.components = {};
         }

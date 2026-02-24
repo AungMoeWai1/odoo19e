@@ -3,10 +3,10 @@
 import csv
 
 from odoo import fields, models, _
-from odoo.tools import float_repr
+from odoo.tools import float_repr, float_compare
 
 from datetime import datetime
-from collections import namedtuple
+from collections import namedtuple, defaultdict
 import tempfile
 import zipfile
 import io
@@ -109,7 +109,7 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
             buf.seek(0)
             content = buf.read()
 
-        filename, extension = report.get_default_report_filename(options, 'ZIP').split('.')
+        filename, extension = report.get_default_report_filename(options, 'ZIP').rsplit('.', 1)
         return {
             'file_name': f'{filename}_atch.{extension}' if options.get('add_attachments') else f'{filename}_data.{extension}',
             'file_content': content,
@@ -197,13 +197,14 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
                 move_types = ('in_refund', 'in_invoice', 'in_receipt')
             select = """SELECT distinct(aml.partner_id)
                         FROM account_move_line aml
-                        LEFT JOIN account_move m
+                        JOIN account_move m
                         ON aml.move_id = m.id
                         WHERE aml.id IN %s
                             AND aml.tax_line_id IS NULL
                             AND aml.debit != aml.credit
                             AND m.move_type IN %s
-                            AND aml.account_id != m.l10n_de_datev_main_account_id"""
+                            AND aml.account_id != m.l10n_de_datev_main_account_id
+                            AND aml.partner_id IS NOT NULL"""
             self.env.cr.execute(select, (tuple(move_line_ids), move_types))
         partners = self.env['res.partner'].browse([p.get('partner_id') for p in self.env.cr.dictfetchall()])
         for partner in partners:
@@ -299,11 +300,68 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
         lines = [preheader, header]
 
         for m in moves:
+            delta_by_aml = defaultdict(float)    # the final delta to apply to each aml
+            # For bills, it's possible to edit the total amount of a tax group manually.
+            # Unfortunatly this change only affects the amounts in tax_totals field, but not
+            # price_total field of the invoice lines, which is used in the export.
+            # Therefore, the exported amount can be wrong because it doesn't include the tax change.
+            # To detect such a case, we check if the sum of price_total of each line is equal to
+            # the total amount in tax_totals.
+            # It can happen that price_total is not set. In this case, the exported amount is
+            # recomputed and also differs from the edited amount.
+            # However, this case is not handled here for the moment.
+            if (m.move_type == 'in_invoice' and
+                all(line.price_total for line in m.invoice_line_ids) and
+                float_compare(
+                    m.tax_totals['total_amount'],
+                    sum(m.invoice_line_ids.mapped('price_total')),
+                    precision_rounding=m.currency_id.rounding,
+                )
+            ):
+                # The amount of a tax group has probably been edited manually.
+                # So we cannot use price_total of the aml as it is and we should dispatch the
+                # delta between all the lines where a tax of the same group has been used.
+                amls_by_group = defaultdict(list)
+                # Get the modified tax group amounts
+                actual_values_by_group = {
+                    self.env['account.tax.group'].browse(tax_group['id']): tax_group['tax_amount']
+                    for subtotal in m.tax_totals['subtotals']
+                    for tax_group in subtotal['tax_groups']
+                }
+                # Get the originally computed values
+                original_values_by_group = defaultdict(float)
+                for line in m.invoice_line_ids:
+                    line_taxes = line.tax_ids.compute_all(line.amount_currency, line.currency_id, partner=line.partner_id, handle_price_include=False)
+                    tax_amounts = {tax_data['id']: tax_data['amount'] for tax_data in line_taxes['taxes']}
+                    for tax_id in tax_amounts:
+                        tax = self.env['account.tax'].browse(tax_id)
+                        original_values_by_group[tax.tax_group_id] += tax_amounts[tax.id]
+                        amls_by_group[tax.tax_group_id].append(line)
+                # Compute deltas by tax group and assign the difference
+                for tax_group, actual_group_amount in actual_values_by_group.items():
+                    delta_group_amount = actual_group_amount - original_values_by_group[tax_group]
+                    current_lines = amls_by_group[tax_group]
+                    nb_lines = len(current_lines)
+                    # Round and add to every line
+                    line_delta_amount = line.currency_id.round(delta_group_amount / nb_lines)
+                    for line in current_lines:
+                        delta_by_aml[line] += line_delta_amount
+                    # Add eventual rounding remainder to the first line of the tax group
+                    remainder = line.currency_id.round(delta_group_amount - line_delta_amount * nb_lines)
+                    delta_by_aml[current_lines[0]] += remainder
+
             payment_account = 0  # Used for non-reconciled payments
 
             move_balance = 0
             counterpart_amount = 0
             last_tax_line_index = 0
+            code_correction = ''
+
+            def _get_code_correction(taxes):
+                codes = set(taxes.mapped('l10n_de_datev_code'))
+                # there should be exactly one, else skip code
+                return len(codes) == 1 and codes.pop() or ''
+
             for aml in m.line_ids:
                 if aml.debit == aml.credit:
                     # Ignore debit = credit = 0
@@ -318,6 +376,9 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
                 # and replace bank account for outstanding payment/receipt for the other line
 
                 if aml.payment_id:
+                    # An expense may be encoded with a tax, we should report the corresponding tax code
+                    if not code_correction:
+                        code_correction = _get_code_correction(m.line_ids.tax_ids)
                     if payment_account == 0:
                         payment_account = account_code
                         counterpart_amount += aml.balance
@@ -330,6 +391,7 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
                     if aml.statement_line_id and not aml.payment_id:
                         counterpart_amount += aml.balance
                     continue
+
                 # If line is a tax ignore it as datev requires single line with gross amount and deduct tax itself based
                 # on account or on the control key code
                 if aml.tax_line_id:
@@ -343,26 +405,18 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
                     aml_taxes = aml.tax_ids.compute_all(aml.amount_currency, aml.currency_id, partner=aml.partner_id, handle_price_include=False)
                     line_amount_currency = aml_taxes['total_included']
                 # convert line_amount in company currency
-                if aml.currency_id != aml.company_id.currency_id:
-                    line_amount = aml.currency_id._convert(
-                        from_amount=line_amount_currency,
-                        to_currency=aml.company_id.currency_id,
-                        company=aml.company_id,
-                        date=aml.date
-                    )
+                if aml.currency_id != aml.company_id.currency_id and not aml.currency_id.is_zero(line_amount_currency):
+                    rate = m._get_product_base_line_currency_rate(aml)
+                    line_amount = line_amount_currency / rate
                 else:
                     line_amount = line_amount_currency
 
                 move_balance += line_amount
 
-                code_correction = ''
                 if aml.tax_ids:
                     last_tax_line_index = len(lines)
                     last_tax_line_amount = line_amount
-                    codes = set(aml.tax_ids.mapped('l10n_de_datev_code'))
-                    if len(codes) == 1:
-                        # there should only be one max, else skip code
-                        code_correction = codes.pop() or ''
+                    code_correction = _get_code_correction(aml.tax_ids)
 
                 # reference
                 receipt1 = ref = aml.move_id.name
@@ -381,14 +435,14 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
                 # credit/debit symbol.
                 array[1] = 'H' if aml.currency_id.compare_amounts(line_amount, 0) < 0 else 'S'
                 line_amount = abs(line_amount)
-                line_amount_currency = abs(line_amount_currency)
+                line_amount_currency = abs(line_amount_currency) + delta_by_aml[aml]
                 # Column A: the amount in the currency that was used. It can be a foreign one, it can be the company's.
                 array[0] = float_repr(line_amount_currency, aml.currency_id.decimal_places).replace('.', ',')
                 # Column C: the corresponding foreign currency used on the original record (invoice, bill, entry, ....)
                 array[2] = aml.currency_id.name
                 if aml.currency_id != aml.company_id.currency_id:
                     # Column D: ratio is E/A if D !=0, else no rate.
-                    rate = line_amount / line_amount_currency if line_amount_currency != 0 else 1.0
+                    rate = line_amount / line_amount_currency if not aml.currency_id.is_zero(line_amount_currency) else 1.0
                     array[3] = str(rate).replace('.', ',')
                     # Column E: the amount converted in the company currency if the original record was in a foreign currency
                     array[4] = float_repr(line_amount, aml.company_id.currency_id.decimal_places).replace('.', ',')

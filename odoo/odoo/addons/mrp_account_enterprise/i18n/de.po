@@ -8,13 +8,14 @@
 # Larissa Manderfeld, 2023
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-03 18:48+0000\n"
-"PO-Revision-Date: 2025-09-15 21:09+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2025-12-30 18:46+0000\n"
+"PO-Revision-Date: 2025-10-22 14:02+0000\n"
+"Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/"
 "mrp_account_enterprise/de/>\n"
 "Language: de\n"
@@ -42,7 +43,7 @@ msgstr "Durchschnittliche Gesamtkosten / Einheit"
 #. module: mrp_account_enterprise
 #: model_terms:ir.ui.view,arch_db:mrp_account_enterprise.mrp_report_form_view
 msgid "Average Workcenter Cost / Unit"
-msgstr ""
+msgstr "Durchschnittliche Kosten pro Arbeitsplatz/Einheit"
 
 #. module: mrp_account_enterprise
 #: model:ir.model.fields,field_description:mrp_account_enterprise.field_mrp_report__byproduct_cost
@@ -113,27 +114,27 @@ msgstr "Enddatum"
 #. module: mrp_account_enterprise
 #: model:ir.model.fields,field_description:mrp_account_enterprise.field_mrp_report__expected_component_cost_unit
 msgid "Expected Component Cost / Unit"
-msgstr ""
+msgstr "Erwartete Komponentenkosten / Einheit"
 
 #. module: mrp_account_enterprise
 #: model:ir.model.fields,field_description:mrp_account_enterprise.field_mrp_report__expected_employee_cost_unit
 msgid "Expected Employee Cost / Unit"
-msgstr ""
+msgstr "Erwartete Mitarbeiterkosten / Einheit"
 
 #. module: mrp_account_enterprise
 #: model:ir.model.fields,field_description:mrp_account_enterprise.field_mrp_report__expected_operation_cost_unit
 msgid "Expected Operation Cost / Unit"
-msgstr ""
+msgstr "Erwartete Betriebskosten / Einheit"
 
 #. module: mrp_account_enterprise
 #: model:ir.model.fields,field_description:mrp_account_enterprise.field_mrp_report__expected_total_cost_unit
 msgid "Expected Total Cost / Unit"
-msgstr ""
+msgstr "Erwartete Gesamtkosten / Einheit"
 
 #. module: mrp_account_enterprise
 #: model:ir.model.fields,field_description:mrp_account_enterprise.field_mrp_report__id
 msgid "Id"
-msgstr ""
+msgstr "ID"
 
 #. module: mrp_account_enterprise
 #: model:ir.model.fields,field_description:mrp_account_enterprise.field_mrp_report__production_id
@@ -185,7 +186,7 @@ msgstr "Produktionsanalyse"
 #. module: mrp_account_enterprise
 #: model:ir.model.fields,field_description:mrp_account_enterprise.field_mrp_report__qty_demanded
 msgid "Quantity Demanded"
-msgstr ""
+msgstr "Geforderte Menge"
 
 #. module: mrp_account_enterprise
 #: model:ir.model.fields,field_description:mrp_account_enterprise.field_mrp_report__qty_produced
@@ -196,7 +197,7 @@ msgstr "Produzierte Menge"
 #. module: mrp_account_enterprise
 #: model:ir.model.fields,help:mrp_account_enterprise.field_mrp_report__yield_rate
 msgid "Ratio of quantity produced over quantity demanded"
-msgstr ""
+msgstr "Verhältnis der produzierten Menge zur geforderten Menge"
 
 #. module: mrp_account_enterprise
 #: model:ir.model.fields,field_description:mrp_account_enterprise.field_mrp_report__component_cost
@@ -226,7 +227,7 @@ msgstr "Gesamtbetriebskosten / Einheit"
 #. module: mrp_account_enterprise
 #: model_terms:ir.ui.view,arch_db:mrp_account_enterprise.mrp_report_form_view
 msgid "Total Workcenter Cost"
-msgstr ""
+msgstr "Gesamtkosten des Arbeitsplatzes"
 
 #. module: mrp_account_enterprise
 #: model:ir.model.fields,help:mrp_account_enterprise.field_mrp_report__component_cost
@@ -255,7 +256,7 @@ msgstr "Gesamtdauer (Minuten) der Vorgänge für den Fertigungsauftrag"
 #. module: mrp_account_enterprise
 #: model:ir.model.fields,help:mrp_account_enterprise.field_mrp_report__qty_demanded
 msgid "Total quantity demanded in product's UoM"
-msgstr ""
+msgstr "Gesamte geforderte Menge in der Maßeinheit des Produkts"
 
 #. module: mrp_account_enterprise
 #: model:ir.model.fields,help:mrp_account_enterprise.field_mrp_report__qty_produced
@@ -265,7 +266,7 @@ msgstr "Gesamte produzierte Menge in der Maßeinheit des Produkts"
 #. module: mrp_account_enterprise
 #: model:ir.model.fields,field_description:mrp_account_enterprise.field_mrp_report__yield_rate
 msgid "Yield Percentage(%)"
-msgstr ""
+msgstr "Gewinnprozentsatz (%)"
 
 #~ msgid "'Cost Analysis - %s ' % object.name"
 #~ msgstr "'Kostenanalyse - %s ' % object.name"

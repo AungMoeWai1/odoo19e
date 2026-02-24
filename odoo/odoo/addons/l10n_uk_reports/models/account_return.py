@@ -1,4 +1,3 @@
-import datetime
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
@@ -30,22 +29,13 @@ class AccountReturnType(models.Model):
 
         return rslt
 
-    def _get_start_date_elements(self, main_company):
-        if self == self.env.ref('l10n_uk_reports.uk_tax_return_type') and main_company.account_fiscal_country_id.code == 'GB':
-            today = datetime.date.today()
-            fy_dates_dict = main_company.compute_fiscalyear_dates(today)
-            date_from = fy_dates_dict['date_from']
-            return date_from.day, date_from.month
-
-        return super()._get_start_date_elements(main_company)
-
 
 class AccountReturn(models.Model):
     _inherit = 'account.return'
 
     @api.model
     def _evaluate_deadline(self, company, return_type, return_type_external_id, date_from, date_to):
-        if return_type_external_id == 'l10n_uk_reports.uk_tax_return_type' and not return_type.deadline_days_delay:
+        if return_type_external_id == 'l10n_uk_reports.uk_tax_return_type' and not return_type.with_company(company).deadline_days_delay:
             return date_to + relativedelta(days=7) + relativedelta(months=1)
 
         return super()._evaluate_deadline(company, return_type, return_type_external_id, date_from, date_to)

@@ -3,13 +3,15 @@
 # * helpdesk_stock
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Abe Manyo (abem)" <abem@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:32+0000\n"
-"PO-Revision-Date: 2025-09-15 23:09+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2025-12-30 18:45+0000\n"
+"PO-Revision-Date: 2025-11-17 06:59+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-19/"
 "helpdesk_stock/id/>\n"
 "Language: id\n"
@@ -24,33 +26,41 @@ msgstr ""
 #: code:addons/helpdesk_stock/models/helpdesk_ticket.py:0
 msgid ""
 "\n"
-"                <p class=\"o_view_nocontent_smiling_face o_view_nocontent_stock\">No delivery orders yet. Let's create one!</p>\n"
-"                <p>Send customers a replacement for a lost, damaged, or returned item</p>\n"
+"                <p class=\"o_view_nocontent_smiling_face "
+"o_view_nocontent_stock\">No delivery orders yet. Let's create one!</p>\n"
+"                <p>Send customers a replacement for a lost, damaged, or "
+"returned item</p>\n"
 "            "
 msgstr ""
+"\n"
+"                <p class=\"o_view_nocontent_smiling_face "
+"o_view_nocontent_stock\">Belum ada pesanan pengiriman. Ayo buat!</p>\n"
+"                <p>Kirim pelanggan pengganti untuk barang yang hilang, "
+"rusak, atau dikembalikkan</p>\n"
+"            "
 
 #. module: helpdesk_stock
 #. odoo-python
 #: code:addons/helpdesk_stock/models/stock_picking.py:0
 msgid " Delivery %(status)s"
-msgstr ""
+msgstr " %(status)s Pengiriman"
 
 #. module: helpdesk_stock
 #. odoo-python
 #: code:addons/helpdesk_stock/models/stock_picking.py:0
 msgid " Return %(status)s"
-msgstr ""
+msgstr " %(status)s Pengembalian"
 
 #. module: helpdesk_stock
 #: model_terms:ir.ui.view,arch_db:helpdesk_stock.view_picking_form_helpdesk
 msgid "<span class=\"o_stat_text\">Ticket</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Tiket</span>"
 
 #. module: helpdesk_stock
 #. odoo-python
 #: code:addons/helpdesk_stock/models/helpdesk_ticket.py:0
 msgid "Create Replacement Order"
-msgstr ""
+msgstr "Buat Pesanan Pengganti"
 
 #. module: helpdesk_stock
 #: model:ir.model,website_form_label:helpdesk_stock.model_helpdesk_ticket
@@ -65,19 +75,19 @@ msgstr "Pelanggan"
 #. module: helpdesk_stock
 #: model_terms:ir.ui.view,arch_db:helpdesk_stock.helpdesk_ticket_view_form_inherit_helpdesk_stock
 msgid "Deliveries"
-msgstr ""
+msgstr "Pengiriman"
 
 #. module: helpdesk_stock
 #. odoo-python
 #: code:addons/helpdesk_stock/models/helpdesk_ticket.py:0
 msgid "Delivery Orders"
-msgstr ""
+msgstr "Pesanan Pengiriman"
 
 #. module: helpdesk_stock
 #. odoo-python
 #: code:addons/helpdesk_stock/models/stock_picking.py:0
 msgid "Delivery created"
-msgstr ""
+msgstr "Pengiriman dibuat"
 
 #. module: helpdesk_stock
 #: model_terms:ir.ui.view,arch_db:helpdesk_stock.view_stock_return_picking_form_inherit_helpdesk_stock
@@ -130,14 +140,39 @@ msgstr "Nomor Seri/Lot"
 msgid ""
 "People to whom this helpdesk team and its tickets will be visible.\n"
 "\n"
-"- Invited internal users: internal users can access the team and the tickets they are following. This access can be modified on each ticket individually by adding or removing the user as follower.\n"
-"A user with the helpdesk > administrator access right level can still access this team and its tickets, even if they are not explicitely part of the followers.\n"
+"- Invited internal users: internal users can access the team and the tickets "
+"they are following. This access can be modified on each ticket individually "
+"by adding or removing the user as follower.\n"
+"A user with the helpdesk > administrator access right level can still access "
+"this team and its tickets, even if they are not explicitely part of the "
+"followers.\n"
 "\n"
-"- All internal users: all internal users can access the team and all of its tickets without distinction.\n"
+"- All internal users: all internal users can access the team and all of its "
+"tickets without distinction.\n"
 "\n"
-"- Invited portal users and all internal users: all internal users can access the team and all of its tickets without distinction.\n"
-"Portal users can only access the tickets they are following. This access can be modified on each ticket individually by adding or removing the portal user as follower."
+"- Invited portal users and all internal users: all internal users can access "
+"the team and all of its tickets without distinction.\n"
+"Portal users can only access the tickets they are following. This access can "
+"be modified on each ticket individually by adding or removing the portal "
+"user as follower."
 msgstr ""
+"Orang-orang ini akan dapat melihat tim meja bantuan dan tiket mereka.\n"
+"\n"
+"- User internal yang diundang: user internal dapat mengakses tim dan tiket "
+"yang mereka ikuti. Akses ini dapat dimodifikasi untuk setiap tiket secara "
+"individu dengan menambahkan atau menghapus user sebagai pengikut.\n"
+"User dengan meja bantuan > tingkat hak akses administrator masih dapat "
+"mengakses tim ini dan tiketnya, bahkan bila mereka bukan merupakan bagian "
+"pengikut.\n"
+"\n"
+"- Semua user internal: semua user internal dapat mengakses tim dan semua "
+"tiketnya tanpa pembedaan khusus.\n"
+"\n"
+"- User portal dan internal yang diundang: semua user internal dapat "
+"mengakses tim dan semua tiketnya tanpa pembedaan.\n"
+"User portal hanya dapat mengakses tiket yang mereka ikuti. Akses ini dapat "
+"dimodifikasi pada setiap tiket secara individu dengan menambahkan atau "
+"menghapus user portal sebagai pengikut."
 
 #. module: helpdesk_stock
 #: model:ir.model.fields,field_description:helpdesk_stock.field_stock_return_picking__picking_id
@@ -154,8 +189,8 @@ msgstr "Produk"
 #. module: helpdesk_stock
 #: model:ir.model.fields,help:helpdesk_stock.field_helpdesk_ticket__product_id
 msgid ""
-"Product this ticket is about. If selected, only the sales orders, deliveries"
-" and invoices including this product will be visible."
+"Product this ticket is about. If selected, only the sales orders, deliveries "
+"and invoices including this product will be visible."
 msgstr ""
 "Produk yang mana tiket ini maksudkan. Bila dipilih, hanya sales order, "
 "pengiriman dan faktur termasuk produk ini yang akan tampak;"
@@ -163,7 +198,7 @@ msgstr ""
 #. module: helpdesk_stock
 #: model_terms:ir.ui.view,arch_db:helpdesk_stock.helpdesk_ticket_view_form_inherit_stock_user
 msgid "Replace"
-msgstr ""
+msgstr "Ganti"
 
 #. module: helpdesk_stock
 #: model_terms:ir.ui.view,arch_db:helpdesk_stock.helpdesk_ticket_view_form_inherit_stock_user
@@ -190,7 +225,7 @@ msgstr "Return Picking"
 #. module: helpdesk_stock
 #: model:ir.model,name:helpdesk_stock.model_stock_return_picking_line
 msgid "Return Picking Line"
-msgstr ""
+msgstr "Baris Pengembalian Picking"
 
 #. module: helpdesk_stock
 #: model_terms:ir.ui.view,arch_db:helpdesk_stock.helpdesk_ticket_view_form_inherit_helpdesk_stock
@@ -221,7 +256,7 @@ msgstr "Sale Order Cocok"
 #. odoo-python
 #: code:addons/helpdesk_stock/models/stock_picking.py:0
 msgid "This transfer was created from the ticket"
-msgstr ""
+msgstr "Transfer ini dibuat dari tiket"
 
 #. module: helpdesk_stock
 #: model:ir.model.fields,field_description:helpdesk_stock.field_stock_return_picking__ticket_id
@@ -238,7 +273,7 @@ msgstr "Analisis Tiket"
 #: code:addons/helpdesk_stock/models/helpdesk_ticket.py:0
 #: code:addons/helpdesk_stock/wizard/stock_picking_return.py:0
 msgid "Ticket: %(ticket_name)s"
-msgstr ""
+msgstr "Tiket: %(ticket_name)s"
 
 #. module: helpdesk_stock
 #: model:ir.model.fields,field_description:helpdesk_stock.field_helpdesk_ticket__tracking

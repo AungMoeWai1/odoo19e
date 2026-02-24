@@ -5,16 +5,19 @@
 # Translators:
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2022
 # Jolien De Paepe, 2022
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023, 2025.
 # Martin Trigaux, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Bren Driesen <brdri@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Odoo Translation Bot <c3p@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-13 21:43+0000\n"
-"PO-Revision-Date: 2025-09-14 11:57+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2025-12-30 18:43+0000\n"
+"PO-Revision-Date: 2026-01-07 18:04+0000\n"
+"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/"
 "account_intrastat/nl/>\n"
 "Language: nl\n"
@@ -22,13 +25,13 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: account_intrastat
 #. odoo-javascript
 #: code:addons/account_intrastat/static/src/components/intrastat_report/warnings.xml:0
 msgid ", which cannot be reported."
-msgstr "die niet gerapporteerd kan worden."
+msgstr "die niet gerapporteerd kan/kunnen worden."
 
 #. module: account_intrastat
 #: model:ir.model.fields.selection,name:account_intrastat.selection__account_intrastat_code__supplementary_unit__1_000_kwh
@@ -60,14 +63,14 @@ msgid ""
 "<span class=\"fa fa-lg fa-building-o ms-2\" title=\"Values set here are "
 "company-specific.\"/>"
 msgstr ""
-"<span class=\"fa fa-lg fa-building-o ms-2\" title="
-"\"De waardes die je hier instelt zijn specifiek aan een bedrijf.\"/>"
+"<span class=\"fa fa-lg fa-building-o ms-2\" title=\"De waardes die je hier "
+"instelt zijn specifiek aan een bedrijf.\"/>"
 
 #. module: account_intrastat
 #: model:ir.model.fields,field_description:account_intrastat.field_product_product__account_fiscal_country_group_codes
 #: model:ir.model.fields,field_description:account_intrastat.field_product_template__account_fiscal_country_group_codes
 msgid "Account Fiscal Country Group Codes"
-msgstr ""
+msgstr "Codes voor fiscale landengroepen"
 
 #. module: account_intrastat
 #: model_terms:ir.ui.view,arch_db:account_intrastat.account_move_line_tree_view_account_intrastat_transaction_codes
@@ -77,12 +80,12 @@ msgstr "Boekingsregel"
 #. module: account_intrastat
 #: model:ir.model,name:account_intrastat.model_account_return
 msgid "Accounting Return"
-msgstr ""
+msgstr "Btw-aangifte"
 
 #. module: account_intrastat
 #: model:ir.model,name:account_intrastat.model_account_return_type
 msgid "Accounting Return Type"
-msgstr ""
+msgstr "Type boekhoudkundige aangifte"
 
 #. module: account_intrastat
 #: model_terms:ir.ui.view,arch_db:account_intrastat.view_intrastat_code_search
@@ -147,7 +150,7 @@ msgstr "Goederencode"
 #. odoo-python
 #: code:addons/account_intrastat/models/account_return.py:0
 msgid "Commodity codes configuration"
-msgstr ""
+msgstr "Configuratie goederencodes"
 
 #. module: account_intrastat
 #: model:ir.model,name:account_intrastat.model_res_company
@@ -219,18 +222,20 @@ msgstr "Schermnaam"
 #: code:addons/account_intrastat/models/account_return.py:0
 msgid "Exclude any domestic or extra-EU sales from the Intrastat report."
 msgstr ""
+"Sluit alle binnenlandse verkopen of verkopen buiten de EU uit van het "
+"Intrastat-rapport."
 
 #. module: account_intrastat
 #. odoo-python
 #: code:addons/account_intrastat/models/account_return.py:0
 msgid "Exclude sales made to private individuals from the listing."
-msgstr ""
+msgstr "Verkoop aan particulieren uitsluiten van de lijst."
 
 #. module: account_intrastat
 #. odoo-python
 #: code:addons/account_intrastat/models/account_return.py:0
 msgid "Exclude services from the report."
-msgstr ""
+msgstr "Diensten uitsluiten uit het rapport."
 
 #. module: account_intrastat
 #. odoo-javascript
@@ -352,7 +357,7 @@ msgstr "Bedrag aanvullende Intrastat-eenheid"
 #. odoo-python
 #: code:addons/account_intrastat/models/account_return.py:0
 msgid "Intrastat Thresholds"
-msgstr ""
+msgstr "Intrastat-drempels"
 
 #. module: account_intrastat
 #: model:ir.model.fields,field_description:account_intrastat.field_account_bank_statement_line__intrastat_transport_mode_id
@@ -384,6 +389,8 @@ msgid ""
 "Intrastat thresholds may change annually. Verify that your transactions "
 "exceed the threshold for reporting."
 msgstr ""
+"Intrastat-drempels kunnen jaarlijks veranderen. Controleer of je transacties "
+"de drempel voor rapportage overschrijden."
 
 #. module: account_intrastat
 #: model_terms:ir.ui.view,arch_db:account_intrastat.account_move_line_tree_view_account_intrastat_transaction_codes
@@ -417,7 +424,7 @@ msgstr "Factuurregels"
 #: model:ir.model.fields,field_description:account_intrastat.field_account_return__is_intrastat_return
 #: model:ir.model.fields,field_description:account_intrastat.field_account_return_type__is_intrastat_return_type
 msgid "Is an Intrastat Return Type"
-msgstr ""
+msgstr "Is een Intrastat-aangiftetype"
 
 #. module: account_intrastat
 #: model_terms:ir.ui.view,arch_db:account_intrastat.account_move_tree_view_account_intrastat_transport_codes
@@ -450,19 +457,19 @@ msgstr "Ontbrekend product"
 #. odoo-python
 #: code:addons/account_intrastat/models/account_return.py:0
 msgid "Only business customers"
-msgstr ""
+msgstr "Alleen zakelijke klanten"
 
 #. module: account_intrastat
 #. odoo-python
 #: code:addons/account_intrastat/models/account_return.py:0
 msgid "Only goods included"
-msgstr ""
+msgstr "Alleen goederen inbegrepen"
 
 #. module: account_intrastat
 #. odoo-python
 #: code:addons/account_intrastat/models/account_return.py:0
 msgid "Only intra-EU transactions"
-msgstr ""
+msgstr "Alleen intracommunautaire transacties"
 
 #. module: account_intrastat
 #. odoo-javascript
@@ -521,7 +528,7 @@ msgstr "Streek"
 #. module: account_intrastat
 #: model_terms:ir.ui.view,arch_db:account_intrastat.account_return_kanban_view
 msgid "Reset"
-msgstr ""
+msgstr "Resetten"
 
 #. module: account_intrastat
 #: model:account.report.column,name:account_intrastat.intrastat_report_column_services_commodity_code
@@ -608,7 +615,8 @@ msgstr "Het datumbereik moet een volledige maand zijn"
 #. odoo-python
 #: code:addons/account_intrastat/models/account_intrastat_report.py:0
 msgid "The date range must be a full month or a full quarter."
-msgstr "Het datumbereik moet een volledige maand of een volledig kwartaal zijn."
+msgstr ""
+"Het datumbereik moet een volledige maand of een volledig kwartaal zijn."
 
 #. module: account_intrastat
 #: model:ir.model.fields,help:account_intrastat.field_product_product__intrastat_supplementary_unit_amount
@@ -620,7 +628,7 @@ msgstr "Het aantal aanvullende eenheden per productaantal."
 #. odoo-python
 #: code:addons/account_intrastat/models/account_return.py:0
 msgid "The value of goods should be VAT exclusive."
-msgstr ""
+msgstr "De waarde van de goederen moet exclusief btw zijn."
 
 #. module: account_intrastat
 #. odoo-javascript
@@ -662,13 +670,13 @@ msgstr "Onbepaald gewichtsproducten."
 #. odoo-python
 #: code:addons/account_intrastat/models/account_return.py:0
 msgid "Unit of measure configuration"
-msgstr ""
+msgstr "Configuratie maateenheid"
 
 #. module: account_intrastat
 #. odoo-python
 #: code:addons/account_intrastat/models/account_return.py:0
 msgid "VAT exclusive"
-msgstr ""
+msgstr "Exclusief btw"
 
 #. module: account_intrastat
 #: model:account.report.column,name:account_intrastat.intrastat_report_column_services_value
@@ -685,7 +693,7 @@ msgstr "Valutawaarde"
 #. odoo-python
 #: code:addons/account_intrastat/models/account_return.py:0
 msgid "Verify that each good is assigned the right unit of measure."
-msgstr ""
+msgstr "Controleer of aan elk goed de juiste maateenheid is toegewezen."
 
 #. module: account_intrastat
 #. odoo-python
@@ -694,6 +702,8 @@ msgid ""
 "Verify that each item has the appropriate code and description according to "
 "the CN (Combined Nomenclature) codes."
 msgstr ""
+"Controleer of elk artikel de juiste code en beschrijving heeft volgens de GN-"
+"codes (Gecombineerde Nomenclatuur)."
 
 #. module: account_intrastat
 #: model:account.report.column,name:account_intrastat.intrastat_report_column_weight

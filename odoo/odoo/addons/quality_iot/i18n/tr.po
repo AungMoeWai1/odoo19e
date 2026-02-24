@@ -10,13 +10,16 @@
 # Buket Şeker <buket_skr@hotmail.com>, 2022
 # Murat Kaplan <muratk@projetgrup.com>, 2022
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# DeepL <noreply-mt-deepl@weblate.org>, 2025.
+# Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 22:21+0000\n"
-"PO-Revision-Date: 2025-09-15 21:09+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-01-30 18:48+0000\n"
+"PO-Revision-Date: 2025-11-21 14:41+0000\n"
+"Last-Translator: Odoo Turkish Import <dyki+tr@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
 "quality_iot/tr/>\n"
 "Language: tr\n"
@@ -28,15 +31,15 @@ msgstr ""
 
 #. module: quality_iot
 #. odoo-javascript
-#: code:addons/quality_iot/static/src/iot_picture/iot_picture.js:0
-msgid "Capture image..."
-msgstr "Görüntüyü yakala"
+#: code:addons/quality_iot/static/src/iot_picture_button.js:0
+msgid "Capturing image..."
+msgstr "Görüntü yakalama..."
 
 #. module: quality_iot
 #. odoo-javascript
-#: code:addons/quality_iot/static/src/iot_picture/iot_picture.js:0
-msgid "Connection to device failed"
-msgstr "Cihaza bağlantı başarısız"
+#: code:addons/quality_iot/static/src/iot_measure_button.js:0
+msgid "Could not get measurement from device"
+msgstr "Cihazdan ölçüm alınamadı"
 
 #. module: quality_iot
 #: model:ir.model.fields,field_description:quality_iot.field_quality_point__device_id
@@ -49,9 +52,29 @@ msgid "Device Name: "
 msgstr "Cihaz Adı: "
 
 #. module: quality_iot
+#: model:ir.model.fields,field_description:quality_iot.field_iot_device__display_name
+#: model:ir.model.fields,field_description:quality_iot.field_quality_check__display_name
+#: model:ir.model.fields,field_description:quality_iot.field_quality_point__display_name
+msgid "Display Name"
+msgstr "İsim Göster"
+
+#. module: quality_iot
 #: model:ir.model.fields,field_description:quality_iot.field_quality_check__ip
 msgid "Domain Address"
 msgstr "Alan Adresi"
+
+#. module: quality_iot
+#. odoo-javascript
+#: code:addons/quality_iot/static/src/iot_picture_button.js:0
+msgid "Failed to take a picture using the IoT Camera"
+msgstr "IoT Kamera kullanılarak fotoğraf çekilemedi"
+
+#. module: quality_iot
+#: model:ir.model.fields,field_description:quality_iot.field_iot_device__id
+#: model:ir.model.fields,field_description:quality_iot.field_quality_check__id
+#: model:ir.model.fields,field_description:quality_iot.field_quality_point__id
+msgid "ID"
+msgstr "ID"
 
 #. module: quality_iot
 #: model:ir.model,name:quality_iot.model_iot_device
@@ -65,9 +88,20 @@ msgstr "Tanımlayıcı"
 
 #. module: quality_iot
 #. odoo-javascript
-#: code:addons/quality_iot/static/src/iot_picture/iot_picture.js:0
-msgid "Please check if the device is still connected."
-msgstr "Lütfen cihazın hala bağlı olup olmadığını kontrol edin."
+#: code:addons/quality_iot/static/src/iot_picture_button.js:0
+msgid "Image captured successfully"
+msgstr "Görüntü başarıyla yakalandı"
+
+#. module: quality_iot
+#: model:ir.model.fields,field_description:quality_iot.field_quality_check__iot_box_id
+msgid "IoT Box"
+msgstr "IoT Kutusu"
+
+#. module: quality_iot
+#. odoo-javascript
+#: code:addons/quality_iot/static/src/iot_measure_button.js:0
+msgid "No IoT device configured for this quality check."
+msgstr ""
 
 #. module: quality_iot
 #: model:ir.model.fields,field_description:quality_iot.field_iot_device__qcp_test_type
@@ -93,3 +127,24 @@ msgstr "Kalite Kontrol Noktaları"
 #: model:ir.model.fields,field_description:quality_iot.field_iot_device__quality_point_ids
 msgid "Quality Point"
 msgstr "Kalite Noktası"
+
+#~ msgid "Close"
+#~ msgstr "Kapat"
+
+#~ msgid "Please check if the device is still connected."
+#~ msgstr "Lütfen cihazın hala bağlı olup olmadığını kontrol edin."
+
+#~ msgid "Preview"
+#~ msgstr "Önizle"
+
+#~ msgid "Viewer"
+#~ msgstr "Görüntüleyici"
+
+#~ msgid "Connection to device failed"
+#~ msgstr "Cihaza bağlantı başarısız"
+
+#~ msgid "Take a Picture"
+#~ msgstr "Bir Fotoğraf Çekin"
+
+#~ msgid "Capture image..."
+#~ msgstr "Görüntüyü yakala"

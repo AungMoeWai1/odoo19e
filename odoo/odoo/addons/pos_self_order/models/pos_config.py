@@ -64,12 +64,14 @@ class PosConfig(models.Model):
         'ir.attachment',
         string="Add images",
         help="Image to display on the self order screen",
+        bypass_search_access=True,
     )
     self_ordering_image_background_ids = fields.Many2many(
         'ir.attachment',
         string="Set background image",
         help="Image to be displayed in the background",
         relation="pos_self_order_background_rels",
+        bypass_search_access=True,
     )
     self_ordering_default_user_id = fields.Many2one(
         "res.users",
@@ -155,7 +157,13 @@ class PosConfig(models.Model):
             if (not vals.get('module_pos_restaurant') and not record.module_pos_restaurant) and vals.get('self_ordering_mode') == 'mobile':
                 vals['self_ordering_pay_after'] = 'each'
 
-            if (vals.get('self_ordering_service_mode') == 'counter' or record.self_ordering_service_mode == 'counter') and vals.get('self_ordering_mode') == 'mobile':
+            if (
+                vals.get('self_ordering_mode') == 'mobile'
+                and (
+                    vals.get('self_ordering_service_mode') == 'counter'
+                    or (record.self_ordering_service_mode == 'counter' and vals.get('self_ordering_service_mode') != 'table')
+                )
+            ):
                 vals['self_ordering_pay_after'] = 'each'
 
             if vals.get('self_ordering_mode') == 'mobile' and vals.get('self_ordering_pay_after') == 'meal':
@@ -336,8 +344,8 @@ class PosConfig(models.Model):
 
     def _split_qr_codes_list(self, floors: List[Dict], cols: int) -> List[Dict]:
         """
-        :floors: the list of floors
-        :cols: the number of qr codes per row
+        :param floors: the list of floors
+        :param cols: the number of qr codes per row
         """
         self.ensure_one()
         return [
@@ -351,6 +359,11 @@ class PosConfig(models.Model):
     def _compute_self_ordering_url(self):
         for record in self:
             record.self_ordering_url = record.get_base_url() + record._get_self_order_route()
+
+    def close_ui(self):
+        if self.self_ordering_mode == "kiosk":
+            return self.action_close_kiosk_session()
+        return super().close_ui()
 
     def action_close_kiosk_session(self):
         if self.current_session_id and self.current_session_id.order_ids:
@@ -418,6 +431,7 @@ class PosConfig(models.Model):
             'iface_splitbill': True,
             'module_pos_restaurant': True,
             'self_ordering_mode': 'kiosk',
+            'self_ordering_pay_after': 'each',
         })
 
     def _generate_single_qr_code__(self, url):  # noqa: PLW3201

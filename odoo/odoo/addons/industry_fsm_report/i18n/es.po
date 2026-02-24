@@ -7,13 +7,15 @@
 # VivianMontana23 <vivianpvm@gmail.com>, 2022
 # Martin Trigaux, 2022
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-30 18:43+0000\n"
-"PO-Revision-Date: 2025-09-15 11:59+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2025-12-30 18:45+0000\n"
+"PO-Revision-Date: 2025-12-31 10:16+0000\n"
+"Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-19/"
 "industry_fsm_report/es/>\n"
 "Language: es\n"
@@ -22,19 +24,19 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
 "0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: industry_fsm_report
 #. odoo-javascript
 #: code:addons/industry_fsm_report/static/src/js/tours/industry_fsm_report_tour.js:0
 msgid "<b>Review and sign</b> the <b>task report</b> with your customer."
-msgstr ""
+msgstr "<b>Revise y firme</b> el <b>informe de tarea</b> con su cliente."
 
 #. module: industry_fsm_report
 #. odoo-javascript
 #: code:addons/industry_fsm_report/static/src/js/tours/industry_fsm_report_tour.js:0
 msgid "<b>Send your task report</b> to your customer."
-msgstr ""
+msgstr "<b>Envíe su informe de tarea</b> a su cliente."
 
 #. module: industry_fsm_report
 #: model_terms:ir.ui.view,arch_db:industry_fsm_report.view_project_kanban_inherit_industry_fsm_report
@@ -53,7 +55,7 @@ msgstr "<span class=\"o_label ms-2\">Hojas de trabajo</span>"
 #. module: industry_fsm_report
 #: model_terms:ir.ui.view,arch_db:industry_fsm_report.view_task_form2_inherit
 msgid "<span class=\"o_stat_text\">Worksheet</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Hoja de trabajo</span>"
 
 #. module: industry_fsm_report
 #: model_terms:ir.ui.view,arch_db:industry_fsm_report.view_task_form2_inherit
@@ -61,6 +63,8 @@ msgid ""
 "<span class=\"o_stat_text\">Worksheet</span>\n"
 "                            <span class=\"o_stat_text\">Complete</span>"
 msgstr ""
+"<span class=\"o_stat_text\">Hoja de trabajo</span>\n"
+"                            <span class=\"o_stat_text\">Completada</span>"
 
 #. module: industry_fsm_report
 #: model_terms:ir.ui.view,arch_db:industry_fsm_report.report_custom_x_project_task_worksheet_template_3
@@ -89,17 +93,17 @@ msgstr "Comentarios"
 #. module: industry_fsm_report
 #: model:ir.model,name:industry_fsm_report.model_base_document_layout
 msgid "Company Document Layout"
-msgstr ""
+msgstr "Diseño de documentos de la compañía"
 
 #. module: industry_fsm_report
 #: model_terms:ir.ui.view,arch_db:industry_fsm_report.project_project_form_inherit_industry_fsm_report
 msgid "Complete custom worksheets for your interventions"
-msgstr ""
+msgstr "Complete las hojas de trabajo personalizadas para sus intervenciones"
 
 #. module: industry_fsm_report
 #: model:ir.model,website_form_label:industry_fsm_report.model_project_task
 msgid "Create a Task"
-msgstr ""
+msgstr "Crear una tarea"
 
 #. module: industry_fsm_report
 #: model:ir.model.fields,help:industry_fsm_report.field_project_task__worksheet_template_id
@@ -115,7 +119,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:industry_fsm_report.x_project_task_worksheet_template_3_ir_model_fields_2
 #: model:ir.model.fields,field_description:industry_fsm_report.x_project_task_worksheet_template_4_ir_model_fields_2
 msgid "Created by"
-msgstr ""
+msgstr "Creado por"
 
 #. module: industry_fsm_report
 #: model:ir.model.fields,field_description:industry_fsm_report.field_worksheet_template_load_wizard__create_date
@@ -130,7 +134,7 @@ msgstr "Creado el"
 #. odoo-javascript
 #: code:addons/industry_fsm_report/static/src/js/tours/industry_fsm_report_tour.js:0
 msgid "Customize your <b>layout</b>."
-msgstr ""
+msgstr "Personalice su <b>diseño</b>."
 
 #. module: industry_fsm_report
 #: model:ir.model.fields,field_description:industry_fsm_report.fsm_template_field6
@@ -152,7 +156,7 @@ msgstr "Descripción de la intervención."
 #. module: industry_fsm_report
 #: model_terms:ir.ui.view,arch_db:industry_fsm_report.res_config_settings_view_form
 msgid "Design worksheet templates"
-msgstr ""
+msgstr "Diseñar plantillas de hojas de trabajo"
 
 #. module: industry_fsm_report
 #: model:ir.model,name:industry_fsm_report.x_project_task_worksheet_template_4_ir_model_1
@@ -162,7 +166,7 @@ msgstr "Instalación y mantenimiento del dispositivo"
 #. module: industry_fsm_report
 #: model_terms:ir.ui.view,arch_db:industry_fsm_report.worksheet_template_view_form_footer_design_button
 msgid "Discard"
-msgstr ""
+msgstr "Descartar"
 
 #. module: industry_fsm_report
 #: model:ir.model.fields,field_description:industry_fsm_report.field_base_document_layout__display_name
@@ -178,19 +182,20 @@ msgstr ""
 #: model:ir.model.fields,field_description:industry_fsm_report.x_project_task_worksheet_template_3_ir_model_fields_3
 #: model:ir.model.fields,field_description:industry_fsm_report.x_project_task_worksheet_template_4_ir_model_fields_3
 msgid "Display Name"
-msgstr ""
+msgstr "Nombre para mostrar"
 
 #. module: industry_fsm_report
 #. odoo-python
 #: code:addons/industry_fsm_report/models/project_task.py:0
 msgid "Explore Worksheets Using an Example Template"
-msgstr ""
+msgstr "Explorar las hojas de trabajo con una plantilla de ejemplo"
 
 #. module: industry_fsm_report
 #. odoo-javascript
 #: code:addons/industry_fsm_report/static/src/js/tours/industry_fsm_report_tour.js:0
 msgid "Fill in your <b>worksheet</b> with the details of your intervention."
 msgstr ""
+"Complete su <b>hoja de trabajo</b> con los detalles de su intervención."
 
 #. module: industry_fsm_report
 #: model_terms:ir.ui.view,arch_db:industry_fsm_report.view_worksheet_template_load_form
@@ -198,12 +203,14 @@ msgid ""
 "Give it a try using one of our example templates. You can remove them at any "
 "time."
 msgstr ""
+"Use una de nuestras plantillas de ejemplo. Puede eliminarlas en cualquier "
+"momento."
 
 #. module: industry_fsm_report
 #. odoo-javascript
 #: code:addons/industry_fsm_report/static/src/js/tours/industry_fsm_report_tour.js:0
 msgid "Go back to your Field Service <b>task</b>."
-msgstr ""
+msgstr "Vuelva a su <b>tarea</b> de servicio de campo."
 
 #. module: industry_fsm_report
 #: model:ir.model.fields,field_description:industry_fsm_report.fsm_template_field4
@@ -229,7 +236,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:industry_fsm_report.x_project_task_worksheet_template_3_ir_model_fields_4
 #: model:ir.model.fields,field_description:industry_fsm_report.x_project_task_worksheet_template_4_ir_model_fields_4
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: industry_fsm_report
 #: model:ir.model.fields,field_description:industry_fsm_report.fsm_template_field1
@@ -241,31 +248,31 @@ msgstr "Tipo de intervención"
 #. odoo-javascript
 #: code:addons/industry_fsm_report/static/src/js/tours/industry_fsm_report_tour.js:0
 msgid "Invite your customer to <b>validate and sign your task report</b>."
-msgstr ""
+msgstr "Invite a su cliente a que <b>valide y firme su informe de tarea.</b>."
 
 #. module: industry_fsm_report
 #: model:ir.model.fields,field_description:industry_fsm_report.field_worksheet_template_load_wizard__write_uid
 #: model:ir.model.fields,field_description:industry_fsm_report.x_project_task_worksheet_template_3_ir_model_fields_6
 #: model:ir.model.fields,field_description:industry_fsm_report.x_project_task_worksheet_template_4_ir_model_fields_6
 msgid "Last Updated by"
-msgstr ""
+msgstr "Última actualización por"
 
 #. module: industry_fsm_report
 #: model:ir.model.fields,field_description:industry_fsm_report.field_worksheet_template_load_wizard__write_date
 #: model:ir.model.fields,field_description:industry_fsm_report.x_project_task_worksheet_template_3_ir_model_fields_5
 #: model:ir.model.fields,field_description:industry_fsm_report.x_project_task_worksheet_template_4_ir_model_fields_5
 msgid "Last Updated on"
-msgstr ""
+msgstr "Última actualización el"
 
 #. module: industry_fsm_report
 #: model_terms:ir.ui.view,arch_db:industry_fsm_report.view_worksheet_template_load_form
 msgid "Load Template"
-msgstr ""
+msgstr "Cargar plantilla"
 
 #. module: industry_fsm_report
 #: model:ir.model,name:industry_fsm_report.model_worksheet_template_load_wizard
 msgid "Load the worksheet template"
-msgstr ""
+msgstr "Cargar la plantilla de la hoja de trabajo"
 
 #. module: industry_fsm_report
 #: model:ir.model.fields,field_description:industry_fsm_report.fsm_template_field3
@@ -276,13 +283,13 @@ msgstr "Fabricante"
 #. module: industry_fsm_report
 #: model:ir.model,name:industry_fsm_report.model_ir_model
 msgid "Models"
-msgstr ""
+msgstr "Modelos"
 
 #. module: industry_fsm_report
 #: model:ir.model.fields,field_description:industry_fsm_report.x_project_task_worksheet_template_3_field_x_name
 #: model:ir.model.fields,field_description:industry_fsm_report.x_project_task_worksheet_template_4_field_x_name
 msgid "Name"
-msgstr ""
+msgstr "Nombre"
 
 #. module: industry_fsm_report
 #: model_terms:ir.actions.act_window,help:industry_fsm_report.project_task_action_fsm_planning_groupby_worksheet
@@ -302,6 +309,8 @@ msgid ""
 "Open your <b>worksheet</b> in order to fill it in with the details of your "
 "intervention."
 msgstr ""
+"Abra su <b>hoja de trabajo</b> para completarla con los detalles de su "
+"intervención."
 
 #. module: industry_fsm_report
 #: model:ir.actions.act_window,name:industry_fsm_report.project_task_action_fsm_planning_groupby_worksheet
@@ -312,7 +321,7 @@ msgstr "Planificación por plantilla de hoja de trabajo"
 #. module: industry_fsm_report
 #: model:ir.actions.server,name:industry_fsm_report.project_task_fsm_planning_groupby_worksheet_server_action
 msgid "Planning by Worksheet Template Server Action"
-msgstr ""
+msgstr "Acción del servidor de planificación por plantilla de hoja de cálculo"
 
 #. module: industry_fsm_report
 #: model:ir.model,name:industry_fsm_report.model_project_project
@@ -322,19 +331,19 @@ msgstr "Proyecto"
 #. module: industry_fsm_report
 #: model_terms:ir.ui.view,arch_db:industry_fsm_report.worksheet_template_view_form_footer_design_button
 msgid "Save & Close"
-msgstr ""
+msgstr "Guardar y cerrar"
 
 #. module: industry_fsm_report
 #. odoo-javascript
 #: code:addons/industry_fsm_report/static/src/js/tours/industry_fsm_report_tour.js:0
 msgid "Save time by automatically generating a <b>signature</b>."
-msgstr ""
+msgstr "Ahorre tiempo generando automáticamente una <b>firma</b>."
 
 #. module: industry_fsm_report
 #: model_terms:ir.actions.act_window,help:industry_fsm_report.project_task_action_fsm_planning_groupby_worksheet
 #: model_terms:ir.actions.act_window,help:industry_fsm_report.project_task_action_fsm_planning_groupby_worksheet2
 msgid "Schedule your tasks and assign them to your technicians."
-msgstr ""
+msgstr "Planifica tus tareas y asígnalas a tus técnicos."
 
 #. module: industry_fsm_report
 #: model:ir.actions.server,name:industry_fsm_report.action_fsm_task_send_report
@@ -350,7 +359,7 @@ msgstr "Número de serie"
 #. module: industry_fsm_report
 #: model_terms:ir.ui.view,arch_db:industry_fsm_report.view_worksheet_template_load_form
 msgid "Start Blank"
-msgstr ""
+msgstr "Empezar vacío"
 
 #. module: industry_fsm_report
 #: model_terms:ir.ui.view,arch_db:industry_fsm_report.view_worksheet_template_load_form
@@ -359,6 +368,9 @@ msgid ""
 "content with customers and request their signatures to validate the "
 "completed work."
 msgstr ""
+"Personalice las plantillas de hojas de trabajo según sus necesidades. "
+"Comparta el contenido de la hoja de trabajo con los clientes y solicite "
+"firmas para validar el trabajo completado con facilidad."
 
 #. module: industry_fsm_report
 #: model_terms:ir.actions.act_window,help:industry_fsm_report.fsm_worksheets_action_settings
@@ -367,6 +379,9 @@ msgid ""
 "content with customers and request their signatures to validate the "
 "completed work.<br>"
 msgstr ""
+"Personalice las plantillas de hojas de trabajo según sus necesidades. "
+"Comparta el contenido de la hoja de trabajo con los clientes y solicite "
+"firmas para validar el trabajo completado con facilidad.<br>"
 
 #. module: industry_fsm_report
 #: model:ir.model,name:industry_fsm_report.model_project_task
@@ -395,13 +410,13 @@ msgstr "Análisis de tareas"
 #: model:ir.model.fields,field_description:industry_fsm_report.fsm_template_field7
 #: model_terms:ir.ui.view,arch_db:industry_fsm_report.report_custom_x_project_task_worksheet_template_4
 msgid "Technician Signature"
-msgstr ""
+msgstr "Firma del técnico"
 
 #. module: industry_fsm_report
 #. odoo-javascript
 #: code:addons/industry_fsm_report/static/src/js/tours/industry_fsm_report_tour.js:0
 msgid "Use the breadcrumbs to return to your <b>task</b>."
-msgstr ""
+msgstr "Utilice las migas de pan para volver a su <b>tarea</b>."
 
 #. module: industry_fsm_report
 #: model:ir.model.fields,help:industry_fsm_report.field_project_task__display_name
@@ -418,12 +433,23 @@ msgid ""
 "        Make sure to use the right format and order e.g. Improve the "
 "configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
+"Utiliza estas palabras clave en el título para establecer nuevas tareas:\n"
+"\n"
+"        30 h Asignar 30 horas a la tarea\n"
+"        #etiquetas Asignar etiquetas a la tarea\n"
+"        @usuario Asignar la tarea a un usuario\n"
+"        ! Asignar prioridad media a la tarea\n"
+"        !! Asignar prioridad alta a la tarea\n"
+"        !!! Asignar prioridad urgente a la tarea\n"
+"\n"
+"        Asegúrate de utilizar el formato y el orden correcto, por ejemplo: "
+"¡Mejorar la pantalla de configuración 5 h #función #v16 @Mitchell!"
 
 #. module: industry_fsm_report
 #. odoo-javascript
 #: code:addons/industry_fsm_report/static/src/js/tours/industry_fsm_report_tour.js:0
 msgid "Validate the <b>signature</b>."
-msgstr ""
+msgstr "Valide la <b>firma</b>."
 
 #. module: industry_fsm_report
 #: model_terms:ir.ui.view,arch_db:industry_fsm_report.portal_my_task
@@ -462,7 +488,7 @@ msgstr "Hojas de trabajo"
 #. module: industry_fsm_report
 #: model_terms:ir.ui.view,arch_db:industry_fsm_report.project_project_form_inherit_industry_fsm_report
 msgid "e.g. Device Installation"
-msgstr ""
+msgstr "p. ej. instalación del dispositivo"
 
 #~ msgid "<strong>Template — </strong>"
 #~ msgstr "<strong>Plantilla — </strong>"

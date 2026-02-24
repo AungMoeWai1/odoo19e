@@ -4,13 +4,14 @@
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025.
+# Odoo Translation Bot <c3p@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:41+0000\n"
-"PO-Revision-Date: 2025-10-02 02:42+0000\n"
-"Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
+"POT-Creation-Date: 2026-01-30 18:49+0000\n"
+"PO-Revision-Date: 2025-11-27 14:16+0000\n"
+"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
 "sale_commission/ko/>\n"
 "Language: ko\n"
@@ -18,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: sale_commission
 #. odoo-python
@@ -309,7 +310,7 @@ msgstr "수수료 계획"
 #. module: sale_commission
 #: model:ir.model.fields,field_description:sale_commission.field_sale_commission_achievement_report__commission_rate
 msgid "Commission Rate"
-msgstr ""
+msgstr "수수료 요율"
 
 #. module: sale_commission
 #: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_report_view_search
@@ -319,12 +320,12 @@ msgstr "커미션 보고서"
 #. module: sale_commission
 #: model_terms:ir.ui.view,arch_db:sale_commission.sale_achievement_report_view_list
 msgid "Commission Target"
-msgstr ""
+msgstr "수수료 목표"
 
 #. module: sale_commission
 #: model:ir.model.fields,field_description:sale_commission.field_sale_commission_achievement_report__commission_target_amount
 msgid "Commission Target Amount"
-msgstr ""
+msgstr "수수료 목표액"
 
 #. module: sale_commission
 #: model:ir.model.fields,field_description:sale_commission.field_res_users__commission_plan_users_ids
@@ -521,7 +522,8 @@ msgstr "종료일"
 msgid ""
 "Ensure you are assigned to a commission plan and have made sales that "
 "qualify for commissions"
-msgstr "커미션 플랜에 배정되어 있고 자격을 충족하는 판매를 수행했는지 확인합니다."
+msgstr ""
+"커미션 플랜에 배정되어 있고 자격을 충족하는 판매를 수행했는지 확인합니다."
 
 #. module: sale_commission
 #. odoo-python
@@ -641,8 +643,9 @@ msgstr "지난 해"
 msgid ""
 "Main user sales team. Used notably for pipeline, or to set sales team in "
 "invoicing or subscription."
-msgstr "주 사용자인 영업팀입니다. 특히 파이프라인 관리에 사용하거나 영업팀에서 "
-"청구서 발행 또는 구독 업무를 진행할 경우에 사용합니다."
+msgstr ""
+"주 사용자인 영업팀입니다. 특히 파이프라인 관리에 사용하거나 영업팀에서 청구"
+"서 발행 또는 구독 업무를 진행할 경우에 사용합니다."
 
 #. module: sale_commission
 #: model:ir.model,name:sale_commission.model_sale_commission_achievement
@@ -754,9 +757,18 @@ msgid "Other plans"
 msgstr "다른 계획"
 
 #. module: sale_commission
+#. odoo-python
+#: code:addons/sale_commission/model/commission_plan_target.py:0
+msgid ""
+"Overlapping periods detected for plan '%(plan)s':\n"
+"- %(c_name)s [%(c_from)s → %(c_to)s]\n"
+"- %(n_name)s [%(n_from)s → %(n_to)s]"
+msgstr ""
+
+#. module: sale_commission
 #: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_target__payment_amount
 msgid "Payment Amount"
-msgstr ""
+msgstr "결제 금액"
 
 #. module: sale_commission
 #: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_target__payment_date
@@ -888,6 +900,7 @@ msgstr "영업 사원"
 #. module: sale_commission
 #: model:ir.model.fields,field_description:sale_commission.field_sale_commission_achievement_report__user_id
 #: model:ir.model.fields,field_description:sale_commission.field_sale_commission_report__user_id
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_plan_view_search
 msgid "Sales Person"
 msgstr "영업 담당자"
 
@@ -987,8 +1000,7 @@ msgstr "목표"
 #. module: sale_commission
 #. odoo-python
 #: code:addons/sale_commission/model/commission_plan.py:0
-msgid ""
-"The plan should have at least one target with an achievement rate of 0%"
+msgid "The plan should have at least one target with an achievement rate of 0%"
 msgstr "계획에는 달성률이 0%인 목표가 하나 이상 있어야 합니다."
 
 #. module: sale_commission
@@ -996,6 +1008,14 @@ msgstr "계획에는 달성률이 0%인 목표가 하나 이상 있어야 합니
 #: code:addons/sale_commission/model/commission_plan.py:0
 msgid "The start date must be before the end date."
 msgstr "시작일은 종료일 이전이어야 합니다"
+
+#. module: sale_commission
+#. odoo-python
+#: code:addons/sale_commission/model/commission_plan_target.py:0
+msgid ""
+"The start date must be before the end date.\n"
+"Period: %s"
+msgstr ""
 
 #. module: sale_commission
 #. odoo-python

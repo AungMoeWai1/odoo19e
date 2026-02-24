@@ -57,7 +57,7 @@ class BudgetLine(models.Model):
             line.is_above_budget = line.achieved_amount > line.budget_amount
 
     def _compute_all(self):
-        grouped = dict(self.env['budget.report']._read_group(
+        grouped = dict(self.env['budget.report'].with_context(budget_report_budget_line_ids=self.ids)._read_group(
             domain=[('budget_line_id', 'in', self.ids)],
             groupby=['budget_line_id'],
             aggregates=['achieved:sum'],
@@ -87,7 +87,7 @@ class BudgetLine(models.Model):
             company_alias = query.left_join(alias, 'company_id', 'res_company', 'id', 'company_id')
             return SQL(
                 "COALESCE(%(company_alias)s.currency_id, %(env_currency_id)s)",
-                company_alias=company_alias,
+                company_alias=SQL.identifier(company_alias),
                 env_currency_id=self.env.company.currency_id.id,
             )
         return super()._field_to_sql(alias, field_expr, query)
@@ -95,16 +95,33 @@ class BudgetLine(models.Model):
     def _read_group_select(self, aggregate_spec, query):
         # flag achieved_amount/theoritical_amount as aggregatable
         # and manually sum the values from the records in the group
-        if aggregate_spec in ('achieved_amount:sum', 'theoritical_amount:sum', 'theoritical_percentage:avg'):
+        if aggregate_spec in (
+            'achieved_amount:sum',
+            'achieved_amount:sum_currency',
+            'theoritical_amount:sum',
+            'theoritical_amount:sum_currency',
+            'theoritical_percentage:avg'
+        ):
             return super()._read_group_select('id:recordset', query)
         return super()._read_group_select(aggregate_spec, query)
 
     def _read_group_postprocess_aggregate(self, aggregate_spec, raw_values):
-        if aggregate_spec in ('achieved_amount:sum', 'theoritical_amount:sum', 'theoritical_percentage:avg'):
+        if aggregate_spec in (
+            'achieved_amount:sum',
+            'achieved_amount:sum_currency',
+            'theoritical_amount:sum',
+            'theoritical_amount:sum_currency',
+            'theoritical_percentage:avg'
+        ):
             field_name, op = aggregate_spec.split(':')
             column = super()._read_group_postprocess_aggregate('id:recordset', raw_values)
             if op == 'sum':
                 return (sum(records.mapped(field_name)) for records in column)
+            if op == 'sum_currency':
+                return (sum(record.currency_id._convert(
+                    from_amount=record[field_name],
+                    to_currency=self.env.company.currency_id,
+                ) for record in records) for records in column)
             if op == 'avg':
                 return (sum(records.mapped(field_name)) / len(records) for records in column)
         return super()._read_group_postprocess_aggregate(aggregate_spec, raw_values)
@@ -112,7 +129,7 @@ class BudgetLine(models.Model):
     def action_open_budget_entries(self):
         project_plan, other_plans = self.env['account.analytic.plan']._get_all_plans()
         all_plan = project_plan + other_plans
-        domain = [('budget_analytic_id', '=', self.budget_analytic_id.id)]
+        domain = [('budget_analytic_id', '=', self.budget_analytic_id.id), ('budget_line_id', '=', self.id)]
         for plan in all_plan:
             fname = plan._column_name()
             if self[fname]:

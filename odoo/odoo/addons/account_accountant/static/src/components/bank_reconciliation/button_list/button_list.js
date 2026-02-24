@@ -23,14 +23,12 @@ export class BankRecButtonList extends Component {
     static props = {
         statementLineRootRef: { type: Object },
         statementLine: { type: Object },
-        isTopLine: { type: Boolean, optional: true },
         suspenseAccountLine: { type: Object, optional: true },
         reconcileLineCount: { type: [Number, { value: null }], optional: true },
         reconcileModels: Array,
         preSelectedReconciliationModel: { type: Object, optional: true },
     };
     static defaultProps = {
-        isTopLine: false,
         reconcileLineCount: 0,
     };
 
@@ -52,6 +50,30 @@ export class BankRecButtonList extends Component {
         }
     }
 
+    async _setPartnerOnReconcileLine(partner_id) {
+        await this.orm.call("account.bank.statement.line", "set_partner_bank_statement_line", [
+            this.statementLineData.id,
+            partner_id,
+        ]);
+        const recordsToLoad = [];
+        if (this.statementLineData.partner_name) {
+            // Reload all impacted statement lines if we have a partner_name
+            recordsToLoad.push(
+                ...this.env.model.root.records.filter(
+                    (record) => record.data.partner_name === this.statementLineData.partner_name
+                )
+            );
+        } else {
+            recordsToLoad.push(this.props.statementLine);
+        }
+        await this.bankReconciliation.reloadRecords(recordsToLoad);
+        await this.bankReconciliation.computeReconcileLineCountPerPartnerId(
+            this.env.model.root.records
+        );
+        this.bankReconciliation.reloadChatter();
+        this.restoreFocus();
+    }
+
     /**
      * Displays a search dialog (no create option) for selecting a `res.partner` record.
      */
@@ -64,31 +86,7 @@ export class BankRecButtonList extends Component {
                 multiSelect: false,
                 resModel: "res.partner",
                 context: { default_name: this.statementLineData.partner_name },
-                onSelected: async (partner) => {
-                    await this.orm.call(
-                        "account.bank.statement.line",
-                        "set_partner_bank_statement_line",
-                        [this.statementLineData.id, partner[0]]
-                    );
-                    const recordsToLoad = [];
-                    if (this.statementLineData.partner_name) {
-                        // Reload all impacted statement lines if we have a partner_name
-                        recordsToLoad.push(
-                            ...this.env.model.root.records.filter(
-                                (record) =>
-                                    record.data.partner_name === this.statementLineData.partner_name
-                            )
-                        );
-                    } else {
-                        recordsToLoad.push(this.props.statementLine);
-                    }
-                    await this.bankReconciliation.reloadRecords(recordsToLoad);
-                    await this.bankReconciliation.computeReconcileLineCountPerPartnerId(
-                        this.env.model.root.records
-                    );
-                    this.bankReconciliation.reloadChatter();
-                    this.restoreFocus();
-                },
+                onSelected: async (partner) => await this._setPartnerOnReconcileLine(partner[0]),
             },
             {
                 onClose: () => {
@@ -116,6 +114,16 @@ export class BankRecButtonList extends Component {
                 title: _t("Search: Account"),
                 noCreate: true,
                 multiSelect: false,
+                domain: [
+                    [
+                        "id",
+                        "not in",
+                        [
+                            this.statementLineData.journal_id.suspense_account_id.id,
+                            this.statementLineData.journal_id.default_account_id.id,
+                        ],
+                    ],
+                ],
                 context: context,
                 resModel: "account.account",
                 onSelected: async (account) => {
@@ -168,12 +176,18 @@ export class BankRecButtonList extends Component {
      */
     async setAccountReceivableOnReconcileLine() {
         let accountId;
-        if (this.props.statementLine.data.partner_id.property_account_receivable_id.id) {
-            accountId = this.props.statementLine.data.partner_id.property_account_receivable_id.id;
+        if (this.statementLineData.partner_id.property_account_receivable_id.id) {
+            accountId = this.statementLineData.partner_id.property_account_receivable_id.id;
         } else {
-            accountId = await this.orm.webSearchRead("account.account", [
-                ["account_type", "=", "asset_receivable"],
-            ]);
+            const account = await this.orm.webSearchRead(
+                "account.account",
+                [
+                    ["company_ids", "=", this.statementLineData.company_id.id],
+                    ["account_type", "=", "asset_receivable"],
+                ],
+                { specification: {}, limit: 1 }
+            );
+            accountId = account.records[0].id;
         }
         await this._setAccountOnReconcileLine(this.lastAccountMoveLine.data.id, accountId);
         this.props.statementLine.load();
@@ -181,16 +195,22 @@ export class BankRecButtonList extends Component {
     }
 
     /**
-     * Sets the account payable on the current reconcile line..
+     * Sets the account payable on the current reconcile line.
      */
     async setAccountPayableOnReconcileLine() {
         let accountId;
         if (this.statementLineData.partner_id.property_account_payable_id.id) {
-            accountId = this.props.statementLine.data.partner_id.property_account_payable_id.id;
+            accountId = this.statementLineData.partner_id.property_account_payable_id.id;
         } else {
-            accountId = await this.orm.webSearchRead("account.account", [
-                ["account_type", "=", "liability_payable"],
-            ]);
+            const account = await this.orm.webSearchRead(
+                "account.account",
+                [
+                    ["company_ids", "=", this.statementLineData.company_id.id],
+                    ["account_type", "=", "liability_payable"],
+                ],
+                { specification: {}, limit: 1 }
+            );
+            accountId = account.records[0].id;
         }
         await this._setAccountOnReconcileLine(this.lastAccountMoveLine.data.id, accountId);
         this.props.statementLine.load();
@@ -407,7 +427,8 @@ export class BankRecButtonList extends Component {
                     this.props.statementLineRootRef.el.querySelector(".btn-primary") &&
                     this.isLineSelected,
                 action: () => {
-                    const primaryButtons = this.props.statementLineRootRef.el.querySelectorAll(".btn-primary");
+                    const primaryButtons =
+                        this.props.statementLineRootRef.el.querySelectorAll(".btn-primary");
                     if (primaryButtons.length > 0) {
                         primaryButtons[0].click();
                     }
@@ -525,13 +546,13 @@ export class BankRecButtonList extends Component {
         return this.props.reconcileLineCount === null || this.props.reconcileLineCount;
     }
 
-    get extraReconcileModelsToShow() {
+    get reconcileModelsInDropdown() {
         if (this.ui.isSmall) {
             return this.props.reconcileModels;
         }
-        return this.props.reconcileModels
-            .filter((model) => model.id !== this.props?.preSelectedReconciliationModel?.id)
-            .slice(3);
+        return this.props.reconcileModels.filter(
+            (model) => model.id !== this.props?.preSelectedReconciliationModel?.id
+        );
     }
 
     /**
@@ -547,6 +568,17 @@ export class BankRecButtonList extends Component {
                 action: this.setPartnerOnReconcileLine.bind(this),
                 classes: "set-partner-btn",
             };
+        } else {
+            buttonsToDisplay.receivable = {
+                label: _t("Receivable"),
+                action: this.setAccountReceivableOnReconcileLine.bind(this),
+                classes: "set-receivable-btn",
+            };
+            buttonsToDisplay.payable = {
+                label: _t("Payable"),
+                action: this.setAccountPayableOnReconcileLine.bind(this),
+                classes: "set-payable-btn",
+            };
         }
 
         if (this.isReconcileButtonShown) {
@@ -558,20 +590,6 @@ export class BankRecButtonList extends Component {
             };
         }
 
-        if (this.isSetReceivableButtonShown) {
-            buttonsToDisplay.receivable = {
-                label: _t("Receivable"),
-                action: this.setAccountReceivableOnReconcileLine.bind(this),
-                classes: "set-receivable-btn",
-            };
-        } else if (this.isSetPayableButtonShown) {
-            buttonsToDisplay.payable = {
-                label: _t("Payable"),
-                action: this.setAccountPayableOnReconcileLine.bind(this),
-                classes: "set-payable-btn",
-            };
-        }
-
         if (this.isSetAccountButtonShown) {
             buttonsToDisplay.account = {
                 label: _t("Set Account"),
@@ -580,26 +598,12 @@ export class BankRecButtonList extends Component {
             };
         }
 
-        if (this.props.statementLine.data.is_reconciled && !this.props.statementLine.data.checked) {
+        if (this.statementLineData.is_reconciled && !this.statementLineData.checked) {
             buttonsToDisplay.toReview = {
                 label: _t("Reviewed"),
                 action: this.setStatementLineAsReviewed.bind(this),
                 toReview: true,
             };
-        }
-
-        if (!this.ui.isSmall) {
-            const models = this.props.reconcileModels
-                .filter((model) => model.id !== this.props?.preSelectedReconciliationModel?.id)
-                .slice(0, 3)
-                .entries();
-            for (const [index, model] of models) {
-                buttonsToDisplay[`model_${model.id}`] = {
-                    label: model.display_name,
-                    action: this.triggerReconciliationModel.bind(this, model.id),
-                    classes: `reconciliation-model-btn-${index}`,
-                };
-            }
         }
 
         return buttonsToDisplay;
@@ -613,45 +617,38 @@ export class BankRecButtonList extends Component {
     get buttonsToDisplay() {
         const buttons = this.buttons || {};
 
-        if (buttons.toReview) {
-            return [buttons.toReview];
-        }
-
-        // This ensures that all buttons are visible in secondary when reco model is primary
-        if (this.props.preSelectedReconciliationModel && !this.props.isTopLine) {
-            return Object.values(buttons);
-        }
-
         let primaryButtonKeys = [];
-
+        let secondaryButtonKeys = [];
         if (buttons?.partner && buttons?.account) {
             primaryButtonKeys = ["partner", "account"];
         } else if (buttons?.reconcile && !!buttons.reconcile?.count) {
             primaryButtonKeys = ["reconcile"];
-        } else if (buttons?.receivable) {
+            if (this.isSetReceivableButtonShown) {
+                secondaryButtonKeys = ["receivable"];
+            } else {
+                secondaryButtonKeys = ["payable"];
+            }
+        } else if (this.isSetReceivableButtonShown) {
             primaryButtonKeys = ["receivable"];
-        } else if (buttons?.payable) {
+        } else if (this.isSetPayableButtonShown) {
             primaryButtonKeys = ["payable"];
         }
 
-        // Handle top line
-        if (this.props.isTopLine) {
-            return primaryButtonKeys.map((key) => ({ ...buttons[key], primary: true }));
-        }
-
-        // Get all other buttons excluding primary ones
-        const otherButtons = Object.keys(buttons)
-            .filter((key) => !primaryButtonKeys.includes(key))
-            .map((key) => buttons[key]);
-
-        if (this.ui.isSmall) {
-            return Object.values(buttons).slice(0, 3);
-        }
-        return otherButtons;
+        return [
+            ...primaryButtonKeys.map((key) => ({ ...buttons[key], primary: true })),
+            ...secondaryButtonKeys.map((key) => ({ ...buttons[key] })),
+        ];
     }
 
-    get mobileButtonsToDisplay() {
-        const buttons = Object.values(this.buttonsToDisplay);
-        return buttons.slice(3);
+    get buttonsInDropdown() {
+        const buttons = this.buttons || {};
+        if (this.props.preSelectedReconciliationModel) {
+            return Object.values(buttons);
+        }
+        const buttonToDisplayClasses = this.buttonsToDisplay.map((button) => button.classes) || [];
+        // Get all other buttons excluding primary ones
+        return Object.values(buttons).filter(
+            (button) => !buttonToDisplayClasses.includes(button.classes)
+        );
     }
 }

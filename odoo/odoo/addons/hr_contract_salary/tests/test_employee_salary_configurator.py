@@ -132,6 +132,7 @@ class TestEmployeeSalaryConfigurator(odoo.tests.HttpCase):
 
         cls.env.ref('base.user_admin').write({
             'company_ids': [(4, cls.company_id.id)],
+            'company_id': cls.company_id.id,
             'name': 'Mitchell Admin',
             'sign_signature': img_content,
         })
@@ -145,7 +146,7 @@ class TestEmployeeSalaryConfigurator(odoo.tests.HttpCase):
             'state_id': cls.env.ref('base.state_us_39').id,
             'phone': '+1 555-555-5555',
             'tz': 'Europe/Brussels',
-            'company_id': cls.env.company.id,
+            'company_id': cls.company_id.id,
         })
         cls.env.ref('base.main_partner').email = "info@yourcompany.example.com"
 
@@ -186,6 +187,8 @@ class TestEmployeeSalaryConfigurator(odoo.tests.HttpCase):
         self.assertEqual(len(active_versions), 1)
         self.assertEqual(active_versions[0].contract_date_start, date(2020, 1, 1))
         self.assertFalse(active_versions[0].contract_date_end)
+        employee.private_country_id = self.env.ref('base.be').id
+        employee.private_state_id = self.env.ref('base.state_be_1').id
         with freeze_time("2022-01-01 12:00:00"):
             self.start_tour("/", 'hr_contract_salary_employee_flow_tour', login='admin', timeout=350)
             self.assertEqual(len(active_versions), 1)

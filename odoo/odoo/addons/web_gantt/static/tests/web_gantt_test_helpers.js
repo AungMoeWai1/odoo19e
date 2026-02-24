@@ -100,8 +100,8 @@ export const SELECTORS = {
     rowHeader: ".o_gantt_row_header",
     rowTitle: ".o_gantt_row_title",
     rowTotal: ".o_gantt_row_total",
-    startDatePicker: ".o_gantt_picker:nth-child(2)",
-    stopDatePicker: ".o_gantt_picker:nth-child(4)",
+    startDatePicker: ".o_gantt_picker:nth-child(1)",
+    stopDatePicker: ".o_gantt_picker:nth-child(3)",
     thumbnail: ".o_gantt_row_thumbnail",
     scaleSelectorMenu: ".o_gantt_scale_selector_menu",
     scaleSelectorToggler: ".o_gantt_scale_selector .dropdown-toggle",
@@ -177,7 +177,7 @@ export async function selectCustomRange({ startDate, stopDate }) {
 export async function selectRange(label) {
     await click(SELECTORS.scaleSelectorToggler);
     await animationFrame();
-    await click(`${SELECTORS.scaleSelectorMenu} .dropdown-item:contains(/^${label}$/i)`);
+    await click(`${SELECTORS.scaleSelectorMenu} .dropdown-item:text(${label})`);
     await ganttControlsChanges();
 }
 
@@ -347,7 +347,12 @@ export function setCellParts(cellPart) {
 export function getGridContent(params = {}) {
     const columnHeaders = getHeaders(SELECTORS.columnHeader, params.setTitleAttrOnHeaders);
     const groupHeaders = getHeaders(SELECTORS.groupHeader, params.setTitleAttrOnHeaders);
-    const range = queryAllTexts(SELECTORS.scaleSelectorToggler)[0] || null;
+    const rangeElement = queryOne(SELECTORS.scaleSelectorToggler)
+    const arrow = queryFirst(".fa-long-arrow-right", { root: rangeElement });
+    const range = arrow
+        ? queryText(arrow.parentNode).split("\n").join(` -> `)
+        : queryText(SELECTORS.scaleSelectorToggler) || null;
+
     const viewTitle = queryAllTexts(".o_gantt_title")[0] || null;
     const colsRange = queryFirst(SELECTORS.columnHeader)
         .style.getPropertyValue("grid-column")
@@ -582,4 +587,20 @@ export function getPill(text, options) {
 /** @type {PillHelper<HTMLElement>} */
 export function getPillWrapper(text, options) {
     return getPill(text, options).closest(SELECTORS.pillWrapper);
+}
+
+/**
+ * For each cell of a specific column, checks whether the cell has the class in
+ * its' classList and returns as a list of booleans.
+ *
+ * @param {string} cssClass
+ * @param {string[]} columnHeaders
+ * @returns {boolean[]}
+ */
+export function cssClassPresencePerCellInColumn(cssClass, columnHeaders) {
+    const columnIndex = findColumnFromHeader(...columnHeaders);
+    const cells = queryAll(`${SELECTORS.cell}[data-col='${columnIndex}']`);
+    return cells.map((el) => {
+        return el.classList.contains(cssClass);
+    });
 }

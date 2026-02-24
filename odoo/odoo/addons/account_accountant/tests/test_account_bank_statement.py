@@ -30,6 +30,17 @@ class TestAccountBankStatement(TestBankRecWidgetCommon):
             ],
         })
 
+        cls.default_tax = cls.env['account.tax'].create({
+            'name': 'default_tax',
+            'amount_type': 'fixed',
+            'amount': 10.0,
+        })
+        cls.default_tax_account = cls.env['account.account'].create({
+            'name': 'account with default tax',
+            'code': '101010',
+            'tax_ids': [Command.set(cls.default_tax.ids)],
+        })
+
     def _create_and_post_payment(self, amount=100, memo=None, post=True, **kwargs):
         payment = self.env['account.payment'].create({
             'payment_type': 'inbound',
@@ -462,6 +473,7 @@ class TestAccountBankStatement(TestBankRecWidgetCommon):
         ])
 
     def test_early_payment_discount_basic_case_smaller_amount(self):
+        early_pay_acc = self.env.company.account_journal_early_pay_discount_loss_account_id
         st_line = self._create_st_line(100.0, date='2017-01-10', update_create_date=False)
         inv_line_with_epd = self._create_invoice_line(
             'out_invoice',
@@ -473,7 +485,8 @@ class TestAccountBankStatement(TestBankRecWidgetCommon):
         self.assertRecordValues(st_line.line_ids, [
             {'account_id': st_line.journal_id.default_account_id.id, 'amount_currency': 100.0, 'currency_id': self.company_data['currency'].id, 'balance': 100.0, 'reconciled': False},
             {'account_id': inv_line_with_epd.account_id.id, 'amount_currency': -90.0, 'currency_id': self.company_data['currency'].id, 'balance': -90.0, 'reconciled': True},
-            {'account_id': st_line.journal_id.suspense_account_id.id, 'amount_currency': -10.0, 'currency_id': self.company_data['currency'].id, 'balance': -10.0, 'reconciled': False},
+            {'account_id': early_pay_acc.id, 'amount_currency': 9.0, 'currency_id': self.company_data['currency'].id, 'balance': 9.0, 'reconciled': False},
+            {'account_id': st_line.journal_id.suspense_account_id.id, 'amount_currency': -19.0, 'currency_id': self.company_data['currency'].id, 'balance': -19.0, 'reconciled': False},
         ])
 
     def test_exchange_diff_basic_case(self):
@@ -785,6 +798,18 @@ class TestAccountBankStatement(TestBankRecWidgetCommon):
         st_line._retrieve_partner()
         self.assertFalse(st_line.partner_id)
 
+    def test_retrieve_partner_from_partner_name_odoobot(self):
+        """This test ensure that OdooBot is not set on a statement line with the retrieve partner"""
+        odoobot = self.env.ref('base.partner_root')
+        odoobot.company_id = self.env.company.id
+        st_line = self._create_st_line(
+            1000.0,
+            partner_id=None,
+            partner_name="ODOO",
+            update_create_date=False,
+        )
+        self.assertNotEqual(st_line.partner_id, odoobot)
+
     def test_retrieve_partner_from_previous_reconciled_st_line(self):
         """Test the retrieve partner from a previous reconciled st-line."""
         # Use 2 partner with the same name, so we can't retrieve it from the partner name
@@ -827,6 +852,22 @@ class TestAccountBankStatement(TestBankRecWidgetCommon):
         self.assertEqual(st_line_2.partner_id, partner_b)
         self.assertEqual(st_line_3.partner_id, bank_account.partner_id)
         self.assertEqual(st_line_4.partner_id, partner_c)
+
+    def test_retrieve_partner_with_multiple_matches(self):
+        """ Test if the retrieve partner from partner name doesn't erase the result of
+            the retrieve partner from bank account.
+        """
+        partner_a, _partner_b = self.env['res.partner'].create([
+            {'name': 'Bobybob'},
+            {'name': 'Turlututu'},
+        ])
+        bank_account = self.env['res.partner.bank'].create({
+            'acc_number': '123456789',
+            'partner_id': partner_a.id,
+        })
+        st_line = self._create_st_line(1000.0, partner_id=None, account_number="123456789", partner_name="Turlututu", update_create_date=False)
+        st_line._retrieve_partner()
+        self.assertEqual(st_line.partner_id, bank_account.partner_id)
 
     def test_res_partner_bank_find_create_when_archived(self):
         """ Test we don't get the "The combination Account Number/Partner must be unique." error with archived
@@ -1634,6 +1675,41 @@ class TestAccountBankStatement(TestBankRecWidgetCommon):
         reco_model = self.env.ref(f'account.account_reco_model_fee_{st_line.journal_id.id}', raise_if_not_found=False)
         self.assertTrue(reco_model, "A new reco model for fees should have been created")
 
+    def test_do_not_tolerate_if_rec_from_invoice(self):
+        self.env['ir.config_parameter'].set_param('account_accountant.bank_rec_payment_tolerance', '0.03')
+        inv_line = self._create_invoice_line(
+            'out_invoice',
+            partner_id=self.partner_a.id,
+            invoice_date='2020-01-01',
+            invoice_line_ids=[{'price_unit': 500.0}],
+        )
+        move = inv_line.move_id
+        st_line = self._create_st_line(
+            490.0,
+            date='2020-01-05',
+            partner_id=self.partner_a.id,
+            update_create_date=False,
+        )
+        move.js_assign_outstanding_line(st_line.line_ids[0].id)
+        self.assertEqual(move.status_in_payment, 'partial')
+        # Since we don't have the payment tolerance, we have a residual amount on the line and can be added to the statement
+        self.assertEqual(10, inv_line.amount_residual)
+        inv_line = self._create_invoice_line(
+            'out_invoice',
+            partner_id=self.partner_a.id,
+            invoice_date='2020-01-01',
+            invoice_line_ids=[{'price_unit': 500.0}],
+        )
+        move = inv_line.move_id
+        st_line = self._create_st_line(
+            490.0,
+            date='2020-01-05',
+            partner_id=self.partner_a.id,
+            update_create_date=False,
+        )
+        st_line.set_line_bank_statement_line(inv_line.id)
+        self.assertEqual(move.status_in_payment, 'paid')
+
     def test_exchange_diff_single_currency(self):
         """
         This test will create a new journal with another currencies as the one from the company with a rounding of 1. Then do a
@@ -1717,98 +1793,6 @@ class TestAccountBankStatement(TestBankRecWidgetCommon):
             "The test reco model should be assigned on the new suspense line",
         )
 
-    def test_author_of_the_messages_when_auto_reconciliation(self):
-        """ Test that the author of the messages in the chatter is set correctly when reconciling a statement lines automatically. """
-
-        invoice = self._create_invoice_line('out_invoice', partner_id=self.partner_a.id, invoice_line_ids=[{'price_unit': 1000.0}])
-        statement_line = self._create_st_line(1000.0, payment_ref=invoice.move_id.name, update_create_date=False)
-        self.env.cr.flush()  # force tracking message
-
-        statement_line.with_context(tracking_disable=False, mail_notrack=False)._try_auto_reconcile_statement_lines()
-        self.env.cr.flush()  # force tracking message
-
-        messages = self.env['mail.message'].search([
-            ('model', '=', 'account.move'),
-            ('res_id', '=', statement_line.move_id.id),
-        ])
-        self.assertEqual(len(messages), 3)
-        self.assertEqual(messages.author_id, self.env.ref('base.partner_root'), "The author of the messages should be OdooBot.")
-
-    def test_author_of_the_messages_when_manual_reconciliation(self):
-        """ Test that the author of the messages in the chatter is set correctly when reconciling a statement lines manually. """
-
-        invoice = self._create_invoice_line('out_invoice', partner_id=self.partner_a.id, invoice_line_ids=[{'price_unit': 1000.0}])
-        statement_line = self._create_st_line(1000.0, payment_ref=invoice.move_id.name, update_create_date=False)
-        self.env.cr.flush()  # force tracking message
-
-        statement_line.with_context(tracking_disable=False, mail_notrack=False).set_line_bank_statement_line(invoice.id)
-        self.env.cr.flush()  # force tracking message
-
-        messages = self.env['mail.message'].search([
-            ('model', '=', 'account.move'),
-            ('res_id', '=', statement_line.move_id.id),
-        ])
-        self.assertEqual(len(messages), 3)
-        self.assertEqual(messages.author_id, self.env.user.partner_id, "The author of the messages should be the current user.")
-
-    def test_author_of_the_messages_when_partner_set(self):
-        """ Test that the author of the messages in the chatter is set correctly when a partner is set manually or automatically on a statement line. """
-
-        invoice_1 = self._create_invoice_line('out_invoice', partner_id=self.partner_a.id, invoice_line_ids=[{'price_unit': 1000.0}])
-        invoice_2 = self._create_invoice_line('out_invoice', partner_id=self.partner_a.id, invoice_line_ids=[{'price_unit': 1500.0}])
-        statement_line_1 = self._create_st_line(1000.0, partner_name='xyz', payment_ref=invoice_1.move_id.name, update_create_date=False)
-        statement_line_2 = self._create_st_line(1500.0, partner_name='xyz', payment_ref=invoice_2.move_id.name, update_create_date=False)
-        self.env.cr.flush()  # force tracking message
-
-        statement_line_1.with_context(tracking_disable=False, mail_notrack=False).set_partner_bank_statement_line(self.partner_a.id)
-        self.env.cr.flush()  # force tracking message
-
-        messages = self.env['mail.message'].search([
-            ('model', '=', 'account.move'),
-            ('res_id', '=', statement_line_1.move_id.id),
-        ])
-        self.assertEqual(len(messages), 3)
-        self.assertEqual(messages[0].author_id, self.env.user.partner_id, "The author of the messages should be the current user.")
-
-        messages = self.env['mail.message'].search([
-            ('model', '=', 'account.move'),
-            ('res_id', '=', statement_line_2.move_id.id),
-        ])
-        self.assertEqual(len(messages), 3)
-        self.assertEqual(messages.author_id, self.env.ref('base.partner_root'), "The author of the messages should be the OdooBot.")
-
-    def test_author_of_the_messages_when_reco_model_set(self):
-        """ Test that the author of the messages in the chatter is set correctly when a reconciliation model is set manually or automatically on a statement line. """
-
-        reco_model = self.env['account.reconcile.model'].create({
-            'name': 'Test',
-            'match_label': 'contains',
-            'match_label_param': 'TEST',
-        })
-        statement_line_1 = self._create_st_line(1000.0, payment_ref="Testing 1", update_create_date=False)
-        statement_line_2 = self._create_st_line(1500.0, payment_ref="Testing 2", update_create_date=False)
-
-        # 1. Manual reco model set should be done by user
-        reco_model.with_context(tracking_disable=False, mail_notrack=False).trigger_reconciliation_model(statement_line_1.id)
-
-        messages = self.env['mail.message'].search([
-            ('model', '=', 'account.move'),
-            ('res_id', '=', statement_line_1.move_id.id),
-        ])
-        self.assertEqual(len(messages), 3)
-        self.assertEqual(messages[0].author_id, self.env.user.partner_id, "The author of the messages should be the current user.")
-
-        # 2. Automatic reco model set should be done by OdooBot
-        # We simulate the automatic reconciliation by setting the trigger to auto_reconcile on the reco model
-        reco_model.with_context(tracking_disable=False, mail_notrack=False).write({'trigger': 'auto_reconcile'})
-
-        messages = self.env['mail.message'].search([
-            ('model', '=', 'account.move'),
-            ('res_id', '=', statement_line_2.move_id.id),
-        ])
-        self.assertEqual(len(messages), 3)
-        self.assertEqual(messages.author_id, self.env.ref('base.partner_root'), "Automatic reco model set should be done by OdooBot.")
-
     def test_delete_lines_with_different_reco_model(self):
         reco_model1 = self.env['account.reconcile.model'].create({
             'name': 'Test reco model',
@@ -1845,45 +1829,25 @@ class TestAccountBankStatement(TestBankRecWidgetCommon):
         )
 
     def test_account_default_taxes_of_reco_model(self):
-        default_tax = self.env['account.tax'].create({
-            'name': "default_tax",
-            'amount_type': 'fixed',
-            'amount': -10.0,
-        })
-        account = self.env['account.account'].create({
-            'name': 'account with default tax',
-            'code': '101010',
-            'tax_ids': [Command.link(default_tax.id)]
-        })
         reco_model = self.env['account.reconcile.model'].create({
             'name': 'test reco model',
-            'line_ids': [Command.create({'account_id': account.id})],
+            'line_ids': [Command.create({'account_id': self.default_tax_account.id})],
         })
         st_line = self._create_st_line(100.0, update_create_date=False)
         reco_model._trigger_reconciliation_model(st_line)
         self.assertRecordValues(st_line.line_ids, [
-            {'account_id': st_line.journal_id.default_account_id.id, 'tax_ids': [], 'tax_line_id': False, 'amount_currency': 100.0, 'currency_id': self.company_data['currency'].id, 'balance': 100.0, 'reconciled': False},
-            {'account_id': account.id, 'tax_ids': default_tax.ids, 'tax_line_id': False, 'amount_currency': -90.0, 'currency_id': self.company_data['currency'].id, 'balance': -90.0, 'reconciled': False},
-            {'account_id': account.id, 'tax_ids': [], 'tax_line_id': default_tax.id, 'amount_currency': -10.0, 'currency_id': self.company_data['currency'].id, 'balance': -10.0, 'reconciled': False},
+            {'account_id': st_line.journal_id.default_account_id.id, 'tax_ids': [], 'tax_line_id': False, 'balance': 100.0, 'reconciled': False},
+            {'account_id': self.default_tax_account.id, 'tax_ids': self.default_tax.ids, 'tax_line_id': False, 'balance': -90.0, 'reconciled': False},
+            {'account_id': self.default_tax_account.id, 'tax_ids': [], 'tax_line_id': self.default_tax.id, 'balance': -10.0, 'reconciled': False},
         ])
 
     def test_add_default_tax_of_account_with_set_account(self):
-        default_tax = self.env['account.tax'].create({
-            'name': "default_tax",
-            'amount_type': 'fixed',
-            'amount': -20.0,
-        })
-        account = self.env['account.account'].create({
-            'name': 'account with default tax',
-            'code': '101010',
-            'tax_ids': [Command.link(default_tax.id)]
-        })
         st_line = self._create_st_line(200.0, update_create_date=False)
-        st_line.with_context(account_default_taxes=True).set_account_bank_statement_line(st_line.line_ids[-1].id, account.id)
+        st_line.with_context(account_default_taxes=True).set_account_bank_statement_line(st_line.line_ids[-1].id, self.default_tax_account.id)
         self.assertRecordValues(st_line.line_ids, [
-            {'account_id': st_line.journal_id.default_account_id.id, 'tax_ids': [], 'tax_line_id': False, 'amount_currency': 200.0, 'currency_id': self.company_data['currency'].id, 'balance': 200.0, 'reconciled': False},
-            {'account_id': account.id, 'tax_ids': default_tax.ids, 'tax_line_id': False, 'amount_currency': -180.0, 'currency_id': self.company_data['currency'].id, 'balance': -180.0, 'reconciled': False},
-            {'account_id': account.id, 'tax_ids': [], 'tax_line_id': default_tax.id, 'amount_currency': -20.0, 'currency_id': self.company_data['currency'].id, 'balance': -20.0, 'reconciled': False},
+            {'account_id': st_line.journal_id.default_account_id.id, 'tax_ids': [], 'tax_line_id': False, 'balance': 200.0, 'reconciled': False},
+            {'account_id': self.default_tax_account.id, 'tax_ids': self.default_tax.ids, 'tax_line_id': False, 'balance': -190.0, 'reconciled': False},
+            {'account_id': self.default_tax_account.id, 'tax_ids': [], 'tax_line_id': self.default_tax.id, 'balance': -10.0, 'reconciled': False},
         ])
 
     def test_reconcile_invoice_foreign_currency_lost_precision_case(self):
@@ -1981,6 +1945,40 @@ class TestAccountBankStatement(TestBankRecWidgetCommon):
         })
         statement_line.set_account_bank_statement_line(statement_line.line_ids[-1].id, self.company_data['default_account_revenue'].id)
         self.assertFalse(invoice.invoice_outstanding_credits_debits_widget, "Only statement lines with suspense account should be considered")
+
+    def test_reconcile_bill_with_account_default_tax(self):
+        """
+        Test reconciling a bill with the statement line, using the 'set account' button
+        to add an account with tax for the remaining balance.
+        This ensures we keep the bill matching after adding the account with tax.
+        """
+        tax = self.env['account.tax'].create({
+            'name': '10% tax',
+            'amount_type': 'percent',
+            'amount': 10.0,
+            'type_tax_use': 'purchase',
+        })
+        self.default_tax_account.tax_ids = tax
+        bill = self._create_invoice_line(
+            move_type='in_invoice',
+            invoice_date='2019-06-24',
+            invoice_line_ids=[{'price_unit': 2000.00, 'tax_ids': tax.ids}]
+        ).move_id
+        bill_rec_line = bill.line_ids.filtered(lambda x: x.account_id.account_type == 'liability_payable')
+        statement_line = self._create_st_line(amount=-2530, partner_id=self.partner_a.id)
+        statement_line.set_line_bank_statement_line(bill_rec_line.ids)
+        statement_line.with_context(account_default_taxes=True).set_account_bank_statement_line(statement_line.line_ids[-1].id, self.default_tax_account.id)
+
+        # Statement line: 2530
+        # Invoice: 2200 (2000 + 10% tax)
+        # Writeoff base line: 300
+        # Writeoff tax line: 30 (10% tax)
+        self.assertRecordValues(statement_line.line_ids, [
+            {'account_id': statement_line.journal_id.default_account_id.id, 'tax_ids': [], 'tax_line_id': False, 'balance': -2530.00, 'reconciled': False, 'reconciled_lines_ids': []},
+            {'account_id': bill_rec_line.account_id.id, 'tax_ids': [], 'tax_line_id': False, 'balance': 2200.00, 'reconciled': True, 'reconciled_lines_ids': bill_rec_line.ids},
+            {'account_id': self.default_tax_account.id, 'tax_ids': tax.ids, 'tax_line_id': False, 'balance': 300, 'reconciled': False, 'reconciled_lines_ids': []},
+            {'account_id': self.default_tax_account.id, 'tax_ids': [], 'tax_line_id': tax.id, 'balance': 30, 'reconciled': False, 'reconciled_lines_ids': []},
+        ])
 
     def test_reconcile_refund_with_bank_statement_line(self):
         """
@@ -2124,23 +2122,29 @@ class TestAccountBankStatement(TestBankRecWidgetCommon):
             {'account_id': st_line.journal_id.default_account_id.id, 'partner_id': self.partner_a.id, 'balance': 100.0, 'reconciled': False},
             {'account_id': self.account_revenue_1.id, 'partner_id': self.partner_a.id, 'balance': -100.0, 'reconciled': False},
         ])
+        st_line.edit_reconcile_line(st_line.line_ids[-1].id, {'balance': -20, 'amount_currency': -20})
+        st_line.set_account_bank_statement_line(st_line.line_ids[-1].id, self.account_revenue_1.id)
+        st_line.edit_reconcile_line(st_line.line_ids[-1].id, {'balance': -20, 'amount_currency': -20})
+        st_line.set_account_bank_statement_line(st_line.line_ids[-1].id, self.account_revenue_1.id)
+        self.assertRecordValues(st_line.line_ids, [
+            {'account_id': st_line.journal_id.default_account_id.id, 'partner_id': self.partner_a.id, 'balance': 100.0},
+            {'account_id': self.account_revenue_1.id, 'partner_id': self.partner_a.id, 'balance': -20.0},
+            {'account_id': self.account_revenue_1.id, 'partner_id': self.partner_a.id, 'balance': -20.0},
+            {'account_id': self.account_revenue_1.id, 'partner_id': self.partner_a.id, 'balance': -60.0},
+        ])
         st_line.edit_reconcile_line(st_line.line_ids[-1].id, {'partner_id': False})
         self.assertRecordValues(st_line.line_ids, [
-            {'account_id': st_line.journal_id.default_account_id.id, 'partner_id': self.partner_a.id, 'balance': 100.0, 'reconciled': False},
-            {'account_id': self.account_revenue_1.id, 'partner_id': False, 'balance': -100.0, 'reconciled': False},
+            {'account_id': st_line.journal_id.default_account_id.id, 'partner_id': self.partner_a.id, 'balance': 100.0},
+            {'account_id': self.account_revenue_1.id, 'partner_id': self.partner_a.id, 'balance': -20.0},
+            {'account_id': self.account_revenue_1.id, 'partner_id': self.partner_a.id, 'balance': -20.0},
+            {'account_id': self.account_revenue_1.id, 'partner_id': False, 'balance': -60.0},
         ])
-
-    def test_reconciliation_without_payment_account(self):
-        """Test reconciliation when there is no payment account on the payment method."""
-        # make sure that no payment account is set on the payment method lines
-        self.company_data['default_journal_bank'].inbound_payment_method_line_ids.payment_account_id = False
-        self.company_data['default_journal_bank'].outbound_payment_method_line_ids.payment_account_id = False
-        self._create_and_post_payment(amount=100)
-        statement_line = self._create_st_line(amount=100, update_create_date=False)
-        statement_line._try_auto_reconcile_statement_lines()
-        self.assertRecordValues(statement_line.line_ids, [
-            {'account_id': self.company_data['default_journal_bank'].default_account_id.id, 'balance': 100.0, 'reconciled': False},
-            {'account_id': self.company_data['default_journal_bank'].suspense_account_id.id, 'balance': -100.0, 'reconciled': False},
+        st_line.edit_reconcile_line(st_line.line_ids[2].id, {'partner_id': False})
+        self.assertRecordValues(st_line.line_ids, [
+            {'account_id': st_line.journal_id.default_account_id.id, 'partner_id': self.partner_a.id, 'balance': 100.0},
+            {'account_id': self.account_revenue_1.id, 'partner_id': self.partner_a.id, 'balance': -20.0},
+            {'account_id': self.account_revenue_1.id, 'partner_id': False, 'balance': -60.0},
+            {'account_id': self.account_revenue_1.id, 'partner_id': False, 'balance': -20.0},
         ])
 
     def test_analytic_distribution_for_early_payment_statement(self):
@@ -2204,6 +2208,207 @@ class TestAccountBankStatement(TestBankRecWidgetCommon):
 
         early_payment_line = statement.line_ids.filtered(lambda p: p.balance == 2.0)
         self.assertTrue(early_payment_line.analytic_distribution)
+
+    def test_reconciliation_without_payment_account(self):
+        """Test reconciliation when there is no payment account on the payment method."""
+        # make sure that no payment account is set on the payment method lines
+        self.company_data['default_journal_bank'].inbound_payment_method_line_ids.payment_account_id = False
+        self.company_data['default_journal_bank'].outbound_payment_method_line_ids.payment_account_id = False
+        self._create_and_post_payment(amount=100)
+        statement_line = self._create_st_line(amount=100, update_create_date=False)
+        statement_line._try_auto_reconcile_statement_lines()
+        self.assertRecordValues(statement_line.line_ids, [
+            {'account_id': self.company_data['default_journal_bank'].default_account_id.id, 'balance': 100.0, 'reconciled': False},
+            {'account_id': self.company_data['default_journal_bank'].suspense_account_id.id, 'balance': -100.0, 'reconciled': False},
+        ])
+
+    def test_set_account_then_edit_with_taxes(self):
+        st_line = self._create_st_line(200.0, update_create_date=False)
+        st_line.with_context(account_default_taxes=True).set_account_bank_statement_line(st_line.line_ids[-1].id, self.account_revenue_1.id)
+
+        st_line.edit_reconcile_line(st_line.line_ids[-1].id, {
+            'tax_ids': [Command.link(self.default_tax.id)],
+        })
+        self.assertRecordValues(st_line.line_ids, [
+            {'account_id': st_line.journal_id.default_account_id.id, 'tax_ids': [], 'tax_line_id': False, 'balance': 200.0, 'reconciled': False},
+            {'account_id': self.account_revenue_1.id, 'tax_ids': self.default_tax.ids, 'tax_line_id': False, 'balance': -190.0, 'reconciled': False},
+            {'account_id': self.account_revenue_1.id, 'tax_ids': [], 'tax_line_id': self.default_tax.id, 'balance': -10.0, 'reconciled': False},
+        ])
+
+    def test_delete_line_with_taxes(self):
+        st_line = self._create_st_line(200.0, update_create_date=False)
+        st_line.with_context(account_default_taxes=True).set_account_bank_statement_line(st_line.line_ids[-1].id, self.default_tax_account.id)
+        self.assertRecordValues(st_line.line_ids, [
+            {'account_id': st_line.journal_id.default_account_id.id, 'tax_ids': [], 'tax_line_id': False, 'balance': 200.0, 'reconciled': False},
+            {'account_id': self.default_tax_account.id, 'tax_ids': self.default_tax.ids, 'tax_line_id': False, 'balance': -190.0, 'reconciled': False},
+            {'account_id': self.default_tax_account.id, 'tax_ids': [], 'tax_line_id': self.default_tax.id, 'balance': -10.0, 'reconciled': False},
+        ])
+        # In the ui we cannot delete tax line, so we will delete the line link to the tax
+        st_line.delete_reconciled_line(st_line.line_ids[-2].id)
+        self.assertRecordValues(st_line.line_ids, [
+            {'account_id': st_line.journal_id.default_account_id.id, 'tax_ids': [], 'tax_line_id': False, 'balance': 200.0, 'reconciled': False},
+            {'account_id': st_line.journal_id.suspense_account_id.id, 'tax_ids': [], 'tax_line_id': False, 'balance': -200.0, 'reconciled': False},
+        ])
+
+    def test_delete_line_with_taxes_with_multiple_lines(self):
+        st_line = self._create_st_line(200.0, update_create_date=False)
+        self.default_tax_account.tax_ids = False
+        st_line.with_context(account_default_taxes=True).set_account_bank_statement_line(st_line.line_ids[-1].id, self.default_tax_account.id)
+        st_line.edit_reconcile_line(st_line.line_ids[-1].id, {'balance': -100, 'amount_currency': -100, 'tax_ids': [Command.link(self.default_tax.id)]})
+        self.assertRecordValues(st_line.line_ids, [
+            {'account_id': st_line.journal_id.default_account_id.id, 'tax_ids': [], 'tax_line_id': False, 'balance': 200.0, 'reconciled': False},
+            {'account_id': self.default_tax_account.id, 'tax_ids': self.default_tax.ids, 'tax_line_id': False, 'balance': -90.0, 'reconciled': False},
+            {'account_id': self.default_tax_account.id, 'tax_ids': [], 'tax_line_id': self.default_tax.id, 'balance': -10.0, 'reconciled': False},
+            {'account_id': st_line.journal_id.suspense_account_id.id, 'tax_ids': [], 'tax_line_id': False, 'balance': -100.0, 'reconciled': False},
+        ])
+        st_line.with_context(account_default_taxes=True).set_account_bank_statement_line(st_line.line_ids[-1].id, self.default_tax_account.id)
+        st_line.edit_reconcile_line(st_line.line_ids[-1].id, {'tax_ids': [Command.link(self.default_tax.id)]})
+        self.assertRecordValues(st_line.line_ids, [
+            {'account_id': st_line.journal_id.default_account_id.id, 'tax_ids': [], 'tax_line_id': False, 'balance': 200.0, 'reconciled': False},
+            {'account_id': self.default_tax_account.id, 'tax_ids': self.default_tax.ids, 'tax_line_id': False, 'balance': -90.0, 'reconciled': False},
+            {'account_id': self.default_tax_account.id, 'tax_ids': self.default_tax.ids, 'tax_line_id': False, 'balance': -90.0, 'reconciled': False},
+            {'account_id': self.default_tax_account.id, 'tax_ids': [], 'tax_line_id': self.default_tax.id, 'balance': -20.0, 'reconciled': False},
+        ])
+        # In the ui we cannot delete tax line, so we will delete the line link to the tax
+        st_line.delete_reconciled_line(st_line.line_ids[-2].id)
+        self.assertRecordValues(st_line.line_ids, [
+            {'account_id': st_line.journal_id.default_account_id.id, 'tax_ids': [], 'tax_line_id': False, 'balance': 200.0, 'reconciled': False},
+            {'account_id': self.default_tax_account.id, 'tax_ids': self.default_tax.ids, 'tax_line_id': False, 'balance': -90.0, 'reconciled': False},
+            {'account_id': self.default_tax_account.id, 'tax_ids': [], 'tax_line_id': self.default_tax.id, 'balance': -10.0, 'reconciled': False},
+            {'account_id': st_line.journal_id.suspense_account_id.id, 'tax_ids': [], 'tax_line_id': False, 'balance': -100.0, 'reconciled': False},
+        ])
+
+    def test_set_account_then_edit_remove_taxes(self):
+        st_line = self._create_st_line(200.0, update_create_date=False)
+        st_line.with_context(account_default_taxes=True).set_account_bank_statement_line(st_line.line_ids[-1].id, self.default_tax_account.id)
+        self.assertRecordValues(st_line.line_ids, [
+            {'account_id': st_line.journal_id.default_account_id.id, 'tax_ids': [], 'tax_line_id': False, 'balance': 200.0, 'reconciled': False},
+            {'account_id': self.default_tax_account.id, 'tax_ids': self.default_tax.ids, 'tax_line_id': False, 'balance': -190.0, 'reconciled': False},
+            {'account_id': self.default_tax_account.id, 'tax_ids': [], 'tax_line_id': self.default_tax.id, 'balance': -10.0, 'reconciled': False},
+        ])
+        st_line.edit_reconcile_line(st_line.line_ids[-2].id, {'tax_ids': [Command.unlink(self.default_tax.id)]})
+        self.assertRecordValues(st_line.line_ids, [
+            {'account_id': st_line.journal_id.default_account_id.id, 'tax_ids': [], 'tax_line_id': False, 'balance': 200.0, 'reconciled': False},
+            {'account_id': self.default_tax_account.id, 'tax_ids': [], 'tax_line_id': False, 'balance': -200.0, 'reconciled': False},
+        ])
+
+    def test_set_account_then_edit_multiple_taxes(self):
+        new_tax = self.env['account.tax'].create({
+            'name': 'new_tax',
+            'amount_type': 'fixed',
+            'amount': 20.0,
+        })
+        st_line = self._create_st_line(200.0, update_create_date=False)
+        st_line.with_context(account_default_taxes=True).set_account_bank_statement_line(st_line.line_ids[-1].id, self.default_tax_account.id)
+        self.assertRecordValues(st_line.line_ids, [
+            {'account_id': st_line.journal_id.default_account_id.id, 'tax_ids': [], 'tax_line_id': False, 'balance': 200.0, 'reconciled': False},
+            {'account_id': self.default_tax_account.id, 'tax_ids': self.default_tax.ids, 'tax_line_id': False, 'balance': -190.0, 'reconciled': False},
+            {'account_id': self.default_tax_account.id, 'tax_ids': [], 'tax_line_id': self.default_tax.id, 'balance': -10.0, 'reconciled': False},
+        ])
+        st_line.edit_reconcile_line(st_line.line_ids[-2].id, {'tax_ids': [Command.link(new_tax.id)]})
+        self.assertRecordValues(st_line.line_ids, [
+            {'account_id': st_line.journal_id.default_account_id.id, 'tax_ids': [], 'tax_line_id': False, 'balance': 200.0, 'reconciled': False},
+            {'account_id': self.default_tax_account.id, 'tax_ids': (self.default_tax + new_tax).ids, 'tax_line_id': False, 'balance': -170.0, 'reconciled': False},
+            {'account_id': self.default_tax_account.id, 'tax_ids': [], 'tax_line_id': new_tax.id, 'balance': -20.0, 'reconciled': False},
+            {'account_id': self.default_tax_account.id, 'tax_ids': [], 'tax_line_id': self.default_tax.id, 'balance': -10.0, 'reconciled': False},
+        ])
+
+    def test_set_account_multiple_taxes_delete_line(self):
+        new_tax = self.env['account.tax'].create({
+            'name': 'new_tax',
+            'amount_type': 'fixed',
+            'amount': 20.0,
+        })
+        self.default_tax_account.tax_ids = [Command.set((self.default_tax + new_tax).ids)]
+        st_line = self._create_st_line(200.0, update_create_date=False)
+        st_line.with_context(account_default_taxes=True).set_account_bank_statement_line(st_line.line_ids[-1].id, self.default_tax_account.id)
+        self.assertRecordValues(st_line.line_ids, [
+            {'account_id': st_line.journal_id.default_account_id.id, 'tax_ids': [], 'tax_line_id': False, 'balance': 200.0, 'reconciled': False},
+            {'account_id': self.default_tax_account.id, 'tax_ids': (self.default_tax + new_tax).ids, 'tax_line_id': False, 'balance': -170.0, 'reconciled': False},
+            {'account_id': self.default_tax_account.id, 'tax_ids': [], 'tax_line_id': self.default_tax.id, 'balance': -10.0, 'reconciled': False},
+            {'account_id': self.default_tax_account.id, 'tax_ids': [], 'tax_line_id': new_tax.id, 'balance': -20.0, 'reconciled': False},
+        ])
+        st_line.edit_reconcile_line(st_line.line_ids[1].id, {'tax_ids': [Command.unlink(self.default_tax.id)]})
+        self.assertRecordValues(st_line.line_ids, [
+            {'account_id': st_line.journal_id.default_account_id.id, 'tax_ids': [], 'tax_line_id': False, 'balance': 200.0, 'reconciled': False},
+            {'account_id': self.default_tax_account.id, 'tax_ids': new_tax.ids, 'tax_line_id': False, 'balance': -180.0, 'reconciled': False},
+            {'account_id': self.default_tax_account.id, 'tax_ids': [], 'tax_line_id': new_tax.id, 'balance': -20.0, 'reconciled': False},
+        ])
+
+    def test_set_account_then_edit_remove_taxes_and_add_new_tax(self):
+        new_tax = self.env['account.tax'].create({
+            'name': 'new_tax',
+            'amount_type': 'fixed',
+            'amount': 20.0,
+        })
+        st_line = self._create_st_line(200.0, update_create_date=False)
+        st_line.with_context(account_default_taxes=True).set_account_bank_statement_line(st_line.line_ids[-1].id, self.default_tax_account.id)
+        self.assertRecordValues(st_line.line_ids, [
+            {'account_id': st_line.journal_id.default_account_id.id, 'tax_ids': [], 'tax_line_id': False, 'balance': 200.0, 'reconciled': False},
+            {'account_id': self.default_tax_account.id, 'tax_ids': self.default_tax.ids, 'tax_line_id': False, 'balance': -190.0, 'reconciled': False},
+            {'account_id': self.default_tax_account.id, 'tax_ids': [], 'tax_line_id': self.default_tax.id, 'balance': -10.0, 'reconciled': False},
+        ])
+        st_line.edit_reconcile_line(st_line.line_ids[1].id, {'tax_ids': [Command.unlink(self.default_tax.id), Command.set(new_tax.ids)]})
+        self.assertRecordValues(st_line.line_ids, [
+            {'account_id': st_line.journal_id.default_account_id.id, 'tax_ids': [], 'tax_line_id': False, 'balance': 200.0, 'reconciled': False},
+            {'account_id': self.default_tax_account.id, 'tax_ids': new_tax.ids, 'tax_line_id': False, 'balance': -180.0, 'reconciled': False},
+            {'account_id': self.default_tax_account.id, 'tax_ids': [], 'tax_line_id': new_tax.id, 'balance': -20.0, 'reconciled': False},
+        ])
+
+    def test_set_account_then_edit_remove_taxes_and_add_new_taxes(self):
+        new_tax = self.env['account.tax'].create({
+            'name': 'new_tax',
+            'amount_type': 'fixed',
+            'amount': 20.0,
+        })
+        st_line = self._create_st_line(200.0, update_create_date=False)
+        st_line.with_context(account_default_taxes=True).set_account_bank_statement_line(st_line.line_ids[-1].id, self.default_tax_account.id)
+        self.assertRecordValues(st_line.line_ids, [
+            {'account_id': st_line.journal_id.default_account_id.id, 'tax_ids': [], 'tax_line_id': False, 'balance': 200.0, 'reconciled': False},
+            {'account_id': self.default_tax_account.id, 'tax_ids': self.default_tax.ids, 'tax_line_id': False, 'balance': -190.0, 'reconciled': False},
+            {'account_id': self.default_tax_account.id, 'tax_ids': [], 'tax_line_id': self.default_tax.id, 'balance': -10.0, 'reconciled': False},
+        ])
+        st_line.edit_reconcile_line(st_line.line_ids[1].id, {'tax_ids': [Command.unlink(self.default_tax.id), Command.set((new_tax + self.default_tax).ids)]})
+        self.assertRecordValues(st_line.line_ids, [
+            {'account_id': st_line.journal_id.default_account_id.id, 'tax_ids': [], 'tax_line_id': False, 'balance': 200.0, 'reconciled': False},
+            {'account_id': self.default_tax_account.id, 'tax_ids': (self.default_tax + new_tax).ids, 'tax_line_id': False, 'balance': -170.0, 'reconciled': False},
+            {'account_id': self.default_tax_account.id, 'tax_ids': [], 'tax_line_id': new_tax.id, 'balance': -20.0, 'reconciled': False},
+            {'account_id': self.default_tax_account.id, 'tax_ids': [], 'tax_line_id': self.default_tax.id, 'balance': -10.0, 'reconciled': False},
+        ])
+
+    def test_multiple_tax_with_different_types(self):
+        sale_tax = self.env['account.tax'].create({
+            'name': '10% S',
+            'amount': 10.0,
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+        })
+        purchase_tax = self.env['account.tax'].create({
+            'name': '10% P',
+            'amount': 10.0,
+            'amount_type': 'percent',
+            'type_tax_use': 'purchase',
+        })
+        st_line = self._create_st_line(100.0, update_create_date=False)
+        st_line.with_context(account_default_taxes=True).set_account_bank_statement_line(st_line.line_ids[-1].id, self.account_revenue_1.id)
+
+        st_line.edit_reconcile_line(st_line.line_ids[-1].id, {
+            'tax_ids': [Command.link(purchase_tax.id), Command.link(sale_tax.id)],
+        })
+        self.assertRecordValues(st_line.line_ids, [
+            {'account_id': st_line.journal_id.default_account_id.id, 'tax_ids': [], 'tax_line_id': False, 'balance': 100.0, 'reconciled': False},
+            {'account_id': self.account_revenue_1.id, 'tax_ids': (purchase_tax + sale_tax).ids, 'tax_line_id': False, 'balance': -83.34, 'reconciled': False},
+            {'account_id': self.account_revenue_1.id, 'tax_ids': [], 'tax_line_id': sale_tax.id, 'balance': -8.33, 'reconciled': False},
+            {'account_id': self.account_revenue_1.id, 'tax_ids': [], 'tax_line_id': purchase_tax.id, 'balance': -8.33, 'reconciled': False},
+        ])
+        st_line.edit_reconcile_line(st_line.line_ids[1].id, {
+            'tax_ids': [Command.unlink(purchase_tax.id)],
+        })
+        self.assertRecordValues(st_line.line_ids, [
+            {'account_id': st_line.journal_id.default_account_id.id, 'tax_ids': [], 'tax_line_id': False, 'balance': 100.0, 'reconciled': False},
+            {'account_id': self.account_revenue_1.id, 'tax_ids': sale_tax.ids, 'tax_line_id': False, 'balance': -90.91, 'reconciled': False},
+            {'account_id': self.account_revenue_1.id, 'tax_ids': [], 'tax_line_id': sale_tax.id, 'balance': -9.09, 'reconciled': False},
+        ])
 
     def test_upload_xml(self):
         xml = b"""<?xml version='1.0' encoding='UTF-8'?>
@@ -2339,4 +2544,640 @@ class TestAccountBankStatement(TestBankRecWidgetCommon):
         self.assertRecordValues(statement_line.line_ids, [
             {'account_id': self.company_data['default_journal_bank'].default_account_id.id, 'balance': -100.0, 'reconciled': False},
             {'account_id': self.company_data['default_account_payable'].id, 'balance': 100.0, 'reconciled': True},
+        ])
+
+    def test_auto_activate_currency_with_xml_file(self):
+        xml = b"""<?xml version='1.0' encoding='UTF-8'?>
+        <Invoice xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2">
+            <cbc:CustomizationID>urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0</cbc:CustomizationID>
+            <cbc:ProfileID>urn:fdc:peppol.eu:2017:poacc:billing:01:1.0</cbc:ProfileID>
+            <cbc:ID>INV/2023/00009</cbc:ID>
+            <cbc:IssueDate>2023-06-20</cbc:IssueDate>
+            <cbc:DueDate>2023-06-20</cbc:DueDate>
+            <cbc:InvoiceTypeCode>380</cbc:InvoiceTypeCode>
+            <cbc:Note>Terms and condition</cbc:Note>
+            <cbc:DocumentCurrencyCode>INR</cbc:DocumentCurrencyCode>
+            <cac:OrderReference>
+                <cbc:ID>DOEO</cbc:ID>
+            </cac:OrderReference>
+            <cac:AdditionalDocumentReference>
+                <cbc:ID>INV_2023_00009.pdf</cbc:ID>
+            </cac:AdditionalDocumentReference>
+            <cac:AccountingSupplierParty>
+            <cac:Party>
+                <cbc:EndpointID schemeID="9925">BE0246697724</cbc:EndpointID>
+                <cac:PartyName>
+                    <cbc:Name>BE Company CoA</cbc:Name>
+                </cac:PartyName>
+                <cac:PostalAddress>
+                    <cbc:StreetName>1021 Sint-Bernardsesteenweg</cbc:StreetName>
+                    <cbc:CityName>Antwerpen</cbc:CityName>
+                    <cbc:PostalZone>2660</cbc:PostalZone>
+                    <cac:Country>
+                    <cbc:IdentificationCode>BE</cbc:IdentificationCode>
+                    </cac:Country>
+                </cac:PostalAddress>
+                <cac:PartyTaxScheme>
+                    <cbc:CompanyID>BE0246697724</cbc:CompanyID>
+                    <cac:TaxScheme>
+                        <cbc:ID>VAT</cbc:ID>
+                    </cac:TaxScheme>
+                </cac:PartyTaxScheme>
+                <cac:PartyLegalEntity>
+                    <cbc:RegistrationName>BE Company CoA</cbc:RegistrationName>
+                    <cbc:CompanyID>BE0246697724</cbc:CompanyID>
+                </cac:PartyLegalEntity>
+                <cac:Contact>
+                    <cbc:Name>BE Company CoA</cbc:Name>
+                    <cbc:Telephone>+32 470 12 34 56</cbc:Telephone>
+                    <cbc:ElectronicMail>info@company.beexample.com</cbc:ElectronicMail>
+                  </cac:Contact>
+                </cac:Party>
+            </cac:AccountingSupplierParty>
+            <cac:AccountingCustomerParty>
+                <cac:Party>
+                    <cbc:EndpointID schemeID="9925">BE0665978937</cbc:EndpointID>
+                    <cac:PartyName>
+                        <cbc:Name>Proximus</cbc:Name>
+                    </cac:PartyName>
+                    <cac:PostalAddress>
+                        <cac:Country>
+                            <cbc:IdentificationCode>BE</cbc:IdentificationCode>
+                        </cac:Country>
+                    </cac:PostalAddress>
+                    <cac:PartyTaxScheme>
+                        <cbc:CompanyID>BE0665978937</cbc:CompanyID>
+                        <cac:TaxScheme>
+                            <cbc:ID>VAT</cbc:ID>
+                        </cac:TaxScheme>
+                    </cac:PartyTaxScheme>
+                    <cac:PartyLegalEntity>
+                        <cbc:RegistrationName>Proximus</cbc:RegistrationName>
+                        <cbc:CompanyID>BE0665978937</cbc:CompanyID>
+                    </cac:PartyLegalEntity>
+                    <cac:Contact>
+                        <cbc:Name>Proximus</cbc:Name>
+                    </cac:Contact>
+                </cac:Party>
+            </cac:AccountingCustomerParty>
+            <cac:Delivery>
+                <cac:DeliveryLocation>
+                    <cac:Address>
+                        <cac:Country>
+                            <cbc:IdentificationCode>BE</cbc:IdentificationCode>
+                        </cac:Country>
+                    </cac:Address>
+                </cac:DeliveryLocation>
+            </cac:Delivery>
+            <cac:PaymentMeans>
+                <cbc:PaymentMeansCode name="credit transfer">30</cbc:PaymentMeansCode>
+                <cbc:PaymentID>+++000/0000/22329+++</cbc:PaymentID>
+                <cac:PayeeFinancialAccount>
+                    <cbc:ID>BE83957821438115</cbc:ID>
+                </cac:PayeeFinancialAccount>
+            </cac:PaymentMeans>
+            <cac:LegalMonetaryTotal>
+                <cbc:LineExtensionAmount currencyID="INR">100.00</cbc:LineExtensionAmount>
+                <cbc:TaxExclusiveAmount currencyID="INR">100.00</cbc:TaxExclusiveAmount>
+                <cbc:TaxInclusiveAmount currencyID="INR">100.00</cbc:TaxInclusiveAmount>
+                <cbc:PrepaidAmount currencyID="INR">0.00</cbc:PrepaidAmount>
+                <cbc:PayableAmount currencyID="INR">100.00</cbc:PayableAmount>
+            </cac:LegalMonetaryTotal>
+            <cac:InvoiceLine>
+                <cbc:ID>984</cbc:ID>
+                <cbc:InvoicedQuantity unitCode="C62">1.0</cbc:InvoicedQuantity>
+                <cbc:LineExtensionAmount currencyID="INR">100.00</cbc:LineExtensionAmount>
+                <cac:Item>
+                    <cbc:Description>[FURN_6666] Acoustic Bloc Screens</cbc:Description>
+                    <cbc:Name>Acoustic Bloc Screens</cbc:Name>
+                    <cac:SellersItemIdentification>
+                        <cbc:ID>FURN_6666</cbc:ID>
+                    </cac:SellersItemIdentification>
+                    <cac:ClassifiedTaxCategory>
+                        <cbc:ID>S</cbc:ID>
+                        <cbc:Percent>21.0</cbc:Percent>
+                        <cac:TaxScheme>
+                            <cbc:ID>VAT</cbc:ID>
+                        </cac:TaxScheme>
+                    </cac:ClassifiedTaxCategory>
+                </cac:Item>
+                <cac:Price>
+                    <cbc:PriceAmount currencyID="INR">100.00</cbc:PriceAmount>
+                </cac:Price>
+            </cac:InvoiceLine>
+        </Invoice>
+        """
+        statement_line = self._create_st_line(amount=-100, update_create_date=False)
+        attachment = self.env['ir.attachment'].create({
+            'name': 'test_file',
+            'mimetype': 'text/xml',
+            'datas': base64.b64encode(xml),
+        })
+        test_currency = self.setup_other_currency('INR', rates=[('2025-01-01', 1.00)], active=False)
+        self.assertFalse(test_currency.active)
+        self.env['account.bank.statement.line'].with_context(
+            statement_line_id=statement_line.id,
+        ).create_document_from_attachment(attachment.ids)
+        self.assertRecordValues(statement_line.line_ids, [
+            {'account_id': self.company_data['default_journal_bank'].default_account_id.id, 'balance': -100.0, 'reconciled': False},
+            {'account_id': self.company_data['default_account_payable'].id, 'balance': 100.0, 'reconciled': True},
+        ])
+        self.assertTrue(test_currency.active)
+
+    def test_reconciliation_with_payment_terms(self):
+        """ Test the scenario where a transaction is already fully consumed before the last installment of the payment term.
+        When adding the invoice lines from the bank reconciliation widget, they should all be added despite the lower amount
+        on the statement line.
+        When adding the statement line from the invoice, the reconciliation should stop if the statement line amount is consumed,
+        partially paying the invoice.
+        """
+        payment_term = self.env['account.payment.term'].create({
+            'name': 'Test payment term',
+            'company_id': self.company_data['company'].id,
+            'line_ids': [
+                Command.create({
+                    'value': 'percent',
+                    'value_amount': amount,
+                    'nb_days': nb_days,
+                }) for amount, nb_days in [(33.33, 0), (33.33, 30), (33.34, 60)]
+            ],
+        })
+
+        payment_term_2 = self.env['account.payment.term'].create({
+            'name': 'Test payment term',
+            'company_id': self.company_data['company'].id,
+            'line_ids': [
+                Command.create({
+                    'value': 'percent',
+                    'value_amount': amount,
+                    'nb_days': nb_days,
+                }) for amount, nb_days in [(50.0, 0), (50.0, 30)]
+            ],
+        })
+        suspense_account = self.company_data['default_journal_bank'].suspense_account_id
+
+        # Case 1: No installments
+        statement_line = self._create_st_line(amount=-90, update_create_date=False)
+        move_line_1 = self._create_invoice_line('in_invoice', invoice_line_ids=[{'price_unit': 200.0}])
+        statement_line.set_line_bank_statement_line(move_line_1.ids)
+        self.assertRecordValues(statement_line.line_ids, [
+            {'account_id': statement_line.journal_id.default_account_id.id, 'amount_currency': -90.0, 'currency_id': self.company_data['currency'].id, 'balance': -90.0, 'reconciled': False},
+            {'account_id': move_line_1.account_id.id, 'amount_currency': 90.0, 'currency_id': self.company_data['currency'].id, 'balance': 90.0, 'reconciled': True},
+        ])
+
+        # Case 2: 2 installments
+        ## Case 2.1: Adding from the bank rec widget
+        statement_line = self._create_st_line(amount=-90, update_create_date=False)
+        move_line_1 = self._create_invoice_line('in_invoice', invoice_payment_term_id=payment_term_2.id, invoice_line_ids=[{'price_unit': 200.0}])
+        statement_line.set_line_bank_statement_line(move_line_1.ids)
+        self.assertRecordValues(statement_line.line_ids, [
+            {'account_id': statement_line.journal_id.default_account_id.id, 'amount_currency': -90.0, 'currency_id': self.company_data['currency'].id, 'balance': -90.0, 'reconciled': False},
+            {'account_id': move_line_1.account_id.id, 'amount_currency': 100.0, 'currency_id': self.company_data['currency'].id, 'balance': 100.0, 'reconciled': True},
+            {'account_id': move_line_1.account_id.id, 'amount_currency': 100.0, 'currency_id': self.company_data['currency'].id, 'balance': 100.0, 'reconciled': True},
+            {'account_id': suspense_account.id, 'amount_currency': -110.0, 'currency_id': self.company_data['currency'].id, 'balance': -110.0, 'reconciled': False},
+        ])
+        ## Case 2.2: Adding from the invoice
+        statement_line = self._create_st_line(amount=-90, update_create_date=False)
+        move_line_1 = self._create_invoice_line('in_invoice', invoice_payment_term_id=payment_term_2.id, invoice_line_ids=[{'price_unit': 200.0}])
+        move_line_1.move_id.js_assign_outstanding_line(statement_line.line_ids[0].id)
+        self.assertRecordValues(statement_line.line_ids, [
+            {'account_id': statement_line.journal_id.default_account_id.id, 'amount_currency': -90.0, 'currency_id': self.company_data['currency'].id, 'balance': -90.0, 'reconciled': False},
+            {'account_id': move_line_1.account_id.id, 'amount_currency': 90.0, 'currency_id': self.company_data['currency'].id, 'balance': 90.0, 'reconciled': True},
+        ])
+        ## Case 2.3: Adding from the invoice, with just enough for the first installment to be fully paid
+        statement_line = self._create_st_line(amount=-100, update_create_date=False)
+        move_line_1 = self._create_invoice_line('in_invoice', invoice_payment_term_id=payment_term_2.id, invoice_line_ids=[{'price_unit': 200.0}])
+        move_line_1.move_id.js_assign_outstanding_line(statement_line.line_ids[0].id)
+        self.assertRecordValues(statement_line.line_ids, [
+            {'account_id': statement_line.journal_id.default_account_id.id, 'amount_currency': -100.0, 'currency_id': self.company_data['currency'].id, 'balance': -100.0, 'reconciled': False},
+            {'account_id': move_line_1.account_id.id, 'amount_currency': 100.0, 'currency_id': self.company_data['currency'].id, 'balance': 100.0, 'reconciled': True},
+        ])
+
+        # Case 3: 3 installments
+        ## Case 3.1: Adding from the bank rec widget
+        statement_line = self._create_st_line(amount=-90, update_create_date=False)
+        move_line_1 = self._create_invoice_line('in_invoice', invoice_payment_term_id=payment_term.id, invoice_line_ids=[{'price_unit': 200.0}])
+        statement_line.set_line_bank_statement_line(move_line_1.ids)
+        self.assertRecordValues(statement_line.line_ids, [
+            {'account_id': statement_line.journal_id.default_account_id.id, 'amount_currency': -90.0, 'currency_id': self.company_data['currency'].id, 'balance': -90.0, 'reconciled': False},
+            {'account_id': move_line_1.account_id.id, 'amount_currency': 66.66, 'currency_id': self.company_data['currency'].id, 'balance': 66.66, 'reconciled': True},
+            {'account_id': move_line_1.account_id.id, 'amount_currency': 66.66, 'currency_id': self.company_data['currency'].id, 'balance': 66.66, 'reconciled': True},
+            {'account_id': move_line_1.account_id.id, 'amount_currency': 66.68, 'currency_id': self.company_data['currency'].id, 'balance': 66.68, 'reconciled': True},
+            {'account_id': suspense_account.id, 'amount_currency': -110.0, 'currency_id': self.company_data['currency'].id, 'balance': -110.0, 'reconciled': False},
+        ])
+        ## Case 3.2: Adding from the invoice
+        statement_line = self._create_st_line(amount=-90, update_create_date=False)
+        move_line_1 = self._create_invoice_line('in_invoice', invoice_payment_term_id=payment_term.id, invoice_line_ids=[{'price_unit': 200.0}])
+        move_line_1.move_id.js_assign_outstanding_line(statement_line.line_ids[0].id)
+        self.assertRecordValues(statement_line.line_ids, [
+            {'account_id': statement_line.journal_id.default_account_id.id, 'amount_currency': -90.0, 'currency_id': self.company_data['currency'].id, 'balance': -90.0, 'reconciled': False},
+            {'account_id': move_line_1.account_id.id, 'amount_currency': 66.66, 'currency_id': self.company_data['currency'].id, 'balance': 66.66, 'reconciled': True},
+            {'account_id': move_line_1.account_id.id, 'amount_currency': 23.34, 'currency_id': self.company_data['currency'].id, 'balance': 23.34, 'reconciled': True},
+        ])
+
+        # Case 4:  3 installments with foreign currency on invoice
+        ## Case 4.1: Adding from the bank rec widget
+        statement_line_2 = self._create_st_line(amount=-90, update_create_date=False)
+        move_line_2 = self._create_invoice_line('in_invoice', currency_id=self.other_currency.id, invoice_payment_term_id=payment_term.id, invoice_line_ids=[{'price_unit': 400.0}])
+        statement_line_2.set_line_bank_statement_line(move_line_2.ids)
+        self.assertRecordValues(statement_line_2.line_ids, [
+            {'account_id': statement_line_2.journal_id.default_account_id.id, 'amount_currency': -90.0, 'currency_id': self.company_data['currency'].id, 'balance': -90.0, 'reconciled': False},
+            {'account_id': move_line_2.account_id.id, 'amount_currency': 133.32, 'currency_id': self.other_currency.id, 'balance': 66.66, 'reconciled': True},
+            {'account_id': move_line_2.account_id.id, 'amount_currency': 133.32, 'currency_id': self.other_currency.id, 'balance': 66.66, 'reconciled': True},
+            {'account_id': move_line_2.account_id.id, 'amount_currency': 133.36, 'currency_id': self.other_currency.id, 'balance': 66.68, 'reconciled': True},
+            {'account_id': suspense_account.id, 'amount_currency': -110.0, 'currency_id': self.company_data['currency'].id, 'balance': -110.0, 'reconciled': False},
+        ])
+        ## Case 4.2: Adding from the invoice
+        statement_line_2 = self._create_st_line(amount=-90, update_create_date=False)
+        move_line_2 = self._create_invoice_line('in_invoice', currency_id=self.other_currency.id, invoice_payment_term_id=payment_term.id, invoice_line_ids=[{'price_unit': 400.0}])
+        move_line_2.move_id.js_assign_outstanding_line(statement_line_2.line_ids[0].id)
+        self.assertRecordValues(statement_line_2.line_ids, [
+            {'account_id': statement_line_2.journal_id.default_account_id.id, 'amount_currency': -90.0, 'currency_id': self.company_data['currency'].id, 'balance': -90.0, 'reconciled': False},
+            {'account_id': move_line_2.account_id.id, 'amount_currency': 133.32, 'currency_id': self.other_currency.id, 'balance': 66.66, 'reconciled': True},
+            {'account_id': move_line_2.account_id.id, 'amount_currency': 46.68, 'currency_id': self.other_currency.id, 'balance': 23.34, 'reconciled': True},
+        ])
+
+        # Case 5: 3 installments with foreign currency on statement line
+        new_journal = self.env['account.journal'].create({
+            'name': 'test',
+            'code': 'TBNK',
+            'type': 'bank',
+            'currency_id': self.other_currency.id,
+        })
+        suspense_account_other = new_journal.suspense_account_id
+        ## Case 5.1: Adding from the bank rec widget
+        statement_line_3 = self._create_st_line(amount=-180, journal_id=new_journal.id, update_create_date=False)
+        move_line_3 = self._create_invoice_line('in_invoice', invoice_payment_term_id=payment_term.id, invoice_line_ids=[{'price_unit': 200.0}])
+        statement_line_3.set_line_bank_statement_line(move_line_3.ids)
+        self.assertRecordValues(statement_line_3.line_ids, [
+            {'account_id': statement_line_3.journal_id.default_account_id.id, 'amount_currency': -180.0, 'currency_id': self.other_currency.id, 'balance': -90.0, 'reconciled': False},
+            {'account_id': move_line_3.account_id.id, 'amount_currency': 66.66, 'currency_id': self.company_data['currency'].id, 'balance': 66.66, 'reconciled': True},
+            {'account_id': move_line_3.account_id.id, 'amount_currency': 66.66, 'currency_id': self.company_data['currency'].id, 'balance': 66.66, 'reconciled': True},
+            {'account_id': move_line_3.account_id.id, 'amount_currency': 66.68, 'currency_id': self.company_data['currency'].id, 'balance': 66.68, 'reconciled': True},
+            {'account_id': suspense_account_other.id, 'amount_currency': -220.0, 'currency_id': self.other_currency.id, 'balance': -110.0, 'reconciled': False},
+        ])
+        ## Case 5.2: Adding from the invoice
+        statement_line_3 = self._create_st_line(amount=-180, journal_id=new_journal.id, update_create_date=False)
+        move_line_3 = self._create_invoice_line('in_invoice', invoice_payment_term_id=payment_term.id, invoice_line_ids=[{'price_unit': 200.0}])
+        move_line_3.move_id.js_assign_outstanding_line(statement_line_3.line_ids[0].id)
+        self.assertRecordValues(statement_line_3.line_ids, [
+            {'account_id': statement_line_3.journal_id.default_account_id.id, 'amount_currency': -180.0, 'currency_id': self.other_currency.id, 'balance': -90.0, 'reconciled': False},
+            {'account_id': move_line_3.account_id.id, 'amount_currency': 66.66, 'currency_id': self.company_data['currency'].id, 'balance': 66.66, 'reconciled': True},
+            {'account_id': move_line_3.account_id.id, 'amount_currency': 23.34, 'currency_id': self.company_data['currency'].id, 'balance': 23.34, 'reconciled': True},
+        ])
+
+        # Case 6: 3 installments with foreign currency on both invoice and statement line
+        ## Case 6.1: Adding from the bank rec widget
+        statement_line_4 = self._create_st_line(amount=-180, journal_id=new_journal.id, update_create_date=False)
+        move_line_4 = self._create_invoice_line('in_invoice', currency_id=self.other_currency.id, invoice_payment_term_id=payment_term.id, invoice_line_ids=[{'price_unit': 400.0}])
+        statement_line_4.set_line_bank_statement_line(move_line_4.ids)
+        self.assertRecordValues(statement_line_4.line_ids, [
+            {'account_id': statement_line_4.journal_id.default_account_id.id, 'amount_currency': -180.0, 'currency_id': self.other_currency.id, 'balance': -90.0, 'reconciled': False},
+            {'account_id': move_line_4.account_id.id, 'amount_currency': 133.32, 'currency_id': self.other_currency.id, 'balance': 66.66, 'reconciled': True},
+            {'account_id': move_line_4.account_id.id, 'amount_currency': 133.32, 'currency_id': self.other_currency.id, 'balance': 66.66, 'reconciled': True},
+            {'account_id': move_line_4.account_id.id, 'amount_currency': 133.36, 'currency_id': self.other_currency.id, 'balance': 66.68, 'reconciled': True},
+            {'account_id': suspense_account_other.id, 'amount_currency': -220.0, 'currency_id': self.other_currency.id, 'balance': -110.0, 'reconciled': False},
+        ])
+        ## Case 6.2: Adding from the invoice
+        statement_line_4 = self._create_st_line(amount=-180, journal_id=new_journal.id, update_create_date=False)
+        move_line_4 = self._create_invoice_line('in_invoice', currency_id=self.other_currency.id, invoice_payment_term_id=payment_term.id, invoice_line_ids=[{'price_unit': 400.0}])
+        move_line_4.move_id.js_assign_outstanding_line(statement_line_4.line_ids[0].id)
+        self.assertRecordValues(statement_line_4.line_ids, [
+            {'account_id': statement_line_4.journal_id.default_account_id.id, 'amount_currency': -180.0, 'currency_id': self.other_currency.id, 'balance': -90.0, 'reconciled': False},
+            {'account_id': move_line_4.account_id.id, 'amount_currency': 133.32, 'currency_id': self.other_currency.id, 'balance': 66.66, 'reconciled': True},
+            {'account_id': move_line_4.account_id.id, 'amount_currency': 46.68, 'currency_id': self.other_currency.id, 'balance': 23.34, 'reconciled': True},
+        ])
+
+        for move in (move_line_1 + move_line_2 + move_line_3 + move_line_4).mapped('move_id'):
+            self.assertEqual(move.payment_state, 'partial')
+
+    def test_create_rule_during_reconcile_with_previous_statements(self):
+        """
+        Test auto creation of reconciliation rule with line references having a
+        common trailing space
+        """
+        refs = (
+                'TEST REFERENCE TO NORMALIZE   123,12',
+                'TEST REFERENCE TO NORMALIZE  234,23',
+                'TEST REFERENCE TO NORMALIZE 345,12',
+                'TEST REFERENCE TO NORMALIZE   234,12',
+                'TEST REFERENCE TO NORMALIZE 123,12',
+        )
+        bank_lines = self.env['account.bank.statement.line'].create([
+            {
+                'journal_id': self.company_data['default_journal_bank'].id,
+                'date': '2020-01-01',
+                'payment_ref': payment_ref,
+                'amount': 100,
+                'sequence': 1,
+                'counterpart_account_id': self.account_revenue_1.id,
+            } for payment_ref in refs
+        ])
+
+        bank_lines[-1].set_account_bank_statement_line(bank_lines[-1].line_ids[-1].id, self.account_revenue_1.id)
+
+        # Reconciliation rule created succesfully with the escaped common substring
+        rule = self.env['account.reconcile.model'].search([
+            ('match_label_param', '=', 'TEST\\ REFERENCE\\ TO\\ NORMALIZE\\ '),
+        ], limit=1)
+        self.assertTrue(rule)
+
+    def test_auto_match_multiple_candidates_select_closer_prior_date(self):
+        self._create_invoice_line('out_invoice', invoice_date='2017-01-10', invoice_line_ids=[{'price_unit': 150}])
+        move_line_2 = self._create_invoice_line('out_invoice', invoice_date='2017-01-08', invoice_line_ids=[{'price_unit': 150}])
+        self._create_invoice_line('out_invoice', invoice_date='2017-01-06', invoice_line_ids=[{'price_unit': 150}])
+        statement_line = self._create_st_line(amount=150, partner_id=self.partner_a.id, date='2017-01-08', update_create_date=False)
+        statement_line._try_auto_reconcile_statement_lines()
+        # move_line_2 will be selected because it's the one with the closer prior or equal date.
+        self.assertEqual(statement_line.line_ids[-1].reconciled_lines_ids, move_line_2)
+
+    def test_set_partner_on_statement_line_reconciles_with_move_line_missing_invoice_date(self):
+        """Test that setting a partner on statement line reconciles it with a move line missing an
+        invoice_date."""
+        # Draft invoice (no invoice_date set)
+        draft_move = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [Command.create({'name': 'line', 'price_unit': 100})],
+        })
+        self.assertFalse(draft_move.line_ids[0].invoice_date)
+
+        prior_move_line = self._create_invoice_line(
+            'out_invoice', invoice_date='2017-01-08', invoice_line_ids=[{'price_unit': 100}]
+        )
+        statement_line = self._create_st_line(100.0, date='2017-01-10')
+        statement_line.set_partner_bank_statement_line(self.partner_a.id)
+
+        self.assertEqual(statement_line.partner_id, self.partner_a)
+        self.assertEqual(statement_line.line_ids[-1].reconciled_lines_ids, prior_move_line)
+
+    def test_edit_statement_line_with_exchange_diff(self):
+        """ When editing a bank statement line with an exchange diff, like setting the invoice
+            as fully paid, the exchange diff should be replaced by a new one, and the invoice
+            should be marked as fully paid.
+
+            That's what we do, but when the currency rate decrease, the exchange diff is first
+            reverted and reconcile, then we try to reconcile the other lines. But the reconciled
+            exchange diff line is interfering with the other one's.
+
+            It shouldn't be the case, and the reconciled exchange diff lines should be filtered
+            out of the lines to edit.
+        """
+        chf_currency = self.setup_other_currency('CHF', rates=[('2016-01-01', 2.0), ('2016-06-20', 1.0)])
+        chf_journal = self.env['account.journal'].create({
+            'name': 'Test Bank CHF',
+            'type': 'bank',
+            'code': 'TBCHF',
+            'currency_id': chf_currency.id,
+        })
+        invoice_line = self._create_invoice_line(
+            'out_invoice',
+            invoice_date='2016-06-15',
+            invoice_line_ids=[{'price_unit': 1000.0}],
+            currency_id=chf_currency.id,
+        )
+        st_line = self._create_st_line(950.0, date='2016-06-21', update_create_date=False, foreign_currency_id=chf_currency.id, journal_id=chf_journal.id)
+        st_line.set_line_bank_statement_line(invoice_line.ids)
+        st_line.edit_reconcile_line(st_line.line_ids[1].id, {'balance': -1000, 'amount_currency': -1000})
+        self.assertEqual(invoice_line.move_id.status_in_payment, 'paid')
+        self.assertRecordValues(st_line.line_ids, [
+            {'balance': 950.0,      'reconciled': False},
+            {'balance': -1000.0,    'reconciled': True},
+            {'balance': 50.0,       'reconciled': False},
+        ])
+
+    def test_reconcile_epd_with_exchange_diff(self):
+        """ When setting an invoice containing an early payment discount that should also apply an exchange difference,
+            a payment with move is created to correctly handle the EPD + exchange différence, as we don't want any
+            exchange difference line in the bank rec widget.
+        """
+        chf_currency = self.setup_other_currency('CHF', rates=[('2016-01-01', 2.0), ('2016-06-20', 4.0)])
+        invoice_line = self._create_invoice_line(
+            'out_invoice',
+            invoice_date='2016-06-15',
+            invoice_payment_term_id=self.early_payment_term.id,
+            invoice_line_ids=[{'price_unit': 100.0}],
+            currency_id=chf_currency.id,
+        )
+        st_line = self._create_st_line(22.5, date='2016-06-21', update_create_date=False, foreign_currency_id=chf_currency.id)
+        st_line.set_line_bank_statement_line(invoice_line.ids)
+        payment_move = invoice_line.move_id.matched_payment_ids.move_id
+        self.assertTrue(payment_move)
+        outstanding_line = payment_move.line_ids.filtered(lambda line: line.account_type == 'asset_current')
+        self.assertRecordValues(st_line.line_ids, [
+            {'account_id': st_line.journal_id.default_account_id.id,    'partner_id': self.partner_a.id,   'balance': 22.5,    'amount_currency': 22.5,  'reconciled': False},
+            {'account_id': outstanding_line.account_id.id,              'partner_id': self.partner_a.id,   'balance': -22.5,   'amount_currency': -90.0, 'reconciled': True},
+        ])
+
+    def test_reconcile_epd_with_partial(self):
+        """ When reconciling an invoice with an early payment discount on a statement line
+            with an amount smaller than the invoice's one (even after applying the EPD),
+            the line should still be a partial.
+        """
+        st_line = self._create_st_line(70.0, date='2017-01-10', update_create_date=False)
+        inv_line_with_epd = self._create_invoice_line(
+            'out_invoice',
+            date='2017-01-04',
+            invoice_payment_term_id=self.early_payment_term.id,
+            invoice_line_ids=[{'price_unit': 100.0}],
+        )
+        st_line.set_line_bank_statement_line(inv_line_with_epd.id)
+        self.assertRecordValues(st_line.line_ids, [
+            {'account_id': st_line.journal_id.default_account_id.id,    'balance': 70.0,    'reconciled': False},
+            {'account_id': inv_line_with_epd.account_id.id,             'balance': -70.0,   'reconciled': True},
+        ])
+
+    def test_reconcile_bill_epd_with_larger_statement_line(self):
+        """ Tests a basic case of applying an early payment discount on a vendor bill.
+            When adding it on a statement line that has a larger amount, it should still apply the EPD
+        """
+        st_line = self._create_st_line(-200.0, date='2017-01-10', update_create_date=False)
+        early_pay_acc = self.env.company.account_journal_early_pay_discount_gain_account_id
+        bill_line_with_epd = self._create_invoice_line(
+            'in_invoice',
+            date='2017-01-04',
+            invoice_payment_term_id=self.early_payment_term.id,
+            invoice_line_ids=[{'price_unit': 100.0}],
+        )
+        st_line.set_line_bank_statement_line(bill_line_with_epd.id)
+        self.assertRecordValues(st_line.line_ids, [
+            {'account_id': st_line.journal_id.default_account_id.id,    'balance': -200.0,  'reconciled': False},
+            {'account_id': bill_line_with_epd.account_id.id,            'balance': 100.0,   'reconciled': True},
+            {'account_id': early_pay_acc.id,                            'balance': -10.0,    'reconciled': False},
+            {'account_id': st_line.journal_id.suspense_account_id.id,   'balance': 110.0,  'reconciled': False},
+        ])
+
+    def test_line_computation_on_edit_line(self):
+        """ When editing a statement line, only the edited line, the suspense and
+            the not reconciled lines should be modified.
+        """
+        usd_currency = self.setup_other_currency('USD', rates=[('2017-01-01', 2.00)])
+        eur_currency = self.setup_other_currency('EUR', rates=[('2017-01-01', 1.00)])
+        eur_journal = self.env['account.journal'].create({
+            'name': 'Test Bank EUR',
+            'type': 'bank',
+            'code': 'TBEUR',
+            'currency_id': eur_currency.id,
+        })
+        st_line = self._create_st_line(5000, date='2017-01-10', update_create_date=False, journal_id=eur_journal.id)
+        eur_invoice_line = self._create_invoice_line(
+            'out_invoice',
+            invoice_date='2017-01-10',
+            invoice_line_ids=[{'price_unit': 1000.0}],
+            currency_id=eur_currency.id,
+        )
+        usd_invoice_line = self._create_invoice_line(
+            'out_invoice',
+            invoice_date='2017-01-10',
+            invoice_line_ids=[{'price_unit': 1000.0}],
+            currency_id=usd_currency.id,
+        )
+        st_line.set_line_bank_statement_line(usd_invoice_line.id)
+        st_line.set_line_bank_statement_line(eur_invoice_line.id)
+        st_line.set_account_bank_statement_line(st_line.line_ids[-1].id, self.account_revenue_1.id)
+        st_line.edit_reconcile_line(st_line.line_ids[-1].id, {'balance': -2000, 'amount_currency': -1000})
+        self.assertRecordValues(st_line.line_ids, [
+            {'amount_currency': 5000.0, 'balance': 10000.0, 'reconciled': False},
+            {'amount_currency': -1000.0, 'balance': -1000.0, 'reconciled': True},
+            {'amount_currency': -1000.0, 'balance': -2000.0, 'reconciled': True},
+            {'amount_currency': -1000.0, 'balance': -2000.0, 'reconciled': False},
+            {'amount_currency': -2500.0, 'balance': -5000.0, 'reconciled': False},
+        ])
+
+    def test_reconcile_partialed_amounts(self):
+        """ Scenario of reconciling an invoice line with multiple statements
+        of lesser amounts, resulting in multiple partial reconciliation amounts.
+        """
+        st_line_50 = self._create_st_line(50.0, update_create_date=False)
+        st_line_300 = self._create_st_line(300.0, update_create_date=False)
+        st_line_400 = self._create_st_line(400.0, update_create_date=False)
+        st_line_500 = self._create_st_line(500.0, update_create_date=False)
+        inv_line = self._create_invoice_line('out_invoice', invoice_line_ids=[{'price_unit': 1000.0}])
+
+        st_line_50.set_line_bank_statement_line(inv_line.id)
+        self.assertRecordValues(st_line_50.line_ids, [
+            {'account_id': st_line_50.journal_id.default_account_id.id,     'balance': 50.0,    'reconciled': False},
+            {'account_id': inv_line.account_id.id,                          'balance': -50.0,   'reconciled': True},
+        ])
+
+        st_line_300.set_line_bank_statement_line(inv_line.id)
+        self.assertRecordValues(st_line_300.line_ids, [
+            {'account_id': st_line_300.journal_id.default_account_id.id,    'balance': 300.0,   'reconciled': False},
+            {'account_id': inv_line.account_id.id,                          'balance': -300.0,  'reconciled': True},
+        ])
+
+        st_line_400.set_line_bank_statement_line(inv_line.id)
+        self.assertRecordValues(st_line_400.line_ids, [
+            {'account_id': st_line_400.journal_id.default_account_id.id,    'balance': 400.0,   'reconciled': False},
+            {'account_id': inv_line.account_id.id,                          'balance': -400.0,  'reconciled': True},
+        ])
+
+        st_line_500.set_line_bank_statement_line(inv_line.id)
+        self.assertRecordValues(st_line_500.line_ids, [
+            {'account_id': st_line_500.journal_id.default_account_id.id,    'balance': 500.0,   'reconciled': False},
+            {'account_id': inv_line.account_id.id,                          'balance': -250.0,  'reconciled': True},
+            {'account_id': st_line_500.journal_id.suspense_account_id.id,   'balance': -250.0,  'reconciled': False},
+        ])
+
+    def test_full_amount_switch_html_multi_statements(self):
+        """ Test full_amount_switch_html is computed only for move lines related to statement lines """
+        st_line_50 = self._create_st_line(50.0, update_create_date=False)
+        st_line_300 = self._create_st_line(300.0, update_create_date=False)
+        inv_line = self._create_invoice_line('out_invoice', invoice_line_ids=[{'price_unit': 350.0}])
+
+        st_line_50.set_line_bank_statement_line(inv_line.id)
+        st_line_300.set_line_bank_statement_line(inv_line.id)
+
+        self.assertFalse(inv_line.full_amount_switch_html)
+        self.assertTrue(any(line.full_amount_switch_html for line in st_line_50.line_ids))
+        self.assertTrue(any(line.full_amount_switch_html for line in st_line_300.line_ids))
+
+    def test_apply_full_amount_html_currencies(self):
+        st_line = self._create_st_line(50.0, update_create_date=False)
+        invoice_line = self._create_invoice_line(
+            'out_invoice',
+            invoice_date='2017-01-1',
+            invoice_payment_term_id=self.early_payment_term.id,
+            invoice_line_ids=[{'price_unit': 150.0}],
+            currency_id=self.other_currency.id,
+        )
+        st_line.set_line_bank_statement_line(invoice_line.id)
+        self.assertRecordValues(st_line.line_ids, [
+            {'account_id': st_line.journal_id.default_account_id.id, 'balance': 50.0, 'amount_currency': 50.0, 'reconciled': False},
+            {'account_id': invoice_line.account_id.id, 'balance': -50.0, 'amount_currency': -100.0, 'reconciled': True},
+        ])
+        st_line.edit_reconcile_line(st_line.line_ids[-1].id, {'balance': -150, 'amount_currency': -300})
+        self.assertRecordValues(st_line.line_ids, [
+            {'account_id': st_line.journal_id.default_account_id.id, 'balance': 50.0, 'amount_currency': 50.0, 'reconciled': False},
+            {'account_id': invoice_line.account_id.id, 'balance': -150.0, 'amount_currency': -300.0, 'reconciled': False},
+            {'account_id': st_line.journal_id.suspense_account_id.id, 'balance': 100.0, 'amount_currency': 100.0, 'reconciled': False},
+        ])
+
+    def test_edit_reconcile_line_with_positive_balance(self):
+        """Editing a reconciled bank statement line with a positive balance should update the line
+           and create a suspense line."""
+        st_line = self._create_st_line(50.0, update_create_date=False)
+        invoice_line = self._create_invoice_line(
+            'out_invoice',
+            invoice_date='2017-01-1',
+            invoice_payment_term_id=self.early_payment_term.id,
+            invoice_line_ids=[{'price_unit': 150.0}],
+            currency_id=self.other_currency.id,
+        )
+        st_line.set_line_bank_statement_line(invoice_line.id)
+        self.assertRecordValues(st_line.line_ids, [
+            {'account_id': st_line.journal_id.default_account_id.id, 'balance': 50.0, 'amount_currency': 50.0, 'reconciled': False},
+            {'account_id': invoice_line.account_id.id, 'balance': -50.0, 'amount_currency': -100.0, 'reconciled': True},
+        ])
+        st_line.edit_reconcile_line(st_line.line_ids[-1].id, {'balance': 150, 'amount_currency': 300})
+        self.assertRecordValues(st_line.line_ids, [
+            {'account_id': st_line.journal_id.default_account_id.id, 'balance': 50.0, 'amount_currency': 50.0, 'reconciled': False},
+            {'account_id': invoice_line.account_id.id, 'balance': 150.0, 'amount_currency': 300.0, 'reconciled': False},
+            {'account_id': st_line.journal_id.suspense_account_id.id, 'balance': -200.0, 'amount_currency': -200.0, 'reconciled': False},
+        ])
+
+    def test_reco_model_empty_space_at_the_end(self):
+        st_line_1 = self._create_st_line(amount=100, payment_ref="Pret                            ", update_create_date=False)
+        st_line_2 = self._create_st_line(amount=100, payment_ref="Course                            ", update_create_date=False)
+
+        st_line_1.set_account_bank_statement_line(st_line_1.line_ids[-1].id, self.account_revenue_1.id)
+        st_line_2.set_account_bank_statement_line(st_line_2.line_ids[-1].id, self.account_revenue_1.id)
+
+        # No reco model should be created
+        reco_model = self.env['account.reconcile.model'].search([
+            ('match_label', '=', 'match_regex'),
+            ('match_label_param', '=', '\\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ '),
+        ])
+        self.assertFalse(reco_model.exists())
+
+    def test_set_partner_multiple_statement_line(self):
+        invoice_1 = self._create_invoice_line('out_invoice', partner_id=self.partner_a.id, invoice_line_ids=[{'price_unit': 1000.0}])
+        invoice_2 = self._create_invoice_line('out_invoice', partner_id=self.partner_a.id, invoice_line_ids=[{'price_unit': 1500.0}])
+        statement_line_1 = self._create_st_line(amount=100, update_create_date=False, partner_id=False)
+        statement_line_2 = self._create_st_line(1000.0, partner_name='xyz', payment_ref=invoice_1.move_id.name, update_create_date=False)
+        statement_line_3 = self._create_st_line(1500.0, partner_name='xyz', payment_ref=invoice_2.move_id.name, update_create_date=False)
+        self.env.cr.flush()  # force tracking message
+
+        (statement_line_1 + statement_line_2).with_context(
+            tracking_disable=False,
+            mail_notrack=False,
+        ).set_partner_bank_statement_line(self.partner_a.id)
+        self.env.cr.flush()  # force tracking message
+
+        self.assertEqual(statement_line_1.partner_id, self.partner_a)
+        self.assertEqual(statement_line_2.partner_id, self.partner_a)
+        self.assertEqual(statement_line_3.partner_id, self.partner_a)
+
+    def test_set_account_multiple_statement_lines(self):
+        st_line_1 = self._create_st_line(500.0, update_create_date=False)
+        st_line_2 = self._create_st_line(500.0, update_create_date=False)
+
+        (st_line_1 + st_line_2).set_account_bank_statement_line([st_line_1.line_ids[-1].id, st_line_2.line_ids[-1].id], self.account_revenue_1.id)
+        self.assertRecordValues(st_line_1.line_ids, [
+            {'account_id': st_line_1.journal_id.default_account_id.id, 'amount_currency': 500.0, 'balance': 500.0, 'reconciled': False},
+            {'account_id': self.company_data['default_account_revenue'].id, 'amount_currency': -500.0, 'balance': -500.0, 'reconciled': False},
+        ])
+        self.assertRecordValues(st_line_2.line_ids, [
+            {'account_id': st_line_2.journal_id.default_account_id.id, 'amount_currency': 500.0, 'balance': 500.0, 'reconciled': False},
+            {'account_id': self.company_data['default_account_revenue'].id, 'amount_currency': -500.0, 'balance': -500.0, 'reconciled': False},
         ])

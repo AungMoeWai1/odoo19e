@@ -3,13 +3,14 @@
 # * industry_fsm_sale
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:35+0000\n"
-"PO-Revision-Date: 2025-09-24 11:34+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2025-12-30 18:45+0000\n"
+"PO-Revision-Date: 2025-11-16 13:44+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Greek <https://translate.odoo.com/projects/odoo-19/"
 "industry_fsm_sale/el/>\n"
 "Language: el\n"
@@ -50,10 +51,13 @@ msgid ""
 "<p class=\"o_view_nocontent_smiling_face\">\n"
 "                            No products found. Let's create one!\n"
 "                        </p><p>\n"
-"                            Keep track of the products you are using to complete your tasks, and invoice your customers for the goods.\n"
-"                            Tip: using kits, you can add multiple products at once.\n"
+"                            Keep track of the products you are using to "
+"complete your tasks, and invoice your customers for the goods.\n"
+"                            Tip: using kits, you can add multiple products "
+"at once.\n"
 "                        </p><p>\n"
-"                            When your task is marked as done, your stock will be updated automatically. Simply choose a warehouse\n"
+"                            When your task is marked as done, your stock "
+"will be updated automatically. Simply choose a warehouse\n"
 "                            in your profile from where to draw stock.\n"
 "                        </p>"
 msgstr ""
@@ -69,7 +73,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:industry_fsm_sale.project_view_form_inherit
 msgid ""
 "<span invisible=\"not is_fsm\">\n"
-"                    Define the service and the rate at which an employee's time is billed based on their expertise, skills or experience.\n"
+"                    Define the service and the rate at which an employee's "
+"time is billed based on their expertise, skills or experience.\n"
 "                </span>"
 msgstr ""
 
@@ -119,7 +124,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/industry_fsm_sale/models/project_task.py:0
 msgid "Add Products"
-msgstr ""
+msgstr "Προσθέστε Είδη"
 
 #. module: industry_fsm_sale
 #: model_terms:ir.ui.view,arch_db:industry_fsm_sale.industry_fsm_sale_product_catalog_inherit_search_view
@@ -170,8 +175,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/industry_fsm_sale/static/src/js/tours/industry_fsm_sale_tour.js:0
 msgid ""
-"Choose a <b>name</b> for your product <i>(e.g. Bolts, Screws, Boiler, "
-"etc.).</i>"
+"Choose a <b>name</b> for your product <i>(e.g. Bolts, Screws, Boiler, etc.)."
+"</i>"
 msgstr ""
 
 #. module: industry_fsm_sale
@@ -232,7 +237,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:industry_fsm_sale.field_sale_order__display_name
 #: model:ir.model.fields,field_description:industry_fsm_sale.field_sale_order_line__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Εμφάνιση Ονόματος"
 
 #. module: industry_fsm_sale
 #. odoo-python
@@ -289,7 +294,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:industry_fsm_sale.field_sale_order__id
 #: model:ir.model.fields,field_description:industry_fsm_sale.field_sale_order_line__id
 msgid "ID"
-msgstr ""
+msgstr "Κωδικός"
 
 #. module: industry_fsm_sale
 #: model:ir.model.fields,help:industry_fsm_sale.field_project_task__under_warranty
@@ -503,8 +508,11 @@ msgstr "Γραμμή Παραγγελίας"
 #. module: industry_fsm_sale
 #: model:ir.model.fields,help:industry_fsm_sale.field_project_project__sale_line_id
 msgid ""
-"Sales order item that will be selected by default on the tasks and timesheets of this project, except if the employee set on the timesheets is explicitely linked to another sales order item on the project.\n"
-"It can be modified on each task and timesheet entry individually if necessary."
+"Sales order item that will be selected by default on the tasks and "
+"timesheets of this project, except if the employee set on the timesheets is "
+"explicitely linked to another sales order item on the project.\n"
+"It can be modified on each task and timesheet entry individually if "
+"necessary."
 msgstr ""
 
 #. module: industry_fsm_sale
@@ -628,7 +636,8 @@ msgid ""
 "        !! Set the task a high priority\n"
 "        !!! Set the task a urgent priority\n"
 "\n"
-"        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
+"        Make sure to use the right format and order e.g. Improve the "
+"configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
 
 #. module: industry_fsm_sale

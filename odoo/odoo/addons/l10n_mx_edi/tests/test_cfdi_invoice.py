@@ -96,6 +96,17 @@ class TestCFDIInvoice(TestMxEdiCommon):
                 invoice._l10n_mx_edi_cfdi_invoice_try_send()
             self._assert_invoice_cfdi(invoice, 'test_customer_in_mx_to_public_inv')
 
+    def test_customer_mx_incomplete_address(self):
+        with self.mx_external_setup(self.frozen_today):
+            for zip_code, country in (['33826', None], [None, self.env.ref('base.mx')], [None, None]):
+                self.partner_mx.zip = zip_code
+                self.partner_mx.country_id = country
+                invoice = self._create_invoice()
+                with self.with_mocked_pac_sign_success():
+                    invoice._l10n_mx_edi_cfdi_invoice_try_send()
+                self.assertTrue(invoice.l10n_mx_edi_cfdi_to_public)
+                self._assert_invoice_cfdi(invoice, 'test_customer_mx_incomplete_address')
+
     def test_invoice_taxes_no_tax(self):
         with self.mx_external_setup(self.frozen_today):
             # Test the invoice CFDI.
@@ -202,6 +213,14 @@ class TestCFDIInvoice(TestMxEdiCommon):
             self._assert_invoice_payment_cfdi(payment.move_id, 'test_invoice_taxes_ieps_payment')
 
     def test_invoice_taxes_local(self):
+        local_fixed_tax = self.env['account.tax'].create({
+            'name': 'local fixed tax',
+            'amount': 5.0,
+            'amount_type': 'fixed',
+            'l10n_mx_tax_type': 'local',
+            'l10n_mx_factor_type': 'Cuota',
+            'tax_group_id': self.local_tax_group.id,
+        })
         with self.mx_external_setup(self.frozen_today):
             # Test the invoice CFDI.
             invoice = self._create_invoice(
@@ -225,6 +244,12 @@ class TestCFDIInvoice(TestMxEdiCommon):
                         'product_id': self.product.id,
                         'price_unit': 4000.0,
                         'tax_ids': [Command.set(self.tax_16.ids)],
+                    }),
+                    Command.create({
+                        'product_id': self.product.id,
+                        'price_unit': 2500.0,
+                        'quantity': 2.0,
+                        'tax_ids': [Command.set(local_fixed_tax.ids)],
                     }),
                 ],
             )
@@ -698,6 +723,29 @@ class TestCFDIInvoice(TestMxEdiCommon):
                 'state': 'invoice_sent_failed',
             }])
 
+    def test_invoice_negative_lines_on_multiple_lines(self):
+        with self.mx_external_setup(self.frozen_today):
+            invoice = self._create_invoice(
+                invoice_line_ids=[
+                    Command.create({
+                        'product_id': self.product.id,
+                        'quantity': quantity,
+                        'price_unit': price_unit,
+                        'tax_ids': [Command.set(self.tax_0.ids)],
+                    })
+                    for quantity, price_unit in (
+                        (1.0, 326.4),
+                        (1.0, 24.0),
+                        (1.0, 172.8),
+                        (1.0, 691.2),
+                        (-1.0, 1149.6),
+                    )
+                ],
+            )
+            with self.with_mocked_pac_sign_success():
+                invoice._l10n_mx_edi_cfdi_invoice_try_send()
+            self._assert_invoice_cfdi(invoice, 'test_invoice_negative_lines_on_multiple_lines')
+
     def test_invoice_payment_policy(self):
         """ Ensure the invoice payment policy isn't override by the partner payment policy. """
         with self.mx_external_setup(self.frozen_today):
@@ -947,12 +995,42 @@ class TestCFDIInvoice(TestMxEdiCommon):
             branch.l10n_mx_edi_certificate_ids = certificate
             self.cr.precommit.run()  # load the CoA
 
-            branch = self.env.company.child_ids
+            self.assertRecordValues(self.env.company, [{
+                'l10n_mx_edi_global_invoice_sequence_id': False,
+                'l10n_mx_edi_global_invoice_sequence_prefix': 'GINV/',
+            }])
+
+            self.assertRecordValues(branch, [{
+                'l10n_mx_edi_global_invoice_sequence_id': False,
+                'l10n_mx_edi_global_invoice_sequence_prefix': 'GINV/',
+            }])
+
             self.product.company_id = branch
+
+            # Invoice.
             invoice = self._create_invoice(company_id=branch.id)
             with self.with_mocked_pac_sign_success():
                 invoice._l10n_mx_edi_cfdi_invoice_try_send()
-            self._assert_invoice_cfdi(invoice, 'test_invoice_company_branch')
+            self._assert_invoice_cfdi(invoice, 'test_invoice_company_branch_inv')
+
+            # Global invoice using the sequence of the root company.
+            invoice = self._create_invoice(company_id=branch.id, l10n_mx_edi_cfdi_to_public=True)
+            with self.with_mocked_pac_sign_success():
+                invoice._l10n_mx_edi_cfdi_global_invoice_try_send()
+            self._assert_global_invoice_cfdi_from_invoices(invoice, 'test_invoice_company_branch_ginvoice_1')
+
+            # Global invoice with a custom global invoice sequence on the branch.
+            branch.l10n_mx_edi_global_invoice_sequence_prefix = "SAL/"
+
+            self.assertRecordValues(branch, [{
+                'l10n_mx_edi_global_invoice_sequence_prefix': 'SAL/',
+            }])
+            self.assertTrue(branch.l10n_mx_edi_global_invoice_sequence_id)
+
+            invoice = self._create_invoice(company_id=branch.id, l10n_mx_edi_cfdi_to_public=True)
+            with self.with_mocked_pac_sign_success():
+                invoice._l10n_mx_edi_cfdi_global_invoice_try_send()
+            self._assert_global_invoice_cfdi_from_invoices(invoice, 'test_invoice_company_branch_ginvoice_2')
 
     def test_invoice_then_refund(self):
         # Create an invoice then sign it.
@@ -1381,7 +1459,7 @@ class TestCFDIInvoice(TestMxEdiCommon):
             {
                 'xml_file': 'test_import_invoice_cfdi_unknown_partner_2',
                 'expected_invoice_vals': {
-                    'l10n_mx_edi_cfdi_to_public': False,
+                    'l10n_mx_edi_cfdi_to_public': True,
                 },
                 'expected_partner_vals': {
                     'name': "PARTNER_US",
@@ -2179,6 +2257,127 @@ class TestCFDIInvoice(TestMxEdiCommon):
                 invoice._l10n_mx_edi_cfdi_invoice_try_send()
             self._assert_invoice_cfdi(invoice, 'test_cfdi_rounding_23_inv')
 
+    def test_cfdi_rounding_24(self):
+        self.tax_16.price_include_override = 'tax_excluded'
+
+        with self.mx_external_setup(self.frozen_today):
+            invoice = self._create_invoice(
+                l10n_mx_edi_cfdi_to_public=True,
+                invoice_line_ids=[
+                    Command.create({
+                        'product_id': self.product.id,
+                        'price_unit': 47.25,
+                        'tax_ids': [Command.set(self.tax_16.ids)],
+                        'discount': 50,
+                    }),
+                ],
+            )
+            with self.with_mocked_pac_sign_success():
+                invoice._l10n_mx_edi_cfdi_global_invoice_try_send()
+            self._assert_global_invoice_cfdi_from_invoices(invoice, 'test_cfdi_rounding_24_inv')
+
+    def test_cfdi_rounding_25(self):
+        self.env['decimal.precision'].search([('name', '=', 'Product Price')]).digits = 6
+        with self.mx_external_setup(self.frozen_today):
+            invoice = self._create_invoice(
+                invoice_line_ids=[
+                    Command.create({
+                        'product_id': self.product.id,
+                        'price_unit': 100.032,
+                        'discount': 50.0,
+                        'tax_ids': [Command.set(self.tax_16.ids)],
+                    })
+                ])
+            with self.with_mocked_pac_sign_success():
+                invoice._l10n_mx_edi_cfdi_invoice_try_send()
+            self._assert_invoice_cfdi(invoice, 'test_cfdi_rounding_25_inv')
+
+    def test_cfdi_rounding_26(self):
+        self.tax_16.price_include_override = 'tax_included'
+
+        def create_invoice():
+            return self._create_invoice(
+                invoice_line_ids=[
+                    Command.create({
+                        'product_id': self.product.id,
+                        'price_unit': price_unit,
+                        'quantity': quantity,
+                        'discount': discount,
+                        'tax_ids': [Command.set(self.tax_16.ids)],
+                    })
+                    for price_unit, quantity, discount in (
+                        (64.99,     6.60,   10.0),
+                        (220.01,    1.0,    10.0),
+                        (1.0,       12.0,   0.0),
+                        (151.99,    1.0,    10.0),
+                    )
+                ])
+
+        with self.mx_external_setup(self.frozen_today):
+            invoice = create_invoice()
+            with self.with_mocked_pac_sign_success():
+                invoice._l10n_mx_edi_cfdi_invoice_try_send()
+            self._assert_invoice_cfdi(invoice, 'test_cfdi_rounding_26_inv')
+
+            invoice = create_invoice()
+            with self.with_mocked_pac_sign_success():
+                invoice._l10n_mx_edi_cfdi_global_invoice_try_send()
+            self._assert_global_invoice_cfdi_from_invoices(invoice, 'test_cfdi_rounding_26_ginvoice')
+
+    def test_cfdi_rounding_27(self):
+        self.tax_16.price_include_override = 'tax_included'
+
+        def create_invoice():
+            return self._create_invoice(
+                invoice_line_ids=[
+                    Command.create({
+                        'product_id': self.product.id,
+                        'price_unit': price_unit,
+                        'tax_ids': [Command.set(self.tax_16.ids)],
+                    })
+                    for price_unit in (
+                        1999.0, 1999.0, 1999.0,
+                        1799.0, 1799.0,
+                        649.0, 649.0, 649.0, 649.0, 649.0,
+                    )
+                ])
+
+        with self.mx_external_setup(self.frozen_today):
+            invoice = create_invoice()
+            with self.with_mocked_pac_sign_success():
+                invoice._l10n_mx_edi_cfdi_invoice_try_send()
+            self._assert_invoice_cfdi(invoice, 'test_cfdi_rounding_27_inv')
+
+            invoice = create_invoice()
+            with self.with_mocked_pac_sign_success():
+                invoice._l10n_mx_edi_cfdi_global_invoice_try_send()
+            self._assert_global_invoice_cfdi_from_invoices(invoice, 'test_cfdi_rounding_27_ginvoice')
+
+    def test_cfdi_rounding_28(self):
+        self.tax_16.price_include_override = 'tax_included'
+
+        def create_invoice():
+            return self._create_invoice(
+                invoice_line_ids=[
+                    Command.create({
+                        'product_id': self.product.id,
+                        'price_unit': price_unit,
+                        'tax_ids': [Command.set(self.tax_16.ids)],
+                    })
+                    for price_unit in (99.0, 99.0, 99.0, 399.0)
+                ])
+
+        with self.mx_external_setup(self.frozen_today):
+            invoice = create_invoice()
+            with self.with_mocked_pac_sign_success():
+                invoice._l10n_mx_edi_cfdi_invoice_try_send()
+            self._assert_invoice_cfdi(invoice, 'test_cfdi_rounding_28_inv')
+
+            invoice = create_invoice()
+            with self.with_mocked_pac_sign_success():
+                invoice._l10n_mx_edi_cfdi_global_invoice_try_send()
+            self._assert_global_invoice_cfdi_from_invoices(invoice, 'test_cfdi_rounding_28_ginvoice')
+
     def test_partial_payment_1(self):
         date1 = self.frozen_today - relativedelta(days=2)
         date2 = self.frozen_today - relativedelta(days=1)
@@ -2449,27 +2648,11 @@ class TestCFDIInvoice(TestMxEdiCommon):
 
     def test_sw_finkok_CRP20211_usd_statement_in_mxn_journal_rounded_exchange_rate(self):
         """ Test rounding of exchange rate in payment cfdi of a statement line with foreign currency
-        using Finkok or SW does not trigger the CRP20211 error.
+        using Finkok, SW, or Solucion Factible does not trigger the CRP20211 error.
         """
-        self.env.company.l10n_mx_edi_pac = 'finkok'
-
         payment_date = self.frozen_today
         # Rates for how much USD for 1 MXN
         usd = self.setup_other_currency('USD', rates=[(payment_date, 0.05)])
-
-        with self.mx_external_setup(payment_date):
-            invoice1 = self._create_invoice(
-                currency_id=usd.id,
-                invoice_line_ids=[
-                    Command.create({
-                        'product_id': self.product.id,
-                        'price_unit': 11396.55,  # + tax(16%) = 13220.0 USD
-                    }),
-                ],
-            )
-
-            with self.with_mocked_pac_sign_success():
-                invoice1._l10n_mx_edi_cfdi_invoice_try_send()
 
         bank_journal = self.env['account.journal'].create({
             'name': 'Bank 123456',
@@ -2479,30 +2662,47 @@ class TestCFDIInvoice(TestMxEdiCommon):
             'l10n_mx_edi_payment_method_id': self.env.ref('l10n_mx_edi.payment_method_transferencia').id,  # To default to this payment method
         })
 
-        with self.mx_external_setup(payment_date):
-            # Those are the important amount because
-            # 305147.51 MXN / 13220.0 USD = 23.082262481 ≃ 23.082262 MXN/USD
-            # 13220.0 USD * 23.082262 MXN/USD = 305147.50 MXN which is not 305147.51 MXN
-            st_line = self.env['account.bank.statement.line'].create({
-                'journal_id': bank_journal.id,
-                'amount_currency': 13220.00,  # USD
-                'amount': 305147.51,  # MXN
-                'foreign_currency_id': self.env.ref('base.USD').id,
-                'date': payment_date,
-                'payment_ref': 'test'
-            })
+        for pac in ['finkok', 'solfact']:
+            self.env.company.l10n_mx_edi_pac = pac
 
-            # Reconcile bank transaction with invoice
-            st_line.set_line_bank_statement_line(invoice1.line_ids.filtered(lambda l: l.display_type == 'payment_term').ids)
-            self.assertRecordValues(st_line, [{'is_reconciled': True}])
-            self.assertRecordValues(invoice1, [{'payment_state': 'paid'}])
+            with self.mx_external_setup(payment_date):
+                invoice = self._create_invoice(
+                    currency_id=usd.id,
+                    invoice_line_ids=[
+                        Command.create({
+                            'product_id': self.product.id,
+                            'price_unit': 11396.55,  # + tax(16%) = 13220.0 USD
+                        }),
+                    ],
+                )
 
-            # Generate payment cfdi file
-            with self.with_mocked_pac_sign_success():
-                st_line.move_id._l10n_mx_edi_cfdi_payment_try_send()
+                with self.with_mocked_pac_sign_success():
+                    invoice._l10n_mx_edi_cfdi_invoice_try_send()
 
-            # Without fix, the generated cfdi payment file will be refused by Quadrum (finkok) due to CRP20211
-            self._assert_invoice_payment_cfdi(st_line.move_id, 'test_sw_finkok_CRP20211_usd_statement_in_mxn_journal_rounded_exchange_rate_pay')
+            with self.mx_external_setup(payment_date):
+                # Those are the important amount because
+                # 305147.51 MXN / 13220.0 USD = 23.082262481 ≃ 23.082262 MXN/USD
+                # 13220.0 USD * 23.082262 MXN/USD = 305147.50 MXN which is not 305147.51 MXN
+                st_line = self.env['account.bank.statement.line'].create({
+                    'journal_id': bank_journal.id,
+                    'amount_currency': 13220.00,  # USD
+                    'amount': 305147.51,  # MXN
+                    'foreign_currency_id': self.env.ref('base.USD').id,
+                    'date': payment_date,
+                    'payment_ref': 'test'
+                })
+
+                # Reconcile bank transaction with invoice
+                st_line.set_line_bank_statement_line(invoice.line_ids.filtered(lambda l: l.display_type == 'payment_term').ids)
+                self.assertRecordValues(st_line, [{'is_reconciled': True}])
+                self.assertRecordValues(invoice, [{'payment_state': 'paid'}])
+
+                # Generate payment cfdi file
+                with self.with_mocked_pac_sign_success():
+                    st_line.move_id._l10n_mx_edi_cfdi_payment_try_send()
+
+                # Without fix, the generated cfdi payment file will be refused by Quadrum (finkok) due to CRP20211
+                self._assert_invoice_payment_cfdi(st_line.move_id, 'test_sw_finkok_CRP20211_usd_statement_in_mxn_journal_rounded_exchange_rate_pay')
 
     def test_foreign_curr_payment_comp_curr_invoice_forced_balance(self):
         date1 = self.frozen_today - relativedelta(days=1)

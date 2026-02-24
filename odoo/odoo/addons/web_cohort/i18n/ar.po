@@ -6,13 +6,14 @@
 # Martin Trigaux, 2022
 # Malaz Abuidris <msea@odoo.com>, 2022
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 16:03+0000\n"
-"PO-Revision-Date: 2025-09-16 13:39+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2025-12-30 18:48+0000\n"
+"PO-Revision-Date: 2025-10-13 15:01+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/"
 "web_cohort/ar/>\n"
 "Language: ar\n"
@@ -26,8 +27,8 @@ msgstr ""
 #. module: web_cohort
 #. odoo-python
 #: code:addons/web_cohort/controllers/main.py:0
-msgid "%s - By %s"
-msgstr "%s - By %s"
+msgid "%(date_stop)s - By %(interval)s"
+msgstr "%(date_stop)s - في %(interval)s"
 
 #. module: web_cohort
 #. odoo-javascript
@@ -41,8 +42,8 @@ msgid "Action Window View"
 msgstr "عرض نافذة الإجراء"
 
 #. module: web_cohort
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/web_cohort/controllers/main.py:0
 #: code:addons/web_cohort/static/src/cohort_renderer.xml:0
 msgid "Average"
@@ -84,10 +85,22 @@ msgid "Day"
 msgstr "اليوم"
 
 #. module: web_cohort
+#: model:ir.model.fields,field_description:web_cohort.field_ir_actions_act_window_view__display_name
+#: model:ir.model.fields,field_description:web_cohort.field_ir_ui_view__display_name
+msgid "Display Name"
+msgstr "اسم العرض"
+
+#. module: web_cohort
 #. odoo-javascript
 #: code:addons/web_cohort/static/src/cohort_renderer.xml:0
 msgid "Download as Excel file"
 msgstr "التنزيل كملف Excel"
+
+#. module: web_cohort
+#: model:ir.model.fields,field_description:web_cohort.field_ir_actions_act_window_view__id
+#: model:ir.model.fields,field_description:web_cohort.field_ir_ui_view__id
+msgid "ID"
+msgstr "المُعرف"
 
 #. module: web_cohort
 #. odoo-javascript
@@ -103,12 +116,6 @@ msgstr "الشهر"
 
 #. module: web_cohort
 #. odoo-javascript
-#: code:addons/web_cohort/static/src/cohort_renderer.xml:0
-msgid "No data available."
-msgstr "لا توجد بيانات متاحة."
-
-#. module: web_cohort
-#. odoo-javascript
 #: code:addons/web_cohort/static/src/cohort_renderer.js:0
 msgid ""
 "Period: %(period)s\n"
@@ -116,6 +123,39 @@ msgid ""
 msgstr ""
 "الفترة: %(period)s\n"
 "%(measure)s: %(count)s"
+
+#. module: web_cohort
+#. odoo-javascript
+#: code:addons/web_cohort/static/src/cohort_model.js:0
+msgid "Quarter"
+msgstr "ربع السنة"
+
+#. module: web_cohort
+#. odoo-javascript
+#: code:addons/web_cohort/static/src/cohort_arch_parser.js:0
+msgid ""
+"The argument %(interval)s is not a valid interval. Here are the intervals: %"
+"(intervals)s"
+msgstr ""
+"الوسيط %(interval)s ليس فاصلاً زمنياً صالحاً. إليك الفواصل الزمنية: %"
+"(intervals)s"
+
+#. module: web_cohort
+#. odoo-javascript
+#: code:addons/web_cohort/static/src/cohort_arch_parser.js:0
+msgid ""
+"The argument %(mode)s is not a valid mode. Here are the modes: %(modes)s"
+msgstr "الوسيط %(mode)s ليس وضعاً صالحاً. إليك الأوضاع: %(modes)s"
+
+#. module: web_cohort
+#. odoo-javascript
+#: code:addons/web_cohort/static/src/cohort_arch_parser.js:0
+msgid ""
+"The argument %(timeline)s is not a valid timeline. Here are the timelines: %"
+"(timelines)s"
+msgstr ""
+"الوسيط %(timeline)s ليس جدولاً زمنياً صالحاً. إليك الجداول الزمنية: %"
+"(timelines)s"
 
 #. module: web_cohort
 #: model:ir.model,name:web_cohort.model_ir_ui_view
@@ -139,3 +179,9 @@ msgstr "الأسبوع"
 #: code:addons/web_cohort/static/src/cohort_model.js:0
 msgid "Year"
 msgstr "السنة"
+
+#~ msgid "%s - By %s"
+#~ msgstr "%s - By %s"
+
+#~ msgid "No data available."
+#~ msgstr "لا توجد بيانات متاحة."

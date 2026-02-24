@@ -7,7 +7,7 @@ from io import BytesIO, TextIOWrapper, StringIO
 from freezegun import freeze_time
 
 from odoo import Command, fields
-from odoo.tests import tagged
+from odoo.tests import tagged, Form
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 
@@ -91,6 +91,52 @@ class TestDatevCSV(AccountTestInvoicingCommon):
                        self.tax_19.l10n_de_datev_code, '112', move.name, move.invoice_line_ids[1].name], data)
         self.assertIn(['119,00', 'S', 'EUR', '49800000', str(move.partner_id.id + 700000000),
                        self.tax_19.l10n_de_datev_code, '112', move.name, move.invoice_line_ids[2].name], data)
+
+    def test_datev_in_receipt(self):
+        report = self.env.ref('account_reports.general_ledger_report')
+        options = report.get_options({})
+        options['date'].update({
+            'date_from': '2020-01-01',
+            'date_to': '2020-12-31',
+        })
+
+        move = self.env['account.move'].create([{
+            'move_type': 'in_receipt',
+            'invoice_date': fields.Date.to_date('2020-12-01'),
+            'date': fields.Date.to_date('2020-12-01'),
+            'ref': 'Brocken123',
+            'invoice_line_ids': [Command.create({
+                    'name': 'Line Number 1',
+                    'price_unit': 100,
+                    'account_id': self.account_3400.id,
+                    'tax_ids': [Command.set(self.tax_19.ids)],
+                }),
+                Command.create({
+                    'name': 'Line Number 2',
+                    'price_unit': 100,
+                    'account_id': self.account_3400.id,
+                    'tax_ids': [Command.set(self.tax_19.ids)],
+                }),
+                Command.create({
+                    'name': 'Line Number 3',
+                    'price_unit': 100,
+                    'account_id': self.account_4980.id,
+                    'tax_ids': [Command.set(self.tax_19.ids)],
+                }),
+            ]
+        }])
+        move.action_post()
+        move.line_ids.flush_recordset()
+
+        account = move.l10n_de_datev_main_account_id
+        with zipfile.ZipFile(BytesIO(self.env[report.custom_handler_model_name].l10n_de_datev_export_to_zip(options)['file_content']), 'r') as zf:
+            reader = csv.reader(TextIOWrapper(zf.open('EXTF_accounting_entries.csv'), "utf-8"), delimiter=';', quotechar='"', quoting=2)
+        data = [[x[0], x[1], x[2], x[6], x[7], x[8], x[9], x[10], x[13]] for x in reader][2:][::-1]
+        self.assertCountEqual([
+            ['119,00', 'S', 'EUR', '34000000', str(account.code).ljust(8, '0'), self.tax_19.l10n_de_datev_code, '112', move.name, move.invoice_line_ids[0].name],
+            ['119,00', 'S', 'EUR', '34000000', str(account.code).ljust(8, '0'), self.tax_19.l10n_de_datev_code, '112', move.name, move.invoice_line_ids[1].name],
+            ['119,00', 'S', 'EUR', '49800000', str(account.code).ljust(8, '0'), self.tax_19.l10n_de_datev_code, '112', move.name, move.invoice_line_ids[2].name],
+        ], data)
 
     def test_datev_out_invoice(self):
         report = self.env.ref('account_reports.general_ledger_report')
@@ -719,7 +765,8 @@ class TestDatevCSV(AccountTestInvoicingCommon):
         f = StringIO(self.env[report.custom_handler_model_name]._l10n_de_datev_get_csv(options, payment_move))
         reader = csv.reader(f, delimiter=';', quotechar='"', quoting=2)
         data = [[x[0], x[1], x[2], x[6], x[7], x[8], x[9], x[10], x[13]] for x in reader][2:]
-        self.assertIn(['5,67', 'H', 'EUR', '26700000', '12010000', self.tax_19.l10n_de_datev_code, '212', payment_move.name, "Early Payment Discount"], data)
+        self.assertIn(['3,83', 'H', 'EUR', '26700000', '12010000', self.tax_19.l10n_de_datev_code, '212', payment_move.name, "Early Payment Discount"], data)
+        self.assertIn(['1,84', 'H', 'EUR', '26700000', '12010000', self.tax_19.l10n_de_datev_code, '212', payment_move.name, "Early Payment Discount"], data)
 
     @freeze_time('2021-01-02 18:00')
     def test_datev_out_invoice_with_attch(self):
@@ -966,3 +1013,166 @@ class TestDatevCSV(AccountTestInvoicingCommon):
             ]
         })
         self.assertEqual(move.l10n_de_datev_main_account_id, self.company_data['default_account_receivable'])
+
+    @freeze_time('2021-01-02 18:00')
+    def test_datev_company_name(self):
+        """
+        Test that DATEV report is exported succesfully even with complex company name
+        """
+        self.company_data['company'].name = 'Test Company GmbH & Co. AB'
+        report = self.env.ref('account_reports.general_ledger_report')
+        options = report.get_options({})
+        vals = self.env[report.custom_handler_model_name].l10n_de_datev_export_to_zip(options)
+        self.assertEqual(vals['file_name'], 'general_ledger_jan_2021_test_company_gmbh_&_co._ab_data.ZIP')
+
+    def test_datev_in_invoice_total_tax_edited(self):
+        """ Test that the correct amount is computed when the total of a tax group is edited manually """
+        report = self.env.ref('account_reports.general_ledger_report')
+        options = report.get_options(previous_options={'date': {
+            'date_from': '2020-12-01',
+            'date_to': '2020-12-31'
+        }})
+        move = self.env['account.move'].create([{
+            'move_type': 'in_invoice',
+            'partner_id': self.env['res.partner'].create({'name': 'Partner XYZ'}).id,
+            'invoice_date': '2020-12-01',
+            'date': '2020-12-01',
+            'ref': 'Brocken123',
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'Line 19% #1',
+                    'price_unit': 100,
+                    'account_id': self.account_3400.id,
+                    'tax_ids': [Command.set(self.tax_19.ids)],
+                }),
+                Command.create({
+                    'name': 'Line 19% #2',
+                    'price_unit': 200,
+                    'account_id': self.account_3400.id,
+                    'tax_ids': [Command.set(self.tax_19.ids)],
+                }),
+                Command.create({
+                    'name': 'Line 7%',
+                    'price_unit': 100,
+                    'account_id': self.account_3400.id,
+                    'tax_ids': [Command.set(self.tax_7.ids)],
+                }),
+            ]
+        }])
+        with Form(move) as move_form:
+            tax_totals = move.tax_totals
+            tax_groups = tax_totals['subtotals'][0]['tax_groups']
+            index = next(
+                (i for i, data in enumerate(tax_groups)
+                if data['id'] == self.tax_19.tax_group_id.id)
+            )
+            self.assertEqual(tax_totals['subtotals'][0]['tax_groups'][index]['tax_amount_currency'], 57.0)
+            # remove 0.05 from Tax 19% group
+            tax_totals['subtotals'][0]['tax_groups'][index]['tax_amount_currency'] = 56.95
+            move_form.tax_totals = tax_totals
+        move.action_post()
+        move.line_ids.flush_recordset()
+
+        f = StringIO(self.env[report.custom_handler_model_name]._l10n_de_datev_get_csv(options, move))
+        reader = csv.reader(f, delimiter=';', quotechar='"', quoting=2)
+        data = [[x[0], x[8]] for x in reader][2:]
+        self.assertEqual([
+            # 0.03 should be dispatched to the first line using Tax 19%
+            ['118,97', self.tax_19.l10n_de_datev_code],
+            # 0.02 should be dispatched to the second line using Tax 19%
+            ['237,98', self.tax_19.l10n_de_datev_code],
+            ['107,00', self.tax_7.l10n_de_datev_code],
+        ], data)
+
+    def test_datev_out_invoice_in_foreign_currency_rate_set_manually(self):
+        report = self.env.ref('account_reports.general_ledger_report')
+        options = report.get_options(previous_options={'date': {
+            'date_from': '2020-01-01',
+            'date_to': '2020-12-31',
+        }})
+        foreign_currency = self.env['res.currency'].create({
+            'name': "XYZ",
+            'symbol': 'X',
+        })
+
+        move = self.env['account.move'].create([{
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'currency_id': foreign_currency.id,
+            'invoice_date': '2020-12-01',
+            'invoice_currency_rate': 0.5,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'Line',
+                    'price_unit': 100.00,
+                    'account_id': self.account_3400.id,
+                    'tax_ids': [Command.set(self.tax_19.ids)],
+                }),
+            ]
+        }])
+        move.action_post()
+        f = StringIO(self.env[report.custom_handler_model_name]._l10n_de_datev_get_csv(options, move))
+        reader = csv.reader(f, delimiter=';', quotechar='"', quoting=2)
+        data = [[x[0], x[1], x[2], x[3], x[4], x[5], x[6], x[7], x[8], x[9], x[10], x[13]] for x in reader][2:]
+        self.assertIn(['119,00', 'H', 'XYZ', '2,0', '238,00', 'EUR', '34000000', str(move.partner_id.id + 100000000),
+                       self.tax_19.l10n_de_datev_code, '112', move.name, move.invoice_line_ids[0].name], data)
+
+    def test_datev_expense_payment_with_tax(self):
+        """ Test that the tax code is exported from a payment move """
+        report = self.env.ref('account_reports.general_ledger_report')
+        options = report.get_options(previous_options={'date': {
+            'date_from': '2020-12-01',
+            'date_to': '2020-12-31'
+        }})
+        bank_journal = self.company_data['default_journal_bank']
+
+        account_1203 = self.env['account.account'].search([
+            ('code', '=', 1203),
+            ('company_ids', '=', self.company_data['company'].id)
+        ], limit=1)
+
+        tax_19_incl = self.tax_19.copy({'name': 'Tax 19% incl.', 'price_include': True})
+        tax_repartition_line = tax_19_incl.refund_repartition_line_ids.filtered(lambda line: line.repartition_type == 'tax')
+
+        skip_context = {
+            'skip_invoice_sync': True,
+            'skip_invoice_line_sync': True,
+            'skip_account_move_synchronization': True,
+        }
+        payment = self.env['account.payment'].with_context(**skip_context).create({
+            'amount': 150.00,
+            'payment_type': 'outbound',
+            'partner_type': 'supplier',
+            'date': '2020-12-01',
+            'journal_id': bank_journal.id,
+            'line_ids': [
+                Command.create({
+                    'name': 'Line 19% #1',
+                    'debit': 126.05,
+                    'credit': 0.0,
+                    'account_id': self.account_3400.id,
+                    'tax_ids': [Command.set(tax_19_incl.ids)],
+                }),
+                Command.create({
+                    'name': 'Line 19% tax',
+                    'debit': 23.95,
+                    'credit': 0.0,
+                    'account_id': self.account_1500.id,
+                    'tax_repartition_line_id': tax_repartition_line.id,
+                }),
+                Command.create({
+                    'name': 'expense line',
+                    'credit': 150.0,
+                    'debit': 0.0,
+                    'account_id': account_1203.id,
+                }),
+            ],
+        })
+        payment.action_post()
+
+        f = StringIO(self.env[report.custom_handler_model_name]._l10n_de_datev_get_csv(options, payment.move_id))
+        reader = csv.reader(f, delimiter=';', quotechar='"', quoting=2)
+        data = [[x[0], x[1], x[2], x[6], x[7], x[8]] for x in reader][2:]
+        self.assertEqual([
+            ['150,00', 'H', 'EUR', '12030000', '34000000', tax_19_incl.l10n_de_datev_code],
+        ], data)

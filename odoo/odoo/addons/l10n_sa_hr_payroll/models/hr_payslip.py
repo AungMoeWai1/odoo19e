@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
 
@@ -135,17 +136,31 @@ class HrPayslip(models.Model):
             ])
         return [header, *rows]
 
+    def _l10n_sa_get_eos_benefit(self):
+        return "The method _l10n_sa_get_eos_benefit is deprecated because the logic is moved to the salary rule"
+
+    def _l10n_sa_get_eos_provision(self):
+        return "The method _l10n_sa_get_eos_provision is deprecated because the logic is moved to the salary rule"
+
+    def _l10n_sa_get_number_of_years(self, start_date, end_date):
+        worked_duration = relativedelta(end_date, start_date)
+        # 1 Day to be added as per the calculation in the QIWA calculator
+        worked_duration += relativedelta(days=1)
+        # last day of month is calculated to get the actual duration that the employee spent as years
+        # without a need to approximate the days in a year.
+        next_month = (end_date + relativedelta(months=1)).replace(day=1)
+        last_day_of_month = (next_month - end_date.replace(day=1)).days
+        total_years = worked_duration.years + (worked_duration.months / 12) + ((worked_duration.days / last_day_of_month) / 12)
+        return total_years
+
     def action_payslip_payment_report(self, export_format='l10n_sa_wps'):
-        self.ensure_one()
-        return {
-            'type': 'ir.actions.act_window',
-            'res_model': 'hr.payroll.payment.report.wizard',
-            'view_mode': 'form',
-            'views': [(False, 'form')],
-            'target': 'new',
+        action = super().action_payslip_payment_report()
+        if self.company_id.country_code != 'SA':
+            return action
+        action.update({
             'context': {
-                'default_payslip_ids': self.ids,
-                'default_payslip_run_id': self.payslip_run_id.id,
+                **action['context'],
                 'default_export_format': export_format,
             },
-        }
+        })
+        return action

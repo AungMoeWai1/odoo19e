@@ -87,9 +87,9 @@ class TestPartnerLedgerReport(TestAccountReportsCommon):
             #   Name                                    Debit           Credit          Balance
             [   0,                                      6,              7,              9],
             [
-                ('partner_a',                           20000.0,        0.0,             20133.33),
+                ('partner_a',                           20000.0,        0.0,             20150.0),
                 ('partner_b',                           1000.0,         0.0,             1200.0),
-                ('partner_c',                           0.0,            21000.0,         -21333.33),
+                ('partner_c',                           0.0,            21000.0,         -21350.0),
                 ('Unknown Partner',                     200.0,          200.0,           0.0),
                 ('Total',                               21200.0,        21200.0,         0.0),
             ],
@@ -103,16 +103,16 @@ class TestPartnerLedgerReport(TestAccountReportsCommon):
             #   Name                                    Debit           Credit          Balance
             [   0,                                      6,              7,              9],
             [
-                ('partner_a',                           20000.0,        0.0,             20133.33),
-                ('Initial Balance',                     '',              '',            133.33),
-                ('MISC/2017/01/0001 2017_1_2',          2000.0,         0.0,            2133.33),
-                ('MISC/2017/01/0001 2017_1_3',          3000.0,         0.0,            5133.33),
-                ('MISC/2017/01/0001 2017_1_4',          4000.0,         0.0,            9133.33),
-                ('MISC/2017/01/0001 2017_1_5',          5000.0,         0.0,            14133.33),
-                ('MISC/2017/01/0001 2017_1_6',          6000.0,         0.0,            20133.33),
-                ('Total partner_a',                     20000.0,        0.0,            20133.33),
+                ('partner_a',                           20000.0,        0.0,             20150.0),
+                ('Initial Balance',                     '',              '',            150.0),
+                ('MISC/2017/01/0001 2017_1_2',          2000.0,         0.0,            2150.0),
+                ('MISC/2017/01/0001 2017_1_3',          3000.0,         0.0,            5150.0),
+                ('MISC/2017/01/0001 2017_1_4',          4000.0,         0.0,            9150.0),
+                ('MISC/2017/01/0001 2017_1_5',          5000.0,         0.0,            14150.0),
+                ('MISC/2017/01/0001 2017_1_6',          6000.0,         0.0,            20150.0),
+                ('Total partner_a',                     20000.0,        0.0,            20150.0),
                 ('partner_b',                           1000.0,         0.0,            1200.0),
-                ('partner_c',                           0.0,            21000.0,        -21333.33),
+                ('partner_c',                           0.0,            21000.0,        -21350.0),
                 ('Unknown Partner',                     200.0,          200.0,          0.0),
                 ('Total',                               21200.0,        21200.0,        0.0),
             ],
@@ -133,29 +133,29 @@ class TestPartnerLedgerReport(TestAccountReportsCommon):
             #   Name                                      Debit           Credit          Balance
             [   0,                                          6,              7,              9],
             [
-                ('partner_a',                          20000.00,           0.0,         20133.33),
-                ('Initial Balance',                          '',            '',           133.33),
-                ('MISC/2017/01/0001 2017_1_2',           2000.0,           0.0,          2133.33),
-                ('MISC/2017/01/0001 2017_1_3',           3000.0,           0.0,          5133.33),
-                ('MISC/2017/01/0001 2017_1_4',           4000.0,           0.0,          9133.33),
-                ('MISC/2017/01/0001 2017_1_5',           5000.0,           0.0,         14133.33),
-                ('MISC/2017/01/0001 2017_1_6',           6000.0,           0.0,         20133.33),
-                ('Total partner_a',                    20000.00,           0.0,         20133.33),
-                ('partner_b',                            1000.0,           0.0,           1200.0),
-                ('Initial Balance',                          '',            '',            200.0),
-                ('MISC/2017/01/0001 2017_1_1',           1000.0,           0.0,           1200.0),
-                ('Total partner_b',                      1000.0,           0.0,           1200.0),
-                ('partner_c',                               0.0,      21000.00,        -21333.33),
-                ('Initial Balance',                          '',            '',          -333.33),
-                ('MISC/2017/01/0001 2017_1_7',              0.0,        6000.0,         -6333.33),
-                ('MISC/2017/01/0001 2017_1_8',              0.0,        7000.0,        -13333.33),
-                ('MISC/2017/01/0001 2017_1_9',              0.0,        8000.0,        -21333.33),
-                ('Total partner_c',                         0.0,      21000.00,        -21333.33),
-                ('Unknown Partner',                       200.0,         200.0,              0.0),
-                ('MISC/2017/06/0001 2017_2_1',            200.0,           0.0,            200.0),
-                ('MISC/2017/06/0001 2017_2_2',              0.0,         200.0,              0.0),
-                ('Total Unknown Partner',                 200.0,         200.0,              0.0),
-                ('Total',                              21200.00,      21200.00,              0.0),
+                ('partner_a',                           20000.0,           0.0,         20150.0),
+                ('Initial Balance',                          '',            '',           150.0),
+                ('MISC/2017/01/0001 2017_1_2',           2000.0,           0.0,          2150.0),
+                ('MISC/2017/01/0001 2017_1_3',           3000.0,           0.0,          5150.0),
+                ('MISC/2017/01/0001 2017_1_4',           4000.0,           0.0,          9150.0),
+                ('MISC/2017/01/0001 2017_1_5',           5000.0,           0.0,         14150.0),
+                ('MISC/2017/01/0001 2017_1_6',           6000.0,           0.0,         20150.0),
+                ('Total partner_a',                     20000.0,           0.0,         20150.0),
+                ('partner_b',                            1000.0,           0.0,          1200.0),
+                ('Initial Balance',                          '',            '',           200.0),
+                ('MISC/2017/01/0001 2017_1_1',           1000.0,           0.0,          1200.0),
+                ('Total partner_b',                      1000.0,           0.0,          1200.0),
+                ('partner_c',                               0.0,       21000.0,        -21350.0),
+                ('Initial Balance',                          '',            '',          -350.0),
+                ('MISC/2017/01/0001 2017_1_7',              0.0,        6000.0,         -6350.0),
+                ('MISC/2017/01/0001 2017_1_8',              0.0,        7000.0,        -13350.0),
+                ('MISC/2017/01/0001 2017_1_9',              0.0,        8000.0,        -21350.0),
+                ('Total partner_c',                         0.0,       21000.0,        -21350.0),
+                ('Unknown Partner',                       200.0,         200.0,             0.0),
+                ('MISC/2017/06/0001 2017_2_1',            200.0,           0.0,           200.0),
+                ('MISC/2017/06/0001 2017_2_2',              0.0,         200.0,             0.0),
+                ('Total Unknown Partner',                 200.0,         200.0,             0.0),
+                ('Total',                               21200.0,       21200.0,             0.0),
             ],
             options,
         )
@@ -174,14 +174,14 @@ class TestPartnerLedgerReport(TestAccountReportsCommon):
             #   Name                                    Debit           Credit          Balance
             [   0,                                      6,              7,              9],
             [
-                ('partner_a',                           20000.0,        0.0,            20133.33),
-                ('Initial Balance',                     '',             '',             133.33),
-                ('MISC/2017/01/0001 2017_1_2',          2000.0,         0.0,            2133.33),
-                ('MISC/2017/01/0001 2017_1_3',          3000.0,         0.0,            5133.33),
+                ('partner_a',                           20000.0,        0.0,            20150.0),
+                ('Initial Balance',                     '',             '',             150.0),
+                ('MISC/2017/01/0001 2017_1_2',          2000.0,         0.0,            2150.0),
+                ('MISC/2017/01/0001 2017_1_3',          3000.0,         0.0,            5150.0),
                 ('Load more...',                        '',             '',             ''),
-                ('Total partner_a',                     20000.0,        0.0,            20133.33),
+                ('Total partner_a',                     20000.0,        0.0,            20150.0),
                 ('partner_b',                           1000.0,         0.0,            1200.0),
-                ('partner_c',                           0.0,            21000.0,        -21333.33),
+                ('partner_c',                           0.0,            21000.0,        -21350.0),
                 ('Unknown Partner',                     200.0,          200.0,          0.0),
                 ('Total',                               21200.0,        21200.0,        0.0),
             ],
@@ -203,8 +203,8 @@ class TestPartnerLedgerReport(TestAccountReportsCommon):
             #   Name                                    Debit           Credit          Balance
             [   0,                                      6,              7,              9],
             [
-                ('MISC/2017/01/0001 2017_1_4',          4000.0,         0.0,             9133.33),
-                ('MISC/2017/01/0001 2017_1_5',          5000.0,         0.0,            14133.33),
+                ('MISC/2017/01/0001 2017_1_4',          4000.0,         0.0,            9150.0),
+                ('MISC/2017/01/0001 2017_1_5',          5000.0,         0.0,            14150.0),
                 ('Load more...',                        '',             '',             ''),
             ],
             options,
@@ -225,7 +225,7 @@ class TestPartnerLedgerReport(TestAccountReportsCommon):
             #   Name                                    Debit           Credit          Balance
             [   0,                                      6,              7,              9],
             [
-                ('MISC/2017/01/0001 2017_1_6',          6000.0,         0.0,            20133.33),
+                ('MISC/2017/01/0001 2017_1_6',          6000.0,         0.0,            20150.0),
             ],
             options,
         )
@@ -248,9 +248,9 @@ class TestPartnerLedgerReport(TestAccountReportsCommon):
                 ('MISC/2017/01/0001 2017_1_5',          5000.0,         0.0,            9000.0),
                 ('MISC/2017/01/0001 2017_1_6',          6000.0,         0.0,            15000.0),
                 ('Total partner_a',                     15000.0,        0.0,            15000.0),
-                ('partner_c',                           0.0,            21000.0,        -21333.33),
+                ('partner_c',                           0.0,            21000.0,        -21350.0),
                 ('Unknown Partner',                     200.0,          200.0,          0.0),
-                ('Total',                               15200.0,        21200.0,        -6333.33),
+                ('Total',                               15200.0,        21200.0,        -6350.0),
             ],
             options,
         )
@@ -265,8 +265,8 @@ class TestPartnerLedgerReport(TestAccountReportsCommon):
             #   Name                                    Debit           Credit          Balance
             [   0,                                      6,              7,              9],
             [
-                ('partner_a',                            20000.0,           0.00,        20133.33),
-                ('partner_c',                               0.00,        21000.0,       -21333.33),
+                ('partner_a',                            20000.0,           0.00,        20150.0),
+                ('partner_c',                               0.00,        21000.0,       -21350.0),
                 ('Total',                                20000.0,        21000.0,        -1200.00),
             ],
             options,
@@ -282,9 +282,9 @@ class TestPartnerLedgerReport(TestAccountReportsCommon):
             #   Name                                    Debit           Credit          Balance
             [   0,                                      6,              7,              9],
             [
-                ('partner_a',                           20000.0,        0.0,            20133.33),
+                ('partner_a',                           20000.0,        0.0,            20150.0),
                 ('partner_b',                           1000.0,         0.0,            1200.0),
-                ('Total',                               21000.0,        0.0,            21333.33),
+                ('Total',                               21000.0,        0.0,            21350.0),
             ],
             options,
         )
@@ -309,9 +309,9 @@ class TestPartnerLedgerReport(TestAccountReportsCommon):
             #   Name                                    Debit           Credit          Balance
             [   0,                                      6,              7,              9],
             [
-                ('partner_a',                            20000.0,           0.00,       20133.33),
+                ('partner_a',                            20000.0,           0.00,       20150.0),
                 ('partner_b',                            1000.00,           0.00,        1200.00),
-                ('partner_c',                               0.00,        21000.0,      -21333.33),
+                ('partner_c',                               0.00,        21000.0,      -21350.0),
                 ('Unknown Partner',                       200.00,        1200.00,       -1000.00),
                 ('Total',                                21200.0,        22200.0,       -1000.00),
             ],
@@ -327,9 +327,9 @@ class TestPartnerLedgerReport(TestAccountReportsCommon):
             #   Name                                    Debit           Credit          Balance
             [   0,                                      6,              7,              9],
             [
-                ('partner_a',                           20000.0,         1000.00,       19133.33),
+                ('partner_a',                           20000.0,         1000.00,       19150.0),
                 ('partner_b',                            1000.00,           0.00,        1200.00),
-                ('partner_c',                               0.00,       21000.0,       -21333.33),
+                ('partner_c',                               0.00,       21000.0,       -21350.0),
                 ('Unknown Partner',                      1200.00,        1200.00,           0.00),
                 ('Total',                               22200.0,        23200.0,        -1000.00),
             ],
@@ -344,17 +344,17 @@ class TestPartnerLedgerReport(TestAccountReportsCommon):
             #   Name                                    Debit           Credit          Balance
             [   0,                                      6,              7,              9],
             [
-                ('partner_a',                            20000.0,        1000.00,       19133.33),
-                ('Initial Balance',                           '',             '',         133.33),
-                ('MISC/2017/01/0001 2017_1_2',           2000.00,           0.00,        2133.33),
-                ('MISC/2017/01/0001 2017_1_3',           3000.00,           0.00,        5133.33),
-                ('MISC/2017/01/0001 2017_1_4',           4000.00,           0.00,        9133.33),
-                ('MISC/2017/01/0001 2017_1_5',           5000.00,           0.00,       14133.33),
-                ('MISC/2017/01/0001 2017_1_6',           6000.00,           0.00,       20133.33),
-                ('MISC/2017/03/0001',                       0.00,        1000.00,       19133.33),
-                ('Total partner_a',                      20000.0,        1000.00,       19133.33),
+                ('partner_a',                            20000.0,        1000.00,       19150.0),
+                ('Initial Balance',                           '',             '',         150.0),
+                ('MISC/2017/01/0001 2017_1_2',           2000.00,           0.00,        2150.0),
+                ('MISC/2017/01/0001 2017_1_3',           3000.00,           0.00,        5150.0),
+                ('MISC/2017/01/0001 2017_1_4',           4000.00,           0.00,        9150.0),
+                ('MISC/2017/01/0001 2017_1_5',           5000.00,           0.00,       14150.0),
+                ('MISC/2017/01/0001 2017_1_6',           6000.00,           0.00,       20150.0),
+                ('MISC/2017/03/0001',                       0.00,        1000.00,       19150.0),
+                ('Total partner_a',                      20000.0,        1000.00,       19150.0),
                 ('partner_b',                            1000.00,           0.00,        1200.00),
-                ('partner_c',                               0.00,        21000.0,      -21333.33),
+                ('partner_c',                               0.00,        21000.0,      -21350.0),
                 ('Unknown Partner',                      1200.00,        1200.00,           0.00),
                 ('Total',                                22200.0,        23200.0,       -1000.00),
             ],
@@ -369,9 +369,9 @@ class TestPartnerLedgerReport(TestAccountReportsCommon):
             #   Name                                    Debit           Credit          Balance
             [   0,                                      6,              7,              9],
             [
-                ('partner_a',                            20000.0,        1000.00,       19133.33),
+                ('partner_a',                            20000.0,        1000.00,       19150.0),
                 ('partner_b',                            1000.00,           0.00,        1200.00),
-                ('partner_c',                               0.00,        21000.0,      -21333.33),
+                ('partner_c',                               0.00,        21000.0,      -21350.0),
                 ('Unknown Partner',                      1200.00,        1200.00,           0.00),
                 ('MISC/2017/03/0001',                       0.00,        1000.00,       -1000.00),
                 ('MISC/2017/06/0001 2017_2_1',            200.00,           0.00,        -800.00),
@@ -391,9 +391,9 @@ class TestPartnerLedgerReport(TestAccountReportsCommon):
             #   Name                                    Debit           Credit          Balance
             [   0,                                      6,              7,              9],
             [
-                ('partner_a',                            20000.0,           0.00,       20133.33),
+                ('partner_a',                            20000.0,           0.00,       20150.0),
                 ('partner_b',                            1000.00,           0.00,        1200.00),
-                ('partner_c',                               0.00,        21000.0,      -21333.33),
+                ('partner_c',                               0.00,        21000.0,      -21350.0),
                 ('Total',                                21000.0,        21000.0,           0.00),
             ],
             options,
@@ -407,9 +407,9 @@ class TestPartnerLedgerReport(TestAccountReportsCommon):
             #   Name                                    Debit           Credit          Balance
             [   0,                                      6,              7,              9],
             [
-                ('partner_a',                                0.0,         1000.0,       19133.33),
+                ('partner_a',                                0.0,         1000.0,       19150.0),
                 ('partner_b',                                0.0,            0.0,        1200.00),
-                ('partner_c',                                0.0,            0.0,      -21333.33),
+                ('partner_c',                                0.0,            0.0,      -21350.0),
                 ('Unknown Partner',                       1000.0,            0.0,            0.0),
                 ('Total',                                 1000.0,         1000.0,        -1000.0),
             ],
@@ -424,11 +424,11 @@ class TestPartnerLedgerReport(TestAccountReportsCommon):
             #   Name                                    Debit           Credit          Balance
             [   0,                                      6,              7,              9],
             [
-                ('partner_a',                           0.0,            1000.0,         19133.33),
-                ('Initial Balance',                     '',             1000.0,         19133.33),
-                ('Total partner_a',                     0.0,            1000.0,         19133.33),
+                ('partner_a',                           0.0,            1000.0,         19150.0),
+                ('Initial Balance',                     '',             1000.0,         19150.0),
+                ('Total partner_a',                     0.0,            1000.0,         19150.0),
                 ('partner_b',                           0.0,            0.0,            1200.0),
-                ('partner_c',                           0.0,            0.0,           -21333.33),
+                ('partner_c',                           0.0,            0.0,           -21350.0),
                 ('Unknown Partner',                     1000.0,         0.0,            0.0),
                 ('Total',                               1000.0,         1000.0,        -1000.0),
             ],
@@ -788,4 +788,102 @@ class TestPartnerLedgerReport(TestAccountReportsCommon):
         self.assertEqual(
             self.env['account.partner.ledger.report.handler'].action_toggle_no_followup(invoice_1_line_ids[0], line_ids)['updated_line_ids'],
             invoice_1_line_ids,
+        )
+
+    def test_reconciled_misc_without_partner_shows_with_partner_filter(self):
+        """A misc move without a partner reconciled with a partner invoice must still appear
+        when filtering the Partner Ledger by that partner."""
+        bernard = self.env['res.partner'].create({'name': 'Bernard Gagnant'})
+        invoice = self.init_invoice('out_invoice', partner=bernard, invoice_date='2019-03-01', amounts=[1000.0], taxes=[], post=True)
+
+        misc_move = self.env['account.move'].create({
+            'date': '2019-03-02',
+            'journal_id': self.company_data['default_journal_misc'].id,
+            'line_ids': [
+                (0, 0, {'debit': 1000.0, 'credit': 0.0, 'account_id': self.company_data['default_account_revenue'].id}),
+                (0, 0, {'debit': 0.0,    'credit': 1000.0, 'account_id': self.company_data['default_account_receivable'].id}),
+            ],
+        })
+        misc_move.action_post()
+
+        invoice_receivable = invoice.line_ids.filtered(lambda l: l.account_id == self.company_data['default_account_receivable'])
+        misc_receivable = misc_move.line_ids.filtered(lambda l: l.account_id == self.company_data['default_account_receivable'] and not l.partner_id)
+        (invoice_receivable + misc_receivable).reconcile()
+
+        # Ensure both the invoice and the misc move appear when the report is fully unfolded.
+        options = self._generate_options(self.report, '2019-03-01', '2019-03-31', default_options={'unfold_all': True})
+        lines = self.report._get_lines(options)
+        self.assertLinesValues(
+            lines,
+            #   Name                                    Debit           Credit          Balance
+            [   0,                                         6,              7,             9],
+            [
+                (bernard.name,                        1000.0,         1000.0,           0.0),
+                (invoice.name,                        1000.0,            0.0,        1000.0),
+                (misc_move.name,                         0.0,         1000.0,           0.0),
+                ('Total ' + bernard.name,             1000.0,         1000.0,           0.0),
+                ('partner_a',                            0.0,            0.0,       20150.0),
+                ('Initial Balance',                       '',             '',       20150.0),
+                ('Total partner_a',                      0.0,            0.0,       20150.0),
+                ('partner_b',                            0.0,            0.0,        1200.0),
+                ('Initial Balance',                       '',             '',        1200.0),
+                ('Total partner_b',                      0.0,            0.0,        1200.0),
+                ('partner_c',                            0.0,            0.0,      -21350.0),
+                ('Initial Balance',                       '',             '',      -21350.0),
+                ('Total partner_c',                      0.0,            0.0,      -21350.0),
+                ('Unknown Partner',                   1000.0,         1000.0,           0.0),
+                ('Initial Balance',                       '',             '',           0.0),
+                ('MISC/2019/03/0001',                    0.0,         1000.0,       -1000.0),
+                ('MISC/2019/03/0001',                 1000.0,            0.0,           0.0),
+                ('Total Unknown Partner',             1000.0,         1000.0,           0.0),
+                ('Total',                             2000.0,         2000.0,           0.0),
+            ],
+            options,
+        )
+
+        # When filtering the report by the partner, the misc move (despite having no partner)
+        # must still appear because it is reconciled with the partner's invoice.
+        options_partner = self._generate_options(self.report, '2019-03-01', '2019-03-31', default_options={'unfold_all': True, 'partner_ids': bernard.ids})
+        lines_filtered = self.report._get_lines(options_partner)
+        self.assertLinesValues(
+            lines_filtered,
+            #   Name                                    Debit           Credit          Balance
+            [   0,                                         6,              7,             9],
+            [
+                (bernard.name,                        1000.0,         1000.0,           0.0),
+                (invoice.name,                        1000.0,            0.0,        1000.0),
+                (misc_move.name,                         0.0,         1000.0,           0.0),
+                ('Total ' + bernard.name,             1000.0,         1000.0,           0.0),
+                ('Total',                             1000.0,         1000.0,           0.0),
+            ],
+            options_partner,
+        )
+
+    def test_partner_ledger_without_filter_partner(self):
+        """"Test opening the partner ledger report when filter_partner is disabled."""
+        self.report.filter_partner = False
+        options = self._generate_options(
+            self.report, '2019-03-01', '2019-03-31',
+            default_options={'unfold_all': True}
+        )
+        self.assertNotIn('partner_ids', options)
+
+        report_lines = self.report._get_lines(options)
+        self.assertLinesValues(
+            report_lines,
+            #   Name                                    Debit           Credit          Balance
+            [   0,                                      6,              7,              9],
+            [
+                ('partner_a',                         0.0,            0.0,        20150.0),
+                ('Initial Balance',                    '',             '',        20150.0),
+                ('Total partner_a',                   0.0,            0.0,        20150.0),
+                ('partner_b',                         0.0,            0.0,         1200.0),
+                ('Initial Balance',                    '',             '',         1200.0),
+                ('Total partner_b',                   0.0,            0.0,         1200.0),
+                ('partner_c',                         0.0,            0.0,       -21350.0),
+                ('Initial Balance',                    '',             '',       -21350.0),
+                ('Total partner_c',                   0.0,            0.0,       -21350.0),
+                ('Total',                             0.0,            0.0,            0.0),
+            ],
+            options,
         )

@@ -3,13 +3,14 @@
 # * pos_pricer
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-03 12:21+0000\n"
-"PO-Revision-Date: 2025-09-15 21:12+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-01-22 18:41+0000\n"
+"PO-Revision-Date: 2026-02-14 10:04+0000\n"
+"Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/"
 "pos_pricer/de/>\n"
 "Language: de\n"
@@ -17,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: pos_pricer
 #: model:ir.model.constraint,message:pos_pricer.constraint_pricer_tag_name_unique
@@ -79,8 +80,14 @@ msgstr "Anzeigename"
 #. module: pos_pricer
 #. odoo-python
 #: code:addons/pos_pricer/models/pricer_store.py:0
-msgid "Error: %(status_code)s - %(message)s"
-msgstr "Fehler: %(status_code)s - %(message)s"
+msgid "Error"
+msgstr "Fehler"
+
+#. module: pos_pricer
+#. odoo-python
+#: code:addons/pos_pricer/models/pricer_store.py:0
+msgid "Error: %(code)s - %(reason)s"
+msgstr "Fehler: %(code)s - %(reason)s"
 
 #. module: pos_pricer
 #. odoo-python
@@ -91,10 +98,18 @@ msgstr "Fehler: Pricer-Anmeldedaten prüfen"
 #. module: pos_pricer
 #. odoo-python
 #: code:addons/pos_pricer/models/pricer_store.py:0
+msgid "Everything is already up to date with Pricer. No update needed."
+msgstr ""
+"Mit Pricer ist alles bereits auf dem neuesten Stand. Es ist keine "
+"Aktualisierung erforderlich."
+
+#. module: pos_pricer
+#. odoo-python
+#: code:addons/pos_pricer/models/pricer_store.py:0
 msgid "Failed to unlink Pricer tag %(pricer_tag)s at API url %(api_url)s"
 msgstr ""
-"Die Verknüpfung des Pricer-Etiketts %(pricer_tag)s mit der API-URL %(api_url)"
-"s konnte nicht aufgehoben werden."
+"Die Verknüpfung des Pricer-Etiketts %(pricer_tag)s mit der API-URL %"
+"(api_url)s konnte nicht aufgehoben werden."
 
 #. module: pos_pricer
 #: model:ir.model.fields,field_description:pos_pricer.field_pos_config__id
@@ -396,8 +411,8 @@ msgstr ""
 #: model:ir.model.fields,help:pos_pricer.field_pricer_tag__pricer_store_id
 #: model:ir.model.fields,help:pos_pricer.field_product_product__pricer_store_id
 msgid ""
-"This product will be linked to and displayed on the Pricer tags of the store"
-" selected here"
+"This product will be linked to and displayed on the Pricer tags of the store "
+"selected here"
 msgstr ""
 "Dieses Produkt wird mit den Pricer-Etiketten der hier ausgewählten Shop "
 "verknüpft und dort angezeigt."
@@ -411,11 +426,6 @@ msgstr ""
 "Dieses Produkt wird mit den Pricer-Etiketten mit den hier aufgeführten IDs "
 "verknüpft und auf diesen angezeigt. Es wird empfohlen, einen Barcode-Scanner "
 "zu verwenden"
-
-#. module: pos_pricer
-#: model_terms:ir.ui.view,arch_db:pos_pricer.pricer_pricer_store_view_list
-msgid "Update all tags"
-msgstr "Alle Etiketten aktualisieren"
 
 #. module: pos_pricer
 #. odoo-python
@@ -432,3 +442,9 @@ msgstr "Etiketten aktualisieren"
 #: model:ir.model.fields,help:pos_pricer.field_pricer_store__pricer_tenant_name
 msgid "Your company identifier at Pricer"
 msgstr "Ihre Unternehmenskennung bei Pricer"
+
+#~ msgid "Error: %(status_code)s - %(message)s"
+#~ msgstr "Fehler: %(status_code)s - %(message)s"
+
+#~ msgid "Update all tags"
+#~ msgstr "Alle Etiketten aktualisieren"

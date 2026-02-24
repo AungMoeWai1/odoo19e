@@ -19,6 +19,16 @@ export class DynamicSnippet extends Interaction {
             "t-on-click": this.callToAction,
         },
         _window: { "t-on-resize": this.throttled(this.render) },
+        _root: {
+            "t-att-class": () => ({
+                // Compatibility code: A dynamic snippet may end up with one,
+                // several, or all of these classes as a default visibility one.
+                o_dynamic_empty: !this.isVisible,
+                s_dynamic_empty: !this.isVisible,
+                o_dynamic_snippet_empty: !this.isVisible,
+                o_dynamic_snippet_loading: !this.data.length,
+            }),
+        },
         ".missing_option_warning": {
             "t-att-class": () => ({
                 "d-none": !!this.data.length,
@@ -86,8 +96,8 @@ export class DynamicSnippet extends Interaction {
     getRpcParameters() {
         return this.isSingleMode
             ? {
-                res_model: this.el.dataset.snippetModel,
-                res_id: parseInt(this.el.dataset.snippetResId),
+                  res_model: this.el.dataset.snippetModel,
+                  res_id: parseInt(this.el.dataset.snippetResId),
               }
             : {};
     }
@@ -95,19 +105,22 @@ export class DynamicSnippet extends Interaction {
     async fetchData() {
         if (this.isConfigComplete()) {
             const nodeData = this.el.dataset;
-            const filterFragments = await this.waitFor(rpc(
-                "/website/snippet/filters",
-                Object.assign({
-                    "filter_id": parseInt(nodeData.filterId),
-                    "template_key": nodeData.templateKey,
-                    "limit": parseInt(nodeData.numberOfRecords),
-                    "search_domain": this.getSearchDomain(),
-                    "with_sample": this.withSample,
-                },
-                    this.getRpcParameters(),
-                    JSON.parse(this.el.dataset?.customTemplateData || "{}")
+            const filterFragments = await this.waitFor(
+                rpc(
+                    "/website/snippet/filters",
+                    Object.assign(
+                        {
+                            filter_id: parseInt(nodeData.filterId),
+                            template_key: nodeData.templateKey,
+                            limit: parseInt(nodeData.numberOfRecords),
+                            search_domain: this.getSearchDomain(),
+                            with_sample: this.withSample,
+                        },
+                        this.getRpcParameters(),
+                        JSON.parse(this.el.dataset?.customTemplateData || "{}")
+                    )
                 )
-            ));
+            );
             this.data = filterFragments.map(markup);
         } else {
             this.data = [];
@@ -119,10 +132,7 @@ export class DynamicSnippet extends Interaction {
      * Prepare the content before rendering.
      */
     prepareContent() {
-        this.renderedContentNode = renderToFragment(
-            this.templateKey,
-            this.getQWebRenderOptions()
-        );
+        this.renderedContentNode = renderToFragment(this.templateKey, this.getQWebRenderOptions());
     }
 
     /**
@@ -134,7 +144,8 @@ export class DynamicSnippet extends Interaction {
         const numberOfRecords = parseInt(dataset.numberOfRecords);
         let numberOfElements;
         if (uiUtils.isSmall()) {
-            numberOfElements = parseInt(dataset.numberOfElementsSmallDevices) || DEFAULT_NUMBER_OF_ELEMENTS_SM;
+            numberOfElements =
+                parseInt(dataset.numberOfElementsSmallDevices) || DEFAULT_NUMBER_OF_ELEMENTS_SM;
         } else {
             numberOfElements = parseInt(dataset.numberOfElements) || DEFAULT_NUMBER_OF_ELEMENTS;
         }
@@ -150,8 +161,10 @@ export class DynamicSnippet extends Interaction {
 
     render() {
         if (this.data.length > 0 || this.withSample) {
+            this.toggleVisibility(true);
             this.prepareContent();
         } else {
+            this.toggleVisibility(false);
             this.renderedContentNode = document.createDocumentFragment();
         }
         this.renderContent();
@@ -165,7 +178,6 @@ export class DynamicSnippet extends Interaction {
         const templateAreaEl = this.el.querySelector(".dynamic_snippet_template");
         this.services["public.interactions"].stopInteractions(templateAreaEl);
         templateAreaEl.replaceChildren(this.renderedContentNode);
-        this.el.classList.remove("o_dynamic_snippet_empty");
         // TODO this is probably not the only public widget which creates DOM
         // which should be attached to another public widget. Maybe a generic
         // method could be added to properly do this operation of DOM addition.
@@ -177,13 +189,20 @@ export class DynamicSnippet extends Interaction {
         // extension, because: why not?
         // (TODO review + See interaction with "slider" public widget).
         this.waitForTimeout(() => {
-            templateAreaEl.querySelectorAll(".carousel").forEach(carouselEl => {
+            templateAreaEl.querySelectorAll(".carousel").forEach((carouselEl) => {
                 if (carouselEl.dataset.bsInterval === "0") {
                     delete carouselEl.dataset.bsRide;
                     delete carouselEl.dataset.bsInterval;
                 }
             });
         }, 0);
+    }
+
+    /**
+     * @param {Boolean} visible
+     */
+    toggleVisibility(visible) {
+        this.isVisible = visible;
     }
 
     /**
@@ -196,6 +215,4 @@ export class DynamicSnippet extends Interaction {
     }
 }
 
-registry
-    .category("public.interactions")
-    .add("website.dynamic_snippet", DynamicSnippet);
+registry.category("public.interactions").add("website.dynamic_snippet", DynamicSnippet);

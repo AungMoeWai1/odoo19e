@@ -21,7 +21,7 @@ import {
     toggleMenuItem,
     toggleSearchBarMenu,
 } from "@web/../tests/web_test_helpers";
-import { loadJS } from "@web/core/assets";
+import { loadBundle } from "@web/core/assets";
 import { registry } from "@web/core/registry";
 import { WebClient } from "@web/webclient/webclient";
 
@@ -59,7 +59,7 @@ async function openView(viewType, options = {}) {
 }
 
 async function insertInSpreadsheetAndClickLink(target) {
-    await loadJS("/web/static/lib/Chart/Chart.js");
+    await loadBundle("web.chartjs_lib");
     patchWithCleanup(Grid.prototype, {
         setup() {
             super.setup();
@@ -173,11 +173,9 @@ test("list view with custom domain and groupby", async function () {
 });
 
 test("insert list in existing spreadsheet", async function () {
-    onRpc("/spreadsheet/data/documents.document/2", () => expect.step("spreadsheet-joined"), {
-        pure: true,
-    });
+    onRpc("/spreadsheet/data/documents.document/2", () => expect.step("spreadsheet-joined"));
     await openView("list");
-    await loadJS("/web/static/lib/Chart/Chart.js");
+    await loadBundle("web.chartjs_lib");
     await toggleSearchBarMenu();
     await contains(".o_insert_action_spreadsheet_menu").click();
     await contains(".o-spreadsheet-grid div[data-id='2']").click();
@@ -194,7 +192,7 @@ test("insert action in new spreadsheet", async function () {
             }
         },
     });
-    await loadJS("/web/static/lib/Chart/Chart.js");
+    await loadBundle("web.chartjs_lib");
     expect(".o_spreadsheet_action").toHaveCount(0);
     await toggleSearchBarMenu();
     await contains(".o_insert_action_spreadsheet_menu").click();

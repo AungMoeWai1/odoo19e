@@ -10,7 +10,7 @@ from datetime import datetime, timedelta
 import re
 
 from odoo import api, models, fields, _
-from odoo.addons.account_edi_ubl_cii.models.account_edi_xml_ubl_20 import FloatFmt
+from odoo.addons.account_edi_ubl_cii.models.account_edi_common import FloatFmt
 from odoo.addons.account.tools import dict_to_xml
 from odoo.addons.l10n_co_dian import xml_utils
 from odoo.addons.l10n_co_edi.models.res_partner import FINAL_CONSUMER_VAT
@@ -303,9 +303,7 @@ class AccountEdiXmlUbl_Dian(models.AbstractModel):
         nsmap = super()._get_document_nsmap(vals)
         nsmap.update({
             'ds': "http://www.w3.org/2000/09/xmldsig#",
-            'sts': "dian:gov:co:facturaelectronica:Structures-2-1"
-                if vals['document_type'] == 'invoice'
-                else "http://www.dian.gov.co/contratos/facturaelectronica/v1/Structures",
+            'sts': self._get_sts_namespace(vals['invoice']),
             'xades': "http://uri.etsi.org/01903/v1.3.2#",
             'xades141': "http://uri.etsi.org/01903/v1.4.1#",
             'xsi': "http://www.w3.org/2001/XMLSchema-instance",
@@ -536,7 +534,6 @@ class AccountEdiXmlUbl_Dian(models.AbstractModel):
             'cbc:IssueTime': {'_text': invoice.l10n_co_dian_post_time.strftime("%H:%M:%S-05:00")},
             'cbc:InvoiceTypeCode': {'_text': self._dian_get_document_type_code(invoice)} if vals['document_type'] == 'invoice' else None,
             'cbc:CreditNoteTypeCode': {'_text': self._dian_get_document_type_code(invoice)} if vals['document_type'] == 'credit_note' else None,
-            'cbc:Note': None,
             'cbc:DocumentCurrencyCode': {
                 '_text': "COP",
                 'listAgencyID': "6",
@@ -761,9 +758,15 @@ class AccountEdiXmlUbl_Dian(models.AbstractModel):
 
         def grouping_function(base_line, tax_data):
             grouping_key = vals['tax_grouping_function'](base_line, tax_data)
-            if grouping_key is not None and tax_data['tax'].l10n_co_edi_type.code in ['32', '34']:
-                # Handle ICL/IBUA taxes
-                base_unit_measure_by_grouping_key[frozendict(grouping_key)] += base_line['product_id'].l10n_co_edi_ref_nominal_tax * (base_line['quantity'] if tax_data['tax'].l10n_co_edi_type.code == '34' else 1)
+            if grouping_key is not None and tax_data['tax'].l10n_co_edi_type.code in ['22', '32', '34']:
+                # Handle INC Bolsas/ICL/IBUA taxes
+                if tax_data['tax'].l10n_co_edi_type.code == '22':
+                    base_unit_measure_by_grouping_key[frozendict(grouping_key)] = tax_data['tax'].amount
+                else:
+                    base_unit_measure_by_grouping_key[frozendict(grouping_key)] += (
+                        base_line['product_id'].l10n_co_edi_ref_nominal_tax *
+                        (base_line['quantity'] if tax_data['tax'].l10n_co_edi_type.code == '34' else 1)
+                    )
             return grouping_key
 
         base_lines_aggregated_tax_details = self.env['account.tax']._aggregate_base_lines_tax_details(
@@ -833,11 +836,11 @@ class AccountEdiXmlUbl_Dian(models.AbstractModel):
         tax_details = vals['tax_details']
         grouping_key = vals['grouping_key']
 
-        if grouping_key['l10n_co_edi_type'].code not in ['32', '34']:
+        if grouping_key['l10n_co_edi_type'].code not in ['22', '32', '34']:
             tax_subtotal_node = super()._get_tax_subtotal_node(vals)
             tax_subtotal_node['cbc:Percent'] = None
         else:
-            # Special subtotals for ICL/IBUA taxes
+            # Special subtotals for INC Bolsas/ICL/IBUA taxes
             tax_subtotal_node = {
                 'cbc:TaxAmount': {
                     '_text': self.format_float(tax_details['tax_amount'], vals['currency_dp']),
@@ -845,7 +848,11 @@ class AccountEdiXmlUbl_Dian(models.AbstractModel):
                 },
                 'cbc:BaseUnitMeasure': {
                     '_text': tax_details['base_unit_measure'],
-                    'unitCode': 'LTR' if grouping_key['l10n_co_edi_type'].code == '32' else 'ML',
+                    'unitCode': {
+                        '22': 'NIU',
+                        '32': 'LTR',
+                        '34': 'ML'
+                    }.get(grouping_key['l10n_co_edi_type'].code),
                 },
                 'cbc:PerUnitAmount': {
                     '_text': self.format_float(grouping_key['amount'], 2),
@@ -865,8 +872,8 @@ class AccountEdiXmlUbl_Dian(models.AbstractModel):
             # The majority of taxes have only 2 decimals, but some have 3 (and they should be reported with all their decimals).
             'cbc:Percent': {
                 '_text': FloatFmt(abs(grouping_key['amount']), 2, 3)  # withholding taxes are reported as positives
-            } if grouping_key['l10n_co_edi_type'].code not in {'32', '34'}
-            else None,  # Don't include Percent for ICL/IBUA taxes
+            } if grouping_key['l10n_co_edi_type'].code not in {'22', '32', '34'}
+            else None,  # Don't include Percent for INC Bolsas/ICL/IBUA taxes
             'cac:TaxScheme': {
                 'cbc:ID': {
                     '_text': grouping_key['l10n_co_edi_type'].code,
@@ -915,13 +922,21 @@ class AccountEdiXmlUbl_Dian(models.AbstractModel):
 
         def grouping_function(base_line, tax_data):
             grouping_key = vals['tax_grouping_function'](base_line, tax_data)
-            if grouping_key is not None and tax_data['tax'].l10n_co_edi_type.code in ['32', '34']:
+            if grouping_key is not None and tax_data['tax'].l10n_co_edi_type.code in ['22', '32', '34']:
+                # - INC Bolsas (tax on plastic bags) is a tax based on the number of plastic bags used in the sale.
+                #   It is always sent in NIUs (Number of Items) according to the specifications listed in the DIAN documentation.
                 # - ICL (tax on alcoholic beverages) is a tax based on the alcohol percentage in the bottle.
                 #   It is always sent in LTRs according to the specifications listed in the DIAN documentation.
                 # - IBUA (tax on sugar beverages) is a tax based on the quantity of sugar per 100mL
                 #   e.g. if the quantity of sugar per 100mL is > 10gr -> tax of 35$ per 100mL
                 # In Odoo, we have a field for the volume of the product : l10n_co_edi_ref_nominal_tax
-                base_unit_measure_by_grouping_key[frozendict(grouping_key)] += base_line['product_id'].l10n_co_edi_ref_nominal_tax * (base_line['quantity'] if tax_data['tax'].l10n_co_edi_type.code == '34' else 1)
+                if tax_data['tax'].l10n_co_edi_type.code == '22':
+                    base_unit_measure_by_grouping_key[frozendict(grouping_key)] = tax_data['tax'].amount
+                else:
+                    base_unit_measure_by_grouping_key[frozendict(grouping_key)] += (
+                        base_line['product_id'].l10n_co_edi_ref_nominal_tax *
+                        (base_line['quantity'] if tax_data['tax'].l10n_co_edi_type.code == '34' else 1)
+                    )
             return grouping_key
 
         aggregated_tax_details = self.env['account.tax']._aggregate_base_line_tax_details(
@@ -1009,10 +1024,10 @@ class AccountEdiXmlUbl_Dian(models.AbstractModel):
         # EXTENDS account.edi.xml.ubl_21
         constraints = super()._export_invoice_constraints(move, vals)
         now = fields.Datetime.now()
-        oldest_date = now - timedelta(days=5)
-        newest_date = now + timedelta(days=10)
+        oldest_date = now - timedelta(days=6)
+        newest_date = now + timedelta(days=6)
         if not (oldest_date <= fields.Datetime.to_datetime(move.invoice_date) <= newest_date):
-            constraints['dian_date'] = _("The issue date can not be older than 5 days or more than 5 days in the future.")
+            constraints['dian_date'] = _("The issue date can not be older than 6 days or more than 6 days in the future.")
         # required fields on invoice
         if not move.l10n_co_dian_post_time:
             constraints['l10n_co_dian_post_time'] = _("A posted time is required to compute the CUFE/CUDE/CUDS.")
@@ -1121,7 +1136,7 @@ class AccountEdiXmlUbl_Dian(models.AbstractModel):
 
         # 3. Format the XML
         xml = etree.tostring(xml_content, xml_declaration=True, encoding='UTF-8')
-        return self._dian_sign_xml(xml, invoice)
+        return self.with_context(l10n_co_next_commercial_state=next_commercial_state)._dian_sign_xml(xml, invoice)
 
     def _get_co_invoice_event_update_status_node(self, vals):
         self._add_co_invoice_event_update_status_config_vals(vals)
@@ -1150,6 +1165,11 @@ class AccountEdiXmlUbl_Dian(models.AbstractModel):
     def _add_co_invoice_event_update_status_header_nodes(self, node, vals):
         invoice = vals['invoice']
         commercial_state_values = invoice._fields['l10n_co_dian_commercial_state'].get_values(self.env)
+        if invoice.is_purchase_document():
+            id_prefix = invoice.ref
+        else:
+            id_prefix = invoice.name
+
         node.update({
             'cbc:UBLVersionID': {'_text': 'UBL 2.1'},
             'cbc:CustomizationID': {'_text': '1'},
@@ -1157,7 +1177,7 @@ class AccountEdiXmlUbl_Dian(models.AbstractModel):
             'cbc:ProfileExecutionID': {'_text': '2' if vals['is_test_env'] else '1'},
             'cbc:ID': {
                 # the move id suffixed by a number that increases with every call
-                '_text': f'{invoice.ref}{commercial_state_values.index(vals["l10n_co_dian_commercial_state_next"])}'
+                '_text': f'{id_prefix}{commercial_state_values.index(vals["l10n_co_dian_commercial_state_next"])}',
             },
             'cbc:UUID': {
                 'schemeID': '2' if vals['is_test_env'] else '1',
@@ -1189,10 +1209,12 @@ la aceptación o rechazo de la referida factura, ni reclamó en contra de su con
         receiver_partner = vals['receiver_partner']
         node['cac:ReceiverParty'] = {
             'cac:PartyTaxScheme': self._get_co_invoice_event_update_status_party_tax_scheme_node({**vals, 'partner': receiver_partner, 'role': 'receiver'}),
-            'cac:Contact': {
-                'cbc:ElectronicMail': {'_text': receiver_partner.email},
-            },
         }
+
+        if vals['l10n_co_dian_commercial_state_next'] != 'accepted_by_issuer':
+            node['cac:ReceiverParty']['cac:Contact'] = {
+                'cbc:ElectronicMail': {'_text': receiver_partner.email},
+            }
 
     def _get_co_invoice_event_update_status_party_tax_scheme_node(self, vals):
         partner = vals['partner']
@@ -1206,10 +1228,15 @@ la aceptación o rechazo de la referida factura, ni reclamó en contra de su con
 
         tax_type = vals['tax_types'][0] if vals['tax_types'] else None
 
+        if vals['role'] == 'sender' and vals['l10n_co_dian_commercial_state_next'] == 'accepted_by_issuer':
+            partner_vat = '800197268'  # VAT number of DIAN
+        else:
+            partner_vat = partner._get_vat_without_verification_code()
+
         return {
             'cbc:RegistrationName': {'_text': registration_name},
             'cbc:CompanyID': {
-                '_text': partner._get_vat_without_verification_code(),
+                '_text': partner_vat,
                 'schemeName': partner._l10n_co_edi_get_carvajal_code_for_identification_type(),
                 'schemeAgencyName': "CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)",
                 'schemeAgencyID': "195",
@@ -1414,7 +1441,7 @@ la aceptación o rechazo de la referida factura, ni reclamó en contra de su con
         document_number = root.findtext('./cbc:ID', namespaces=namespaces)
 
         if ((invoice.move_type in ('in_invoice', 'in_refund') and not invoice.l10n_co_edi_is_support_document)
-                or (invoice.move_type == 'out_invoice' and self.env.context.get('l10n_co_dian_commercial_state_next') == 'accept_by_issuer')):
+                or (invoice.move_type == 'out_invoice' and self.env.context.get('l10n_co_next_commercial_state') == 'accepted_by_issuer')):
             identifier = root.findtext('.//cac:DocumentResponse/cac:DocumentReference/cbc:UUID', namespaces=namespaces)
         else:
             identifier = root.findtext('./cbc:UUID', namespaces=namespaces)
@@ -1456,4 +1483,13 @@ la aceptación o rechazo de la referida factura, ni reclamó en contra de su con
         cufe = self._find_value("./cbc:UUID[@schemeName='CUFE-SHA384']", tree)
         if cufe:
             invoice.l10n_co_edi_cufe_cude_ref = cufe
+        if invoice.is_purchase_document():
+            self.env['l10n_co_dian.document']._create_document(
+                etree.tostring(tree, encoding='UTF-8'),
+                invoice,
+                'invoice_accepted',
+                attachment_name=f'dian_{invoice.move_type}_{invoice.ref}.xml',
+                commercial_state='pending',
+                message_json={'status': ''},
+            )
         return logs

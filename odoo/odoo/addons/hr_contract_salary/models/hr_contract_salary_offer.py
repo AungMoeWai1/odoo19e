@@ -1,7 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import uuid
 
 from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, SUPERUSER_ID, _
+from odoo.addons.hr_contract_salary.utils.hr_version import requires_hr_version_context
 from werkzeug.urls import url_encode
 from odoo.exceptions import ValidationError
 
@@ -19,6 +21,8 @@ class HrContractSalaryOffer(models.Model):
             contract = self.env['hr.contract'].browse(contract_id)
             result['employee_id'] = contract.employee_id.id
         for field in fields:
+            if field == 'access_token' and 'applicant_id' in result:
+                result['access_token'] = uuid.uuid4().hex
             if field.startswith('x_') and 'active_id' in self.env.context:
                 model = self.env.context.get('active_model')
                 if model == "hr.version" and field in self.env[model]:
@@ -76,7 +80,7 @@ class HrContractSalaryOffer(models.Model):
     contract_start_date = fields.Date(tracking=True,
                                       default=fields.Date.context_today)
     contract_end_date = fields.Date(tracking=True)
-    access_token = fields.Char('Access Token', copy=False, tracking=True)
+    access_token = fields.Char('Access Token', copy=False, tracking=True, store=True, compute="_compute_token")
     validity_days_count = fields.Integer("Validity Days Count",
                               compute="_compute_validity_days_count",
                               store=True, readonly=False)
@@ -88,14 +92,15 @@ class HrContractSalaryOffer(models.Model):
         compute_sudo=True,
         export_string_translation=False
     )
+    contract_type_id = fields.Many2one(related='employee_job_id.contract_type_id', string='Contract Type', readonly=True, store=False)
 
-    # DO NOT CALL THIS FUNCTION OUTSIDE OF A ROLLBACK SAVEPOINT
+    @requires_hr_version_context()
     def _get_version(self):
         self.ensure_one()
 
         # Offer for an employee
         if self.employee_id:
-            contract_template = self.contract_template_id.with_context(tracking_disable=True, salary_simulation=True)
+            contract_template = self.contract_template_id
             if contract_template:
                 if not contract_template.employee_id:
                     contract_template.write({
@@ -105,13 +110,10 @@ class HrContractSalaryOffer(models.Model):
                     })
                 return contract_template
             else:
-                return self.employee_version_id.with_context(tracking_disable=True, salary_simulation=True)
+                return self.employee_version_id
 
         # Offer for an applicant, create an employee
-        employee = self.env['hr.employee'].with_context(
-            tracking_disable=True,
-            salary_simulation=True,
-        ).with_user(SUPERUSER_ID).sudo().create({
+        employee = self.env['hr.employee'].with_user(SUPERUSER_ID).sudo().create({
             'name': self.applicant_id.partner_name if self.applicant_id else 'Simulation Employee',
             'private_phone': self.applicant_id.partner_phone if self.applicant_id else False,
             'private_email': self.applicant_id.email_from if self.applicant_id else False,
@@ -122,24 +124,23 @@ class HrContractSalaryOffer(models.Model):
             'company_id': self.company_id.id,
         })
         if self.contract_template_id:
-            employee.version_id.with_context(tracking_disable=True, salary_simulation=True).write(
+            employee.version_id.write(
                 self.env['hr.version'].get_values_from_contract_template(self.contract_template_id)
             )
-            return employee.current_version_id.with_context(tracking_disable=True, salary_simulation=True)
-        return employee.current_version_id.with_context(tracking_disable=True, salary_simulation=True)
+        return employee.current_version_id
 
-    @api.depends('contract_template_id.sign_template_id')
+    @api.depends('contract_template_id.sign_template_id', 'contract_template_id.contract_update_template_id')
     def _compute_sign_template_id(self):
         for offer in self:
             if offer.contract_template_id:
-                if offer.employee_id:
+                if offer.employee_id and offer.employee_id.active:
                     offer.sign_template_id = offer.contract_template_id.contract_update_template_id
                 else:
                     offer.sign_template_id = offer.contract_template_id.sign_template_id
 
     def _copy_contract_template_signatories(self):
         self.ensure_one()
-        if self.employee_id:
+        if self.employee_id and self.employee_id.active:
             contract_template_signatories_copy = self.contract_template_id.contract_update_signatories_ids.copy()
         else:
             contract_template_signatories_copy = self.contract_template_id.sign_template_signatories_ids.copy()
@@ -161,14 +162,20 @@ class HrContractSalaryOffer(models.Model):
         for offer in self:
             offer.is_half_sign_state_required = len(offer.sign_template_signatories_ids) != 1
 
-    @api.depends("access_token", "applicant_id")
+    @api.depends("access_token", "final_yearly_costs")
     def _compute_url(self):
         base_url = self.env['hr.contract.salary.offer'].get_base_url()
         for offer in self:
             offer.url = base_url \
-                      + f"/salary_package/simulation/offer/{offer.id}" \
+                      + f"/salary_package/simulation/offer/{offer._origin.id}" \
                       + f"?final_yearly_costs={round(offer.final_yearly_costs, 2)}" \
                       + (f"&token={offer.access_token}" if offer.access_token else "")
+
+    @api.depends("employee_id", "applicant_id")
+    def _compute_token(self):
+        for offer in self:
+            if not offer.access_token and (not offer.employee_id or not offer.employee_id.user_id):
+                offer.access_token = uuid.uuid4().hex
 
     @api.depends('applicant_id', 'employee_version_id', 'employee_id')
     def _compute_display_name(self):
@@ -330,8 +337,16 @@ class HrContractSalaryOffer(models.Model):
 
     def action_view_signature_request(self):
         self.ensure_one()
-        pending_sign_request = self.sign_request_ids.filtered(lambda r: r.state != 'signed')
-        return pending_sign_request.go_to_document()
+        pending_sign_requests = self.sign_request_ids.filtered(lambda r: r.state != 'signed')
+        if len(pending_sign_requests) == 1:
+            return pending_sign_requests.go_to_document()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Signature Requests',
+            'view_mode': 'kanban,list',
+            'res_model': 'sign.request',
+            'domain': [('id', 'in', pending_sign_requests.ids)]
+        }
 
     def action_edit_offer_signatories(self):
         self.ensure_one()

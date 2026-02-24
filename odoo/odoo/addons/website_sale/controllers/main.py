@@ -17,6 +17,7 @@ from odoo.tools import SQL, clean_context, float_round, groupby, lazy, str2bool
 from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.translate import LazyTranslate, _
 
+from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.controllers import portal as payment_portal
 from odoo.addons.sale.controllers import portal as sale_portal
 from odoo.addons.html_editor.tools import get_video_thumbnail
@@ -288,7 +289,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
     )
     def shop(self, page=0, category=None, search='', min_price=0.0, max_price=0.0, tags='', **post):
         if not request.website.has_ecommerce_access():
-            return request.redirect('/web/login')
+            return request.redirect(f'/web/login?redirect={request.httprequest.path}')
 
         is_category_in_query = category and isinstance(category, str)
         category = self._validate_and_get_category(category)
@@ -324,6 +325,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         attribute_value_ids = set(itertools.chain.from_iterable(attribute_value_dict.values()))
         if attribute_values:
             request.session['attribute_values'] = attribute_values
+            post['attribute_values'] = attribute_values
         else:
             request.session.pop('attribute_values', None)
 
@@ -541,7 +543,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
     )
     def product(self, product, category=None, pricelist=None, **kwargs):
         if not request.website.has_ecommerce_access():
-            return request.redirect('/web/login')
+            return request.redirect(f'/web/login?redirect={request.httprequest.path}')
 
         if pricelist is not None:
             try:
@@ -819,7 +821,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                             and ptav.product_attribute_value_id.id in attribute_value_ids
                         )
                     )[:1]
-                ) or ptal.product_template_value_ids[:1]
+                ) or ptal.product_template_value_ids.filtered('ptav_active')[:1]
             )
             combination_info = product._get_combination_info(
                 combination=request.env['product.template.attribute.value'].concat(combination)
@@ -1426,10 +1428,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 )
             # Process the delivery method.
             if shipping_option:
-                delivery_method_sudo = request.env['delivery.carrier'].sudo().browse(
-                    int(shipping_option['id'])
-                ).exists()
-                order_sudo._set_delivery_method(delivery_method_sudo)
+                dm_id = int(shipping_option['id'])
+                available_dms = order_sudo._get_delivery_methods()
+                order_sudo._set_delivery_method(available_dms.filtered(lambda dm: dm.id == dm_id))
 
         return order_sudo.partner_id.id
 
@@ -1554,6 +1555,19 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'sale_order_id': order.id,  # Allow Stripe to check if tokenization is required.
         }
         return checkout_page_values | payment_form_values
+
+    @route(
+        _express_checkout_delivery_route + '/compute_taxes', type='jsonrpc', auth='public',
+        website=True, sitemap=False,
+    )
+    def express_checkout_shipping_address_compute_taxes(self):
+        order_sudo = request.cart
+        order_sudo._recompute_taxes()
+        amount_without_delivery = order_sudo._compute_amount_total_without_delivery()
+
+        return payment_utils.to_minor_currency_units(
+            amount_without_delivery, order_sudo.currency_id
+        )
 
     def _get_shop_payment_errors(self, order):
         """ Check that there is no error that should block the payment.

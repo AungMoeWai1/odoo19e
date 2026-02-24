@@ -8,13 +8,14 @@
 # Miku Laitinen <miku.laitinen@gmail.com>, 2022
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 16:03+0000\n"
-"PO-Revision-Date: 2025-09-16 17:05+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2025-12-30 18:46+0000\n"
+"PO-Revision-Date: 2025-11-16 17:54+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
 "project_timesheet_forecast_sale/fi/>\n"
 "Language: fi\n"
@@ -26,19 +27,19 @@ msgstr ""
 
 #. module: project_timesheet_forecast_sale
 #. odoo-python
-#: code:addons/project_timesheet_forecast_sale/models/project.py:0
+#: code:addons/project_timesheet_forecast_sale/models/project_project.py:0
 msgid "%(name)s's Timesheets and Planning Analysis"
 msgstr "%(name)s:n työaikakirjaukset ja suunnitteluanalyysi"
 
 #. module: project_timesheet_forecast_sale
 #: model:ir.model,name:project_timesheet_forecast_sale.model_account_analytic_line
-msgid "Analytic Account"
-msgstr "Kustannuspaikka"
+msgid "Analytic Line"
+msgstr "Analyyttinen rivi"
 
 #. module: project_timesheet_forecast_sale
 #: model:ir.model.fields,field_description:project_timesheet_forecast_sale.field_planning_analysis_report__billable_allocated_hours
-msgid "Billable Hours Allocated"
-msgstr "Laskutettavat tunnit Kohdennettuina"
+msgid "Billable Time Allocated"
+msgstr "Kohdistettu laskutettava aika"
 
 #. module: project_timesheet_forecast_sale
 #: model:planning.role,name:project_timesheet_forecast_sale.planning_role_consultant
@@ -46,14 +47,19 @@ msgid "Consultant"
 msgstr "Konsultti"
 
 #. module: project_timesheet_forecast_sale
-#: model:ir.model.fields,field_description:project_timesheet_forecast_sale.field_project_project__display_planning_timesheet_analysis
-msgid "Display Planning Timesheet Analysis"
-msgstr "Näytä suunnittelu Työaikakirjausten analyysi"
+#: model:ir.model.fields,field_description:project_timesheet_forecast_sale.field_account_analytic_line__display_name
+#: model:ir.model.fields,field_description:project_timesheet_forecast_sale.field_planning_analysis_report__display_name
+#: model:ir.model.fields,field_description:project_timesheet_forecast_sale.field_planning_slot__display_name
+#: model:ir.model.fields,field_description:project_timesheet_forecast_sale.field_project_project__display_name
+#: model:ir.model.fields,field_description:project_timesheet_forecast_sale.field_project_timesheet_forecast_report_analysis__display_name
+#: model:ir.model.fields,field_description:project_timesheet_forecast_sale.field_sale_order_line__display_name
+msgid "Display Name"
+msgstr "Näyttönimi"
 
 #. module: project_timesheet_forecast_sale
 #: model:ir.model.fields,field_description:project_timesheet_forecast_sale.field_project_timesheet_forecast_report_analysis__effective_billable_hours
-msgid "Effective Billable Hours"
-msgstr ""
+msgid "Effective Billable Time"
+msgstr "Tehokkaasti käytetty laskutettava aika"
 
 #. module: project_timesheet_forecast_sale
 #: model:ir.model.fields,field_description:project_timesheet_forecast_sale.field_project_timesheet_forecast_report_analysis__effective_margin
@@ -62,8 +68,8 @@ msgstr "Vaikuttava marginaali"
 
 #. module: project_timesheet_forecast_sale
 #: model:ir.model.fields,field_description:project_timesheet_forecast_sale.field_project_timesheet_forecast_report_analysis__effective_non_billable_hours
-msgid "Effective Non-Billable Hours"
-msgstr ""
+msgid "Effective Non-Billable Time"
+msgstr "Vaikuttava laskuttamaton aika"
 
 #. module: project_timesheet_forecast_sale
 #: model:ir.model.fields,field_description:project_timesheet_forecast_sale.field_project_timesheet_forecast_report_analysis__effective_revenues
@@ -71,24 +77,24 @@ msgid "Effective Revenues"
 msgstr "Vaikuttavat tulot"
 
 #. module: project_timesheet_forecast_sale
-#: model_terms:ir.ui.view,arch_db:project_timesheet_forecast_sale.project_update_default_description
-msgid "N/A"
-msgstr ""
+#: model:ir.model.fields,field_description:project_timesheet_forecast_sale.field_account_analytic_line__id
+#: model:ir.model.fields,field_description:project_timesheet_forecast_sale.field_planning_analysis_report__id
+#: model:ir.model.fields,field_description:project_timesheet_forecast_sale.field_planning_slot__id
+#: model:ir.model.fields,field_description:project_timesheet_forecast_sale.field_project_project__id
+#: model:ir.model.fields,field_description:project_timesheet_forecast_sale.field_project_timesheet_forecast_report_analysis__id
+#: model:ir.model.fields,field_description:project_timesheet_forecast_sale.field_sale_order_line__id
+msgid "ID"
+msgstr "Tunnus"
 
 #. module: project_timesheet_forecast_sale
 #: model:ir.model.fields,field_description:project_timesheet_forecast_sale.field_planning_analysis_report__non_billable_allocated_hours
-msgid "Non-billable Hours Allocated"
-msgstr "Ei-laskutettavat tunnit Kohdennettuina"
-
-#. module: project_timesheet_forecast_sale
-#: model_terms:ir.ui.view,arch_db:project_timesheet_forecast_sale.project_update_default_description
-msgid "Planned"
-msgstr "Suunniteltu"
+msgid "Non-billable Time Allocated"
+msgstr "Kohdistettu laskuttamaton aika"
 
 #. module: project_timesheet_forecast_sale
 #: model:ir.model.fields,field_description:project_timesheet_forecast_sale.field_project_timesheet_forecast_report_analysis__planned_billable_hours
-msgid "Planned Billable Hours"
-msgstr ""
+msgid "Planned Billable Time"
+msgstr "Suunniteltu laskutettava aika"
 
 #. module: project_timesheet_forecast_sale
 #: model:ir.model.fields,field_description:project_timesheet_forecast_sale.field_project_timesheet_forecast_report_analysis__planned_margin
@@ -97,8 +103,8 @@ msgstr "Suunniteltu marginaali"
 
 #. module: project_timesheet_forecast_sale
 #: model:ir.model.fields,field_description:project_timesheet_forecast_sale.field_project_timesheet_forecast_report_analysis__planned_non_billable_hours
-msgid "Planned Non-Billable Hours"
-msgstr ""
+msgid "Planned Non-Billable Time"
+msgstr "Suunniteltu laskuttamaton aika"
 
 #. module: project_timesheet_forecast_sale
 #: model:ir.model.fields,field_description:project_timesheet_forecast_sale.field_project_timesheet_forecast_report_analysis__planned_revenues
@@ -106,9 +112,19 @@ msgid "Planned Revenues"
 msgstr "Suunnitellut tulot"
 
 #. module: project_timesheet_forecast_sale
+#: model:ir.model,name:project_timesheet_forecast_sale.model_project_timesheet_forecast_report_analysis
+msgid "Planning / Timesheets Analysis"
+msgstr "Suunnittelu / Työaikakirjausten analyysi"
+
+#. module: project_timesheet_forecast_sale
 #: model:ir.model,name:project_timesheet_forecast_sale.model_planning_analysis_report
 msgid "Planning Analysis Report"
 msgstr "Suunnitteluanalyysiraportti"
+
+#. module: project_timesheet_forecast_sale
+#: model:ir.model,name:project_timesheet_forecast_sale.model_planning_slot
+msgid "Planning Shift"
+msgstr "Vuorosuunnittelu"
 
 #. module: project_timesheet_forecast_sale
 #: model:ir.model,name:project_timesheet_forecast_sale.model_project_project
@@ -116,19 +132,9 @@ msgid "Project"
 msgstr "Projekti"
 
 #. module: project_timesheet_forecast_sale
-#: model:ir.model,name:project_timesheet_forecast_sale.model_project_update
-msgid "Project Update"
-msgstr "Projektin päivitys"
-
-#. module: project_timesheet_forecast_sale
 #: model:ir.model,name:project_timesheet_forecast_sale.model_sale_order_line
 msgid "Sales Order Line"
 msgstr "Myyntitilausrivi"
-
-#. module: project_timesheet_forecast_sale
-#: model:ir.model.fields,help:project_timesheet_forecast_sale.field_project_project__display_planning_timesheet_analysis
-msgid "Should we display the planning and timesheet analysis button?"
-msgstr "Pitäisikö näyttää suunnittelu- ja työaikakirjausten analysointipainike?"
 
 #. module: project_timesheet_forecast_sale
 #: model:planning.role,name:project_timesheet_forecast_sale.planning_role_junior_architect
@@ -143,21 +149,18 @@ msgstr "Vanhempi ohjelmistoarkkitehti"
 #. module: project_timesheet_forecast_sale
 #: model:ir.model.fields,help:project_timesheet_forecast_sale.field_planning_analysis_report__billable_allocated_hours
 msgid "Sum of hours allocated to shifts linked to a SOL."
-msgstr "Myyntitilauksen riviin liittyviin työvuoroihin varattujen tuntien summa."
+msgstr ""
+"Myyntitilauksen riviin liittyviin työvuoroihin varattujen tuntien summa."
 
 #. module: project_timesheet_forecast_sale
 #: model:ir.model.fields,help:project_timesheet_forecast_sale.field_planning_analysis_report__non_billable_allocated_hours
 msgid "Sum of hours allocated to shifts not linked to a SOL."
-msgstr "Myyntitilauksen riviin liittymättömiin työvuoroihin varattujen tuntien summa."
-
-#. module: project_timesheet_forecast_sale
-#: model:ir.model,name:project_timesheet_forecast_sale.model_project_timesheet_forecast_report_analysis
-msgid "Timesheet & Planning Statistics"
 msgstr ""
+"Myyntitilauksen riviin liittymättömiin työvuoroihin varattujen tuntien summa."
 
 #. module: project_timesheet_forecast_sale
 #. odoo-python
-#: code:addons/project_timesheet_forecast_sale/models/project.py:0
+#: code:addons/project_timesheet_forecast_sale/models/project_project.py:0
 msgid "Timesheets and Planning"
 msgstr "Työaikakirjaukset ja suunnittelu"
 
@@ -165,3 +168,25 @@ msgstr "Työaikakirjaukset ja suunnittelu"
 #: model_terms:ir.ui.view,arch_db:project_timesheet_forecast_sale.project_timesheet_forecast_view_kanban_inherit_sale_timesheet
 msgid "Timesheets and Planning Analysis"
 msgstr "Työaikakirjaukset ja suunnitteluanalyysi"
+
+#~ msgid "Analytic Account"
+#~ msgstr "Kustannuspaikka"
+
+#~ msgid "Billable Hours Allocated"
+#~ msgstr "Laskutettavat tunnit Kohdennettuina"
+
+#~ msgid "Display Planning Timesheet Analysis"
+#~ msgstr "Näytä suunnittelu Työaikakirjausten analyysi"
+
+#~ msgid "Non-billable Hours Allocated"
+#~ msgstr "Ei-laskutettavat tunnit Kohdennettuina"
+
+#~ msgid "Planned"
+#~ msgstr "Suunniteltu"
+
+#~ msgid "Project Update"
+#~ msgstr "Projektin päivitys"
+
+#~ msgid "Should we display the planning and timesheet analysis button?"
+#~ msgstr ""
+#~ "Pitäisikö näyttää suunnittelu- ja työaikakirjausten analysointipainike?"

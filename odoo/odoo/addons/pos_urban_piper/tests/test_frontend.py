@@ -82,15 +82,27 @@ class TestFrontend(TestPosUrbanPiperCommon):
             'name': 'Preparation Display',
             'pos_config_ids': [(4, self.urban_piper_config.id)],
         })
-        self.start_pos_tour('OrderFlowTour', pos_config=self.urban_piper_config, login="pos_admin")
+        PosOrder = self.env.registry.models['pos.order']
+
+        def mark_urbanpiper_prep_order_as_printed_patch(self):
+            # Catch the intentionally raised ValueError from the mathod
+            # and return 'False' instead of propagating the exception
+            try:
+                return super(PosOrder, self).mark_urbanpiper_prep_order_as_printed()
+            except ValueError:
+                return False
+        with patch.object(PosOrder, "mark_urbanpiper_prep_order_as_printed", mark_urbanpiper_prep_order_as_printed_patch):
+            self.start_pos_tour('OrderFlowTour', pos_config=self.urban_piper_config, login="pos_admin")
         order_1 = self.env['pos.order'].search([('delivery_identifier', '=', identifier_1)])
         order_2 = self.env['pos.order'].search([('delivery_identifier', '=', identifier_2)])
         self.assertEqual(100.0, order_1.amount_total)
         self.assertEqual(100.0, order_1.amount_paid)
+        self.assertEqual(0.0, order_1.amount_difference)
         self.assertEqual(0.0, order_1.amount_tax)
         self.assertEqual(100.0, order_1.payment_ids[0].amount)
         self.assertEqual(200.0, order_2.amount_total)
         self.assertEqual(200.0, order_2.amount_paid)
+        self.assertEqual(0.0, order_2.amount_difference)
         self.assertEqual(0.0, order_2.amount_tax)
         self.assertEqual(200.0, order_2.payment_ids[0].amount)
         pdis_order1 = self.env['pos.prep.order'].search([('pos_order_id', '=', order_1.id)], limit=1)
@@ -130,10 +142,10 @@ class TestFrontend(TestPosUrbanPiperCommon):
             }).make_test_order(identifier_1)
         self.start_pos_tour('OrderWithChargesAndDiscountTour', pos_config=self.urban_piper_config, login="pos_admin")
         order_1 = self.env['pos.order'].search([('delivery_identifier', '=', identifier_1)])
-        self.assertEqual(522.5, order_1.amount_total)
-        self.assertEqual(522.5, order_1.amount_paid)
-        self.assertEqual(22.5, order_1.amount_tax)
-        self.assertEqual(522.5, order_1.payment_ids[0].amount)
+        self.assertEqual(500, order_1.amount_total)
+        self.assertEqual(500, order_1.amount_paid)
+        self.assertEqual(0, order_1.amount_tax)
+        self.assertEqual(500, order_1.payment_ids[0].amount)
 
     def test_prepare_option_data_returns_valid_options(self):
         """Test that _prepare_option_data returns correctly formatted active options."""
@@ -202,3 +214,111 @@ class TestFrontend(TestPosUrbanPiperCommon):
         with patch.object(UrbanPiperClient, "_make_api_request", _mock_make_api_request):
             self.urban_piper_config.with_user(self.pos_admin).open_ui()
             self.start_pos_tour('test_payment_method_close_session', pos_config=self.urban_piper_config, login="pos_admin")
+
+    def test_multi_branch_tax_setup(self):
+        self.parent_company = self.company_data['company']
+        self.child_company = self.env['res.company'].create({
+            'name': 'Branch Company',
+            'parent_id': self.parent_company.id,
+            'chart_template': self.env.company.chart_template,
+            'country_id': self.env.company.country_id.id,
+        })
+        bank_payment_method = self.bank_payment_method.copy()
+        bank_payment_method.company_id = self.child_company.id
+        self.tax_15 = self.env['account.tax'].create({
+            'name': '15% VAT',
+            'amount': 15,
+            'amount_type': 'percent',
+            'company_id': self.parent_company.id,
+        })
+        self.product_with_tax_15 = self.env['product.template'].create({
+            'name': 'Product 1',
+            'available_in_pos': True,
+            'taxes_id': [(4, self.tax_15.id)],
+            'type': 'consu',
+            'list_price': 100.0,
+        })
+        self.child_branch_pos_config = self.env['pos.config'].with_company(self.child_company).create({
+            'name': 'Branch POS',
+            'module_pos_urban_piper': True,
+            'urbanpiper_delivery_provider_ids': [Command.set([self.env.ref('pos_urban_piper.pos_delivery_provider_justeat').id])],
+            'journal_id': self.company_data['default_journal_sale'].id,
+            'invoice_journal_id': self.company_data['default_journal_sale'].id,
+            'payment_method_ids': [(4, bank_payment_method.id)],
+        })
+        self.child_branch_pos_config.open_ui()
+        with MockRequest(self.env):
+            identifier_1 = str(uuid.uuid4())
+            self.env['pos.urbanpiper.test.order.wizard'].with_context(config_id=self.child_branch_pos_config.id).create({
+                'product_id': self.product_with_tax_15.id,
+                'quantity': 5,
+                'packaging_charge': 50,
+                'delivery_charge': 100,
+                'discount_amount': 150,
+                'delivery_provider_id': self.env.ref('pos_urban_piper.pos_delivery_provider_justeat').id,
+            }).make_test_order(identifier_1)
+        order = self.env['pos.order'].search([('delivery_identifier', '=', identifier_1)])
+
+        def _mock_make_api_request(self, endpoint, method='POST', data=None, timeout=10):
+            return []
+
+        with patch.object(UrbanPiperClient, "_make_api_request", _mock_make_api_request):
+            self.child_branch_pos_config.order_status_update(order.id, 'Food Ready')
+        self.assertEqual(self.tax_15.id, order.lines.tax_ids.id)
+
+    def test_to_check_attribute(self):
+        self.configurable_chair.active = True
+        self.urban_piper_config.open_ui()
+        with MockRequest(self.env):
+            identifier_1 = str(uuid.uuid4())
+            self.env['pos.urbanpiper.test.order.wizard'].with_context(
+                config_id=self.urban_piper_config.id,
+                options_to_add=[
+                    {'title': 'Red', 'quantity': '1', 'merchant_id': f'{self.configurable_chair.id}-{self.configurable_chair.attribute_line_ids[0].value_ids[0].id}'},
+                    {'title': 'Metal', 'quantity': '1', 'merchant_id': f'{self.configurable_chair.id}-{self.configurable_chair.attribute_line_ids[1].value_ids[0].id}'},
+                    {'title': 'Wool', 'quantity': '1', 'merchant_id': f'{self.configurable_chair.id}-{self.chair_fabrics_wool.id}'},
+                    {'title': 'Cup Holder', 'quantity': '1', 'merchant_id': f'{self.configurable_chair.id}-{self.chair_addon_cupholder.id}'},
+                    {'title': 'Cushion', 'quantity': '1', 'merchant_id': f'{self.configurable_chair.id}-{self.chair_addon_cushion.id}'},
+                ],
+            ).create({
+                'product_id': self.configurable_chair.id,
+                'quantity': 2,
+                'delivery_provider_id': self.env.ref('pos_urban_piper.pos_delivery_provider_justeat').id,
+            }).make_test_order(identifier_1)
+        self.start_pos_tour('test_to_check_attribute', pos_config=self.urban_piper_config, login="pos_admin")
+
+    def test_charges_sent_to_urbanpiper(self):
+        up = UrbanPiperClient(self.urban_piper_config)
+        delivery_charge_product = self.env.ref('pos_urban_piper.product_delivery_charges')
+        delivery_charge_product.list_price = 10
+        charges = up._prepare_charges_data()
+        self.assertEqual(
+            charges,
+            [{'code': 'DC_F', 'title': 'Delivery Charges', 'active': True, 'structure': {'applicable_on': 'order.order_subtotal', 'value': 10.0}, 'item_ref_ids': ['all']}]
+        )
+
+    def test_order_with_no_children_taxes(self):
+        tax = self.env['account.tax'].create({
+            'name': 'Tax without children taxes',
+            'amount_type': 'group',
+        })
+        self.product_1.write({
+            'taxes_id': [Command.set([tax.id])],
+        })
+
+        self.urban_piper_config.open_ui()
+        with MockRequest(self.env):
+            identifier = str(uuid.uuid4())
+            self.env['pos.urbanpiper.test.order.wizard'].with_context(config_id=self.urban_piper_config.id).create({
+                'product_id': self.product_1.id,
+                'quantity': 1,
+                'delivery_provider_id': self.env.ref('pos_urban_piper.pos_delivery_provider_justeat').id,
+            }).make_test_order(identifier)
+
+        order = self.env['pos.order'].search([('delivery_identifier', '=', identifier)])
+
+        self.assertEqual(len(order.lines), 1)
+        self.assertEqual(order.lines[0].price_unit, 100.0)
+        self.assertEqual(order.lines[0].price_subtotal, 100.0)
+        self.assertEqual(order.amount_total, 100.0)
+        self.assertEqual(order.amount_tax, 0.0)

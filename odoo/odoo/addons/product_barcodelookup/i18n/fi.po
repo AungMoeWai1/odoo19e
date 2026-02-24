@@ -3,13 +3,14 @@
 # * product_barcodelookup
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Saara Hakanen <sahak@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:39+0000\n"
-"PO-Revision-Date: 2025-09-16 17:08+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2025-12-30 18:46+0000\n"
+"PO-Revision-Date: 2026-02-17 12:43+0000\n"
+"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
 "product_barcodelookup/fi/>\n"
 "Language: fi\n"
@@ -17,14 +18,14 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: product_barcodelookup
 #. odoo-python
 #: code:addons/product_barcodelookup/wizard/product_fetch_image_wizard.py:0
 msgid ""
-"%(matching_images_count)s matching images have been found for "
-"%(product_count)s products."
+"%(matching_images_count)s matching images have been found for %"
+"(product_count)s products."
 msgstr ""
 "%(matching_images_count)s vastaavaa kuvaa on löydetty %(product_count)s "
 "tuotteelle."
@@ -33,7 +34,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product_barcodelookup.product_fetch_image_wizard_view_form
 msgid ""
 "<span invisible=\"nb_products_selected &lt;= 1000\">\n"
-"                            As only 1000 products can be processed per day, the remaining will be\n"
+"                            As only 1000 products can be processed per day, "
+"the remaining will be\n"
 "                            done tomorrow.\n"
 "                        </span>"
 msgstr ""
@@ -47,7 +49,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product_barcodelookup.product_fetch_image_wizard_view_form
 msgid ""
 "<strong>Note: </strong>\n"
-"                        Some images may not be royalty-free and should not be published online."
+"                        Some images may not be royalty-free and should not "
+"be published online."
 msgstr ""
 "<strong>Huom: </strong>\n"
 "                        Jotkut kuvat eivät välttämättä ole rojaltivapaita "
@@ -138,7 +141,7 @@ msgstr "Hae kuvat Barcode Lookupista"
 #. odoo-python
 #: code:addons/product_barcodelookup/wizard/product_fetch_image_wizard.py:0
 msgid "Go to Settings"
-msgstr ""
+msgstr "Siirry asetuksiin"
 
 #. module: product_barcodelookup
 #: model:ir.model.fields,field_description:product_barcodelookup.field_ir_cron_trigger__id
@@ -197,7 +200,7 @@ msgstr "Tuotekuvat: Hae tuotekuvat Barcode Lookupista"
 #. module: product_barcodelookup
 #: model:ir.model,name:product_barcodelookup.model_product_product
 msgid "Product Variant"
-msgstr "Tuotevariantti"
+msgstr "Tuotevariaatio"
 
 #. module: product_barcodelookup
 #. odoo-python
@@ -254,12 +257,6 @@ msgstr ""
 "Ajastettu toiminto \"Tuotekuvat: Tuotekuvien hakeminen Barcode Lookupista\" "
 "on poistettu. Ota yhteyttä ylläpitäjään, jotta toiminto voidaan palauttaa "
 "tai jotta moduuli \"product_barcodelookup\" voidaan asentaa uudelleen."
-
-#. module: product_barcodelookup
-#. odoo-python
-#: code:addons/product_barcodelookup/models/ir_cron_trigger.py:0
-msgid "This action is already scheduled. Please try again later."
-msgstr "Tämä toiminta on jo aikataulutettu. Yritä myöhemmin uudelleen."
 
 #. module: product_barcodelookup
 #: model:ir.model,name:product_barcodelookup.model_ir_cron_trigger
@@ -335,9 +332,13 @@ msgstr "käsitellään."
 #: model_terms:ir.ui.view,arch_db:product_barcodelookup.product_fetch_image_wizard_view_form
 msgid ""
 "won't be\n"
-"                            processed because they either already have an image or\n"
+"                            processed because they either already have an "
+"image or\n"
 "                            lack a barcode"
 msgstr ""
 "ei\n"
 "                            käsitellä, koska niillä on jo kuva tai niiltä\n"
 "                            puuttuu viivakoodi."
+
+#~ msgid "This action is already scheduled. Please try again later."
+#~ msgstr "Tämä toiminta on jo aikataulutettu. Yritä myöhemmin uudelleen."

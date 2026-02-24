@@ -121,7 +121,7 @@ class TestSaleProject(TestSaleProjectCommon):
         })
 
         so_line_order_task_in_global = SaleOrderLine.create({
-            'name': f"{self.product_order_service2.name}\n[TEST1]\nGlobal project",
+            'name': f"{self.product_order_service2.display_name}\nDescription for global task.",
             'product_id': self.product_order_service2.id,
             'product_uom_qty': 10,
             'order_id': sale_order.id,
@@ -129,7 +129,7 @@ class TestSaleProject(TestSaleProjectCommon):
 
         self.product_order_service3.description_sale = "Task in New Project"
         so_line_order_new_task_new_project = SaleOrderLine.create({
-            'name': f"{self.product_order_service3.display_name}\n[TEST2]\nNew project",
+            'name': f"{self.product_order_service3.display_name}\nDescription for new project task.",
             'product_id': self.product_order_service3.id,
             'product_uom_qty': 10,
             'order_id': sale_order.id,
@@ -155,29 +155,29 @@ class TestSaleProject(TestSaleProjectCommon):
         self.assertEqual(self.project_global.tasks.sale_line_id, so_line_order_task_in_global, "Global project's task should be linked to so line")
         self.assertEqual(
             so_line_order_task_in_global.task_id.name,
-            f"{sale_order.name} - [TEST1]",
-            "Task name in global project should include SO name & partial line description",
+            f"{sale_order.name} - Description for global task.",
+            "Task name in global project should include SO name and the single-line SOL description.",
         )
-        self.assertEqual(
-            str(so_line_order_task_in_global.task_id.description),
-            '<p>Global project</p>',
+        self.assertFalse(
+            so_line_order_task_in_global.task_id.description,
+            "Task description should be empty for single-line SOL descriptions."
         )
         #  service_tracking 'task_in_project'
         self.assertTrue(so_line_order_new_task_new_project.project_id, "Sales order line should be linked to newly created project")
         self.assertTrue(so_line_order_new_task_new_project.task_id, "Sales order line should be linked to newly created task")
         self.assertEqual(
             so_line_order_new_task_new_project.task_id.name,
-            "[TEST2]",
-            "Task name in new project should only include partial line description",
+            "Description for new project task.",
+            "Task name should be the single-line SOL description.",
         )
-        self.assertEqual(
-            str(so_line_order_new_task_new_project.task_id.description),
-            '<p>New project</p>',
+        self.assertFalse(
+            so_line_order_new_task_new_project.task_id.description,
+            "Task description should be empty for single-line SOL descriptions."
         )
         self.assertEqual(
             so_line_order_new_task_new_project2.task_id.name,
-            self.product_order_service3.display_name,
-            "Task name created from a SOL with default description should use the product name",
+            self.product_order_service3.description_sale,
+            "Task name should be the product's default sales description."
         )
         # service_tracking 'project_only'
         self.assertFalse(so_line_order_only_project.task_id, "Task should not be created")
@@ -1854,3 +1854,69 @@ class TestSaleProject(TestSaleProjectCommon):
             so.project_ids.allow_milestones,
             'The generated project should have the "Allow Milestones" setting enabled, as one of the products has invoice policy based on milestones.',
         )
+
+    def test_sale_order_creation_without_service_product_for_project(self):
+        """Test that a sale order is created for a project using a non-service product"""
+        self.project_global.partner_id = self.partner
+        action_dict = self.project_global.with_context(
+            create_for_project_id=self.project_global.id,
+            default_project_id=self.project_global.id,
+            default_partner_id=self.partner.id
+        ).action_view_sos()
+
+        self.product_milestone.type = 'consu'
+        sale_order = self.env['sale.order'].with_context(action_dict['context']).create({
+            'order_line': [Command.create({
+                'product_id': self.product_milestone.id,
+                'product_uom_qty': 1,
+            })],
+        })
+
+        self.assertEqual(sale_order.project_id, self.project_global)
+        self.assertEqual(sale_order.partner_id, self.partner)
+        self.assertFalse(self.project_global.sale_line_id)
+        self.assertEqual(self.project_global.reinvoiced_sale_order_id, sale_order)
+
+    def test_allocated_hours_manual_delivery_service(self):
+        """
+        Test that allocated_hours match the quantity ordered on creation
+        when the service product has 'delivered_manual' service policy.
+        """
+        self.product_service_delivered_manual.service_tracking = 'task_in_project'
+        so = self.env['sale.order'].create({'partner_id': self.partner.id})
+        sol = self.env['sale.order.line'].create({
+            'order_id': so.id,
+            'product_id': self.product_service_delivered_manual.id,
+            'product_uom_qty': 10,
+        })
+        so.action_confirm()
+        self.assertEqual(sol.task_id.allocated_hours, 10, "The allocated hours should be 10.")
+
+    def test_quotation_with_zero_unit_project_service(self):
+        """
+        Test checking that a project doesn't get created on order when ordering 0 units of the corresponding
+         product service if it is optional. If the unit is increased to 1, a project should be created.
+        """
+        sale_order_with_option = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'product_uom_qty': 1,
+                }),
+                Command.create({
+                    'display_type': 'line_section',
+                    'name': "Optional products",
+                    'is_optional': True,
+                }),
+                Command.create({
+                    'product_id': self.product_order_service4.id,
+                    'product_uom_qty': 0,
+                }),
+            ],
+        })
+        optional_product_line = sale_order_with_option.order_line.filtered(lambda line: not line.display_type and line._is_line_optional())
+        sale_order_with_option.action_confirm()
+        self.assertFalse(optional_product_line.project_id)
+        optional_product_line.write({'product_uom_qty': 1})
+        self.assertEqual(optional_product_line.project_id.sale_order_id, sale_order_with_option)

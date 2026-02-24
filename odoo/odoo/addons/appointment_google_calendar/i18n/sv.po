@@ -3,13 +3,15 @@
 # * appointment_google_calendar
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Hanna Kharraziha <hakha@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:27+0000\n"
-"PO-Revision-Date: 2025-09-16 21:35+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2025-12-30 18:44+0000\n"
+"PO-Revision-Date: 2026-02-20 17:15+0000\n"
+"Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/"
 "appointment_google_calendar/sv/>\n"
 "Language: sv\n"
@@ -17,14 +19,14 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: appointment_google_calendar
 #. odoo-python
 #: code:addons/appointment_google_calendar/models/appointment_type.py:0
 msgid ""
-"%(user_names)s did not synchronize their Google Calendar account yet, Google"
-" Meeting links won't be added to their meetings."
+"%(user_names)s did not synchronize their Google Calendar account yet, Google "
+"Meeting links won't be added to their meetings."
 msgstr ""
 "%(user_names)sinte har synkroniserat sitt Google Kalender-konto ännu, länkar "
 "till Google Meeting kommer inte att läggas till i deras möten."
@@ -93,4 +95,4 @@ msgstr "Användare utan Google Calendar Synchronization"
 #. module: appointment_google_calendar
 #: model:ir.model.fields,field_description:appointment_google_calendar.field_appointment_type__event_videocall_source
 msgid "Video Link"
-msgstr ""
+msgstr "Videolänk"

@@ -6,7 +6,7 @@ from requests.exceptions import RequestException
 
 from odoo import _
 from odoo.exceptions import ValidationError
-from odoo.tools import float_round
+from odoo.tools.float_utils import float_round, json_float_round
 
 TEST_BASE_URL = 'https://express.api.dhl.com/mydhlapi/test/'
 PROD_BASE_URL = 'https://express.api.dhl.com/mydhlapi/'
@@ -41,6 +41,8 @@ class DHLProvider:
         if res_body.get('additionalDetails'):
             for detail in res_body['additionalDetails']:
                 err_msgs.append(detail)
+        for reason in res_body.get('reasons', []):
+            err_msgs.append(reason['msg'])
         return '\n'.join(err_msgs)
 
     def _check_required_value(self, carrier, recipient, shipper, order=False, picking=False):
@@ -183,7 +185,7 @@ class DHLProvider:
             item = {
                 'number': sequence,
                 'description': line.product_id.name,
-                'price': line.sale_price / rounded_qty,
+                'price': json_float_round(line.sale_price / rounded_qty, 3),
                 'quantity': {
                     'value': int(rounded_qty),
                     'unitOfMeasurement': 'PCS'
@@ -205,7 +207,7 @@ class DHLProvider:
         if is_return:
             export_declaration['exportReasonType'] = 'return'
         if picking.sale_id.client_order_ref:
-            export_declaration['recepientReference'] = picking.sale_id.client_order_ref
+            export_declaration['recipientReference'] = picking.sale_id.client_order_ref
         return export_declaration
 
     def _get_shipment_vals(self, picking):

@@ -647,6 +647,60 @@ test("tab and shift+tab close the dropdown", async () => {
     expect(dropdown).not.toHaveCount();
 });
 
+test("Clicking away selects the first option when selectOnBlur is true", async () => {
+    class Parent extends Component {
+        static template = xml`<AutoComplete value="state.value" sources="sources" selectOnBlur="true"/>`;
+        static components = { AutoComplete };
+        static props = [];
+
+        state = useState({ value: "" });
+        sources = buildSources(() => [
+            item("World", this.onSelect.bind(this)),
+            item("Hello", this.onSelect.bind(this)),
+        ]);
+
+        onSelect(option) {
+            this.state.value = option.label;
+            expect.step(option.label);
+        }
+    }
+
+    await mountWithCleanup(Parent);
+    const input = ".o-autocomplete input";
+    await contains(input).click();
+    expect(".o-autocomplete--dropdown-menu").toBeVisible();
+    queryFirst(input).blur();
+    await animationFrame();
+    expect(input).toHaveValue("World");
+    expect.verifySteps(["World"]);
+});
+
+test("selectOnBlur doesn't interfere with selecting by mouse clicking", async () => {
+    class Parent extends Component {
+        static template = xml`<AutoComplete value="state.value" sources="sources" selectOnBlur="true"/>`;
+        static components = { AutoComplete };
+        static props = [];
+
+        state = useState({ value: "" });
+        sources = buildSources(() => [
+            item("World", this.onSelect.bind(this)),
+            item("Hello", this.onSelect.bind(this)),
+        ]);
+
+        onSelect(option) {
+            this.state.value = option.label;
+            expect.step(option.label);
+        }
+    }
+
+    await mountWithCleanup(Parent);
+    const input = ".o-autocomplete input";
+    await contains(input).click();
+    await contains(".o-autocomplete--dropdown-item:last").click();
+    expect(input).toHaveValue("Hello");
+    expect.verifySteps(["Hello"]);
+});
+
 test("autocomplete scrolls when moving with arrows", async () => {
     class Parent extends Component {
         static template = xml`
@@ -835,4 +889,33 @@ test("items are selected only when the mouse moves, not just on enter", async ()
     expect(".o-autocomplete--dropdown-item:nth-child(3) .dropdown-item").toHaveClass(
         "ui-state-active"
     );
+});
+
+test("do not attempt to scroll if element is null", async () => {
+    const def = new Deferred();
+    class Parent extends Component {
+        static template = xml`<AutoComplete value="''" sources="sources" />`;
+        static components = { AutoComplete };
+        static props = [];
+
+        sources = [
+            buildSources(async () => {
+                await def;
+                return [item("delayed one"), item("delayed two"), item("delayed three")];
+            }),
+            buildSources(Array.from(Array(20)).map((_, index) => item(`item ${index}`))),
+        ].flat();
+    }
+
+    await mountWithCleanup(Parent);
+    queryOne(`.o-autocomplete input`).focus();
+    queryOne(`.o-autocomplete input`).click();
+    await animationFrame();
+    expect(".o-autocomplete .dropdown-menu").toHaveCount(1);
+    expect(".o-autocomplete .dropdown-item").toHaveCount(21);
+    expect(".o-autocomplete .dropdown-item:eq(0)").toHaveClass("o_loading");
+
+    def.resolve();
+    await animationFrame();
+    expect(".o-autocomplete .dropdown-item").toHaveCount(23); // + 3 items - loading
 });

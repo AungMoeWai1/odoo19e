@@ -12,22 +12,25 @@
 # Luis D Lafaurie, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-30 18:36+0000\n"
-"PO-Revision-Date: 2025-09-17 17:19+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2026-02-03 12:05+0000\n"
+"Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-19/product/"
 "es/>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
-"0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.12.2\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
+" ? 1 : 2);\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: product
 #. odoo-python
@@ -195,13 +198,11 @@ msgstr "10 unidades"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_height_100
-#, fuzzy
 msgid "100"
 msgstr "100"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_length_120
-#, fuzzy
 msgid "120"
 msgstr "120"
 
@@ -212,20 +213,18 @@ msgstr "123456789012"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_length_140
-#, fuzzy
 msgid "140"
 msgstr "140"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_length_160
-#, fuzzy
 msgid "160"
 msgstr "160"
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_4_product_template
 msgid "160x80cm, with large legs"
-msgstr ""
+msgstr "160 x 80 cm, con patas grandes"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__2x7xprice
@@ -239,7 +238,6 @@ msgstr "2 años"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_size_2xl
-#, fuzzy
 msgid "2XL"
 msgstr "2XL"
 
@@ -250,13 +248,11 @@ msgstr "3 años"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_shoe_size_39
-#, fuzzy
 msgid "39"
 msgstr "39"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_size_3xl
-#, fuzzy
 msgid "3XL"
 msgstr "3XL"
 
@@ -277,37 +273,31 @@ msgstr "4 x 7 con precio"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_shoe_size_40
-#, fuzzy
 msgid "40"
 msgstr "40"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_shoe_size_41
-#, fuzzy
 msgid "41"
 msgstr "41"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_shoe_size_42
-#, fuzzy
 msgid "42"
 msgstr "42"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_shoe_size_43
-#, fuzzy
 msgid "43"
 msgstr "43"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_height_45
-#, fuzzy
 msgid "45"
 msgstr "45"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_size_4xl
-#, fuzzy
 msgid "4XL"
 msgstr "4XL"
 
@@ -323,7 +313,6 @@ msgstr "6 meses"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_height_85
-#, fuzzy
 msgid "85"
 msgstr "85"
 
@@ -471,6 +460,16 @@ msgstr ""
 "productos, fechas y cantidades pedidas.\n"
 "            Esta es la herramienta perfecta para manejar varios precios, "
 "descuentos de temporada, etc."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+msgid ""
+"A pricelist item with \"Other Pricelist\" as base must have a "
+"base_pricelist_id."
+msgstr ""
+"Un artículo de la lista de precios con «Otra lista de precios» como base "
+"debe tener un base_pricelist_id."
 
 #. module: product
 #. odoo-python
@@ -699,7 +698,6 @@ msgstr "Aluminio"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_apple
-#, fuzzy
 msgid "Apple"
 msgstr "Apple"
 
@@ -739,7 +737,6 @@ msgstr "Archivado"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_ariel
-#, fuzzy
 msgid "Ariel"
 msgstr "Ariel"
 
@@ -896,14 +893,13 @@ msgstr "Lista de precios básicas"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_color_beige
-#, fuzzy
 msgid "Beige"
 msgstr "Beige"
 
 #. module: product
 #: model:product.template,description_sale:product.consu_delivery_02_product_template
 msgid "Big table seats 10–12 for team discussions"
-msgstr ""
+msgstr "Mesa grande con capacidad para 10-12 personas para reuniones en equipo"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_color_black
@@ -918,7 +914,7 @@ msgstr "Azul"
 #. module: product
 #: model:product.template,description_sale:product.product_product_7_product_template
 msgid "Blue plastic bin for flexible office storage"
-msgstr ""
+msgstr "Contenedor de plástico azul para almacenamiento flexible en la oficina"
 
 #. module: product
 #: model:product.attribute,name:product.pa_brand
@@ -959,7 +955,6 @@ msgstr "Cancelar"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_canon
-#, fuzzy
 msgid "Canon"
 msgstr "Canon"
 
@@ -1104,7 +1099,7 @@ msgstr ""
 #. module: product
 #: model:product.template,description_sale:product.product_delivery_01_product_template
 msgid "Comfortable yellow chair for daily work"
-msgstr ""
+msgstr "Cómoda silla amarilla para el trabajo diario"
 
 #. module: product
 #: model:ir.model,name:product.model_res_company
@@ -1167,7 +1162,7 @@ msgstr "Contacto"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__custom_quantity
 msgid "Copies"
-msgstr ""
+msgstr "Copias"
 
 #. module: product
 #: model:product.template,name:product.product_product_13_product_template
@@ -1240,7 +1235,7 @@ msgstr "Crear un producto"
 #: model:ir.model.fields,field_description:product.field_product_product__service_tracking
 #: model:ir.model.fields,field_description:product.field_product_template__service_tracking
 msgid "Create on Order"
-msgstr "Crear en el pedido"
+msgstr "Crear al confirmar el pedido"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__create_uid
@@ -1400,7 +1395,6 @@ msgstr "Eliminar"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_dell
-#, fuzzy
 msgid "Dell"
 msgstr "Dell"
 
@@ -1414,7 +1408,7 @@ msgstr "Descripción"
 #. module: product
 #: model:product.template,description_sale:product.product_order_01_product_template
 msgid "Design and plan smart offices with ease"
-msgstr ""
+msgstr "Diseña oficinas inteligentes con facilidad"
 
 #. module: product
 #: model:product.template,name:product.product_product_3_product_template
@@ -1439,7 +1433,7 @@ msgstr "Soporte de escritorio con pantalla"
 #. module: product
 #: model:product.template,description_sale:product.product_product_3_product_template
 msgid "Desk combination, black-brown: chair + desk + drawer"
-msgstr ""
+msgstr "Combinación de escritorio negro-marrón: silla + escritorio + cajón"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__sequence
@@ -1544,7 +1538,6 @@ msgstr "Documentos de esta variante"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_dove
-#, fuzzy
 msgid "Dove"
 msgstr "Dove"
 
@@ -1572,7 +1565,7 @@ msgstr "Cajón negro"
 #. module: product
 #: model_terms:product.template,description:product.product_product_27_product_template
 msgid "Drawer with two routing possiblities"
-msgstr ""
+msgstr "Cajón con dos opciones de enrutamiento"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_options_drawers
@@ -1596,7 +1589,6 @@ msgstr "Dinámicamente"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_dyson
-#, fuzzy
 msgid "Dyson"
 msgstr "Dyson"
 
@@ -1808,7 +1800,6 @@ msgstr "Información general"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_gillette
-#, fuzzy
 msgid "Gillette"
 msgstr "Gillette"
 
@@ -1862,7 +1853,6 @@ msgstr "Verde"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_h_m
-#, fuzzy
 msgid "H&M"
 msgstr "H&M"
 
@@ -1882,7 +1872,7 @@ msgstr "Tiene un mensaje"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__has_thumbnail
 msgid "Has Thumbnail"
-msgstr ""
+msgstr "Tiene miniatura"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_head_shoulders
@@ -1907,7 +1897,7 @@ msgstr ""
 #. module: product
 #: model:product.template,description_sale:product.product_product_12_product_template
 msgid "High-back office chair with great support"
-msgstr ""
+msgstr "Silla de oficina con respaldo alto y buen apoyo"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_form
@@ -2151,7 +2141,7 @@ msgstr "Es un seguidor"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__is_in_selected_section_of_order
 msgid "Is In Selected Section Of Order"
-msgstr ""
+msgstr "Está en la sección seleccionada del pedido"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__is_pricelist_required
@@ -2186,7 +2176,6 @@ msgstr "Kilogramos (kg)"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_loreal
-#, fuzzy
 msgid "L'Oréal"
 msgstr "L'Oréal"
 
@@ -2270,7 +2259,7 @@ msgstr "Actividades retrasadas"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__delay
 msgid "Lead Time"
-msgstr ""
+msgstr "Plazo de entrega"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__delay
@@ -2291,7 +2280,7 @@ msgstr "Cuero"
 #. module: product
 #: model:product.template,description_sale:product.product_product_13_product_template
 msgid "Left-sided workspace with storage"
-msgstr ""
+msgstr "Espacio de trabajo con almacenamiento en el lado izquierdo"
 
 #. module: product
 #: model:product.attribute,name:product.pa_legs
@@ -2305,13 +2294,11 @@ msgstr "Longitud"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_lenovo
-#, fuzzy
 msgid "Lenovo"
 msgstr "Lenovo"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_levis
-#, fuzzy
 msgid "Levi's"
 msgstr "Levi's"
 
@@ -2399,7 +2386,6 @@ msgstr "Margen máx. de precio"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_maybelline
-#, fuzzy
 msgid "Maybelline"
 msgstr "Maybelline"
 
@@ -2457,7 +2443,7 @@ msgstr "Cantidad mín."
 #. module: product
 #: model:product.template,description_sale:product.product_product_8_product_template
 msgid "Minimalist wooden desk for executive use"
-msgstr ""
+msgstr "Escritorio minimalista de madera para uso ejecutivo"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_update_product_attribute_value__mode
@@ -2471,7 +2457,6 @@ msgstr "Soporte de monitor"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_montblanc
-#, fuzzy
 msgid "Montblanc"
 msgstr "Montblanc"
 
@@ -2519,7 +2504,6 @@ msgstr "Azul marino"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_nestle
-#, fuzzy
 msgid "Nestlé"
 msgstr "Nestlé"
 
@@ -2536,7 +2520,6 @@ msgstr "Nuevo"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_new_balance
-#, fuzzy
 msgid "New Balance"
 msgstr "New Balance"
 
@@ -2570,13 +2553,11 @@ msgstr "Tipo de la siguiente actividad"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_nike
-#, fuzzy
 msgid "Nike"
 msgstr "Nike"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_nikon
-#, fuzzy
 msgid "Nikon"
 msgstr "Nikon"
 
@@ -2616,12 +2597,12 @@ msgstr "No se encontró una lista de precios para el proveedor"
 #. odoo-javascript
 #: code:addons/product/static/src/js/product_attribute_value_list.js:0
 msgid "No, keep it"
-msgstr "No, manténgalo"
+msgstr "No, mantenlo así"
 
 #. module: product
 #: model:product.template,description_sale:product.product_template_acoustic_bloc_screens
 msgid "Noise-reducing panels for open spaces"
-msgstr ""
+msgstr "Paneles reductores de ruido para espacios abiertos"
 
 #. module: product
 #. odoo-python
@@ -2699,7 +2680,6 @@ msgstr "Lámpara de oficina"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_olay
-#, fuzzy
 msgid "Olay"
 msgstr "Olay"
 
@@ -2743,7 +2723,6 @@ msgstr "Opciones"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_oral_b
-#, fuzzy
 msgid "Oral-B"
 msgstr "Oral-B"
 
@@ -2804,13 +2783,11 @@ msgstr "Embalajes"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_panasonic
-#, fuzzy
 msgid "Panasonic"
 msgstr "Panasonic"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_pantene
-#, fuzzy
 msgid "Pantene"
 msgstr "Pantene"
 
@@ -2841,7 +2818,6 @@ msgstr "Porcentaje de precio"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_philips
-#, fuzzy
 msgid "Philips"
 msgstr "Philips"
 
@@ -3046,7 +3022,7 @@ msgstr "Imprimir etiquetas"
 #. module: product
 #: model:product.template,description_sale:product.product_product_24_product_template
 msgid "Private pod with desk and chair"
-msgstr ""
+msgstr "Cabina privada con escritorio y silla"
 
 #. module: product
 #. odoo-python
@@ -3364,7 +3340,6 @@ msgstr "Propiedades"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_puma
-#, fuzzy
 msgid "Puma"
 msgstr "Puma"
 
@@ -3426,7 +3401,6 @@ msgstr "Radio"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_rayban
-#, fuzzy
 msgid "Ray-Ban"
 msgstr "Ray-Ban"
 
@@ -3434,7 +3408,7 @@ msgstr "Ray-Ban"
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "Recursive pricelist rules detected: %s"
-msgstr ""
+msgstr "Se han detectado reglas recursivas en la lista de precios: %s"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_color_red
@@ -3443,7 +3417,6 @@ msgstr "Rojo"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_reebok
-#, fuzzy
 msgid "Reebok"
 msgstr "Reebok"
 
@@ -3524,11 +3497,10 @@ msgstr "Gastos de restaurante"
 #. module: product
 #: model:product.template,description_sale:product.product_product_5_product_template
 msgid "Right-aligned desk with storage"
-msgstr ""
+msgstr "Escritorio alineado a la derecha con espacio de almacenamiento"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_rolex
-#, fuzzy
 msgid "Rolex"
 msgstr "Rolex"
 
@@ -3584,7 +3556,6 @@ msgstr "Precio de venta"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_samsung
-#, fuzzy
 msgid "Samsung"
 msgstr "Samsung"
 
@@ -3666,11 +3637,10 @@ msgstr "Tamaño"
 #. module: product
 #: model:product.template,description_sale:product.product_product_9_product_template
 msgid "Soft-close pedal bin for office use"
-msgstr ""
+msgstr "Cubo de basura con pedal y cierre suave para uso en oficinas"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_sony
-#, fuzzy
 msgid "Sony"
 msgstr "Sony"
 
@@ -3787,7 +3757,7 @@ msgstr "Lista de precios de proveedor"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_tag_form_view
 msgid "Tag"
-msgstr ""
+msgstr "Etiqueta"
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_tag_name_uniq
@@ -4056,11 +4026,10 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__thumbnail
 msgid "Thumbnail"
-msgstr ""
+msgstr "Miniatura"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_tide
-#, fuzzy
 msgid "Tide"
 msgstr "Tide"
 
@@ -4106,7 +4075,6 @@ msgstr "No se pudo encontrar la plantilla de informe para el formato %s"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_underarmour
-#, fuzzy
 msgid "Under Armour"
 msgstr "Under Armour"
 
@@ -4117,7 +4085,6 @@ msgstr "Cajones para escritorios"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_uniqlo
-#, fuzzy
 msgid "Uniqlo"
 msgstr "Uniqlo"
 
@@ -4512,7 +4479,6 @@ msgstr "Si la etiqueta se muestra a los clientes."
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_whirlpool
-#, fuzzy
 msgid "Whirlpool"
 msgstr "Whirlpool"
 
@@ -4534,13 +4500,11 @@ msgstr "Fecha de edición"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_size_xl
-#, fuzzy
 msgid "XL"
 msgstr "XL"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_size_xs
-#, fuzzy
 msgid "XS"
 msgstr "XS"
 
@@ -4806,7 +4770,6 @@ msgstr "Debe ingresar una cantidad positiva."
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_zara
-#, fuzzy
 msgid "Zara"
 msgstr "Zara"
 

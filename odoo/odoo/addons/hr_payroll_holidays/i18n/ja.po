@@ -3,13 +3,14 @@
 # * hr_payroll_holidays
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:34+0000\n"
-"PO-Revision-Date: 2025-09-15 12:01+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2025-12-30 18:43+0000\n"
+"PO-Revision-Date: 2026-02-14 10:04+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
 "hr_payroll_holidays/ja/>\n"
 "Language: ja\n"
@@ -17,13 +18,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: hr_payroll_holidays
 #: model_terms:ir.actions.act_window,help:hr_payroll_holidays.hr_leave_work_entry_action
 msgid ""
-"A great way to keep track on employee’s PTOs, sick days, and approval "
-"status."
+"A great way to keep track on employee’s PTOs, sick days, and approval status."
 msgstr "従業員のPTO、病欠、および承認ステータスを追跡するための優れた方法。"
 
 #. module: hr_payroll_holidays
@@ -49,7 +49,7 @@ msgstr "現在の給与明細で計算済"
 #. module: hr_payroll_holidays
 #: model:ir.model,name:hr_payroll_holidays.model_res_config_settings
 msgid "Config Settings"
-msgstr "詳細設定"
+msgstr "構成設定"
 
 #. module: hr_payroll_holidays
 #: model:ir.actions.server,name:hr_payroll_holidays.ir_actions_server_report_to_next_month
@@ -64,7 +64,7 @@ msgstr "次回の給与明細に繰越"
 #. module: hr_payroll_holidays
 #: model_terms:ir.ui.view,arch_db:hr_payroll_holidays.res_config_settings_view_form
 msgid "Deferred Time Off"
-msgstr "休暇の繰り延べ"
+msgstr "繰延休暇"
 
 #. module: hr_payroll_holidays
 #: model:ir.model.fields,field_description:hr_payroll_holidays.field_res_company__deferred_time_off_manager
@@ -87,7 +87,7 @@ msgstr "表示名"
 #. module: hr_payroll_holidays
 #: model:ir.model,name:hr_payroll_holidays.model_hr_employee
 msgid "Employee"
-msgstr ""
+msgstr "従業員"
 
 #. module: hr_payroll_holidays
 #: model:ir.model,name:hr_payroll_holidays.model_hr_version
@@ -104,7 +104,7 @@ msgstr "従業員参照番号"
 #. odoo-python
 #: code:addons/hr_payroll_holidays/models/hr_payslip.py:0
 msgid "Employee has time off to defer"
-msgstr ""
+msgstr "従業員には繰越可能な休暇があります"
 
 #. module: hr_payroll_holidays
 #: model:ir.model.fields,field_description:hr_payroll_holidays.field_hr_employee__id
@@ -121,13 +121,13 @@ msgstr "ID"
 #. module: hr_payroll_holidays
 #: model:ir.model.fields,field_description:hr_payroll_holidays.field_hr_employee__leave_ids
 msgid "Leave"
-msgstr ""
+msgstr "休暇"
 
 #. module: hr_payroll_holidays
 #: model:mail.activity.type,name:hr_payroll_holidays.mail_activity_data_hr_leave_to_defer
 #: model:mail.activity.type,summary:hr_payroll_holidays.mail_activity_data_hr_leave_to_defer
 msgid "Leave to Defer"
-msgstr "繰越する休暇"
+msgstr "繰越対象の休暇"
 
 #. module: hr_payroll_holidays
 #: model_terms:ir.actions.act_window,help:hr_payroll_holidays.hr_leave_work_entry_action
@@ -145,13 +145,14 @@ msgstr "通知を受ける人はいません"
 msgid ""
 "Not enough attendance work entries to report the time off %s. Please make "
 "the operation manually"
-msgstr "休暇%sを報告するには勤怠勤務記録が不十分です。操作を手動で行って下さい。"
+msgstr ""
+"休暇%sを報告するには勤怠勤務記録が不十分です。操作を手動で行って下さい。"
 
 #. module: hr_payroll_holidays
 #. odoo-python
 #: code:addons/hr_payroll_holidays/models/hr_leave.py:0
 msgid "Only an employee time off to defer can be reported to next month"
-msgstr "繰越する従業員休暇のみ翌月に持越すことができます"
+msgstr "繰越対象として設定された従業員の休暇のみ、翌月に計上できます"
 
 #. module: hr_payroll_holidays
 #: model:ir.model,name:hr_payroll_holidays.model_hr_payslip
@@ -172,12 +173,12 @@ msgstr "%sの勤務記録を手動で作成して下さい"
 #. module: hr_payroll_holidays
 #: model_terms:ir.ui.view,arch_db:hr_payroll_holidays.res_config_settings_view_form
 msgid "Postpone time off after payslip validation"
-msgstr "給与明細の確認後、休暇を繰り延べます"
+msgstr "給与明細の確定後に休暇を繰り延べる"
 
 #. module: hr_payroll_holidays
 #: model_terms:ir.ui.view,arch_db:hr_payroll_holidays.hr_leave_view_form_inherit
 msgid "Report to Next Month"
-msgstr "来月に繰越し"
+msgstr "翌月に繰り越す"
 
 #. module: hr_payroll_holidays
 #: model_terms:ir.ui.view,arch_db:hr_payroll_holidays.res_config_settings_view_form
@@ -198,7 +199,8 @@ msgstr "来月の勤務記録が作成されていないか、休暇%s用に既�
 msgid ""
 "The pay of the month is already validated with this day included. If you "
 "need to adapt, please refer to HR."
-msgstr "その月の給与は、すでにこの日を含めて検証済です。変更が必要な場合は、人事部に"
+msgstr ""
+"その月の給与は、すでにこの日を含めて検証済です。変更が必要な場合は、人事部に"
 "相談して下さい。"
 
 #. module: hr_payroll_holidays

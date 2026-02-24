@@ -7,6 +7,8 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.tools import misc, format_date
 from odoo.tools.pdf import PdfFileReader, PdfFileWriter, PdfReadError, reshape_text
 
+from odoo.addons.sign.utils.pdf_handling import get_valid_pdf_data
+
 from PIL import UnidentifiedImageError
 
 from reportlab.lib.styles import ParagraphStyle
@@ -67,12 +69,13 @@ class SignDocument(models.Model):
             else:
                 attachment.res_model = self._name
         documents = super().create(vals_list)
+        default_name = self.env['sign.template'].default_get(fields=['name'])['name']
         for document, attachment in zip(documents, documents.attachment_id):
             attachment.write({
                 'res_model': self._name,
                 'res_id': document.id
             })
-            if document.template_id.name == self.env._('New Template'):
+            if document.template_id.name == default_name:
                 document.template_id.name = document.name
         documents.attachment_id.check_access('read')
         return documents
@@ -114,7 +117,7 @@ class SignDocument(models.Model):
     def get_radio_sets_dict(self):
         """
         :return: dict radio_sets_dict that maps each radio set that belongs to
-        this template to a dictionary containing num_options and radio_item_ids.
+            this template to a dictionary containing num_options and radio_item_ids.
         """
         radio_sets = self.sign_item_ids.filtered(lambda item: item.radio_set_id).radio_set_id
         radio_sets_dict = {
@@ -137,11 +140,13 @@ class SignDocument(models.Model):
         Updates the attachment's name. If the provided name is empty or None,
         the current name is retained. This forced update prevents the creation
         of duplicate sign items during simultaneous RPC requests.
+
         :param name: The new name for the attachment.
         :return:
+
             - True: Indicates the attachment name was successfully updated.
             - False: Indicates the update was skipped because a sign request linked
-                    to the template already exists
+              to the template already exists
         """
         self.ensure_one()
         sign_requests = self.env['sign.request'].search([('template_id', '=', self.template_id.id)], limit=1)
@@ -417,29 +422,28 @@ CRM, eCommerce, accounting, inventory, point of sale,\nproject management, etc.
         return output
 
     def _copy_sign_items_to(self, new_document):
-        """ copy all sign items of the self document to the new_document """
+        """ Copy all sign items of the self document to the new_document that fit within its page count."""
         self.ensure_one()
         if new_document.template_id.has_sign_requests:
             raise UserError(self.env._("Somebody is already filling a document which uses this template"))
+
+        new_document_pages = new_document.num_pages
         item_id_map = {}
         for sign_item in self.sign_item_ids:
-            new_sign_item = sign_item.copy({'document_id': new_document.id})
-            item_id_map[str(sign_item.id)] = str(new_sign_item.id)
+            # Only copy sign items that fit within the new document's page range.
+            if sign_item.page <= new_document_pages:
+                new_sign_item = sign_item.copy({'document_id': new_document.id})
+                item_id_map[str(sign_item.id)] = str(new_sign_item.id)
         return item_id_map
 
     @api.model
     def _check_pdf_data_validity(self, datas):
         try:
             self._get_pdf_number_of_pages(base64.b64decode(datas))
-        except (ValueError, PdfReadError) as e:
+        except ValueError as e:
             raise UserError(self.env._("One uploaded file cannot be read. Is it a valid PDF?")) from e
 
     @api.model
     def _get_pdf_number_of_pages(self, pdf_data):
-        file_pdf = PdfFileReader(io.BytesIO(pdf_data), strict=False, overwriteWarnings=False)
-        if file_pdf.isEncrypted:
-            raise ValidationError(self.env._(
-            "It seems that we're not able to process one of the uploaded pdf. It is either"
-            " encrypted, or encoded in a format we do not support."
-        ))
+        file_pdf = get_valid_pdf_data(pdf_data, strict=False)
         return len(file_pdf.pages)

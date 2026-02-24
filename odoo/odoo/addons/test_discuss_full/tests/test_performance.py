@@ -249,7 +249,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 },
             )["channel_id"]
         )
-        self.channel_livechat_1.with_user(self.users[1]).message_post(body="test")
+        self.channel_livechat_1.with_user(self.users[1]).message_post(body="test", message_type="comment")
         # add conversation tags into livechat channels
         self.conversation_tag = self.env["im_livechat.conversation.tag"].create({"name": "Support", "color": 1})
         self.channel_livechat_1.livechat_conversation_tag_ids = [Command.link(self.conversation_tag.id)]
@@ -425,6 +425,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 {
                     "id": self.users[0].id,
                     "is_admin": False,
+                    "is_livechat_manager": False,
                     "notification_type": "inbox",
                     "share": False,
                     "signature": ["markup", str(self.users[0].signature)],
@@ -433,7 +434,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             "Store": {
                 "channel_types_with_seen_infos": sorted(["chat", "group", "livechat"]),
                 "action_discuss_id": xmlid_to_res_id("mail.action_discuss"),
-                "hasCannedResponses": False,
+                "hasCannedResponses": True,
                 "hasGifPickerFeature": False,
                 "hasLinkPreviewFeature": True,
                 "has_access_livechat": True,
@@ -509,7 +510,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "id": "starred",
                     "model": "mail.box",
                 },
-                "initChannelsUnreadCounter": 2,
+                "initChannelsUnreadCounter": 3,
             },
         }
 
@@ -874,6 +875,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "livechat_note": False,
                 "livechat_outcome": "no_answer",
                 "livechat_status": "in_progress",
+                "livechat_lang_id": False,
                 "livechat_visitor_id": False,
                 "livechat_expertise_ids": [],
                 "livechat_operator_id": self.users[0].partner_id.id,
@@ -904,6 +906,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "livechat_note": False,
                 "livechat_outcome": "no_answer",
                 "livechat_status": "in_progress",
+                "livechat_lang_id": False,
                 "livechat_visitor_id": False,
                 "livechat_expertise_ids": [],
                 "livechat_operator_id": self.users[0].partner_id.id,
@@ -1196,7 +1199,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "id": member_0.id,
                 "livechat_member_type": "agent",
                 "last_interest_dt": member_0_last_interest_dt,
-                "message_unread_counter": 0,
+                "message_unread_counter": 1,
                 "message_unread_counter_bus_id": bus_last_id,
                 "mute_until_dt": False,
                 "last_seen_dt": member_0_last_seen_dt,
@@ -1462,7 +1465,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "incoming_email_cc": False,
                 "incoming_email_to": False,
                 "message_link_preview_ids": [],
-                "message_type": "notification",
+                "message_type": "comment",
                 "model": "discuss.channel",
                 "needaction": False,
                 "notification_ids": [],

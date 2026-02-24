@@ -754,13 +754,13 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         self._apply_promo_code(order, 'test_10pc')
         self._auto_rewards(order, self.all_programs)
         self.assertAlmostEqual(order.amount_tax, 1.14, 2)
-        self.assertEqual(order.amount_untaxed, 22.72)
-        self.assertEqual(order.amount_total, 23.86, "The promotion program should not make the order total go below 0be altered after recomputation")
+        self.assertEqual(order.amount_untaxed, 22.71)
+        self.assertEqual(order.amount_total, 23.85, "The promotion program should not make the order total go below 0be altered after recomputation")
         # It should stay the same after a recompute, order matters
         self._auto_rewards(order, self.all_programs)
         self.assertAlmostEqual(order.amount_tax, 1.14, 2)
-        self.assertEqual(order.amount_untaxed, 22.72)
-        self.assertEqual(order.amount_total, 23.86, "The promotion program should not make the order total go below 0be altered after recomputation")
+        self.assertEqual(order.amount_untaxed, 22.71)
+        self.assertEqual(order.amount_total, 23.85, "The promotion program should not make the order total go below 0be altered after recomputation")
 
     def test_coupon_and_coupon_discount_fixed_amount_tax_incl(self):
         """ Ensure multiple coupon can cohexists without making
@@ -1287,6 +1287,42 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         self.assertEqual(len(order.order_line), 2, 'The order must contain 2 order lines: 1x Product F and 1x 5$ discount')
         self.assertEqual(order.amount_total, 190.0, 'The price must be 190.0 since there is now 2x 5$ discount and 2x Product F')
         self.assertEqual(order.order_line.filtered(lambda x: x.is_reward_line).price_unit, -5, 'The discount unit price should still be -5 after the quantity was manually changed')
+
+    def test_program_multi_product_max_discount(self):
+        order = self.empty_order
+        coupon_program = self.env['loyalty.program'].create({
+            'name': "50% off for cheapest product(max $30)",
+            'trigger': 'with_code',
+            'program_type': 'coupons',
+            'reward_ids': [(0, 0, {
+                'reward_type': 'discount',
+                'discount': 50,
+                'discount_mode': 'percent',
+                'discount_applicability': 'cheapest',
+                'discount_max_amount': 30,
+            })],
+        })
+
+        # create SOL
+        self.env['sale.order.line'].create({
+            'product_id': self.largeCabinet.id,
+            'product_uom_qty': 2.0,
+            'order_id': order.id,
+        })
+
+        # generate and apply coupon
+        self.env['loyalty.generate.wizard'].with_context(active_id=coupon_program.id).create({
+            'coupon_qty': 1,
+            'points_granted': 1,
+        }).generate_coupons()
+
+        coupon = coupon_program.coupon_ids
+        self._apply_promo_code(order, coupon.code)
+
+        self.assertEqual(len(order.order_line), 2, "The order must contain 2 order lines")
+        self.assertEqual(
+            order.amount_total, 610.0, "The price must be 610.0 since the max discount is 30"
+        )
 
     def test_specific_discount_product_group(self):
         # Tests the following:

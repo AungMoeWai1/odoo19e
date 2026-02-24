@@ -3,14 +3,14 @@
 # * ai
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Patricia Gutiérrez (pagc)" <pagc@odoo.com>, 2025.
-# "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025.
+# "Patricia Gutiérrez (pagc)" <pagc@odoo.com>, 2025, 2026.
+# "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-13 21:43+0000\n"
-"PO-Revision-Date: 2025-10-08 02:40+0000\n"
+"POT-Creation-Date: 2026-02-13 18:42+0000\n"
+"PO-Revision-Date: 2026-02-20 02:21+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-19/ai/es_419/>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: ai
 #: model:ir.actions.server,ai_tool_description:ai.ir_actions_server_read_group
@@ -109,16 +109,16 @@ msgstr ""
 "esta orden\n"
 "            date_order|Fecha de la orden|datetime|true|true|Fecha en la que "
 "se realizó la orden\n"
-"            order_line|Líneas de la "
-"orden|one2many(sale.order.line)|false|false|Líneas en esta orden\n"
+"            order_line|Líneas de la orden|one2many(sale.order.line)|false|"
+"false|Líneas en esta orden\n"
 "            state|Estado|selection|true|true|Estado de la orden\n"
 "            ```\n"
 "\n"
 "            Puntos importantes:\n"
 "            - ⚠️ Solo muestra campos QUE SE PUEDAN BUSCAR, otros no se pueden "
 "usar en dominios\n"
-"            - Para relaciones: Muestra modelos relacionados en paréntesis ("
-"many2one, one2many, many2many).\n"
+"            - Para relaciones: Muestra modelos relacionados en paréntesis "
+"(many2one, one2many, many2many).\n"
 "            - Solo se pueden usar los campos de relación para relacionar con "
 "otros modelos\n"
 "            - Los campos literales como char/text/float NO se pueden usar "
@@ -383,8 +383,8 @@ msgstr ""
 "            ⚠️ Nota: Utiliza row_groupbys/col_groupbys (arreglos) en lugar de "
 "selected_groupbys\n"
 "\n"
-"            Por ejemplo, para \"Mejores vendedores de productos de oficina\":"
-"\n"
+"            Por ejemplo, para \"Mejores vendedores de productos de "
+"oficina\":\n"
 "            - Usa search=[\"categ_id\", \"oficina\"] si puedes buscar en "
 "categ_id\n"
 "            - Solo usa un dominio_personalizado si no hay ningún campo en el "
@@ -423,16 +423,16 @@ msgstr ""
 "\n"
 "            Recupera información detallada (contexto, dominio, search_view) "
 "de menús específicos.\n"
-"            DEBES llamarlo antes de usar cualquier herramienta de open_menu_*"
-" para obtener detalles específicos del menú.\n"
+"            DEBES llamarlo antes de usar cualquier herramienta de "
+"open_menu_* para obtener detalles específicos del menú.\n"
 "\n"
 "            Devuelve un CSV con un delimitador de barra vertical (|):\n"
 "            ``` \n"
 "            menu_id|model_name|context|domain|search_view\n"
-"            389|sale.order|{\"search_default_my_quotation\": "
-"1}|[]|<search><fields>...</fields></search>\n"
-"            172|account.move|{\"search_default_draft\": 1}|"
-"[[\"type\", \"=\", \"out_invoice\"]]|<search>...</search>\n"
+"            389|sale.order|{\"search_default_my_quotation\": 1}|[]|"
+"<search><fields>...</fields></search>\n"
+"            172|account.move|{\"search_default_draft\": 1}|[[\"type\", "
+"\"=\", \"out_invoice\"]]|<search>...</search>\n"
 "            ```\n"
 "\n"
 "            Información clave:\n"
@@ -542,6 +542,12 @@ msgid "%s (copy)"
 msgstr "%s (copia)"
 
 #. module: ai
+#. odoo-python
+#: code:addons/ai/utils/llm_providers.py:0
+msgid "%s is no longer available. Please select a newer model."
+msgstr "%s ya no está disponible. Selecciona un modelo más reciente."
+
+#. module: ai
 #: model_terms:ir.ui.view,arch_db:ai.ai_log_action
 msgid ""
 "<br/>\n"
@@ -557,9 +563,9 @@ msgid ""
 "ai_tool_show_warning\" aria-hidden=\"true\" title=\"The AI will not be "
 "limited by the groups defined on tools\"/>"
 msgstr ""
-"<i class=\"fa fa-warning text-warning me-2\" invisible="
-"\"not ai_tool_show_warning\" aria-hidden=\"true\" title="
-"\"La IA no estará limitada por los grupos definidos en las herramientas\"/>"
+"<i class=\"fa fa-warning text-warning me-2\" invisible=\"not "
+"ai_tool_show_warning\" aria-hidden=\"true\" title=\"La IA no estará limitada "
+"por los grupos definidos en las herramientas\"/>"
 
 #. module: ai
 #: model_terms:ir.ui.view,arch_db:ai.ai_log_action
@@ -857,12 +863,6 @@ msgid "An error occured"
 msgstr "Ocurrió un error"
 
 #. module: ai
-#. odoo-javascript
-#: code:addons/ai/static/src/discuss/core/common/thread_model_patch.js:0
-msgid "An error occurred while generating the AI response."
-msgstr "Ocurrió un error al generar la respuesta de IA."
-
-#. module: ai
 #: model:ir.model.fields.selection,name:ai.selection__ai_agent__response_style__analytical
 msgid "Analytical"
 msgstr "Analítico"
@@ -930,8 +930,8 @@ msgid ""
 "persons. Channel can be freely joined (depending on its configuration)."
 msgstr ""
 "Un chat es privado y único entre 2 personas. Un grupo es privado entre las "
-"personas invitadas. Un canal es abierto y cualquier persona puede unirse ("
-"depende de la configuración)."
+"personas invitadas. Un canal es abierto y cualquier persona puede unirse "
+"(depende de la configuración)."
 
 #. module: ai
 #: model:ir.model.fields,field_description:ai.field_ai_embedding__checksum
@@ -1075,6 +1075,7 @@ msgstr "Canal de conversaciones"
 #: model:ir.model.fields,field_description:ai.field_ir_actions_server__display_name
 #: model:ir.model.fields,field_description:ai.field_ir_attachment__display_name
 #: model:ir.model.fields,field_description:ai.field_ir_http__display_name
+#: model:ir.model.fields,field_description:ai.field_ir_model_fields__display_name
 #: model:ir.model.fields,field_description:ai.field_mail_composer_mixin__display_name
 #: model:ir.model.fields,field_description:ai.field_mail_render_mixin__display_name
 #: model:ir.model.fields,field_description:ai.field_mail_template__display_name
@@ -1151,6 +1152,18 @@ msgstr "Falló"
 
 #. module: ai
 #. odoo-python
+#: code:addons/ai/utils/html_extractor.py:0
+msgid "Failed to fetch URL: %s"
+msgstr "Ocurrió un error al obtener la URL: %s"
+
+#. module: ai
+#. odoo-python
+#: code:addons/ai/models/ai_agent_source.py:0
+msgid "Failed to fetch the content of the source."
+msgstr "Ocurrió un error al obtener el contenido de la fuente."
+
+#. module: ai
+#. odoo-python
 #: code:addons/ai/models/ai_agent.py:0
 msgid "Failed to get embeddings for the prompt."
 msgstr "Ocurrió un error al obtener incrustaciones con la instrucción."
@@ -1160,6 +1173,16 @@ msgstr "Ocurrió un error al obtener incrustaciones con la instrucción."
 #: code:addons/ai/static/src/ai_prompt/ai_field_selector_plugin.js:0
 msgid "Field Selector"
 msgstr "Selector de campos"
+
+#. module: ai
+#: model:ir.model.fields,field_description:ai.field_ir_model_fields__ttype
+msgid "Field Type"
+msgstr "Tipo de campo"
+
+#. module: ai
+#: model:ir.model,name:ai.model_ir_model_fields
+msgid "Fields"
+msgstr "Campos"
 
 #. module: ai
 #: model:ir.model.fields.selection,name:ai.selection__ai_agent_source__type__binary
@@ -1219,6 +1242,7 @@ msgstr "Hola, ¿cómo puedo ayudarte?"
 #: model:ir.model.fields,field_description:ai.field_ir_actions_server__id
 #: model:ir.model.fields,field_description:ai.field_ir_attachment__id
 #: model:ir.model.fields,field_description:ai.field_ir_http__id
+#: model:ir.model.fields,field_description:ai.field_ir_model_fields__id
 #: model:ir.model.fields,field_description:ai.field_mail_composer_mixin__id
 #: model:ir.model.fields,field_description:ai.field_mail_render_mixin__id
 #: model:ir.model.fields,field_description:ai.field_mail_template__id
@@ -1248,7 +1272,7 @@ msgstr "Imagen"
 #. module: ai
 #: model:ir.model.fields.selection,name:ai.selection__ai_agent_source__status__indexed
 msgid "Indexed"
-msgstr "Indexado"
+msgstr "Indexada"
 
 #. module: ai
 #. odoo-javascript
@@ -1279,7 +1303,8 @@ msgstr "Insertar registros"
 #. odoo-javascript
 #: code:addons/ai/static/src/ai_prompt/ai_prompt_field.js:0
 msgid "Insert records the AI can use with the '/record' command"
-msgstr "Inserta los registros que la IA puede usar con el comando \"/registro\""
+msgstr ""
+"Inserta los registros que la IA puede usar con el comando \"/registro\""
 
 #. module: ai
 #: model:ir.model.fields,field_description:ai.field_ai_composer__default_prompt
@@ -1328,8 +1353,8 @@ msgid ""
 "JSON containing the values that can be returned by the LLM along with their "
 "properties (type, length, ...)"
 msgstr ""
-"JSON que contiene valores que LLM puede regresar junto con sus propiedades ("
-"como tipo, longitud y más)."
+"JSON que contiene valores que LLM puede regresar junto con sus propiedades "
+"(como tipo, longitud y más)."
 
 #. module: ai
 #: model_terms:ir.ui.view,arch_db:ai.ir_actions_server_view_form
@@ -1372,7 +1397,7 @@ msgstr "Última actualización el"
 
 #. module: ai
 #. odoo-javascript
-#: code:addons/ai/static/src/web/systray_action.js:0
+#: code:addons/ai/static/src/ai_chat_launcher_service.js:0
 msgid "Log Note"
 msgstr "Registrar una nota"
 
@@ -1437,6 +1462,12 @@ msgstr ""
 
 #. module: ai
 #. odoo-python
+#: code:addons/ai/utils/llm_providers.py:0
+msgid "No embedding configuration found for the provider"
+msgstr "No se encontró ninguna configuración de integración para el proveedor"
+
+#. module: ai
+#. odoo-python
 #: code:addons/ai/models/ai_agent.py:0
 msgid "No embedding model found for the selected provider"
 msgstr "No encontramos un modelo de inserción para el proveedor seleccionado"
@@ -1468,11 +1499,11 @@ msgstr "No se encontraron URL válidas para procesar."
 #. odoo-javascript
 #: code:addons/ai/static/src/components/agent_add_source_dialog/agent_add_source_dialog.js:0
 msgid ""
-"No valid files to upload. Only PDF, Word, PowerPoint, Excel, Text, and "
+"No valid files to upload. Only PDF, Word, PowerPoint, Excel, Text, CSV, and "
 "OpenDocument files are allowed."
 msgstr ""
-"No se encontraron archivos válidos para cargar. Solo los archivos PDF, Word, "
-"PowerPoint, Excel, de texto y OpenDocument son compatibles."
+"No hay ningún archivo válido para subir. Solo los archivos PDF, Word, "
+"PowerPoint, Excel, Texto, CSV y OpenDocument son compatibles."
 
 #. module: ai
 #. odoo-javascript
@@ -1492,6 +1523,12 @@ msgstr "En línea"
 #: code:addons/ai/models/ai_agent_source.py:0
 msgid "Only administrators can create sources from URLs."
 msgstr "Solo los administradores pueden crear fuentes con las URL."
+
+#. module: ai
+#. odoo-python
+#: code:addons/ai/models/ai_agent.py:0
+msgid "Oops, it looks like our AI is unreachable"
+msgstr "¡Uy! Parece ser que no podemos acceder a nuestra IA."
 
 #. module: ai
 #: model:ir.model.fields.selection,name:ai.selection__ai_embedding__embedding_model__text-embedding-3-small
@@ -1616,7 +1653,7 @@ msgstr "Selecciona un registro"
 
 #. module: ai
 #. odoo-javascript
-#: code:addons/ai/static/src/web/systray_action.js:0
+#: code:addons/ai/static/src/ai_chat_launcher_service.js:0
 msgid "Send Message"
 msgstr "Enviar mensaje"
 
@@ -1661,19 +1698,19 @@ msgid ""
 "Some URLs are invalid and were skipped. URLs must start with http://, "
 "https://, or ftp://"
 msgstr ""
-"Algunas URL no son válidas y se omitieron. Las URL deben comenzar con http://"
-", https:// o ftp://"
+"Algunas URL no son válidas y se omitieron. Las URL deben comenzar con "
+"http://, https:// o ftp://"
 
 #. module: ai
 #. odoo-javascript
 #: code:addons/ai/static/src/components/agent_add_source_dialog/agent_add_source_dialog.js:0
 msgid ""
 "Some files have invalid formats and were skipped: %s. Only PDF, Word, "
-"PowerPoint, Excel, Text, and OpenDocument files are allowed."
+"PowerPoint, Excel, Text, CSV, and OpenDocument files are allowed."
 msgstr ""
-"Algunos archivos están en un formato que no es válido y se omitieron: %s. "
-"Solo los archivos PDF, Word, PowerPoint, Excel, de texto y OpenDocument son "
-"compatibles."
+"Algunos archivos tienen formatos que no son válidos, por lo que se "
+"omitieron: %s. Solo los archivos PDF, Word, PowerPoint, Excel, Texto, CSV y "
+"OpenDocument son compatibles."
 
 #. module: ai
 #. odoo-javascript
@@ -1787,13 +1824,19 @@ msgstr "La instrucción enviada a la IA al hacer clic"
 
 #. module: ai
 #. odoo-python
+#: code:addons/ai/utils/html_extractor.py:0
+msgid "The site's rules (robots.txt) prevent reading this page."
+msgstr "Las reglas del sitio (robots.txt) impiden leer esta página."
+
+#. module: ai
+#. odoo-python
 #: code:addons/ai/utils/tools_schema/validators.py:0
 msgid ""
 "The type of the parameter '%(name)s' is incorrect. It should be '%"
 "(expected_param_type)s'."
 msgstr ""
-"El tipo del parámetro \"%(name)s\" es incorrecto. Debería ser "
-"\"%(expected_param_type)s\"."
+"El tipo del parámetro \"%(name)s\" es incorrecto. Debería ser \"%"
+"(expected_param_type)s\"."
 
 #. module: ai
 #. odoo-python
@@ -1802,8 +1845,8 @@ msgid ""
 "The value '%(value)s' of the parameter '%(name)s' doesn't match the expected "
 "pattern '%(expected_pattern)s'."
 msgstr ""
-"El valor \"%(value)s\" del parámetro \"%(name)s\" no coincide con "
-"\"%(expected_pattern)s\", que es el patrón esperado."
+"El valor \"%(value)s\" del parámetro \"%(name)s\" no coincide con \"%"
+"(expected_pattern)s\", que es el patrón esperado."
 
 #. module: ai
 #. odoo-python
@@ -1831,7 +1874,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/ai/static/src/ai_json_schema/ai_json_schema.xml:0
 msgid "Those parameters will be passed as global variables of the actions."
-msgstr "Esos parámetros se pasarán como las variables globales de las acciones."
+msgstr ""
+"Esos parámetros se pasarán como las variables globales de las acciones."
 
 #. module: ai
 #: model_terms:ir.ui.view,arch_db:ai.mail_template_view_form
@@ -1851,8 +1895,8 @@ msgstr "Título"
 #: model_terms:ir.ui.view,arch_db:ai.ir_actions_server_view_form
 msgid "To return a result to the AI agent, do <code>ai['result'] = ...</code>"
 msgstr ""
-"Para devolver un resultado al agente de IA, utiliza <code>ai['result'] = "
-"...</code>"
+"Para devolver un resultado al agente de IA, utiliza <code>ai['result'] = ..."
+"</code>"
 
 #. module: ai
 #: model:ir.model.fields,field_description:ai.field_ir_actions_server__ai_tool_ids
@@ -1928,9 +1972,15 @@ msgstr "URL"
 
 #. module: ai
 #. odoo-python
-#: code:addons/ai/models/ai_agent_source.py:0
-msgid "URL content cannot be extracted."
-msgstr "No se puede extraer el contenido de la URL."
+#: code:addons/ai/utils/html_extractor.py:0
+msgid "URL %(url)s returned non-HTML content: %(content_type)s"
+msgstr "La URL %(url)s devolvió contenido que no es HTML: %(content_type)s"
+
+#. module: ai
+#. odoo-python
+#: code:addons/ai/utils/html_extractor.py:0
+msgid "URL %s returned empty content"
+msgstr "La URL %s devolvió contenido vacío"
 
 #. module: ai
 #. odoo-javascript
@@ -2068,3 +2118,29 @@ msgstr "ejecutado."
 #: code:addons/ai/static/src/ai_prompt/ai_field_selector_plugin.js:0
 msgid "fa-hashtag"
 msgstr "fa-hashtag"
+
+#. module: ai
+#: model:ir.model.fields.selection,name:ai.selection__ir_model_fields__ttype__vector
+msgid "vector"
+msgstr "vector"
+
+#~ msgid "An error occurred while generating the AI response."
+#~ msgstr "Ocurrió un error al generar la respuesta de IA."
+
+#~ msgid "URL content cannot be extracted."
+#~ msgstr "No se puede extraer el contenido de la URL."
+
+#~ msgid ""
+#~ "No valid files to upload. Only PDF, Word, PowerPoint, Excel, Text, and "
+#~ "OpenDocument files are allowed."
+#~ msgstr ""
+#~ "No se encontraron archivos válidos para cargar. Solo los archivos PDF, "
+#~ "Word, PowerPoint, Excel, de texto y OpenDocument son compatibles."
+
+#~ msgid ""
+#~ "Some files have invalid formats and were skipped: %s. Only PDF, Word, "
+#~ "PowerPoint, Excel, Text, and OpenDocument files are allowed."
+#~ msgstr ""
+#~ "Algunos archivos están en un formato que no es válido y se omitieron: %s. "
+#~ "Solo los archivos PDF, Word, PowerPoint, Excel, de texto y OpenDocument "
+#~ "son compatibles."

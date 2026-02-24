@@ -3,13 +3,15 @@
 # * approvals
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:28+0000\n"
-"PO-Revision-Date: 2025-09-16 12:13+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2025-12-30 18:42+0000\n"
+"PO-Revision-Date: 2025-12-10 10:29+0000\n"
+"Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/approvals/"
 "ko/>\n"
 "Language: ko\n"
@@ -17,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: approvals
 #. odoo-python
@@ -48,22 +50,22 @@ msgstr "1200"
 #. module: approvals
 #: model_terms:ir.ui.view,arch_db:approvals.approval_request_view_kanban
 msgid "<i class=\"fa fa-check text-success me-1\"/>Approve"
-msgstr ""
+msgstr "<i class=\"fa fa-check text-success me-1\"/>승인"
 
 #. module: approvals
 #: model_terms:ir.ui.view,arch_db:approvals.approval_request_view_kanban
 msgid "<i class=\"fa fa-times text-danger me-1\"/>Refuse"
-msgstr ""
+msgstr "<i class=\"fa fa-times text-danger me-1\"/>반려"
+
+#. module: approvals
+#: model_terms:ir.ui.view,arch_db:approvals.report_aprroval_request_document
+msgid "<span class=\"col-2 fw-bold\">Description:</span>"
+msgstr "<span class=\"col-2 fw-bold\">설명:</span>"
 
 #. module: approvals
 #: model_terms:ir.ui.view,arch_db:approvals.approval_category_view_form
 msgid "<span class=\"fa fa-warning\" title=\"Invalid minimum approvals\"/>"
 msgstr "<span class=\"fa fa-warning\" title=\"Invalid minimum approvals\"/>"
-
-#. module: approvals
-#: model_terms:ir.ui.view,arch_db:approvals.report_aprroval_request_document
-msgid "<span class=\"fw-bold\">Description:</span>"
-msgstr "<span class=\"fw-bold\">설명:</span>"
 
 #. module: approvals
 #: model_terms:ir.ui.view,arch_db:approvals.report_aprroval_request_document
@@ -73,7 +75,7 @@ msgstr "<span class=\"fw-bold\">종료</span>"
 #. module: approvals
 #: model_terms:ir.ui.view,arch_db:approvals.approval_request_view_kanban
 msgid "<span class=\"mx-1\">-</span>"
-msgstr ""
+msgstr "<span class=\"mx-1\">-</span>"
 
 #. module: approvals
 #: model:ir.model.fields,field_description:approvals.field_approval_request__message_needaction
@@ -267,7 +269,8 @@ msgstr "결재권자"
 #: code:addons/approvals/models/approval_category.py:0
 msgid ""
 "Approver Sequence can only be activated with at least 1 minimum approver."
-msgstr "결재권자 순서 기능은 결재자가 최소 1명 이상 있어야 활성화할 수 있습니다."
+msgstr ""
+"결재권자 순서 기능은 결재자가 최소 1명 이상 있어야 활성화할 수 있습니다."
 
 #. module: approvals
 #: model:ir.model.fields,field_description:approvals.field_approval_category__user_ids
@@ -608,6 +611,11 @@ msgid "From:"
 msgstr "시작일"
 
 #. module: approvals
+#: model_terms:ir.ui.view,arch_db:approvals.approval_search_view_search
+msgid "Future Activities"
+msgstr "향후 활동"
+
+#. module: approvals
 #: model:approval.category,name:approvals.approval_category_data_general_approval
 msgid "General Approval"
 msgstr "일반 결재"
@@ -683,7 +691,8 @@ msgid ""
 "\n"
 "        Empty: do nothing\n"
 "        Is Approver: the employee's manager will be in the approver list\n"
-"        Is Required Approver: the employee's manager will be required to approve the request.\n"
+"        Is Required Approver: the employee's manager will be required to "
+"approve the request.\n"
 "    "
 msgstr ""
 "직원의 관리자가 해당 결재 유형으로 소통하는 방식입니다.\n"
@@ -732,18 +741,19 @@ msgstr "이 옵션을 선택하면 일부 정보가 전달 오류를 생성합�
 msgid ""
 "If checked, the Approval Requests will have an automated generated name "
 "based on the given code."
-msgstr "선택하면, 결재 요청에서 지정한 코드에 따라 자동으로 생성된 이름이 지정됩니다."
+msgstr ""
+"선택하면, 결재 요청에서 지정한 코드에 따라 자동으로 생성된 이름이 지정됩니다."
 
 #. module: approvals
 #: model:ir.model.fields,help:approvals.field_approval_category__approver_sequence
 #: model:ir.model.fields,help:approvals.field_approval_request__approver_sequence
 msgid ""
-"If checked, the approvers have to approve in sequence (one after the other)."
-" If Employee's Manager is selected as approver, they will be the first in "
+"If checked, the approvers have to approve in sequence (one after the other). "
+"If Employee's Manager is selected as approver, they will be the first in "
 "line."
 msgstr ""
-"선택하면, 결재권자 순서대로 결재를 해야 합니다 (하나씩 차례대로 실행). "
-"직원의 관리자를 결재권자로 선택하면, 관리자가 가장 먼저 결재하게 됩니다."
+"선택하면, 결재권자 순서대로 결재를 해야 합니다 (하나씩 차례대로 실행). 직원"
+"의 관리자를 결재권자로 선택하면, 관리자가 가장 먼저 결재하게 됩니다."
 
 #. module: approvals
 #: model:ir.model.fields,field_description:approvals.field_approval_category__image
@@ -798,6 +808,11 @@ msgstr "최근 갱신한 사람"
 #: model:ir.model.fields,field_description:approvals.field_approval_request__write_date
 msgid "Last Updated on"
 msgstr "최근 갱신 일자"
+
+#. module: approvals
+#: model_terms:ir.ui.view,arch_db:approvals.approval_search_view_search
+msgid "Late Activities"
+msgstr "지연된 활동"
 
 #. module: approvals
 #: model_terms:ir.actions.act_window,help:approvals.approval_request_action
@@ -1220,8 +1235,9 @@ msgstr "시퀀스 %(code)s"
 msgid ""
 "Simple users should not be able to remove themselves as approvers because "
 "they will lose access to the record if they misclick."
-msgstr "기록에 대한 액세스 권한이 실수로 지워지는 것을 방지하기 위해 일반 사용자는 "
-"자신을 승인자에서 삭제할 수 없습니다."
+msgstr ""
+"기록에 대한 액세스 권한이 실수로 지워지는 것을 방지하기 위해 일반 사용자는 자"
+"신을 승인자에서 삭제할 수 없습니다."
 
 #. module: approvals
 #. odoo-python
@@ -1301,15 +1317,16 @@ msgstr "%(request_name)s 요청이 반려되었습니다. (신청자: %(request_
 msgid ""
 "The request created on %(create_date)s by %(request_owner)s has been "
 "approved."
-msgstr "%(create_date)s 에 %(request_owner)s 측에서 생성한 요청이 승인되었습니다."
+msgstr ""
+"%(create_date)s 에 %(request_owner)s 측에서 생성한 요청이 승인되었습니다."
 
 #. module: approvals
 #. odoo-python
 #: code:addons/approvals/models/approval_request.py:0
 msgid ""
-"The request created on %(create_date)s by %(request_owner)s has been "
-"refused."
-msgstr "%(create_date)s에 생성된 요청이 반려되었습니다. (신청자: %(request_owner)s)"
+"The request created on %(create_date)s by %(request_owner)s has been refused."
+msgstr ""
+"%(create_date)s에 생성된 요청이 반려되었습니다. (신청자: %(request_owner)s)"
 
 #. module: approvals
 #. odoo-python
@@ -1333,8 +1350,9 @@ msgstr "사용자는 결재 환경 설정에 접근할 수 있습니다."
 msgid ""
 "This request needs to be approved by your manager. There is no manager "
 "linked to your employee profile."
-msgstr "관리자의 결재가 필요한 요청 항목입니다. 사용자 프로필에 연결되어 있는 "
-"관리자가 없습니다."
+msgstr ""
+"관리자의 결재가 필요한 요청 항목입니다. 사용자 프로필에 연결되어 있는 관리자"
+"가 없습니다."
 
 #. module: approvals
 #. odoo-python
@@ -1342,8 +1360,9 @@ msgstr "관리자의 결재가 필요한 요청 항목입니다. 사용자 프�
 msgid ""
 "This request needs to be approved by your manager. There is no user linked "
 "to your manager."
-msgstr "관리자의 결재가 필요한 요청 항목입니다. 관리자에 연결되어 있는 사용자가 "
-"없습니다."
+msgstr ""
+"관리자의 결재가 필요한 요청 항목입니다. 관리자에 연결되어 있는 사용자가 없습"
+"니다."
 
 #. module: approvals
 #. odoo-python
@@ -1351,7 +1370,8 @@ msgstr "관리자의 결재가 필요한 요청 항목입니다. 관리자에 �
 msgid ""
 "This request needs to be approved by your manager. Your manager is not in "
 "the approvers list."
-msgstr "관리자의 결재가 필요한 요청 항목입니다. 관리자가 결재권자 목록에 없습니다."
+msgstr ""
+"관리자의 결재가 필요한 요청 항목입니다. 관리자가 결재권자 목록에 없습니다."
 
 #. module: approvals
 #: model:ir.model.fields.selection,name:approvals.selection__approval_approver__status__pending
@@ -1367,6 +1387,11 @@ msgstr "검토 대기 :"
 #: model:ir.model.fields.selection,name:approvals.selection__approval_request__request_status__new
 msgid "To Submit"
 msgstr "기안 작성"
+
+#. module: approvals
+#: model_terms:ir.ui.view,arch_db:approvals.approval_search_view_search
+msgid "Today Activities"
+msgstr "오늘의 활동"
 
 #. module: approvals
 #: model:ir.model.fields,help:approvals.field_approval_request__activity_exception_decoration
@@ -1446,12 +1471,19 @@ msgstr "이전 결재권자보다 먼저 결재할 수 없습니다."
 
 #. module: approvals
 #. odoo-python
+#: code:addons/approvals/models/approval_approver.py:0
+msgid "You cannot change approval request."
+msgstr ""
+
+#. module: approvals
+#. odoo-python
 #: code:addons/approvals/models/ir_attachment.py:0
 msgid ""
 "You cannot unlink an attachment which is linked to a validated, refused or "
 "cancelled approval request."
-msgstr "승인되거나 반려 또는 취소된 결재 요청에 연결되어 있는 첨부 파일은 연결을 "
-"해제할 수 없습니다."
+msgstr ""
+"승인되거나 반려 또는 취소된 결재 요청에 연결되어 있는 첨부 파일은 연결을 해제"
+"할 수 없습니다."
 
 #. module: approvals
 #. odoo-python
@@ -1518,3 +1550,6 @@ msgstr "새 요청"
 #: model_terms:ir.ui.view,arch_db:approvals.approval_request_view_form
 msgid "to:"
 msgstr "종료일"
+
+#~ msgid "<span class=\"fw-bold\">Description:</span>"
+#~ msgstr "<span class=\"fw-bold\">설명:</span>"

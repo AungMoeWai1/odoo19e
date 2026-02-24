@@ -1,7 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command
-from odoo.tests import tagged
+from odoo.tests import tagged, HttpCase
+from odoo.tools import SQL
 
 from odoo.addons.product.tests.test_product_attribute_value_config import (
     TestProductAttributeValueCommon,
@@ -10,7 +11,7 @@ from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
 
 
 @tagged('post_install', '-at_install')
-class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValueCommon):
+class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValueCommon, HttpCase):
 
     @classmethod
     def setUpClass(cls):
@@ -86,6 +87,15 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
             cls.computer_case + cls.monitor + cls.computer + cls.windows_pc + cls.mac + generics
         )
 
+        # Archive all products not relevant to the test suite, bypassing ORM constraints
+        cls.env.invalidate_all()
+        cls.env.cr.execute(SQL('; ').join(
+            SQL(
+                'UPDATE %s SET active = false WHERE id NOT IN %s',
+                SQL.identifier(recs._table), recs._ids,
+            ) for recs in (cls.product_tmpls.product_variant_ids, cls.product_tmpls)
+        ))
+
     def test_latest_sold_filter(self):
         """Check the latest sold filter after selling 1 computer and 3 different cases.
 
@@ -93,16 +103,6 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
         When hiding variants, the case should be the most sold product.
         """
         computer = self.computer.product_variant_id
-        self.env['product.product'].search([
-            (
-                'id',
-                'in',
-                self.env['sale.order.line']._search([
-                    ('order_id.website_id', '!=', False),
-                    ('state', '=', 'sale'),
-                ]).subselect('product_id'),
-            )
-        ]).action_archive()
         self.empty_cart.write({
             'website_id': self.website.id,
             'order_line': [
@@ -322,3 +322,12 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
                 16,
                 "When displaying newest product templates, 16 unique templates should be shown",
             )
+
+    def test_shop_attribute_filters_remain_when_changing_page(self):
+        self.env['product.attribute'].search([]).write({'visibility': 'hidden'})
+        self.color_attribute.visibility = 'visible'
+        self.size_attribute.visibility = 'visible'
+        self.env['website'].get_current_website().shop_ppg = 1
+        computer_case_copy = self.computer_case.copy()
+        computer_case_copy.website_published = True
+        self.start_tour('/shop', 'shop_attribute_filters_remain_when_changing_page')

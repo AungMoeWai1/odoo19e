@@ -1,32 +1,33 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* account_budget
+# * account_budget
 #
 # Translators:
 # Uros Kalajdzic <ukalajdzic@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Dragan Vukosavljevic <dragan.vukosavljevic@gmail.com>, 2023
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-03 09:03+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Dragan Vukosavljevic <dragan.vukosavljevic@gmail.com>, "
-"2023\n"
-"Language-Team: Serbian (https://app.transifex.com/odoo/teams/41243/sr/)\n"
-"Language: sr\n"
+"POT-Creation-Date: 2025-12-30 18:43+0000\n"
+"PO-Revision-Date: 2025-11-16 05:23+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Serbian (Latin script) <https://translate.odoo.com/projects/"
+"odoo-19/account_budget/sr_Latn/>\n"
+"Language: sr@latin\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: account_budget
 #: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_kanban
 msgid ""
-"<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Period\" "
+"<i class=\"fa fa-clock-o me-1\" role=\"img\" aria-label=\"Period\" "
 "title=\"Period\"/>"
 msgstr ""
 
@@ -41,16 +42,16 @@ msgstr ""
 "title=\"Arrow\"/>"
 
 #. module: account_budget
-#: model_terms:ir.ui.view,arch_db:account_budget.budget_report_view_search
-#, fuzzy
-msgid "Account"
-msgstr "Računi"
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_form
+msgid "<span class=\"o_stat_text\">Budget Report</span>"
+msgstr ""
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_budget_line__achieved_amount
 #: model:ir.model.fields,field_description:account_budget.field_budget_report__achieved
 #: model:ir.model.fields.selection,name:account_budget.selection__budget_report__line_type__achieved
 #: model_terms:ir.ui.view,arch_db:account_budget.budget_report_view_search
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_form
 #: model_terms:ir.ui.view,arch_db:account_budget.view_budget_line_pivot
 #, fuzzy
 msgid "Achieved"
@@ -58,8 +59,8 @@ msgstr "Dostignuća"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_budget_line__achieved_percentage
-msgid "Achievement"
-msgstr "Dostignuća"
+msgid "Achieved (%)"
+msgstr ""
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_budget_analytic__message_needaction
@@ -88,24 +89,14 @@ msgstr "Ikonica vrste aktivnosti"
 
 #. module: account_budget
 #: model:ir.model.fields,help:account_budget.field_budget_line__achieved_amount
-msgid "Amount really earned/spent."
+msgid "Amount Billed/Invoiced."
 msgstr ""
 
 #. module: account_budget
 #: model:ir.model.fields,help:account_budget.field_budget_line__theoritical_amount
-msgid "Amount you are supposed to have earned/spent at this date."
-msgstr ""
-
-#. module: account_budget
-#: model:ir.model.fields,help:account_budget.field_budget_line__committed_amount
-msgid "Amount you have purchased but not invoiced at this date."
-msgstr ""
-
-#. module: account_budget
-#: model:ir.model.fields,help:account_budget.field_budget_line__budget_amount
 msgid ""
-"Amount you plan to earn/spend. Record a positive amount if it is a revenue "
-"and a negative amount if it is a cost."
+"Amount supposed to be Billed/Invoiced, formula = (Budget Amount / Budget "
+"Days) x Budget Days Completed"
 msgstr ""
 
 #. module: account_budget
@@ -116,10 +107,9 @@ msgid "Analytic Account"
 msgstr "Račun analitike"
 
 #. module: account_budget
-#: model:ir.model.fields,field_description:account_budget.field_purchase_order_line__analytic_json
-#, fuzzy
-msgid "Analytic JSON"
-msgstr "Račun analitike"
+#: model:ir.ui.menu,name:account_budget.menu_act_budget_analytic_view
+msgid "Analytic Budget"
+msgstr ""
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_budget_split_wizard__analytical_plan_ids
@@ -133,17 +123,20 @@ msgid "Attachment Count"
 msgstr "Brojač priloga"
 
 #. module: account_budget
-#: model:ir.model.fields.selection,name:account_budget.selection__budget_analytic__budget_type__both
-msgid "Both"
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_form
+msgid "Audit"
 msgstr ""
 
 #. module: account_budget
+#: model:ir.model.fields.selection,name:account_budget.selection__budget_analytic__budget_type__both
+msgid "Both"
+msgstr "Oba"
+
+#. module: account_budget
 #: model:ir.model,name:account_budget.model_budget_analytic
-#: model:ir.model.fields,field_description:account_budget.field_budget_line__budget_amount
 #: model:ir.model.fields,field_description:account_budget.field_budget_report__budget
 #: model:ir.model.fields.selection,name:account_budget.selection__budget_report__line_type__budget
 #: model_terms:ir.ui.view,arch_db:account_budget.budget_report_view_search
-#: model_terms:ir.ui.view,arch_db:account_budget.purchase_order_form_account_budget
 #: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_form
 #: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_search
 #: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_tree
@@ -169,6 +162,7 @@ msgstr "Linija budžeta"
 #. module: account_budget
 #: model:ir.model,name:account_budget.model_budget_line
 #: model:ir.model.fields,field_description:account_budget.field_account_analytic_account__budget_line_ids
+#: model:ir.model.fields,field_description:account_budget.field_budget_report__budget_line_id
 msgid "Budget Line"
 msgstr "Linija budžeta"
 
@@ -176,7 +170,6 @@ msgstr "Linija budžeta"
 #. odoo-python
 #: code:addons/account_budget/models/budget_analytic.py:0
 #: model:ir.model.fields,field_description:account_budget.field_budget_analytic__budget_line_ids
-#: model:ir.model.fields,field_description:account_budget.field_purchase_order_line__budget_line_ids
 #: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_form
 #: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_tree
 #: model_terms:ir.ui.view,arch_db:account_budget.view_budget_line_form
@@ -194,6 +187,8 @@ msgid "Budget Name"
 msgstr "Naziv budžeta"
 
 #. module: account_budget
+#. odoo-python
+#: code:addons/account_budget/models/budget_analytic.py:0
 #: model:ir.actions.act_window,name:account_budget.budget_report_action
 #: model:ir.model,name:account_budget.model_budget_report
 #: model:ir.ui.menu,name:account_budget.budget_report_menu
@@ -208,12 +203,12 @@ msgstr "Linija budžeta"
 #. module: account_budget
 #: model:ir.model,name:account_budget.model_budget_split_wizard
 msgid "Budget Split Wizard"
-msgstr ""
+msgstr "Čarobnjak za podelu budžeta"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_budget_line__budget_analytic_state
 msgid "Budget State"
-msgstr ""
+msgstr "Stanje budžeta"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_budget_analytic__budget_type
@@ -223,9 +218,20 @@ msgstr "Linija budžeta"
 
 #. module: account_budget
 #. odoo-python
+#: code:addons/account_budget/models/budget_analytic.py:0
+msgid "Budget end date may not be before the starting date."
+msgstr ""
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_line__budget_amount
+#: model_terms:ir.ui.view,arch_db:account_budget.budget_report_view_search
+msgid "Budgeted"
+msgstr ""
+
+#. module: account_budget
+#. odoo-python
 #: code:addons/account_budget/wizards/budget_split_wizard.py:0
 #: model:ir.actions.act_window,name:account_budget.act_budget_analytic_view
-#: model:ir.ui.menu,name:account_budget.menu_act_budget_analytic_view
 #: model_terms:ir.ui.view,arch_db:account_budget.view_account_analytic_account_form_inherit_budget
 #: model_terms:ir.ui.view,arch_db:account_budget.view_budget_line_search
 msgid "Budgets"
@@ -234,7 +240,7 @@ msgstr "Budzeti"
 #. module: account_budget
 #: model:ir.actions.act_window,name:account_budget.act_budget_lines_view
 msgid "Budgets Analysis"
-msgstr ""
+msgstr "Analiza budžeta"
 
 #. module: account_budget
 #: model_terms:ir.ui.view,arch_db:account_budget.budget_split_wizard_form_view
@@ -259,35 +265,11 @@ msgid "Click to create a new budget."
 msgstr "Klikni da kreiraš novi budžet."
 
 #. module: account_budget
-#: model:ir.model.fields,field_description:account_budget.field_budget_line__committed_percentage
-msgid "Commitment"
-msgstr ""
-
-#. module: account_budget
-#: model:ir.model.fields,field_description:account_budget.field_budget_line__committed_amount
-#: model:ir.model.fields,field_description:account_budget.field_budget_report__committed
-#: model:ir.model.fields.selection,name:account_budget.selection__budget_report__line_type__committed
-#: model_terms:ir.ui.view,arch_db:account_budget.budget_report_view_search
-#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_form
-msgid "Committed"
-msgstr ""
-
-#. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_budget_analytic__company_id
 #: model:ir.model.fields,field_description:account_budget.field_budget_line__company_id
 #: model:ir.model.fields,field_description:account_budget.field_budget_report__company_id
 msgid "Company"
 msgstr "Kompanija"
-
-#. module: account_budget
-#: model:ir.model.fields,help:account_budget.field_budget_line__achieved_percentage
-msgid "Comparison between practical and Achieved amount in percentage."
-msgstr ""
-
-#. module: account_budget
-#: model:ir.model.fields,help:account_budget.field_budget_line__theoritical_percentage
-msgid "Comparison between practical and theoretical amount in percentage."
-msgstr ""
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_budget_analytic__create_uid
@@ -316,17 +298,18 @@ msgid "Date"
 msgstr "Datum"
 
 #. module: account_budget
-#: model:ir.model.fields,field_description:account_budget.field_budget_report__description
-msgid "Description"
+#. odoo-python
+#: code:addons/account_budget/models/budget_analytic.py:0
+msgid "Deletion is only allowed in the Draft and Canceled stages."
 msgstr ""
 
 #. module: account_budget
-#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_form
-#, fuzzy
-msgid "Details..."
-msgstr "Unosi..."
+#: model:ir.model.fields,field_description:account_budget.field_budget_report__description
+msgid "Description"
+msgstr "Opis"
 
 #. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_account_analytic_account__display_name
 #: model:ir.model.fields,field_description:account_budget.field_budget_analytic__display_name
 #: model:ir.model.fields,field_description:account_budget.field_budget_line__display_name
 #: model:ir.model.fields,field_description:account_budget.field_budget_report__display_name
@@ -337,7 +320,7 @@ msgstr "Naziv za prikaz"
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_budget_report__res_id
 msgid "Document"
-msgstr ""
+msgstr "Dokument"
 
 #. module: account_budget
 #: model:ir.model.fields.selection,name:account_budget.selection__budget_analytic__state__done
@@ -366,7 +349,7 @@ msgstr "Završni Datum"
 #. module: account_budget
 #: model:ir.model.fields.selection,name:account_budget.selection__budget_analytic__budget_type__expense
 msgid "Expense"
-msgstr ""
+msgstr "Rashod"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_budget_analytic__message_follower_ids
@@ -396,7 +379,7 @@ msgstr "Buduće aktivnosti"
 #. module: account_budget
 #: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_tree
 msgid "Generate"
-msgstr ""
+msgstr "Generiši"
 
 #. module: account_budget
 #: model:ir.actions.act_window,name:account_budget.budget_split_wizard_action
@@ -406,17 +389,12 @@ msgid "Generate Budget"
 msgstr "Budžeti u nacrtu"
 
 #. module: account_budget
-#: model_terms:ir.ui.view,arch_db:account_budget.budget_report_view_search
-#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_line_search
-msgid "Group By"
-msgstr "Grupiši po"
-
-#. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_budget_analytic__has_message
 msgid "Has Message"
 msgstr "Ima poruku"
 
 #. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_account_analytic_account__id
 #: model:ir.model.fields,field_description:account_budget.field_budget_analytic__id
 #: model:ir.model.fields,field_description:account_budget.field_budget_line__id
 #: model:ir.model.fields,field_description:account_budget.field_budget_report__id
@@ -453,15 +431,8 @@ msgstr "Budžet"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_budget_line__is_above_budget
-#: model:ir.model.fields,field_description:account_budget.field_purchase_order__is_above_budget
-#: model:ir.model.fields,field_description:account_budget.field_purchase_order_line__is_above_budget
 msgid "Is Above Budget"
-msgstr ""
-
-#. module: account_budget
-#: model:ir.model.fields,field_description:account_budget.field_purchase_order__is_analytic
-msgid "Is Analytic"
-msgstr ""
+msgstr "Je iznad budžeta"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_budget_analytic__message_is_follower
@@ -500,12 +471,17 @@ msgstr "Poruke"
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_budget_report__res_model
 msgid "Model"
-msgstr ""
+msgstr "Model"
 
 #. module: account_budget
 #: model:ir.model.fields.selection,name:account_budget.selection__budget_split_wizard__period__month
 msgid "Month"
-msgstr ""
+msgstr "Mesec"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_search
+msgid "My Activities"
+msgstr "Moje aktivnosti"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_budget_analytic__my_activity_date_deadline
@@ -516,7 +492,7 @@ msgstr "Rok moje aktivnosti"
 #. odoo-python
 #: code:addons/account_budget/models/budget_analytic.py:0
 msgid "New revision"
-msgstr ""
+msgstr "Nova revizija"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_budget_analytic__activity_calendar_event_id
@@ -541,7 +517,7 @@ msgstr "Tip sledeće aktivnosti"
 #. module: account_budget
 #: model_terms:ir.ui.view,arch_db:account_budget.view_budget_line_search
 msgid "Not Cancelled"
-msgstr ""
+msgstr "Nije otkazano"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_budget_analytic__message_needaction_counter
@@ -568,18 +544,13 @@ msgstr "Broj poruka sa greškom u isporuci"
 #: model:ir.model.fields.selection,name:account_budget.selection__budget_analytic__state__confirmed
 #: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_form
 msgid "Open"
-msgstr ""
+msgstr "Otvori"
 
 #. module: account_budget
 #: model_terms:ir.ui.view,arch_db:account_budget.budget_report_view_search
 #, fuzzy
 msgid "Open Budget"
 msgstr "Budžet"
-
-#. module: account_budget
-#: model:ir.model.fields,help:account_budget.field_budget_line__committed_percentage
-msgid "Percentage of the budget that has been committed."
-msgstr ""
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_budget_split_wizard__period
@@ -590,7 +561,7 @@ msgstr "Razdoblje"
 #. module: account_budget
 #: model_terms:ir.ui.view,arch_db:account_budget.view_budget_line_graph
 msgid "Practical amount"
-msgstr ""
+msgstr "Praktičan iznos"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_budget_line__account_id
@@ -600,30 +571,14 @@ msgid "Project Account"
 msgstr "Stvarni iznos"
 
 #. module: account_budget
-#: model:ir.model,name:account_budget.model_purchase_order
-msgid "Purchase Order"
-msgstr ""
-
-#. module: account_budget
-#: model:ir.model,name:account_budget.model_purchase_order_line
-msgid "Purchase Order Line"
-msgstr ""
-
-#. module: account_budget
 #: model:ir.model.fields.selection,name:account_budget.selection__budget_split_wizard__period__quarter
 msgid "Quarter"
-msgstr ""
-
-#. module: account_budget
-#. odoo-python
-#: code:addons/account_budget/models/budget_analytic.py:0
-msgid "REV %s"
-msgstr ""
+msgstr "Kvartal"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_budget_analytic__rating_ids
 msgid "Ratings"
-msgstr ""
+msgstr "Ocene"
 
 #. module: account_budget
 #: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_form
@@ -643,27 +598,27 @@ msgstr "Odgovorni korisnik"
 #. module: account_budget
 #: model:ir.model.fields.selection,name:account_budget.selection__budget_analytic__budget_type__revenue
 msgid "Revenue"
-msgstr ""
+msgstr "Prihod"
 
 #. module: account_budget
 #: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_form
 msgid "Revise"
-msgstr ""
+msgstr "Revidiraj"
 
 #. module: account_budget
 #: model:ir.model.fields.selection,name:account_budget.selection__budget_analytic__state__revised
 msgid "Revised"
-msgstr ""
+msgstr "Revidirano"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_budget_analytic__parent_id
 msgid "Revision Of"
-msgstr ""
+msgstr "Revizija od"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_budget_analytic__children_ids
 msgid "Revisions"
-msgstr ""
+msgstr "Revizije"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_budget_analytic__message_has_sms_error
@@ -671,15 +626,19 @@ msgid "SMS Delivery error"
 msgstr "Greška u dostavi SMS-a"
 
 #. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_line__sequence
+msgid "Sequence"
+msgstr "Niz"
+
+#. module: account_budget
 #: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_search
-msgid "Show all records which has next action date is before today"
+msgid "Show all records whose next activity date is past"
 msgstr ""
-"Prikaži sve zapise koji imaju datum sledeće aktivnosti pre današnjeg datuma"
 
 #. module: account_budget
 #: model_terms:ir.ui.view,arch_db:account_budget.budget_split_wizard_form_view
 msgid "Split"
-msgstr ""
+msgstr "Podeli"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_budget_analytic__date_from
@@ -707,17 +666,22 @@ msgstr ""
 "Planirano: Buduće aktivnosti."
 
 #. module: account_budget
+#. odoo-python
+#: code:addons/account_budget/models/budget_line.py:0
+msgid "The 'End Date' must be greater than or equal to 'Start Date'."
+msgstr ""
+
+#. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_budget_line__theoritical_amount
+#: model:ir.model.fields,field_description:account_budget.field_budget_report__theoretical
 #: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_form
-#, fuzzy
-msgid "Theoritical"
-msgstr "Teoretski Iznos"
+msgid "Theoretical"
+msgstr ""
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_budget_line__theoritical_percentage
-#, fuzzy
-msgid "Theoritical Percentage"
-msgstr "Teoretski Iznos"
+msgid "Theoretical (%)"
+msgstr ""
 
 #. module: account_budget
 #: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_search
@@ -727,7 +691,7 @@ msgstr "Današnje aktivnosti"
 #. module: account_budget
 #: model_terms:ir.ui.view,arch_db:account_budget.budget_report_view_tree
 msgid "Total Achieved"
-msgstr ""
+msgstr "Ukupno ostvareno"
 
 #. module: account_budget
 #: model_terms:ir.ui.view,arch_db:account_budget.budget_report_view_tree
@@ -736,15 +700,10 @@ msgid "Total Budget"
 msgstr "Poništi budžet"
 
 #. module: account_budget
-#: model_terms:ir.ui.view,arch_db:account_budget.budget_report_view_tree
-msgid "Total Committed"
-msgstr ""
-
-#. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_budget_report__line_type
 #: model_terms:ir.ui.view,arch_db:account_budget.budget_report_view_search
 msgid "Type"
-msgstr ""
+msgstr "Vrsta"
 
 #. module: account_budget
 #: model:ir.model.fields,help:account_budget.field_budget_analytic__activity_exception_decoration
@@ -755,12 +714,13 @@ msgstr "Zabeležen tip aktivnosti izuzeća."
 #: model_terms:ir.actions.act_window,help:account_budget.act_budget_analytic_view
 msgid "Use budgets to compare actual with expected revenues and costs"
 msgstr ""
+"Koristite budžete da uporedite stvarne prihode i troškove sa očekivanim"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_budget_report__user_id
 #: model_terms:ir.ui.view,arch_db:account_budget.budget_report_view_search
 msgid "User"
-msgstr ""
+msgstr "Korisnik"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_budget_analytic__website_message_ids
@@ -775,24 +735,65 @@ msgstr "Istorija website komunikacije"
 #. module: account_budget
 #: model:ir.model.fields.selection,name:account_budget.selection__budget_split_wizard__period__year
 msgid "Year"
-msgstr ""
+msgstr "Godina"
 
 #. module: account_budget
 #. odoo-python
 #: code:addons/account_budget/models/budget_analytic.py:0
 msgid "You cannot create recursive revision of budget."
-msgstr ""
+msgstr "Ne možete kreirati rekurzivnu reviziju budžeta."
 
 #. module: account_budget
-#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_form
-#, fuzzy
-msgid "achieved"
-msgstr "Dostignuća"
+#. odoo-python
+#: code:addons/account_budget/models/budget_analytic.py:0
+msgid "budget_analytic_id"
+msgstr ""
 
 #. module: account_budget
 #: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_form
 msgid "e.g. Budget 2023"
+msgstr "npr. Budžet 2023"
+
+#. module: account_budget
+#. odoo-python
+#: code:addons/account_budget/wizards/budget_split_wizard.py:0
+msgid "id"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Account"
+#~ msgstr "Računi"
+
+#~ msgid "Achievement"
+#~ msgstr "Dostignuća"
+
+#, fuzzy
+#~ msgid "Analytic JSON"
+#~ msgstr "Račun analitike"
+
+#, fuzzy
+#~ msgid "Details..."
+#~ msgstr "Unosi..."
+
+#~ msgid "Group By"
+#~ msgstr "Grupiši po"
+
+#~ msgid "Show all records which has next action date is before today"
+#~ msgstr ""
+#~ "Prikaži sve zapise koji imaju datum sledeće aktivnosti pre današnjeg "
+#~ "datuma"
+
+#, fuzzy
+#~ msgid "Theoritical"
+#~ msgstr "Teoretski Iznos"
+
+#, fuzzy
+#~ msgid "Theoritical Percentage"
+#~ msgstr "Teoretski Iznos"
+
+#, fuzzy
+#~ msgid "achieved"
+#~ msgstr "Dostignuća"
 
 #~ msgid "Approve"
 #~ msgstr "Odobri"

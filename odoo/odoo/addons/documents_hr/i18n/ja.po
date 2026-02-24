@@ -3,13 +3,15 @@
 # * documents_hr
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:30+0000\n"
-"PO-Revision-Date: 2025-09-15 12:02+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2025-12-30 18:44+0000\n"
+"PO-Revision-Date: 2025-11-18 05:40+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
 "documents_hr/ja/>\n"
 "Language: ja\n"
@@ -51,6 +53,7 @@ msgid ""
 "Comma separated list of folder names that need to be created under each "
 "employee folder."
 msgstr ""
+"各従業員フォルダの下に作成する必要があるフォルダ名の、カンマ区切りのリスト。"
 
 #. module: documents_hr
 #: model:ir.model.fields,help:documents_hr.field_res_config_settings__employee_subfolders
@@ -58,6 +61,8 @@ msgid ""
 "Comma separated string of folder names that need to be created under each "
 "employee folder."
 msgstr ""
+"各従業員フォルダの下に作成する必要があるフォルダ名をカンマ区切りで指定しま"
+"す。"
 
 #. module: documents_hr
 #: model:ir.model,name:documents_hr.model_res_company
@@ -67,7 +72,7 @@ msgstr "会社"
 #. module: documents_hr
 #: model:ir.model,name:documents_hr.model_res_config_settings
 msgid "Config Settings"
-msgstr "詳細設定"
+msgstr "構成設定"
 
 #. module: documents_hr
 #. odoo-python
@@ -145,7 +150,7 @@ msgstr "従業員契約"
 #. odoo-python
 #: code:addons/documents_hr/models/res_company.py:0
 msgid "Employees - %s"
-msgstr ""
+msgstr "従業員 - %s"
 
 #. module: documents_hr
 #: model:documents.tag,name:documents_hr.documents_tag_employees
@@ -163,17 +168,17 @@ msgstr "従業員フォルダ"
 #: model:ir.model.fields,field_description:documents_hr.field_res_company__employee_subfolders
 #: model:ir.model.fields,field_description:documents_hr.field_res_config_settings__employee_subfolders
 msgid "Employees Subfolder"
-msgstr ""
+msgstr "従業員サブフォルダ"
 
 #. module: documents_hr
 #: model_terms:ir.ui.view,arch_db:documents_hr.res_config_settings_view_form
 msgid "Employees Subfolders"
-msgstr ""
+msgstr "従業員サブフォルダ"
 
 #. module: documents_hr
 #: model:ir.model.fields,field_description:documents_hr.field_hr_employee__hr_employee_contract_folder_id
 msgid "HR Employee Contract Folder"
-msgstr ""
+msgstr "人事 従業員契約書フォルダ"
 
 #. module: documents_hr
 #: model:ir.model.fields,field_description:documents_hr.field_hr_employee__hr_employee_folder_id
@@ -201,7 +206,7 @@ msgstr "ID"
 #. odoo-python
 #: code:addons/documents_hr/models/documents_document.py:0
 msgid "Impossible to delete employee folder or employee 'Contract' folder"
-msgstr ""
+msgstr "従業員フォルダや従業員の「契約」フォルダを削除できません"
 
 #. module: documents_hr
 #: model_terms:ir.ui.view,arch_db:documents_hr.documents_hr_portal_view
@@ -211,7 +216,7 @@ msgstr "自分のドキュメント"
 #. module: documents_hr
 #: model:ir.model,name:documents_hr.model_hr_employee_public
 msgid "Public Employee"
-msgstr ""
+msgstr "公開従業員"
 
 #. module: documents_hr
 #: model:documents.tag,name:documents_hr.document_tag_signature_request
@@ -232,7 +237,7 @@ msgstr "タグ"
 #. odoo-python
 #: code:addons/documents_hr/models/hr_employee.py:0
 msgid "You cannot access the employee's folder."
-msgstr ""
+msgstr "従業員のフォルダにはアクセスできません。"
 
 #. module: documents_hr
 #. odoo-python
@@ -240,7 +245,8 @@ msgstr ""
 msgid ""
 "You cannot delete this tag as it is used to link employee contracts and "
 "signatures."
-msgstr "このタグは、従業員の契約および署名にリンクするために使用されているため、削除"
+msgstr ""
+"このタグは、従業員の契約および署名にリンクするために使用されているため、削除"
 "することはできません。"
 
 #. module: documents_hr
@@ -249,8 +255,9 @@ msgstr "このタグは、従業員の契約および署名にリンクするた
 msgid ""
 "You must configure the HR Employee folder in document settings to use "
 "Document's features."
-msgstr "ドキュメントの機能を使用するには、ドキュメント設定で人事 "
-"従業員フォルダを設定する必要があります。"
+msgstr ""
+"ドキュメントの機能を使用するには、ドキュメント設定で人事 従業員フォルダを設定"
+"する必要があります。"
 
 #. module: documents_hr
 #. odoo-python
@@ -258,4 +265,5 @@ msgstr "ドキュメントの機能を使用するには、ドキュメント設
 msgid ""
 "You must have a contact linked to the employee in order to use Document's "
 "features."
-msgstr "ドキュメントの機能を使用するには、従業員にリンクされた連絡先が必要です。"
+msgstr ""
+"ドキュメントの機能を使用するには、従業員にリンクされた連絡先が必要です。"

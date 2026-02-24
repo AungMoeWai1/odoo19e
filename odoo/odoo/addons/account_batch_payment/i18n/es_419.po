@@ -3,13 +3,15 @@
 # * account_batch_payment
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:24+0000\n"
-"PO-Revision-Date: 2025-09-17 09:36+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2025-12-30 18:43+0000\n"
+"PO-Revision-Date: 2025-12-18 17:26+0000\n"
+"Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-19/account_batch_payment/es_419/>\n"
 "Language: es_419\n"
@@ -17,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: account_batch_payment
 #. odoo-python
@@ -183,12 +185,12 @@ msgstr "Contenido del lote"
 #: model:account.payment.method,name:account_batch_payment.account_payment_method_batch_deposit
 #: model_terms:ir.ui.view,arch_db:account_batch_payment.account_journal_dashboard_kanban_view_inherited
 msgid "Batch Deposit"
-msgstr "Depósito del lote"
+msgstr "Depósito por lotes"
 
 #. module: account_batch_payment
 #: model:ir.model,name:account_batch_payment.model_report_account_batch_payment_print_batch_payment
 msgid "Batch Deposit Report"
-msgstr "Reporte del depósito del lote"
+msgstr "Reporte del depósito por lotes"
 
 #. module: account_batch_payment
 #. odoo-python
@@ -218,7 +220,8 @@ msgstr "Tipo de lote"
 #: model_terms:ir.actions.act_window,help:account_batch_payment.action_batch_payment_out
 msgid ""
 "Batch payments allow you grouping different payments to ease\n"
-"                    reconciliation. They are also useful when depositing checks\n"
+"                    reconciliation. They are also useful when depositing "
+"checks\n"
 "                    to the bank."
 msgstr ""
 "Los pagos por lotes le permiten agrupar diferentes pagos para facilitar\n"
@@ -503,9 +506,20 @@ msgstr "Secuencia de pago por lotes entrante"
 
 #. module: account_batch_payment
 #. odoo-python
+#: code:addons/account_batch_payment/models/account_batch_payment.py:0
+msgid "Invalid Partners"
+msgstr "Contactos no válidos"
+
+#. module: account_batch_payment
+#. odoo-python
 #: code:addons/account_batch_payment/wizard/create_batch_error.py:0
 msgid "Invalid Payments"
 msgstr "Pagos no válidos"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_payment__invalid_sct_partners_ids
+msgid "Invalid Sct Partners"
+msgstr "Contactos Sct no válidos"
 
 #. module: account_batch_payment
 #: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_payment__message_is_follower
@@ -515,7 +529,7 @@ msgstr "Es un seguidor"
 #. module: account_batch_payment
 #: model_terms:ir.ui.view,arch_db:account_batch_payment.print_batch_payment
 msgid "Issuing bank account :"
-msgstr "Cuenta bancaria emisora"
+msgstr "Cuenta bancaria emisora:"
 
 #. module: account_batch_payment
 #: model:ir.model,name:account_batch_payment.model_account_journal
@@ -646,8 +660,7 @@ msgstr "Odoo Payments LLC"
 #. module: account_batch_payment
 #. odoo-python
 #: code:addons/account_batch_payment/wizard/create_batch_error.py:0
-msgid ""
-"Only %s payments can be added to a batch. Invalid ones will be ignored."
+msgid "Only %s payments can be added to a batch. Invalid ones will be ignored."
 msgstr ""
 "Solo los pagos %s pueden estar en un lote. Los que no son válidos serán "
 "omitidos."
@@ -740,7 +753,7 @@ msgstr "Calificaciones"
 #. module: account_batch_payment
 #: model_terms:ir.ui.view,arch_db:account_batch_payment.view_batch_payment_form
 msgid "Re-generate Export File"
-msgstr "Regenerar el archivo de exportación"
+msgstr "Volver a generar el archivo de exportación"
 
 #. module: account_batch_payment
 #: model_terms:ir.ui.view,arch_db:account_batch_payment.print_batch_payment
@@ -834,7 +847,8 @@ msgstr "TOTAL"
 #: code:addons/account_batch_payment/models/account_batch_payment.py:0
 msgid ""
 "Target another recipient account or allow sending money to the current one."
-msgstr "Use una cuenta receptora diferente o permita enviar dinero a la actual."
+msgstr ""
+"Use una cuenta receptora diferente o permita enviar dinero a la actual."
 
 #. module: account_batch_payment
 #: model_terms:ir.ui.view,arch_db:account_batch_payment.batch_error_wizard_form
@@ -869,11 +883,16 @@ msgstr ""
 "muestran en este asistente."
 
 #. module: account_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_batch_payment.view_batch_payment_form
+msgid "The country or city of"
+msgstr "El país o ciudad de"
+
+#. module: account_batch_payment
 #. odoo-python
 #: code:addons/account_batch_payment/models/account_batch_payment.py:0
 msgid ""
-"The journal of the batch payment and of the payments it contains must be the"
-" same."
+"The journal of the batch payment and of the payments it contains must be the "
+"same."
 msgstr ""
 "El diario del pago por lote debe ser el mismo que los pagos que contiene."
 
@@ -900,8 +919,8 @@ msgstr "Total"
 #. module: account_batch_payment
 #: model:ir.model.fields,help:account_batch_payment.field_account_batch_error_wizard__show_remove_options
 msgid ""
-"True if and only if the options to remove the payments causing the errors or"
-" warnings from the batch should be shown"
+"True if and only if the options to remove the payments causing the errors or "
+"warnings from the batch should be shown"
 msgstr ""
 "'True' solo si se deben mostrar las opciones para quitar los pagos que están "
 "generando errores o advertencias dentro de un lote."
@@ -984,3 +1003,14 @@ msgstr "No puede crear pagos por lote con pagos que ya están en otro lote."
 #: code:addons/account_batch_payment/models/account_batch_payment.py:0
 msgid "You cannot create batches with overlapping payments."
 msgstr "No puede crear lotes con pagos superpuestos."
+
+#. module: account_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_batch_payment.view_batch_payment_form
+msgid "is not set, which could cause the file to be refused by the bank."
+msgstr ""
+"no está establecido, lo cual podría causar que el banco rechace el archivo."
+
+#. module: account_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_batch_payment.view_batch_payment_form
+msgid "these partners"
+msgstr "estos contactos"

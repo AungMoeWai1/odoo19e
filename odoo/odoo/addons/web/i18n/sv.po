@@ -25,21 +25,23 @@
 # Kim Asplund <kim.asplund@gmail.com>, 2023
 # Daniel Osser <danielosser@gmail.com>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Hanna Kharraziha <hakha@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-30 18:36+0000\n"
-"PO-Revision-Date: 2025-09-16 21:14+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
-"Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/web/sv/"
-">\n"
+"POT-Creation-Date: 2026-02-06 18:36+0000\n"
+"PO-Revision-Date: 2026-02-20 17:16+0000\n"
+"Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
+"Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/web/sv/>"
+"\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: web
 #. odoo-javascript
@@ -556,8 +558,8 @@ msgstr "<span id=\"line_tax_ids\">15%</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
-msgid "<span itemprop=\"name\">Deco Addict</span>"
-msgstr "<span itemprop=\"name\">Deco Addict</span>"
+msgid "<span itemprop=\"name\">Acme Corporation</span>"
+msgstr ""
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -824,7 +826,7 @@ msgstr "Ace-redigerare"
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/actions/debug_items.js:0
 msgid "Action"
-msgstr "Åtgärder"
+msgstr "Åtgärd"
 
 #. module: web
 #. odoo-javascript
@@ -2137,7 +2139,7 @@ msgstr "Skapa %s"
 #. module: web
 #: model:ir.model,website_form_label:web.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "Skapa en kund"
 
 #. module: web
 #. odoo-javascript
@@ -2191,7 +2193,7 @@ msgstr "Valuta"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
 msgid "Currency field"
-msgstr ""
+msgstr "Valuta fält"
 
 #. module: web
 #. odoo-javascript
@@ -2313,7 +2315,7 @@ msgstr "Datum & tid"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 msgid "Date Format"
-msgstr ""
+msgstr "Datumformat"
 
 #. module: web
 #. odoo-javascript
@@ -2907,7 +2909,7 @@ msgstr ""
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login
 msgid "Enter your password"
-msgstr ""
+msgstr "Ange ditt lösenord"
 
 #. module: web
 #. odoo-javascript
@@ -3465,7 +3467,7 @@ msgstr "Startmeny"
 #. odoo-javascript
 #: code:addons/web/static/src/search/utils/dates.js:0
 msgid "Hour"
-msgstr ""
+msgstr "Timme"
 
 #. module: web
 #. odoo-python
@@ -3489,7 +3491,7 @@ msgstr "Så här hämtar du applikationen"
 #. odoo-javascript
 #: code:addons/web/static/src/core/color_picker/custom_color_picker/custom_color_picker.xml:0
 msgid "Hue"
-msgstr ""
+msgstr "Färgton"
 
 #. module: web
 #. odoo-javascript
@@ -3566,6 +3568,14 @@ msgstr ""
 "på den. Observera att om ett färgfält också har angetts, kommer taggens "
 "utgåva att gälla. Färgväljaren kommer alltså inte att visas när du klickar "
 "på taggen."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/json_checkboxes/json_checkboxes_field.js:0
+msgid ""
+"If checked, the checkboxes will be displayed in a column. Otherwise, they "
+"will be inlined."
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -4152,13 +4162,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_components.js:0
 msgid "Last 30 days"
-msgstr ""
+msgstr "Senaste 30 dagarna"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_components.js:0
 msgid "Last 7 days"
-msgstr ""
+msgstr "Senaste 7 dagarna"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__write_uid
@@ -4176,7 +4186,7 @@ msgstr "Senast uppdaterad den"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_components.js:0
 msgid "Last month"
-msgstr ""
+msgstr "Förra månaden"
 
 #. module: web
 #. odoo-javascript
@@ -4319,7 +4329,7 @@ msgstr "Logga ut"
 #. odoo-python
 #: code:addons/web/controllers/home.py:0
 msgid "Login"
-msgstr ""
+msgstr "Inloggning"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_bold
@@ -4524,6 +4534,12 @@ msgstr "Vintergatan"
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 msgid "Minimal precision"
 msgstr "Minimal precision"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/float/float_field.js:0
+msgid "Minimum Digits"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -4938,6 +4954,12 @@ msgid "No data to display"
 msgstr "Ingen data att visa"
 
 #. module: web
+#. odoo-python
+#: code:addons/web/controllers/pivot.py:0
+msgid "No data to export"
+msgstr ""
+
+#. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/debug/debug_menu.js:0
 msgid "No debug command found"
@@ -5004,7 +5026,7 @@ msgstr "Inga resultat hittade"
 #. odoo-javascript
 #: code:addons/web/static/src/core/select_menu/select_menu.xml:0
 msgid "No results"
-msgstr ""
+msgstr "Inga resultat"
 
 #. module: web
 #. odoo-javascript
@@ -5230,7 +5252,6 @@ msgstr "Åh, sjutton också!"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/confirmation_dialog/confirmation_dialog.js:0
-#: code:addons/web/static/src/core/dialog/dialog.xml:0
 #: code:addons/web/static/src/public/error_notifications.js:0
 #: code:addons/web/static/src/views/calendar/calendar_year/calendar_year_popover.xml:0
 #: code:addons/web/static/src/views/view_dialogs/form_view_dialog.xml:0
@@ -5733,7 +5754,7 @@ msgstr "Fastigheter"
 #. module: web
 #: model:ir.model,name:web.model_properties_base_definition
 msgid "Properties Base Definition"
-msgstr ""
+msgstr "Egenskaper Bas Definition"
 
 #. module: web
 #. odoo-javascript
@@ -5913,7 +5934,7 @@ msgstr "Referens"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/domain/domain_field.xml:0
 msgid "Refresh"
-msgstr "Ladda om"
+msgstr "Uppdatera"
 
 #. module: web
 #. odoo-javascript
@@ -5943,7 +5964,7 @@ msgstr "Relationell tabell"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/image/image_field.js:0
 msgid "Reload"
-msgstr "Ladda om"
+msgstr "Uppdatera"
 
 #. module: web
 #. odoo-javascript
@@ -6395,7 +6416,7 @@ msgstr "Välj en vy"
 #. odoo-javascript
 #: code:addons/web/static/src/views/view_components/selection_box.xml:0
 msgid "Select all"
-msgstr "Välj alla"
+msgstr "Markera alla"
 
 #. module: web
 #. odoo-javascript
@@ -6668,10 +6689,11 @@ msgstr "Special:"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Speedscope"
-msgstr ""
+msgstr "Speedscope"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/json_checkboxes/json_checkboxes_field.js:0
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
 msgid "Stacked"
 msgstr "Stackad"
@@ -6773,7 +6795,7 @@ msgstr "Stil-fel"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
 msgid "Suffix"
-msgstr ""
+msgstr "Suffix"
 
 #. module: web
 #. odoo-javascript
@@ -6987,6 +7009,12 @@ msgid "The domain should not involve non-literals"
 msgstr ""
 
 #. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/utils/files.js:0
+msgid "The file is not an image, resizing is not possible"
+msgstr ""
+
+#. module: web
 #. odoo-python
 #: code:addons/web/models/res_users_settings_embedded_action.py:0
 msgid "The ids in %(field_name)s must not be duplicated: “%(action_ids)s”"
@@ -7010,6 +7038,12 @@ msgid ""
 msgstr ""
 "Operationen avbröts. Detta innebär vanligtvis att den aktuella operationen "
 "tar för lång tid."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/utils/files.js:0
+msgid "The resizing of the image failed"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -7663,7 +7697,7 @@ msgstr "Användargränssnitt"
 #. module: web
 #: model:ir.model,name:web.model_res_users_settings
 msgid "User Settings"
-msgstr ""
+msgstr "Användarinställningar"
 
 #. module: web
 #: model:ir.model,name:web.model_res_users_settings_embedded_action
@@ -7827,6 +7861,7 @@ msgstr "WC"
 #: code:addons/web/static/src/core/errors/error_dialogs.js:0
 #: code:addons/web/static/src/search/control_panel/control_panel.js:0
 #: code:addons/web/static/src/views/fields/domain/domain_field.xml:0
+#: code:addons/web/static/src/views/fields/json_checkboxes/json_checkboxes_field.xml:0
 msgid "Warning"
 msgstr "Varning"
 
@@ -8153,7 +8188,7 @@ msgstr "tillbehör"
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "accounting"
-msgstr "redovisning"
+msgstr "bokföring"
 
 #. module: web
 #. odoo-javascript
@@ -8231,7 +8266,7 @@ msgstr "aesculapius"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
 msgid "after"
-msgstr ""
+msgstr "efter"
 
 #. module: web
 #. odoo-javascript
@@ -8686,7 +8721,7 @@ msgstr "automatiserad"
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "automobile"
-msgstr "fordon"
+msgstr "bil"
 
 #. module: web
 #. odoo-javascript
@@ -9334,7 +9369,7 @@ msgstr "bikini"
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "bill"
-msgstr "räkning"
+msgstr "leverantörsfaktura"
 
 #. module: web
 #. odoo-javascript
@@ -21472,7 +21507,7 @@ msgstr "religion"
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "reload"
-msgstr "ladda om"
+msgstr "uppdatera"
 
 #. module: web
 #. odoo-javascript
@@ -26971,6 +27006,9 @@ msgstr "\"ledig tjänst\""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "ココ"
 msgstr "ココ"
+
+#~ msgid "<span itemprop=\"name\">Deco Addict</span>"
+#~ msgstr "<span itemprop=\"name\">Deco Addict</span>"
 
 #~ msgid "Angle"
 #~ msgstr "Vinkel"

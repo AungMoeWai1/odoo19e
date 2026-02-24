@@ -6,7 +6,9 @@ import { rpc } from "@web/core/network/rpc";
 export const unpatchSelf = patch(PosData.prototype, {
     async loadInitialData() {
         const configId = session.data.config_id;
-        return await rpc(`/pos-self/data/${parseInt(configId)}`);
+        return await rpc(`/pos-self/data/${parseInt(configId)}`, {
+            access_token: odoo.access_token,
+        });
     },
     async loadFieldsAndRelations() {
         const configId = session.data.config_id;
@@ -47,4 +49,9 @@ export const unpatchSelf = patch(PosData.prototype, {
         return recordMap;
     },
     async checkAndDeleteMissingOrders(results) {},
+    async deleteRecordsInIndexedDB(model, ids) {
+        return session.data.self_ordering_mode === "mobile"
+            ? await super.deleteRecordsInIndexedDB(...arguments)
+            : true;
+    },
 });

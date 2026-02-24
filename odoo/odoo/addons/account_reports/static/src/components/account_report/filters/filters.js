@@ -70,6 +70,10 @@ export class AccountReportFilters extends Component {
             'integer_rounding_enabled': {
                 'name': _t("Integer Rounding"),
             },
+            'consolidation': {
+                'name': _t("Consolidation"),
+                'show': this.controller.cachedFilterOptions.show_consolidation,
+            },
             'hide_0_lines': {
                 'name': _t("Hide lines at 0"),
                 'ui_filter': true,
@@ -585,11 +589,7 @@ export class AccountReportFilters extends Component {
 
     get shouldDisplayReturnPeriod() {
         const periodicitySettings = this.controller.cachedFilterOptions.return_periodicity;
-        if (periodicitySettings) {
-            return periodicitySettings.start_day !== 1 || periodicitySettings.start_month !== 1 || ![1, 3, 12].includes(periodicitySettings.months_per_period);
-        }
-
-        return false;
+        return periodicitySettings?.is_filter_visible ?? false;
     }
 
     displayPeriod(periodType) {
@@ -823,11 +823,16 @@ export class AccountReportFilters extends Component {
 
         this.controller.lines = await this.controller.orm.call(
             "account.report",
-            "format_column_values",
+            "dispatch_report_action",
             [
+                this.controller.cachedFilterOptions.report_id,
                 this.controller.cachedFilterOptions,
+                "format_column_values_from_client",
                 this.controller.lines,
             ],
+            {
+                context: this.controller.context,
+            }
         );
     }
 

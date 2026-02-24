@@ -1,19 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* theme_artists
+# * theme_artists
 #
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-01 12:58+0000\n"
-"PO-Revision-Date: 2025-07-01 12:58+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"POT-Creation-Date: 2025-10-09 10:55+0000\n"
+"PO-Revision-Date: 2025-11-19 10:30+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Azerbaijani <https://translate.odoo.com/projects/odoo-19/"
+"theme_artists/az/>\n"
+"Language: az\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: theme_artists
 #: model_terms:theme.ir.ui.view,arch:theme_artists.s_quotes_carousel_minimal
@@ -31,7 +35,8 @@ msgstr ""
 
 #. module: theme_artists
 #: model_terms:theme.ir.ui.view,arch:theme_artists.s_quotes_carousel_minimal
-msgid "\" Their creativity transformed our vision. Unique and truly inspiring. \""
+msgid ""
+"\" Their creativity transformed our vision. Unique and truly inspiring. \""
 msgstr ""
 
 #. module: theme_artists
@@ -91,7 +96,9 @@ msgstr ""
 
 #. module: theme_artists
 #: model_terms:theme.ir.ui.view,arch:theme_artists.s_carousel
-msgid "<a href=\"#\" class=\"btn btn-primary btn-lg o_translate_inline\">Discover</a>"
+msgid ""
+"<a href=\"#\" class=\"btn btn-primary btn-lg o_translate_inline\">Discover</"
+"a>"
 msgstr ""
 
 #. module: theme_artists
@@ -101,7 +108,8 @@ msgstr ""
 
 #. module: theme_artists
 #: model_terms:theme.ir.ui.view,arch:theme_artists.s_three_columns
-msgid "<a href=\"#\" class=\"btn btn-primary o_translate_inline\">More details</a>"
+msgid ""
+"<a href=\"#\" class=\"btn btn-primary o_translate_inline\">More details</a>"
 msgstr ""
 
 #. module: theme_artists
@@ -144,11 +152,11 @@ msgstr ""
 #. module: theme_artists
 #: model_terms:theme.ir.ui.view,arch:theme_artists.s_split_intro
 msgid ""
-"<br/>Step into a new artistic era with our innovative techniques designed to"
-" elevate your unique style. From refining your skills to expanding your "
+"<br/>Step into a new artistic era with our innovative techniques designed to "
+"elevate your unique style. From refining your skills to expanding your "
 "creative horizons, our tools provide the foundation for lasting impact. "
-"Don’t let outdated methods limit your artistic potential any "
-"longer.<br/><br/>"
+"Don’t let outdated methods limit your artistic potential any longer.<br/><br/"
+">"
 msgstr ""
 
 #. module: theme_artists
@@ -159,7 +167,8 @@ msgstr ""
 #. module: theme_artists
 #: model_terms:theme.ir.ui.view,arch:theme_artists.s_big_number
 msgid ""
-"<font class=\"text-gradient\" style=\"background-image: linear-gradient(0deg, var(--o-color-1) 25%, var(--o-color-4) 90%);\">\n"
+"<font class=\"text-gradient\" style=\"background-image: linear-"
+"gradient(0deg, var(--o-color-1) 25%, var(--o-color-4) 90%);\">\n"
 "            250+\n"
 "        </font>"
 msgstr ""
@@ -186,8 +195,8 @@ msgstr ""
 #. module: theme_artists
 #: model_terms:theme.ir.ui.view,arch:theme_artists.s_pricelist_boxed
 msgid ""
-"A tranquil garden scene that blends soft greens and pastel flowers, creating"
-" a peaceful and calming atmosphere."
+"A tranquil garden scene that blends soft greens and pastel flowers, creating "
+"a peaceful and calming atmosphere."
 msgstr ""
 
 #. module: theme_artists
@@ -332,7 +341,7 @@ msgstr ""
 #. module: theme_artists
 #: model_terms:theme.ir.ui.view,arch:theme_artists.s_cta_box
 msgid "Discover"
-msgstr ""
+msgstr "Kəşf edin"
 
 #. module: theme_artists
 #: model_terms:theme.ir.ui.view,arch:theme_artists.s_image_text
@@ -379,7 +388,7 @@ msgstr ""
 #. module: theme_artists
 #: model:ir.model.fields,field_description:theme_artists.field_theme_utils__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Göstəriləcək Ad"
 
 #. module: theme_artists
 #: model_terms:theme.ir.ui.view,arch:theme_artists.s_cards_grid
@@ -425,8 +434,8 @@ msgstr ""
 #. module: theme_artists
 #: model_terms:theme.ir.ui.view,arch:theme_artists.s_cta_box
 msgid ""
-"Elevate your space with the unique wonders of artistic "
-"craftsmanship.<br/><br/>"
+"Elevate your space with the unique wonders of artistic craftsmanship.<br/"
+"><br/>"
 msgstr ""
 
 #. module: theme_artists
@@ -448,8 +457,8 @@ msgstr ""
 #. module: theme_artists
 #: model_terms:theme.ir.ui.view,arch:theme_artists.s_carousel_intro
 msgid ""
-"Enhance your talent with our exclusive guidance, showcasing the best version"
-" of your artistic expression, every day."
+"Enhance your talent with our exclusive guidance, showcasing the best version "
+"of your artistic expression, every day."
 msgstr ""
 
 #. module: theme_artists
@@ -502,9 +511,9 @@ msgstr ""
 #. module: theme_artists
 #: model_terms:theme.ir.ui.view,arch:theme_artists.s_freegrid
 msgid ""
-"Explore our carefully curated selection of artworks that push the boundaries"
-" of creativity and innovation. Our galleries showcase the finest pieces that"
-" inspire and captivate."
+"Explore our carefully curated selection of artworks that push the boundaries "
+"of creativity and innovation. Our galleries showcase the finest pieces that "
+"inspire and captivate."
 msgstr ""
 
 #. module: theme_artists
@@ -549,7 +558,7 @@ msgstr ""
 #. module: theme_artists
 #: model:ir.model.fields,field_description:theme_artists.field_theme_utils__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: theme_artists
 #: model_terms:theme.ir.ui.view,arch:theme_artists.s_carousel
@@ -559,8 +568,8 @@ msgstr ""
 #. module: theme_artists
 #: model_terms:theme.ir.ui.view,arch:theme_artists.s_quadrant
 msgid ""
-"Immerse yourself in the world of art. Our galleries showcase a diverse range"
-" of creativity, from paintings to photography.<br/><br/> Discover the works "
+"Immerse yourself in the world of art. Our galleries showcase a diverse range "
+"of creativity, from paintings to photography.<br/><br/> Discover the works "
 "that speak to your soul and elevate your space."
 msgstr ""
 
@@ -582,7 +591,7 @@ msgstr ""
 #. module: theme_artists
 #: model_terms:theme.ir.ui.view,arch:theme_artists.s_text_cover
 msgid "Learn more"
-msgstr ""
+msgstr "Daha çox Məlumat Əldə et"
 
 #. module: theme_artists
 #: model_terms:theme.ir.ui.view,arch:theme_artists.s_card_offset
@@ -678,8 +687,7 @@ msgstr ""
 
 #. module: theme_artists
 #: model_terms:theme.ir.ui.view,arch:theme_artists.s_carousel_intro
-msgid ""
-"Refresh your portfolio with our expert advice and unique opportunities."
+msgid "Refresh your portfolio with our expert advice and unique opportunities."
 msgstr ""
 
 #. module: theme_artists
@@ -734,7 +742,7 @@ msgstr ""
 #. module: theme_artists
 #: model:ir.model,name:theme_artists.model_theme_utils
 msgid "Theme Utils"
-msgstr ""
+msgstr "Tema Utilləri"
 
 #. module: theme_artists
 #: model_terms:theme.ir.ui.view,arch:theme_artists.s_pricelist_boxed

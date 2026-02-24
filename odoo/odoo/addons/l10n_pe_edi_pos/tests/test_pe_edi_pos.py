@@ -1,7 +1,9 @@
 import base64
 
+from odoo.addons.account_edi.tests.common import AccountTestInvoicingCommon
 from odoo.addons.l10n_pe_edi.tests.common import TestPeEdiCommon
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
+from odoo.addons.point_of_sale.tests.test_generic_localization import TestGenericLocalization
 from odoo.tests import tagged
 from odoo import Command, fields
 from unittest.mock import patch
@@ -150,6 +152,7 @@ class TestPeEdiPoS(TestPeEdiCommon, TestPointOfSaleHttpCommon):
             "amount_tax": -180.0,
             "amount_paid": -1180.0,
             "amount_return": 0.0,
+            'is_refund': True,
         })
         refund_order.refunded_order_id = original_order
         try:
@@ -160,3 +163,11 @@ class TestPeEdiPoS(TestPeEdiCommon, TestPointOfSaleHttpCommon):
         refund_order.write({"l10n_pe_edi_refund_reason": "01"})
         refund_invoice = refund_order._generate_pos_order_invoice()
         self.assertEqual(refund_invoice.l10n_pe_edi_refund_reason, "01")
+
+
+@tagged('post_install', '-at_install', 'post_install_l10n')
+class TestGenericPE(TestGenericLocalization):
+    @classmethod
+    @AccountTestInvoicingCommon.setup_country('pe')
+    def setUpClass(cls):
+        super().setUpClass()

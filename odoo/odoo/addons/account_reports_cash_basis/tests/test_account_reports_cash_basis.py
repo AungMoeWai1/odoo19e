@@ -8,7 +8,7 @@ from odoo import fields, Command
 from odoo.addons.account_reports.tests.common import TestAccountReportsCommon
 
 
-@tagged('post_install', '-at_install')
+@tagged('post_install_l10n', 'post_install', '-at_install')
 class TestAccountReports(TestAccountReportsCommon):
     @classmethod
     def _reconcile_on(cls, lines, account):
@@ -326,7 +326,7 @@ class TestAccountReports(TestAccountReportsCommon):
                 ('121000 Account Receivable',          500,            500,              0),
                 ('400000 Product Sales',                 0,             60,            -60),
                 ('499000 Other Income',                  0,            150,           -150),
-                ('999999 Undistributed Profits/Losses',  0,            140,           -140),
+                ('Undistributed Profits/Losses - company_1_data',  0,            140,           -140),
                 # Report Total.
                 ('Total General Ledger',               850,            850,              0),
             ],
@@ -372,27 +372,27 @@ class TestAccountReports(TestAccountReportsCommon):
         options['report_cash_basis'] = True
         options['ignore_totals_below_sections'] = True
         parent_line_id = report._get_generic_line_id(model_name='account.report.line', value=self.env.ref("account_reports.general_ledger_custom_engine_line").id)
-        account_revenue_line_id = report._get_generic_line_id(model_name='account.account', value=self.company_data['default_account_revenue'].id, markup={'groupby': 'account_or_unaff_id'}, parent_line_id=parent_line_id)
+        account_revenue_line_id = report._get_generic_line_id(model_name='account.account', value=self.company_data['default_account_revenue'].id, markup={'groupby': 'account_id'}, parent_line_id=parent_line_id)
         options['unfolded_lines'] = [account_revenue_line_id]
 
         lines = report._get_lines(options)
         self.assertLinesValues(
             lines,
-            #   Name                                    Debit       Credit     Balance
+            #   Name                                                Debit       Credit     Balance
             [0, 4, 5, 6],
             [
                 # Accounts.
-                ('101401 Bank',                         460.0,      0,          460.0),
-                ('101403 Outstanding Receipts',         3000.0,     0,          3000.0),
-                ('121000 Account Receivable',           3460.0,     3460.0,     0.0),
+                ('101401 Bank',                                      460.0,          0,       460.0),
+                ('101403 Outstanding Receipts',                     3000.0,          0,      3000.0),
+                ('121000 Account Receivable',                       3460.0,     3460.0,         0.0),
                 # Expanded line
-                ('400000 Product Sales',                0,          3000.0,     -3000.0),
-                ('INV/2023/00001 test line',            0,          2000.0,     -2000.0),  # All lines are grouped if they are on the same date with the same id
-                ('INV/2023/00001 test line',            0,          500.0,      -2500.0),
-                ('Load more...',                        '',         '',          ''),
-                ('999999 Undistributed Profits/Losses', 0,          460.0,      -460.0),
+                ('400000 Product Sales',                                 0,     3000.0,     -3000.0),
+                ('INV/2023/00001 test line',                             0,     2000.0,     -2000.0),  # All lines are grouped if they are on the same date with the same id
+                ('INV/2023/00001 test line',                             0,      500.0,     -2500.0),
+                ('Load more...',                                        '',         '',          ''),
+                ('Undistributed Profits/Losses - company_1_data',        0,      460.0,      -460.0),
                 # Report Total.
-                ('Total General Ledger',                6920.0,     6920.0,     0),
+                ('Total General Ledger',                            6920.0,     6920.0,           0),
             ],
             options,
         )
@@ -1066,7 +1066,7 @@ class TestAccountReports(TestAccountReportsCommon):
                 ('121000 Account Receivable',           460.0,      460.0,      0.0),
                 (receivable_account_2.display_name,     70.0,       70.0,       0.0),
                 ('400000 Product Sales',                0.0,        70.0,     -70.0),
-                ('999999 Undistributed Profits/Losses', 0.0,        460.0,   -460.0),
+                ('Undistributed Profits/Losses - company_1_data', 0.0,        460.0,   -460.0),
                 # Report Total.
                 ('Total General Ledger',                1060.0,     1060.0,     0.0),
             ],
@@ -1112,7 +1112,7 @@ class TestAccountReports(TestAccountReportsCommon):
                 (receivable_account_2.display_name,     70.0,       70.0,       0.0),
                 (receivable_account_3.display_name,     80.0,       80.0,       0.0),
                 ('400000 Product Sales',                0.0,        150.0,   -150.0),
-                ('999999 Undistributed Profits/Losses', 0.0,        460.0,   -460.0),
+                ('Undistributed Profits/Losses - company_1_data', 0.0,        460.0,   -460.0),
                 # Report Total.
                 ('Total General Ledger',                1220.0,     1220.0,     0.0),
             ],

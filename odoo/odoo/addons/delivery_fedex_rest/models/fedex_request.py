@@ -7,7 +7,7 @@ from requests import RequestException
 
 from odoo import _
 from odoo.exceptions import ValidationError, UserError
-from odoo.tools import float_repr
+from odoo.tools import float_repr, remove_accents
 
 TEST_BASE_URL = "https://apis-sandbox.fedex.com"
 PROD_BASE_URL = "https://apis.fedex.com"
@@ -69,6 +69,16 @@ FEDEX_MX_STATE_MATCH = {
     'VER': 'VE',
     'YUC': 'YU',
     'ZAC': 'ZA'
+}
+
+FEDEX_AE_STATE_MATCH = {
+    'AZ': 'AB',
+    'AJ': 'AJ',
+    'DU': 'DU',
+    'FU': 'FU',
+    'RK': 'RA',
+    'SH': 'SH',
+    'UQ': 'UM',
 }
 
 FEDEX_STOCK_TYPE_MATCH = {
@@ -197,7 +207,7 @@ class FedexRequest:
         else:
             # For other countries, keep the part after the hyphen
             split_code = state_code.split('-')
-            if split_code[0] == country_code:
+            if split_code[0] == country_code and len(split_code) > 1:
                 return split_code[1]
             else:
                 return state_code
@@ -205,7 +215,7 @@ class FedexRequest:
     def _get_location_from_partner(self, partner, check_residential=False):
         res = {'countryCode': partner.country_id.code}
         if partner.city:
-            res['city'] = partner.city
+            res['city'] = remove_accents(partner.city)
         if partner.zip:
             res['postalCode'] = partner.zip
         if partner.state_id:
@@ -213,9 +223,12 @@ class FedexRequest:
         # need to adhere to two character length state code
             if partner.country_id.code == 'MX':
                 state_code = FEDEX_MX_STATE_MATCH[state_code]
+            if partner.country_id.code == 'AE':
+                state_code = FEDEX_AE_STATE_MATCH.get(state_code, state_code)
             if partner.country_id.code == 'IN' and partner.state_id.code == 'UK':
                 state_code = 'UT'
-            res['stateOrProvinceCode'] = state_code
+            if len(state_code) <= 2:
+                res['stateOrProvinceCode'] = state_code
         if check_residential:
             setting = self.check_residential
             if setting == 'always' or (setting == 'check' and self._check_residential_address({**res, 'streetLines': [partner.street, partner.street2]})):
@@ -232,9 +245,9 @@ class FedexRequest:
 
     def _get_address_from_partner(self, partner, check_residential=False):
         res = self._get_location_from_partner(partner, check_residential)
-        res['streetLines'] = [partner.street]
+        res['streetLines'] = [remove_accents(partner.street)]
         if partner.street2:
-            res['streetLines'].append(partner.street2)
+            res['streetLines'].append(remove_accents(partner.street2))
         return res
 
     def _get_contact_from_partner(self, partner, company_partner=False):
@@ -253,6 +266,8 @@ class FedexRequest:
             res['personName'] = partner.name[:70]
             if partner.parent_id:
                 res['companyName'] = partner.parent_id.name[:35]
+            elif partner.company_name:
+                res['companyName'] = partner.company_name[:35]
         if partner.email:
             res['emailAddress'] = partner.email
         elif company_partner and company_partner.email:
@@ -466,7 +481,7 @@ class FedexRequest:
             details = shipment['completedShipmentDetail']
             pieces = shipment['pieceResponses']
             # Sometimes the shipment might be created but no pricing calculated, we just set to 0.
-            price = self._decode_pricing(details['shipmentRating']) if 'shipmentRating' in details else 0.0
+            price = self._decode_pricing(details['shipmentRating'], fedex_currency) if 'shipmentRating' in details else 0.0
         except KeyError:
             raise ValidationError(_('Could not decode response')) from None
 
@@ -576,8 +591,13 @@ class FedexRequest:
             'alert_message': self._process_alerts(shipment),
         }
 
-    def _decode_pricing(self, rating_result):
-        actual = next(filter(lambda d: d['rateType'] == rating_result['actualRateType'], rating_result['shipmentRateDetails']), {})
+    def _decode_pricing(self, rating_result, request_currency=False):
+        actual = next(filter(
+            lambda d:
+                d['rateType'] in [rating_result['actualRateType'], rating_result['actualRateType'].replace("PAYOR", "PREFERRED").replace("RATED", "PREFERRED")] and
+                (not request_currency or d['currency'] == request_currency),
+            rating_result['shipmentRateDetails']
+        ), {})
         if actual.get('totalNetChargeWithDutiesAndTaxes', False):
             return actual['totalNetChargeWithDutiesAndTaxes']
         return actual['totalNetCharge']

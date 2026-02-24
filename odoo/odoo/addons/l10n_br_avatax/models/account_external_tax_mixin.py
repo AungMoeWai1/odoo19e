@@ -475,6 +475,31 @@ class AccountExternalTaxMixin(models.AbstractModel):
         self._l10n_br_remove_temp_values_lines(lines)
         self._l10n_br_repr_amounts(lines)
 
+        partner_shipping_id = params['partner_shipping']
+        partner_shipping_location = {}
+        if partner_shipping_id != partner:
+            partner_shipping_content = {
+                'name': partner_shipping_id.display_name,
+                'businessName': partner_shipping_id.display_name,
+                'type': self._l10n_br_get_partner_type(partner_shipping_id),
+                'federalTaxId': partner_shipping_id.vat,
+                'cityTaxId': partner_shipping_id.l10n_br_im_code,
+                'suframa': partner_shipping_id.l10n_br_isuf_code or '',
+                'address': {
+                    'number': partner_shipping_id.street_number,
+                    'complement': partner_shipping_id.street_number2,
+                    'street': partner_shipping_id.street,
+                    'neighborhood': partner_shipping_id.street2,
+                    'zipcode': partner_shipping_id.zip,
+                    'cityName': partner_shipping_id.city,
+                    'state': partner_shipping_id.state_id.code,
+                    'phone': partner_shipping_id.phone,
+                    'email': partner_shipping_id.email
+                }
+            }
+            key = 'rendered' if is_service else 'delivery'
+            partner_shipping_location[key] = partner_shipping_content
+
         taxes_settings_customer = self._l10n_br_get_taxes_settings(is_service, partner)
         taxes_settings_company = self._l10n_br_get_taxes_settings(is_service, company_partner)
         if company_partner.l10n_br_tax_regime == 'simplified':
@@ -533,6 +558,7 @@ class AccountExternalTaxMixin(models.AbstractModel):
                         'federalTaxId': company_partner.vat,
                         'suframa': company_partner.l10n_br_isuf_code or '',
                     },
+                    **partner_shipping_location,
                 },
                 **payments,
             },
@@ -542,13 +568,15 @@ class AccountExternalTaxMixin(models.AbstractModel):
     @api.model
     def _extract_tax_values_from_l10n_br_avatax_detail(self, service_params, line_detail, tax_detail):
         tax_amount = tax_detail['tax']
-        if service_params['is_return']:
-            tax_amount = -tax_amount
 
         if tax_detail['taxImpact']['impactOnNetAmount'] == 'Subtracted':
             tax_amount *= -1
 
-        base_amount_currency = line_detail['lineNetFigure'] - line_detail['lineTaxedDiscount']
+        base_amount_currency = line_detail['lineNetFigure']
+        # The service API already accounts for the discount in the net figure.
+        if not service_params['is_service']:
+            base_amount_currency -= line_detail['lineTaxedDiscount']
+
         return (
             {'name': 'Avalara Brazil', 'company_id': service_params['company'].id},
             {
@@ -558,6 +586,7 @@ class AccountExternalTaxMixin(models.AbstractModel):
                 'amount': 1,
                 'amount_type': 'percent',
                 'price_include_override': 'tax_included' if tax_detail['taxImpact']['impactOnNetAmount'] == 'Included' else 'tax_excluded',
+                **({'type_tax_use': self.invoice_filter_type_domain} if 'invoice_filter_type_domain' in self._fields else {})
             },
             {'tax_amount_currency': tax_amount, 'base_amount_currency': base_amount_currency},
         )

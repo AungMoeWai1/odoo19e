@@ -6,23 +6,24 @@
 # Martin Trigaux, 2022
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 16:01+0000\n"
-"PO-Revision-Date: 2025-09-16 22:56+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2025-12-30 18:42+0000\n"
+"PO-Revision-Date: 2025-11-16 05:26+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-19/"
 "delivery_bpost/uk/>\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 "
-"? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > "
-"14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % "
-"100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
+"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
+"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
+"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: delivery_bpost
@@ -128,6 +129,12 @@ msgid "Destroy"
 msgstr "Знищити"
 
 #. module: delivery_bpost
+#: model:ir.model.fields,field_description:delivery_bpost.field_delivery_carrier__display_name
+#: model:ir.model.fields,field_description:delivery_bpost.field_stock_package_type__display_name
+msgid "Display Name"
+msgstr "Назва для відображення"
+
+#. module: delivery_bpost
 #: model:ir.model.fields.selection,name:delivery_bpost.selection__delivery_carrier__bpost_delivery_nature__domestic
 msgid "Domestic"
 msgstr "Вітчизняний"
@@ -141,6 +148,12 @@ msgstr "ПОДАРУНОК"
 #: model:ir.model.fields.selection,name:delivery_bpost.selection__delivery_carrier__bpost_shipment_type__goods
 msgid "GOODS"
 msgstr "ТОВАРИ"
+
+#. module: delivery_bpost
+#: model:ir.model.fields,field_description:delivery_bpost.field_delivery_carrier__id
+#: model:ir.model.fields,field_description:delivery_bpost.field_stock_package_type__id
+msgid "ID"
+msgstr "ID"
 
 #. module: delivery_bpost
 #: model:ir.model.fields.selection,name:delivery_bpost.selection__delivery_carrier__bpost_delivery_nature__international
@@ -203,13 +216,13 @@ msgstr "Провайдер"
 #. odoo-python
 #: code:addons/delivery_bpost/models/delivery_bpost.py:0
 msgid "Return labels created into bpost"
-msgstr ""
+msgstr "Повернення етикетон, створених в bpost"
 
 #. module: delivery_bpost
 #. odoo-python
 #: code:addons/delivery_bpost/models/delivery_bpost.py:0
 msgid "Return shipment created into bpost"
-msgstr ""
+msgstr "Повернення відправлення створене в bpost"
 
 #. module: delivery_bpost
 #: model:ir.model.fields.selection,name:delivery_bpost.selection__delivery_carrier__bpost_parcel_return_instructions__rta
@@ -236,7 +249,7 @@ msgstr "Доставку №%s було скасовано"
 #. odoo-python
 #: code:addons/delivery_bpost/models/delivery_bpost.py:0
 msgid "Shipment created into bpost"
-msgstr ""
+msgstr "Доставка, створена в bpost"
 
 #. module: delivery_bpost
 #: model:ir.model,name:delivery_bpost.model_delivery_carrier
@@ -258,16 +271,20 @@ msgstr "Послуга доставки BPost не відповідає, пов�
 #. odoo-python
 #: code:addons/delivery_bpost/models/bpost_request.py:0
 msgid ""
-"The address of your company/warehouse is incomplete or wrong (Missing field(s):  \n"
+"The address of your company/warehouse is incomplete or wrong (Missing "
+"field(s):  \n"
 " %s)"
 msgstr ""
-"Адреса вашої компанії/складу є неповною або неправильною (відсутнє поле(я):  \n"
+"Адреса вашої компанії/складу є неповною або неправильною (відсутнє "
+"поле(я):  \n"
 " %s)"
 
 #. module: delivery_bpost
 #. odoo-python
 #: code:addons/delivery_bpost/models/bpost_request.py:0
-msgid "The estimated shipping price cannot be computed because all your products are service."
+msgid ""
+"The estimated shipping price cannot be computed because all your products "
+"are service."
 msgstr ""
 "Очікувану ціну доставки неможливо порахувати, тому що усі ваші товари - це "
 "послуги."
@@ -276,10 +293,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/delivery_bpost/models/bpost_request.py:0
 msgid ""
-"The estimated shipping price cannot be computed because the weight is missing for the following product(s): \n"
+"The estimated shipping price cannot be computed because the weight is "
+"missing for the following product(s): \n"
 " %s"
 msgstr ""
-"Приблизну ціну доставки неможливо обчислити, оскільки відсутня вага для таких товарів: \n"
+"Приблизну ціну доставки неможливо обчислити, оскільки відсутня вага для "
+"таких товарів: \n"
 " %s"
 
 #. module: delivery_bpost
@@ -296,19 +315,19 @@ msgstr ""
 #. odoo-python
 #: code:addons/delivery_bpost/models/delivery_bpost.py:0
 msgid "Tracking Links"
-msgstr ""
+msgstr "Посилання відстеження"
 
 #. module: delivery_bpost
 #. odoo-python
 #: code:addons/delivery_bpost/models/delivery_bpost.py:0
 msgid "Tracking Number:"
-msgstr ""
+msgstr "Номер відстеження:"
 
 #. module: delivery_bpost
 #. odoo-python
 #: code:addons/delivery_bpost/models/delivery_bpost.py:0
 msgid "Tracking Numbers:"
-msgstr ""
+msgstr "Номери відстеження:"
 
 #. module: delivery_bpost
 #. odoo-python
@@ -320,7 +339,8 @@ msgstr "Ви не можете обчислити парольну фразу д
 #. odoo-python
 #: code:addons/delivery_bpost/models/bpost_request.py:0
 msgid "Your company/warehouse address must be in Belgium to ship with bpost"
-msgstr "Адреса вашої компанії/складу повинні бути в Бельгії, щоб доставити їх з bpost"
+msgstr ""
+"Адреса вашої компанії/складу повинні бути в Бельгії, щоб доставити їх з bpost"
 
 #. module: delivery_bpost
 #: model:ir.model.fields.selection,name:delivery_bpost.selection__delivery_carrier__bpost_domestic_deliver_type__bpack_24h_pro
@@ -371,14 +391,22 @@ msgstr "bpost Тип упаковки за замовчуванням"
 #. module: delivery_bpost
 #. odoo-python
 #: code:addons/delivery_bpost/models/bpost_request.py:0
-msgid "bpost Domestic is used only to ship inside Belgium. Please change the delivery method into bpost International."
-msgstr "Вітчизняний bpost використовується тільки для доставки в Бельгію. Будь-ласка, змініть метод доставки в Міжнародний bpost."
+msgid ""
+"bpost Domestic is used only to ship inside Belgium. Please change the "
+"delivery method into bpost International."
+msgstr ""
+"Вітчизняний bpost використовується тільки для доставки в Бельгію. Будь-"
+"ласка, змініть метод доставки в Міжнародний bpost."
 
 #. module: delivery_bpost
 #. odoo-python
 #: code:addons/delivery_bpost/models/bpost_request.py:0
-msgid "bpost International is used only to ship outside Belgium. Please change the delivery method into bpost Domestic."
-msgstr "Міжнародний bpost використовується лише для доставки за межами Бельгії. Будь ласка, змініть метод доставки на адресу Вітчизняний bpost."
+msgid ""
+"bpost International is used only to ship outside Belgium. Please change the "
+"delivery method into bpost Domestic."
+msgstr ""
+"Міжнародний bpost використовується лише для доставки за межами Бельгії. Будь "
+"ласка, змініть метод доставки на адресу Вітчизняний bpost."
 
 #. module: delivery_bpost
 #: model_terms:ir.ui.view,arch_db:delivery_bpost.res_config_settings_view_form_sale

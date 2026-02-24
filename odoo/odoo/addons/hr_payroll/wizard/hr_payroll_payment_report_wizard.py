@@ -37,8 +37,12 @@ class HrPayrollPaymentReportWizard(models.TransientModel):
         for slip in self.payslip_ids:
             legal_name = slip.employee_id.legal_name
             allocations = slip.compute_salary_allocations()
+            if not allocations:
+                continue
             for ba in slip.employee_id.bank_account_ids:
                 amount = allocations[str(ba.id)]
+                if amount == 0:
+                    continue
                 rows.append((
                     str(index),
                     format_date(self.env, self.effective_date),

@@ -26,6 +26,7 @@ Pro rules and show the errors.
         'data/cii_22_templates.xml',
         'views/account_tax_views.xml',
         'views/res_partner_views.xml',
+        'report/account_edi_ubl_cii_report_templates.xml',
     ],
     'assets': {
         'web.assets_backend': [
@@ -36,4 +37,5 @@ Pro rules and show the errors.
     'auto_install': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
+    'uninstall_hook': 'uninstall_hook',
 }

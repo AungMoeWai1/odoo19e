@@ -3,13 +3,16 @@
 # * hr_contract_salary_payroll
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Thi Huong Nguyen (thng)" <thng@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Odoo Translation Bot <c3p@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-03 18:48+0000\n"
-"PO-Revision-Date: 2025-09-15 23:04+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-01-22 18:43+0000\n"
+"PO-Revision-Date: 2025-11-27 14:16+0000\n"
+"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-19/"
 "hr_contract_salary_payroll/vi/>\n"
 "Language: vi\n"
@@ -17,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: hr_contract_salary_payroll
 #: model_terms:ir.ui.view,arch_db:hr_contract_salary_payroll.hr_employee_view_form
@@ -91,12 +94,12 @@ msgstr ""
 #. module: hr_contract_salary_payroll
 #: model:ir.model,name:hr_contract_salary_payroll.model_hr_applicant
 msgid "Applicant"
-msgstr ""
+msgstr "Ứng viên"
 
 #. module: hr_contract_salary_payroll
 #: model:ir.model,website_form_label:hr_contract_salary_payroll.model_hr_applicant
 msgid "Apply for a Job"
-msgstr ""
+msgstr "Ứng tuyển một công việc"
 
 #. module: hr_contract_salary_payroll
 #: model:ir.model.fields,field_description:hr_contract_salary_payroll.field_hr_contract_salary_benefit__source
@@ -107,17 +110,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_contract_salary_payroll.hr_contract_salary_offer_view_form
 #: model_terms:ir.ui.view,arch_db:hr_contract_salary_payroll.hr_contract_salary_offer_view_form_inherit
 msgid "Benefits"
-msgstr ""
+msgstr "Quyền lợi"
 
 #. module: hr_contract_salary_payroll
 #: model:ir.model.fields,field_description:hr_contract_salary_payroll.field_hr_contract_salary_offer__budget_type
 msgid "Budget Type"
-msgstr ""
+msgstr "Loại ngân sách"
 
 #. module: hr_contract_salary_payroll
 #: model_terms:ir.ui.view,arch_db:hr_contract_salary_payroll.hr_contract_salary_offer_view_form
 msgid "Close"
-msgstr ""
+msgstr "Đóng"
 
 #. module: hr_contract_salary_payroll
 #: model:ir.model.fields,field_description:hr_contract_salary_payroll.field_hr_contract_salary_resume__code
@@ -128,7 +131,7 @@ msgstr "Mã"
 #: model_terms:ir.ui.view,arch_db:hr_contract_salary_payroll.hr_contract_salary_offer_view_form
 #: model_terms:ir.ui.view,arch_db:hr_contract_salary_payroll.hr_contract_salary_offer_view_form_inherit
 msgid "Company cost"
-msgstr ""
+msgstr "Chi phí của công ty"
 
 #. module: hr_contract_salary_payroll
 #: model_terms:ir.ui.view,arch_db:hr_contract_salary_payroll.hr_contract_salary_offer_view_form
@@ -148,12 +151,12 @@ msgstr "Hợp đồng"
 #. module: hr_contract_salary_payroll
 #: model_terms:ir.ui.view,arch_db:hr_contract_salary_payroll.hr_contract_salary_offer_view_form
 msgid "Copy Link"
-msgstr ""
+msgstr "Sao chép liên kết"
 
 #. module: hr_contract_salary_payroll
 #: model:ir.model.fields,field_description:hr_contract_salary_payroll.field_hr_contract_salary_offer__country_id
 msgid "Country"
-msgstr ""
+msgstr "Quốc gia"
 
 #. module: hr_contract_salary_payroll
 #: model:ir.model.fields,field_description:hr_contract_salary_payroll.field_hr_applicant__display_name
@@ -180,7 +183,7 @@ msgstr "Hợp đồng lao động"
 #. module: hr_contract_salary_payroll
 #: model:ir.model.fields,field_description:hr_contract_salary_payroll.field_hr_contract_salary_offer__final_yearly_costs
 msgid "Employer Budget"
-msgstr ""
+msgstr "Ngân sách công ty"
 
 #. module: hr_contract_salary_payroll
 #: model:ir.model.fields,field_description:hr_contract_salary_payroll.field_hr_payroll_headcount_line__employer_cost
@@ -206,7 +209,7 @@ msgstr ""
 #. module: hr_contract_salary_payroll
 #: model:ir.model.fields,field_description:hr_contract_salary_payroll.field_hr_contract_salary_offer__gross_wage
 msgid "Gross Wage"
-msgstr ""
+msgstr "Lương gộp"
 
 #. module: hr_contract_salary_payroll
 #: model:ir.actions.act_window,name:hr_contract_salary_payroll.action_hr_salary_simulator
@@ -239,7 +242,7 @@ msgstr "Tác động Tổng hàng tháng"
 #. module: hr_contract_salary_payroll
 #: model:ir.model.fields,field_description:hr_contract_salary_payroll.field_hr_contract_salary_offer__is_full_time
 msgid "Is Full Time"
-msgstr ""
+msgstr "Đủ thời gian"
 
 #. module: hr_contract_salary_payroll
 #: model:ir.model.fields,field_description:hr_contract_salary_payroll.field_hr_contract_salary_offer__is_simulation_offer
@@ -255,7 +258,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_contract_salary_payroll.field_hr_employee__monthly_yearly_costs
 #: model:ir.model.fields,field_description:hr_contract_salary_payroll.field_hr_version__monthly_yearly_costs
 msgid "Monthly Cost"
-msgstr ""
+msgstr "Chi phí hàng tháng"
 
 #. module: hr_contract_salary_payroll
 #: model:ir.model.fields,field_description:hr_contract_salary_payroll.field_hr_contract_salary_offer__monthly_employer_cost
@@ -265,7 +268,7 @@ msgstr ""
 #. module: hr_contract_salary_payroll
 #: model:ir.model.fields,field_description:hr_contract_salary_payroll.field_hr_contract_salary_offer__monthly_wage
 msgid "Monthly Wage"
-msgstr ""
+msgstr "Lương tháng"
 
 #. module: hr_contract_salary_payroll
 #: model:hr.contract.salary.resume,name:hr_contract_salary_payroll.hr_contract_salary_resume_net_employee
@@ -273,17 +276,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_contract_salary_payroll.hr_contract_salary_offer_view_form
 #: model_terms:ir.ui.view,arch_db:hr_contract_salary_payroll.hr_contract_salary_offer_view_form_inherit
 msgid "Net"
-msgstr ""
+msgstr "Số tiền thực"
 
 #. module: hr_contract_salary_payroll
 #: model:ir.model.fields,field_description:hr_contract_salary_payroll.field_hr_contract_salary_offer__net_wage
 msgid "Net Wage"
-msgstr ""
+msgstr "Lương thực nhận"
 
 #. module: hr_contract_salary_payroll
 #: model_terms:ir.ui.view,arch_db:hr_contract_salary_payroll.hr_contract_salary_offer_view_form
 msgid "Optional"
-msgstr ""
+msgstr "Tuỳ chọn"
 
 #. module: hr_contract_salary_payroll
 #: model:ir.actions.server,name:hr_contract_salary_payroll.ir_cron_remove_simulation_offers_ir_actions_server
@@ -312,10 +315,20 @@ msgid ""
 "Monthly Total: The information will be a total of all the information in the "
 "category Monthly Benefits"
 msgstr ""
+"Chọn cách tính giá trị của thông tin:\n"
+"Giá trị cố định: Thiết lập một giá trị xác định, cố định cho tất cả các liên "
+"kết\n"
+"Giá trị từ hồ sơ nhân viên: Lấy giá trị từ một trường trên hồ sơ nhân viên\n"
+"Giá trị từ phiếu lương: Lấy giá trị từ một trường trên phiếu lương\n"
+"Tổng giá trị các phúc lợi: Bạn có thể chọn tất cả phúc lợi và tính tổng của "
+"chúng\n"
+"Tổng hàng tháng: Thông tin sẽ là tổng của tất cả thông tin trong mục Phúc "
+"lợi hàng tháng"
 
 #. module: hr_contract_salary_payroll
 #. odoo-javascript
 #: code:addons/hr_contract_salary_payroll/static/src/xml/brut2net_modal.xml:0
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary_payroll.hr_contract_salary_offer_view_form_inherit
 msgid ""
 "Please note that this information may be inaccurate and should be used for "
 "reference only."
@@ -323,27 +336,10 @@ msgstr ""
 "Xin lưu ý thông tin này có thể không chính xác và chỉ nên dùng tham khảo."
 
 #. module: hr_contract_salary_payroll
-#: model_terms:ir.ui.view,arch_db:hr_contract_salary_payroll.hr_contract_salary_offer_view_form_inherit
-msgid ""
-"Please note that this information may be inaccurate and should be used for "
-"reference only. The amounts are calculated based on a full time permanent "
-"contract, and benefits are computed from the selected contract template"
-msgstr ""
-
-#. module: hr_contract_salary_payroll
-#: model_terms:ir.ui.view,arch_db:hr_contract_salary_payroll.hr_contract_salary_offer_view_form_inherit
-msgid ""
-"Please note that this information may be inaccurate and should be used for "
-"reference only. The amounts are calculated based on a full time permanent "
-"contract, and benefits are computed from the selected employee and/or the "
-"selected contract template"
-msgstr ""
-
-#. module: hr_contract_salary_payroll
 #: model_terms:ir.ui.view,arch_db:hr_contract_salary_payroll.hr_contract_salary_offer_view_form
 #: model_terms:ir.ui.view,arch_db:hr_contract_salary_payroll.hr_contract_salary_offer_view_form_inherit
 msgid "Salary"
-msgstr ""
+msgstr "Tiền lương"
 
 #. module: hr_contract_salary_payroll
 #: model:ir.ui.menu,name:hr_contract_salary_payroll.menu_hr_payroll_salary_calculator
@@ -351,14 +347,20 @@ msgid "Salary Calculator"
 msgstr ""
 
 #. module: hr_contract_salary_payroll
+#: model:ir.model.fields,field_description:hr_contract_salary_payroll.field_hr_employee__salary_offer_ids
+#: model:ir.model.fields,field_description:hr_contract_salary_payroll.field_hr_version__salary_offer_ids
+msgid "Salary Offer"
+msgstr ""
+
+#. module: hr_contract_salary_payroll
 #: model:ir.model,name:hr_contract_salary_payroll.model_hr_contract_salary_benefit
 msgid "Salary Package Benefit"
-msgstr ""
+msgstr "Gói lương Quyền lợi"
 
 #. module: hr_contract_salary_payroll
 #: model:ir.model,name:hr_contract_salary_payroll.model_hr_contract_salary_offer
 msgid "Salary Package Offer"
-msgstr ""
+msgstr "Đề xuất gói lương"
 
 #. module: hr_contract_salary_payroll
 #: model:ir.model,name:hr_contract_salary_payroll.model_hr_contract_salary_resume
@@ -369,7 +371,7 @@ msgstr "Hồ sơ gói lương"
 #: model:ir.model.fields,field_description:hr_contract_salary_payroll.field_hr_contract_salary_benefit__salary_rule_id
 #: model:ir.model.fields.selection,name:hr_contract_salary_payroll.selection__hr_contract_salary_benefit__source__rule
 msgid "Salary Rule"
-msgstr ""
+msgstr "Quy tắc lương"
 
 #. module: hr_contract_salary_payroll
 #: model_terms:ir.ui.view,arch_db:hr_contract_salary_payroll.hr_contract_salary_offer_view_form_inherit
@@ -379,7 +381,7 @@ msgstr ""
 #. module: hr_contract_salary_payroll
 #: model:ir.model.fields,field_description:hr_contract_salary_payroll.field_hr_contract_salary_offer__structure_id
 msgid "Salary Structure"
-msgstr ""
+msgstr "Cấu trúc lương"
 
 #. module: hr_contract_salary_payroll
 #. odoo-javascript
@@ -400,18 +402,12 @@ msgstr ""
 #. module: hr_contract_salary_payroll
 #: model:hr.contract.salary.resume,name:hr_contract_salary_payroll.hr_contract_salary_payroll_resume_gross_worker
 msgid "Taxable Salary"
-msgstr ""
+msgstr "Lương chịu thuế"
 
 #. module: hr_contract_salary_payroll
 #: model:ir.ui.menu,name:hr_contract_salary_payroll.hr_payroll_menu_contract_templates
 msgid "Templates"
 msgstr "Mẫu"
-
-#. module: hr_contract_salary_payroll
-#. odoo-javascript
-#: code:addons/hr_contract_salary_payroll/static/src/xml/brut2net_modal.xml:0
-msgid "The amounts are calculated  based on a full time permanent contract."
-msgstr "Các khoản được tính dựa trên hợp đồng cố định toàn thời gian."
 
 #. module: hr_contract_salary_payroll
 #. odoo-javascript
@@ -436,6 +432,8 @@ msgstr "Đây là tổng lương được tính cho tháng này với tổng %s 
 msgid ""
 "This link is invalid. Please contact the HR Responsible to get a new one..."
 msgstr ""
+"Liên kết này không hợp lệ. Vui lòng liên hệ với Nhân viên nhân sự để lấy "
+"liên kết mới..."
 
 #. module: hr_contract_salary_payroll
 #. odoo-python
@@ -446,7 +444,7 @@ msgstr ""
 #. module: hr_contract_salary_payroll
 #: model:ir.model.fields,field_description:hr_contract_salary_payroll.field_hr_contract_salary_offer__display_name
 msgid "Title"
-msgstr ""
+msgstr "Tiêu đề"
 
 #. module: hr_contract_salary_payroll
 #: model:ir.model.fields,field_description:hr_contract_salary_payroll.field_hr_contract_salary_resume__value_type
@@ -457,13 +455,13 @@ msgstr "Loại giá trị"
 #: model:ir.model.fields,field_description:hr_contract_salary_payroll.field_hr_employee__wage_on_signature
 #: model:ir.model.fields,field_description:hr_contract_salary_payroll.field_hr_version__wage_on_signature
 msgid "Wage on Signature"
-msgstr ""
+msgstr "Lương khi ký hợp đồng"
 
 #. module: hr_contract_salary_payroll
 #: model:ir.model.fields,field_description:hr_contract_salary_payroll.field_hr_employee__wage_with_holidays
 #: model:ir.model.fields,field_description:hr_contract_salary_payroll.field_hr_version__wage_with_holidays
 msgid "Wage with Holidays"
-msgstr ""
+msgstr "Lương kèm ngày lễ"
 
 #. module: hr_contract_salary_payroll
 #: model:ir.model.fields,field_description:hr_contract_salary_payroll.field_hr_contract_salary_offer__resource_calendar_id
@@ -480,7 +478,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_contract_salary_payroll.field_hr_employee__final_yearly_costs
 #: model:ir.model.fields,field_description:hr_contract_salary_payroll.field_hr_version__final_yearly_costs
 msgid "Yearly Cost"
-msgstr ""
+msgstr "Chi phí hàng năm"
 
 #. module: hr_contract_salary_payroll
 #: model:ir.model.fields,field_description:hr_contract_salary_payroll.field_hr_contract_salary_offer__yearly_employer_cost
@@ -492,10 +490,35 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_contract_salary_payroll.hr_contract_salary_offer_view_form
 #: model_terms:ir.ui.view,arch_db:hr_contract_salary_payroll.hr_contract_salary_offer_view_form_inherit
 msgid "month"
-msgstr ""
+msgstr "tháng"
 
 #. module: hr_contract_salary_payroll
 #: model_terms:ir.ui.view,arch_db:hr_contract_salary_payroll.hr_contract_salary_offer_view_form
 #: model_terms:ir.ui.view,arch_db:hr_contract_salary_payroll.hr_contract_salary_offer_view_form_inherit
 msgid "year"
-msgstr ""
+msgstr "năm"
+
+#~ msgid ""
+#~ "Please note that this information may be inaccurate and should be used "
+#~ "for reference only. The amounts are calculated based on a full time "
+#~ "permanent contract, and benefits are computed from the selected contract "
+#~ "template"
+#~ msgstr ""
+#~ "Lưu ý rằng thông tin này có thể không chính xác và chỉ nên được sử dụng "
+#~ "để tham khảo. Các khoản tiền được tính dựa trên hợp đồng lao động toàn "
+#~ "thời gian cố định, và các phúc lợi được tính toán dựa trên mẫu hợp đồng "
+#~ "đã chọn"
+
+#~ msgid ""
+#~ "Please note that this information may be inaccurate and should be used "
+#~ "for reference only. The amounts are calculated based on a full time "
+#~ "permanent contract, and benefits are computed from the selected employee "
+#~ "and/or the selected contract template"
+#~ msgstr ""
+#~ "Lưu ý rằng thông tin này có thể không chính xác và chỉ nên được sử dụng "
+#~ "để tham khảo. Các khoản tiền được tính dựa trên hợp đồng lao động toàn "
+#~ "thời gian cố định, và các phúc lợi được tính toán dựa trên nhân viên được "
+#~ "chọn và/hoặc mẫu hợp đồng được chọn"
+
+#~ msgid "The amounts are calculated  based on a full time permanent contract."
+#~ msgstr "Các khoản được tính dựa trên hợp đồng cố định toàn thời gian."

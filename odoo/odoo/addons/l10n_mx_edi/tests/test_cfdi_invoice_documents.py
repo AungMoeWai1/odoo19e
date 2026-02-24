@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+from contextlib import contextmanager
+from datetime import timedelta
+
 from .common import TestMxEdiCommon
 from odoo import Command, fields
 from odoo.addons.mail.tools.discuss import Store
@@ -1060,6 +1063,19 @@ class TestCFDIInvoiceWorkflow(TestMxEdiCommon):
             'l10n_mx_edi_cfdi_state': 'cancel',
         }])
 
+    def test_global_invoice_production_with_account_user(self):
+        """ Test the global invoice creation made by a user that isn't in the group 'base.group_system' """
+        self.simple_accountman.email = 'simple_accountman@test.com'
+
+        with freeze_time('2017-01-01'):
+            invoice = self._create_invoice(l10n_mx_edi_cfdi_to_public=True)
+            with self.with_mocked_pac_sign_success():
+                invoice.with_user(self.simple_accountman)._l10n_mx_edi_cfdi_global_invoice_try_send()
+
+            self.assertRecordValues(invoice, [{
+                'l10n_mx_edi_cfdi_state': 'global_sent',
+            }])
+
     def test_global_invoice_production_sign_flow_cancel_from_the_sat(self):
         """ Test the case the global invoice is signed but the user manually cancel the document from the SAT portal (production environment). """
         self.env.company.l10n_mx_edi_pac_test_env = False
@@ -2081,6 +2097,69 @@ class TestCFDIInvoiceWorkflow(TestMxEdiCommon):
         self.assertEqual(new_invoice.line_ids[1].name, 'note')
 
     def test_legal_name_sanitization(self):
-        unsanitized_name = "Dinora Ñúñez Ávila"
+        unsanitized_name = "Dinora Güntnér Ñúñez Ávila Zoë"
         sanitized_name = self.env['l10n_mx_edi.document']._cfdi_sanitize_to_legal_name(unsanitized_name)
-        self.assertEqual(sanitized_name, 'DINORA ÑUÑEZ AVILA')
+        self.assertEqual(sanitized_name, 'DINORA GÜNTNÉR ÑUÑEZ AVILA ZOË')
+
+    def test_cron_update_sat_state_write_date(self):
+        """ Test that the sat_state is updated always when using the cron. """
+
+        @contextmanager
+        def freeze_now(ref_datetime):
+            with freeze_time(ref_datetime):
+                self.patch(self.env.cr, 'now', lambda: ref_datetime)
+                yield
+
+        ref_datetime = fields.Datetime.from_string('2017-01-01 00:00:00')
+
+        ref_datetime_minus_2 = ref_datetime - timedelta(days=2)
+        with freeze_now(ref_datetime_minus_2):
+            invoice_2 = self._create_invoice()
+            with self.with_mocked_pac_sign_success():
+                invoice_2._l10n_mx_edi_cfdi_invoice_try_send()
+            doc_2 = invoice_2.l10n_mx_edi_invoice_document_ids
+            doc_2.invalidate_recordset()
+
+        ref_datetime_minus_1 = ref_datetime - timedelta(days=1)
+        with freeze_now(ref_datetime_minus_1):
+            invoice_1 = self._create_invoice()
+            with self.with_mocked_pac_sign_success():
+                invoice_1._l10n_mx_edi_cfdi_invoice_try_send()
+            doc_1 = invoice_1.l10n_mx_edi_invoice_document_ids
+            doc_1.invalidate_recordset()
+
+        self.assertRecordValues(doc_1 + doc_2, [
+            {'state': 'invoice_sent', 'write_date': ref_datetime_minus_1, 'sat_state': 'not_defined'},
+            {'state': 'invoice_sent', 'write_date': ref_datetime_minus_2, 'sat_state': 'not_defined'},
+        ])
+
+        ref_datetime_plus_1 = ref_datetime + timedelta(days=1)
+        with freeze_now(ref_datetime_plus_1), self.with_mocked_sat_call(lambda _x: 'valid'):
+            self.env['l10n_mx_edi.document']._fetch_and_update_sat_status(batch_size=1, extra_domain=[('id', 'in', (doc_1 + doc_2).ids)])
+            doc_1.invalidate_recordset()
+            doc_2.invalidate_recordset()
+        self.assertRecordValues(doc_1 + doc_2, [
+            {'state': 'invoice_sent', 'write_date': ref_datetime_minus_1, 'sat_state': 'not_defined'},
+            {'state': 'invoice_sent', 'write_date': ref_datetime_plus_1, 'sat_state': 'valid'},
+        ])
+
+        ref_datetime_plus_2 = ref_datetime + timedelta(days=2)
+        with freeze_now(ref_datetime_plus_2), self.with_mocked_sat_call(lambda _x: 'valid'):
+            self.env['l10n_mx_edi.document']._fetch_and_update_sat_status(batch_size=1, extra_domain=[('id', 'in', (doc_1 + doc_2).ids)])
+            doc_1.invalidate_recordset()
+            doc_2.invalidate_recordset()
+        self.assertRecordValues(doc_1 + doc_2, [
+            {'state': 'invoice_sent', 'write_date': ref_datetime_plus_2, 'sat_state': 'valid'},
+            {'state': 'invoice_sent', 'write_date': ref_datetime_plus_1, 'sat_state': 'valid'},
+        ])
+
+        # last day will not update nothing because they are valid (sat_state not in valid)
+        ref_datetime_plus_3 = ref_datetime + timedelta(days=3)
+        with freeze_now(ref_datetime_plus_3), self.with_mocked_sat_call(lambda _x: 'valid'):
+            self.env['l10n_mx_edi.document']._fetch_and_update_sat_status(batch_size=1, extra_domain=[('id', 'in', (doc_1 + doc_2).ids)])
+            doc_1.invalidate_recordset()
+            doc_2.invalidate_recordset()
+        self.assertRecordValues(doc_1 + doc_2, [
+            {'state': 'invoice_sent', 'write_date': ref_datetime_plus_2, 'sat_state': 'valid'},
+            {'state': 'invoice_sent', 'write_date': ref_datetime_plus_1, 'sat_state': 'valid'},
+        ])

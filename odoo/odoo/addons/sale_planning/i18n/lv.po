@@ -1,19 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* sale_planning
+# * sale_planning
 #
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:42+0000\n"
-"PO-Revision-Date: 2025-09-11 14:42+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"POT-Creation-Date: 2025-12-30 18:47+0000\n"
+"PO-Revision-Date: 2025-11-17 07:05+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Latvian <https://translate.odoo.com/projects/odoo-19/"
+"sale_planning/lv/>\n"
+"Language: lv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Plural-Forms: nplurals=3; plural=(n % 10 == 0 || n % 100 >= 11 && n % 100 <= "
+"19) ? 0 : ((n % 10 == 1 && n % 100 != 11) ? 1 : 2);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: sale_planning
 #: model_terms:ir.ui.view,arch_db:sale_planning.planning_shift_ics_description_inherit
@@ -57,14 +62,19 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/sale_planning/static/src/views/planning_hooks.js:0
 msgid ""
-"All open shifts and sales orders have already been assigned, or there are no"
-" resources available to take them at this time."
+"All open shifts and sales orders have already been assigned, or there are no "
+"resources available to take them at this time."
+msgstr ""
+
+#. module: sale_planning
+#: model_terms:ir.ui.view,arch_db:sale_planning.planning_slot_view_tree_inherit_sale_planning
+msgid "Allocated Hours"
 msgstr ""
 
 #. module: sale_planning
 #: model:ir.model.fields,field_description:sale_planning.field_planning_slot__allocated_hours
 msgid "Allocated Time"
-msgstr ""
+msgstr "Piešķirtais laiks"
 
 #. module: sale_planning
 #: model_terms:ir.ui.view,arch_db:sale_planning.planning_slot_view_search_inherit_sale_planning
@@ -79,7 +89,7 @@ msgstr ""
 #. module: sale_planning
 #: model:ir.model.fields,field_description:sale_planning.field_planning_slot__partner_id
 msgid "Customer"
-msgstr ""
+msgstr "Klients"
 
 #. module: sale_planning
 #: model:product.template,name:sale_planning.developer_product_product_template
@@ -95,12 +105,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_planning.field_sale_order_line__display_name
 #: model:ir.model.fields,field_description:sale_planning.field_uom_uom__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Parādīt vārdu"
 
 #. module: sale_planning
 #: model:ir.model.fields,field_description:sale_planning.field_planning_slot__end_datetime
 msgid "End Date"
-msgstr ""
+msgstr "Beigu datums"
 
 #. module: sale_planning
 #: model:planning.role,name:sale_planning.planning_role_tester
@@ -110,7 +120,7 @@ msgstr ""
 #. module: sale_planning
 #: model_terms:ir.ui.view,arch_db:sale_planning.view_order_form_inherit_sale_planning
 msgid "Hours"
-msgstr ""
+msgstr "Stundas"
 
 #. module: sale_planning
 #: model:ir.model.fields,field_description:sale_planning.field_planning_analysis_report__id
@@ -121,7 +131,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_planning.field_sale_order_line__id
 #: model:ir.model.fields,field_description:sale_planning.field_uom_uom__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: sale_planning
 #: model:product.template,name:sale_planning.technical_maintainance_product_product_template
@@ -140,11 +150,11 @@ msgstr ""
 msgid ""
 "If enabled, a shift will automatically be generated for the selected role "
 "when confirming the Sales Order.                 With the 'auto plan' "
-"feature, only employees with this role will be automatically assigned shifts"
-" for Sales Orders containing this service.                 The system will "
-"consider employee availability and the remaining time to be planned."
-"                 You can also manually schedule open shifts for your Sales "
-"Order or assign them to any employee you prefer."
+"feature, only employees with this role will be automatically assigned shifts "
+"for Sales Orders containing this service.                 The system will "
+"consider employee availability and the remaining time to be "
+"planned.                 You can also manually schedule open shifts for your "
+"Sales Order or assign them to any employee you prefer."
 msgstr ""
 
 #. module: sale_planning
@@ -155,7 +165,7 @@ msgstr ""
 #. module: sale_planning
 #: model_terms:ir.actions.act_window,help:sale_planning.sale_planning_action_schedule_by_sale_order
 msgid "No shifts found. Let's create one!"
-msgstr ""
+msgstr "Maiņas nav atrastas. Laiks izveidot tādu!"
 
 #. module: sale_planning
 #: model_terms:ir.ui.view,arch_db:sale_planning.planning_slot_view_search_inherit_sale_planning
@@ -173,13 +183,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/sale_planning/static/src/views/planning_hooks.js:0
 msgid "Open shifts and sales orders assigned"
-msgstr ""
+msgstr "Piešķirtās atvērtās maiņas un pārdošana pasūtījumi"
 
 #. module: sale_planning
 #. odoo-javascript
 #: code:addons/sale_planning/static/src/views/planning_hooks.js:0
 msgid "Open shifts and sales orders unscheduled"
-msgstr ""
+msgstr "Neieplānotās atvērtās maiņas un pārdošanas pasūtījumi"
 
 #. module: sale_planning
 #: model_terms:product.template,description:sale_planning.developer_product_product_template
@@ -225,12 +235,12 @@ msgstr ""
 #. module: sale_planning
 #: model:ir.model,name:sale_planning.model_product_template
 msgid "Product"
-msgstr ""
+msgstr "Produkts"
 
 #. module: sale_planning
 #: model:ir.model,name:sale_planning.model_uom_uom
 msgid "Product Unit of Measure"
-msgstr ""
+msgstr "Preces mērvienība"
 
 #. module: sale_planning
 #: model:ir.model.fields,field_description:sale_planning.field_planning_analysis_report__role_product_ids
@@ -243,7 +253,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_planning.field_planning_slot__sale_order_id
 #: model_terms:ir.ui.view,arch_db:sale_planning.planning_slot_view_search_inherit_sale_planning
 msgid "Sales Order"
-msgstr ""
+msgstr "Pasūtījums"
 
 #. module: sale_planning
 #: model:ir.model.fields,field_description:sale_planning.field_planning_analysis_report__sale_line_id
@@ -252,7 +262,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_planning.period_report_template
 #: model_terms:ir.ui.view,arch_db:sale_planning.planning_slot_view_search_inherit_sale_planning
 msgid "Sales Order Item"
-msgstr ""
+msgstr "Pārdošanas pasūtījuma pozīcija"
 
 #. module: sale_planning
 #: model_terms:ir.ui.view,arch_db:sale_planning.planning_shift_ics_description_inherit
@@ -262,7 +272,7 @@ msgstr ""
 #. module: sale_planning
 #: model:ir.model,name:sale_planning.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Pasūtījuma Rinda"
 
 #. module: sale_planning
 #: model:ir.model.fields,field_description:sale_planning.field_planning_slot__sale_order_state
@@ -288,16 +298,18 @@ msgid ""
 "Schedule your human and material resources across roles, projects and sales "
 "orders."
 msgstr ""
+"Ieplānojiet savus cilvēkresursus un materiālos resursus starp lomām, "
+"projektiem un pārdošanas pasūtījumiem."
 
 #. module: sale_planning
 #: model:ir.model.fields,field_description:sale_planning.field_planning_role__product_ids
 msgid "Services"
-msgstr ""
+msgstr "Pakalpojumi"
 
 #. module: sale_planning
 #: model:ir.model.fields,field_description:sale_planning.field_planning_slot__start_datetime
 msgid "Start Date"
-msgstr ""
+msgstr "Sākuma datums"
 
 #. module: sale_planning
 #: model_terms:product.template,description:sale_planning.technical_maintainance_product_product_template
@@ -359,7 +371,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_planning/models/sale_order.py:0
 msgid ""
-"You cannot update the company for sales order %(order_name)s as it's linked to shifts in another company.\n"
+"You cannot update the company for sales order %(order_name)s as it's linked "
+"to shifts in another company.\n"
 "Please transfer shifts %(slots_names)s to the destination company first."
 msgstr ""
 

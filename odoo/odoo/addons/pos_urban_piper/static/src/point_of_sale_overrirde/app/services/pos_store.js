@@ -1,5 +1,6 @@
 import { patch } from "@web/core/utils/patch";
 import { PosStore } from "@point_of_sale/app/services/pos_store";
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 
 patch(PosStore.prototype, {
@@ -23,6 +24,34 @@ patch(PosStore.prototype, {
             await this._fetchUrbanpiperOrderCount(false);
         }
         this.isSoundPlaying = false;
+        this.data.connectWebSocket(
+            "PRODUCT_UP_STATUS_CHANGED",
+            this.notifyFoodDeliveryStatus.bind(this)
+        );
+    },
+
+    notifyFoodDeliveryStatus(data) {
+        const { product_ids, status } = data;
+        const products = this.models["product.template"].filter((product) =>
+            product_ids.includes(product.id)
+        );
+        if (!products.length) {
+            return;
+        }
+        products.forEach((product) => {
+            product.setFoodDeliveryAvailability(status, this.config.id);
+            this.notification.add(
+                _t(
+                    "%s is %s online food delivery for all platform in this locations.",
+                    product.name,
+                    status ? _t("enabled") : _t("disabled")
+                ),
+                {
+                    type: status ? "success" : "warning",
+                    sticky: false,
+                }
+            );
+        });
     },
 
     async saveProviderState(newStates = {}) {
@@ -72,17 +101,18 @@ patch(PosStore.prototype, {
 
     async getServerOrders() {
         if (this.config.module_pos_urban_piper && this.config.urbanpiper_store_identifier) {
-            return await this.data.loadServerOrders([
+            await this.data.loadServerOrders([
                 ["company_id", "=", this.config.company_id.id],
+                ["state", "=", "draft"],
+                ["session_id", "=", this.session.id],
                 [
                     "delivery_provider_id",
                     "in",
                     this.config.urbanpiper_delivery_provider_ids.map((provider) => provider.id),
                 ],
             ]);
-        } else {
-            return await super.getServerOrders(...arguments);
         }
+        return await super.getServerOrders(...arguments);
     },
     _fetchStoreAction(data) {
         const params = {
@@ -171,9 +201,7 @@ patch(PosStore.prototype, {
             return;
         }
         if (deliveryOrder.delivery_status === "acknowledged" && deliveryOrder.state != "cancel") {
-            if (!deliveryOrder.isFutureOrder()) {
-                await this.sendOrderInPreparationUpdateLastChange(deliveryOrder);
-            }
+            await this._sendDeliveryOrderForPreparation(deliveryOrder);
         } else if (deliveryOrder.delivery_status === "placed") {
             if (!this.isSoundPlaying) {
                 this.isSoundPlaying = true;
@@ -184,6 +212,28 @@ patch(PosStore.prototype, {
                     this.notificationOptions
                 );
             }
+        }
+    },
+
+    async _sendDeliveryOrderForPreparation(deliveryOrder) {
+        if (
+            deliveryOrder.last_order_preparation_change.urbanpiper_printed ||
+            deliveryOrder.isFutureOrder()
+        ) {
+            return;
+        }
+        let isReadyToPrint = true;
+        try {
+            isReadyToPrint = await this.data.call(
+                "pos.order",
+                "mark_urbanpiper_prep_order_as_printed",
+                [deliveryOrder.id]
+            );
+        } catch {
+            isReadyToPrint = false;
+        }
+        if (isReadyToPrint) {
+            await this.sendOrderInPreparationUpdateLastChange(deliveryOrder);
         }
     },
 
@@ -208,11 +258,26 @@ patch(PosStore.prototype, {
         if (order.delivery_provider_id) {
             orderData = {
                 ...orderData,
-                delivery_provider_id: order.delivery_provider_id,
+                delivery_provider_id: {
+                    id: order.delivery_provider_id.id,
+                    name: order.delivery_provider_id.name,
+                },
                 order_otp: JSON.parse(order.delivery_json)?.order?.details?.ext_platforms?.[0].id,
                 prep_time: order.prep_time,
             };
         }
         return orderData;
+    },
+    async onDeleteOrder(order) {
+        if (!order?.delivery_identifier) {
+            return super.onDeleteOrder(...arguments);
+        }
+        this.dialog.add(AlertDialog, {
+            title: _t("Online Order"),
+            body: _t(
+                "Online orders cannot be deleted. If needed, reject the order instead or contact the food delivery provider."
+            ),
+        });
+        return false;
     },
 });

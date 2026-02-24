@@ -258,6 +258,11 @@ class TestDeliveryShiprocketPostInstall(TestDeliveryShiprocket):
         if sale_loyalty_module.state != 'installed':
             self.skipTest("This test will fail if sale_loyalty is not installed")
 
+        basic_tax = self.env['account.tax'].create({
+            'name': 'Basic 15% tax',
+            'amount': 15,
+        })
+        empty_pricelist = self.env['product.pricelist'].create({'name': 'Empty Pricelist'})
         sale_order = self.env['sale.order'].create({
             'partner_id': self.in_partner.id,
             'order_line': [Command.create({
@@ -266,7 +271,9 @@ class TestDeliveryShiprocketPostInstall(TestDeliveryShiprocket):
                 'product_uom_id': self.product_to_ship1.uom_id.id,
                 'product_uom_qty': 1.0,
                 'price_unit': self.product_to_ship1.lst_price,
+                'tax_ids': basic_tax,
             })],
+            'pricelist_id': empty_pricelist.id,
         })
         self.env['choose.delivery.carrier'].with_context({
             'default_order_id': sale_order.id,
@@ -305,8 +312,8 @@ class TestDeliveryShiprocketPostInstall(TestDeliveryShiprocket):
         discount_line.product_uom_qty = 2
         self.assertEqual(discount_line.price_total, -40)
 
-        # Total expected price is 100 - (20 + 40) = 40
-        self.assertAlmostEqual(sale_order.amount_total, 40)
+        # Total expected price is 115 - (20 + 40) = 55
+        self.assertAlmostEqual(sale_order.amount_total, 55)
 
         sale_order.action_confirm()
         self.assertTrue(sale_order.picking_ids)

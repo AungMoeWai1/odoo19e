@@ -94,7 +94,7 @@ class L10n_EcWizardAccountWithhold(models.TransientModel):
         currency_field='currency_id'
     )
     dividend_fiscal_year = fields.Selection(
-        [(str(year), str(year)) for year in range(_L10N_EC_DIVIDEND_YEAR_MIN, _L10N_EC_DIVIDEND_YEAR_MAX + 1)],
+        lambda self: [(str(year), str(year)) for year in range(_L10N_EC_DIVIDEND_YEAR_MIN, _L10N_EC_DIVIDEND_YEAR_MAX + 1)],
         'Dividend fiscal year',
         help='Enter the fiscal year in which earnings on the reported dividend are generated. The company could pay previous periods'
     )
@@ -371,6 +371,10 @@ class L10n_EcWizardAccountWithhold(models.TransientModel):
         if withhold_type == 'out_withhold':
             return partner.property_account_receivable_id
         return partner.property_account_payable_id
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_withhold_lines_wizard(self):
+        self.withhold_line_ids.unlink()
 
     # ===== MOVE VALIDATION METHODS =====
 

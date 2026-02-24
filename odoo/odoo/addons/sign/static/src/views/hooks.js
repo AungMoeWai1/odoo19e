@@ -65,7 +65,7 @@ export function useSignViewButtons() {
             if (Array.from(files).filter((file) => file.type !== "application/pdf").length) {
                 dialog.add(TemplateAlertDialog, {
                     title: _t("File Error"),
-                    message: _t("Only PDF files are allowed."),
+                    body: _t("Only PDF files are allowed."),
                 });
                 return;
             }
@@ -113,8 +113,13 @@ export function useSignViewButtons() {
     };
 
     useBus(env.bus, "change_file_input", async (ev) => {
+        if (component.constructor.name === 'SignActionHelper') {
+            // Skip processing in SignActionHelper(signRenderer) call to prevent double handling
+            // because its triggered from signController too.
+            return;
+        }
         fileInput.el.files = ev.detail.files;
-        resModel = ev.detail.resModel
+        resModel = ev.detail.resModel;
         await upload.onFileInputChange(ev);
     });
 

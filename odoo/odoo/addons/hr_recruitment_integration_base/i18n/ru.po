@@ -3,13 +3,15 @@
 # * hr_recruitment_integration_base
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:34+0000\n"
-"PO-Revision-Date: 2025-09-18 02:45+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2025-12-30 18:45+0000\n"
+"PO-Revision-Date: 2025-11-17 03:40+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-19/"
 "hr_recruitment_integration_base/ru/>\n"
 "Language: ru\n"
@@ -33,15 +35,16 @@ msgstr "<span class=\"px-2\">-</span>"
 
 #. module: hr_recruitment_integration_base
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_integration_base.hr_job_post_view_kanban
-msgid "<span class=\"text-muted\" invisible=\"campaign_end_date\">No limit</span>"
+msgid ""
+"<span class=\"text-muted\" invisible=\"campaign_end_date\">No limit</span>"
 msgstr ""
-"<span class=\"text-muted\" invisible=\"campaign_end_date\">Без "
-"ограничений</span>"
+"<span class=\"text-muted\" invisible=\"campaign_end_date\">Без ограничений</"
+"span>"
 
 #. module: hr_recruitment_integration_base
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_integration_base.hr_recruitment_post_job_wizard_view_form
 msgid "<strong class=\"mx-1\">to</strong>"
-msgstr ""
+msgstr "<strong class=\"mx-1\">по</strong>"
 
 #. module: hr_recruitment_integration_base
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_integration_base.hr_job_post_view_kanban
@@ -76,7 +79,7 @@ msgstr "Активность"
 #. module: hr_recruitment_integration_base
 #: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_job_post__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Оформление исключения активности"
+msgstr "Оформление задачи-исключения"
 
 #. module: hr_recruitment_integration_base
 #: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_job_post__activity_state
@@ -91,7 +94,7 @@ msgstr "Значок типа активности"
 #. module: hr_recruitment_integration_base
 #: model:ir.model,name:hr_recruitment_integration_base.model_hr_applicant
 msgid "Applicant"
-msgstr ""
+msgstr "Кандидат"
 
 #. module: hr_recruitment_integration_base
 #: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_recruitment_post_job_wizard__apply_method
@@ -101,7 +104,7 @@ msgstr "Способ подачи заявки"
 #. module: hr_recruitment_integration_base
 #: model:ir.model,website_form_label:hr_recruitment_integration_base.model_hr_applicant
 msgid "Apply for a Job"
-msgstr ""
+msgstr "Откликнуться на вакансию"
 
 #. module: hr_recruitment_integration_base
 #: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_job_post__message_attachment_count
@@ -181,7 +184,7 @@ msgstr "Дата начала кампании:"
 #. odoo-python
 #: code:addons/hr_recruitment_integration_base/wizard/hr_recruitment_post.py:0
 msgid "Campaign start date can't be after campaign end date.\n"
-msgstr ""
+msgstr "Дата начала кампании не может быть позже даты окончания кампании.\n"
 
 #. module: hr_recruitment_integration_base
 #. odoo-python
@@ -262,12 +265,12 @@ msgstr "Данные"
 #. module: hr_recruitment_integration_base
 #: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_job__date_from
 msgid "Date From"
-msgstr ""
+msgstr "С"
 
 #. module: hr_recruitment_integration_base
 #: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_job__date_to
 msgid "Date To"
-msgstr ""
+msgstr "Дата до"
 
 #. module: hr_recruitment_integration_base
 #: model:ir.model.fields.selection,name:hr_recruitment_integration_base.selection__hr_job__payment_interval__daily
@@ -325,11 +328,12 @@ msgstr "Email"
 #: code:addons/hr_recruitment_integration_base/wizard/hr_recruitment_post.py:0
 msgid "Email is required if the apply method is 'Send an email'.\n"
 msgstr ""
+"Email обязателен, если выбран способ подачи заявки «Отправить email».\n"
 
 #. module: hr_recruitment_integration_base
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_integration_base.view_hr_job_form
 msgid "End Date"
-msgstr ""
+msgstr "Дата окончания"
 
 #. module: hr_recruitment_integration_base
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_integration_base.hr_job_post_view_kanban_search
@@ -365,7 +369,7 @@ msgstr "Шрифт, отличный значок, например. к.-а.-з�
 #. module: hr_recruitment_integration_base
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_integration_base.hr_recruitment_post_job_wizard_view_form
 msgid "From"
-msgstr ""
+msgstr "От"
 
 #. module: hr_recruitment_integration_base
 #: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_job_post__has_message
@@ -394,7 +398,7 @@ msgstr "Иконка"
 #. module: hr_recruitment_integration_base
 #: model:ir.model.fields,help:hr_recruitment_integration_base.field_hr_job_post__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Значок, обозначающий исключение Дела."
+msgstr "Иконка, указывающая на задачу-исключение."
 
 #. module: hr_recruitment_integration_base
 #: model:ir.model.fields,help:hr_recruitment_integration_base.field_hr_job_post__message_needaction
@@ -436,7 +440,7 @@ msgstr "Изображение 512"
 #. module: hr_recruitment_integration_base
 #: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_recruitment_post_job_wizard__industry_id
 msgid "Industry"
-msgstr ""
+msgstr "Промышленность"
 
 #. module: hr_recruitment_integration_base
 #: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_job_post__message_is_follower
@@ -556,7 +560,7 @@ msgstr "Минимальная зарплата"
 #. module: hr_recruitment_integration_base
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_integration_base.hr_recruitment_post_job_wizard_view_form
 msgid "Mission Dates"
-msgstr ""
+msgstr "Сроки проекта"
 
 #. module: hr_recruitment_integration_base
 #: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_recruitment_post_job_wizard__date_to
@@ -647,7 +651,7 @@ msgstr "Количество недоставленных сообщений"
 #. module: hr_recruitment_integration_base
 #: model_terms:ir.actions.act_window,help:hr_recruitment_integration_base.action_open_hr_job_post
 msgid "Or you can start with the creation of a new open job position"
-msgstr ""
+msgstr "Или вы можете начать с создания новой открытой должности"
 
 #. module: hr_recruitment_integration_base
 #: model:ir.model.fields.selection,name:hr_recruitment_integration_base.selection__hr_job_post__status__pending
@@ -715,7 +719,7 @@ msgstr "Опубликовать на доске вакансий"
 #. module: hr_recruitment_integration_base
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_integration_base.hr_job_post_view_kanban
 msgid "Publish on Jobs Board"
-msgstr ""
+msgstr "Опубликовать на доске вакансий"
 
 #. module: hr_recruitment_integration_base
 #. odoo-python
@@ -727,7 +731,7 @@ msgstr "Опубликовать на доске вакансий"
 #. module: hr_recruitment_integration_base
 #: model_terms:ir.actions.act_window,help:hr_recruitment_integration_base.action_open_hr_job_post
 msgid "Publish one of our job position to a Jobs Board"
-msgstr ""
+msgstr "Опубликуйте одну из наших должностей на доске вакансий"
 
 #. module: hr_recruitment_integration_base
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_integration_base.hr_job_post_view_kanban_search
@@ -834,10 +838,13 @@ msgstr "Успех"
 #. module: hr_recruitment_integration_base
 #: model:ir.model.fields,help:hr_recruitment_integration_base.field_hr_job_post__recruiter_id
 msgid ""
-"The Recruiter will be the default value for all Applicants in this job"
-"             position. The Recruiter is automatically added to all meetings "
-"with the Applicant."
+"The Recruiter will be the default value for all Applicants in this "
+"job             position. The Recruiter is automatically added to all "
+"meetings with the Applicant."
 msgstr ""
+"Рекрутер будет значением по умолчанию для поля «Рекрутер» у всех кандидатов "
+"на эту             вакансию. Рекрутер также автоматически добавляется во все "
+"встречи с кандидатом."
 
 #. module: hr_recruitment_integration_base
 #: model:ir.model.fields,help:hr_recruitment_integration_base.field_hr_job_post__campaign_end_date
@@ -863,8 +870,8 @@ msgstr "Адрес электронной почты, номер телефон�
 #. odoo-python
 #: code:addons/hr_recruitment_integration_base/models/hr_job_post.py:0
 msgid ""
-"This action will update the job post on the platform. This action will cost "
-"%(price)s credits. Do you want to continue?"
+"This action will update the job post on the platform. This action will cost %"
+"(price)s credits. Do you want to continue?"
 msgstr ""
 "Это действие обновит публикацию вакансии на платформе. Это действие будет "
 "стоить %(price)s кредитов. Хотите продолжить?"
@@ -872,14 +879,14 @@ msgstr ""
 #. module: hr_recruitment_integration_base
 #: model:ir.model.fields,help:hr_recruitment_integration_base.field_hr_recruitment_post_job_wizard__date_from
 msgid ""
-"This will update the applicant's availability status once they are hired for"
-" this position."
+"This will update the applicant's availability status once they are hired for "
+"this position."
 msgstr ""
 
 #. module: hr_recruitment_integration_base
 #: model:ir.model.fields,help:hr_recruitment_integration_base.field_hr_job_post__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Тип Дела для исключения в записи."
+msgstr "Тип задачи-исключения в записи."
 
 #. module: hr_recruitment_integration_base
 #. odoo-python

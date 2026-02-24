@@ -170,9 +170,9 @@ class AccountOnlineAccount(models.Model):
         # Update connection status and get consent expiration date and create an activity on related journal
         self.account_online_link_id._update_connection_status()
 
-        # Set last_sync date (date of latest statement or accounting lock date or False)
+        # Set last_sync date (date of latest statement or one day after accounting lock date or False)
         lock_date = self.env.company._get_user_fiscal_lock_date(journal)
-        last_sync = lock_date if lock_date and lock_date > datetime.date.min else None
+        last_sync = lock_date + relativedelta(days=1) if lock_date and lock_date > datetime.date.min else None
         bnk_stmt_line = self.env['account.bank.statement.line'].search([('journal_id', 'in', self.journal_ids.ids)], order="date desc", limit=1)
         if bnk_stmt_line:
             last_sync = bnk_stmt_line.date
@@ -458,6 +458,7 @@ class AccountOnlineLink(models.Model):
             'name': data.get('account_number'),
             'type': journal_type,
             'bank_account_id': bank_account.id,
+            'company_id': self.company_id.id,
         })
 
         return {'type': 'ir.actions.client', 'tag': 'soft_reload'}
@@ -1011,9 +1012,16 @@ class AccountOnlineLink(models.Model):
         journal_type = 'bank'
         if data:
             journal_type = data.pop('journal_type', None) or 'bank'
+            if consent_token := data.pop('manage_consent', None):
+                url = self._get_odoofin_url(f'/manage-consent?consent_token={consent_token}')
+                self.message_post(
+                    body=_("You can manage your bank synchronization consent for this connection %s", Markup("<a href='%s' target='_blank'>%s</a>") % (url, _("here.")))
+                )
+
             self.write(data)
 
             self._update_connection_status()
+
         # if for some reason we just have to update the record without doing anything else, the mode will be set to 'none'
         if mode == 'none':
             return {'type': 'ir.actions.client', 'tag': 'reload'}
@@ -1094,10 +1102,10 @@ class AccountOnlineLink(models.Model):
     def action_new_synchronization(self, preferred_inst=None, journal_id=False, journal_type='bank'):
         # Search for an existing link that was not fully connected
         online_link = self
-        if not online_link:
-            online_link = self.search([('account_online_account_ids', '=', False)], limit=1)
+        if not online_link or online_link.provider_type:
+            online_link = self.search([('account_online_account_ids', '=', False), ('provider_type', '=', False)], limit=1)
         # If not found, create a new one
-        if not online_link:
+        if not online_link or online_link.provider_type:
             online_link = self.create({})
         return online_link._open_iframe('link', preferred_institution=preferred_inst, journal_id=journal_id, journal_type=journal_type)
 

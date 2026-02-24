@@ -11,13 +11,14 @@
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2022
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Saara Hakanen <sahak@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 16:03+0000\n"
-"PO-Revision-Date: 2025-09-16 17:05+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2025-12-30 18:48+0000\n"
+"PO-Revision-Date: 2025-12-06 09:55+0000\n"
+"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
 "web_cohort/fi/>\n"
 "Language: fi\n"
@@ -25,13 +26,13 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: web_cohort
 #. odoo-python
 #: code:addons/web_cohort/controllers/main.py:0
-msgid "%s - By %s"
-msgstr "%s - Tekijä %s"
+msgid "%(date_stop)s - By %(interval)s"
+msgstr "%(date_stop)s - %(interval)s välein"
 
 #. module: web_cohort
 #. odoo-javascript
@@ -45,8 +46,8 @@ msgid "Action Window View"
 msgstr "Toimintoikkunan näkymä"
 
 #. module: web_cohort
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/web_cohort/controllers/main.py:0
 #: code:addons/web_cohort/static/src/cohort_renderer.xml:0
 msgid "Average"
@@ -88,10 +89,22 @@ msgid "Day"
 msgstr "Päivä"
 
 #. module: web_cohort
+#: model:ir.model.fields,field_description:web_cohort.field_ir_actions_act_window_view__display_name
+#: model:ir.model.fields,field_description:web_cohort.field_ir_ui_view__display_name
+msgid "Display Name"
+msgstr "Näyttönimi"
+
+#. module: web_cohort
 #. odoo-javascript
 #: code:addons/web_cohort/static/src/cohort_renderer.xml:0
 msgid "Download as Excel file"
 msgstr "Lataa Excel-tiedostona"
+
+#. module: web_cohort
+#: model:ir.model.fields,field_description:web_cohort.field_ir_actions_act_window_view__id
+#: model:ir.model.fields,field_description:web_cohort.field_ir_ui_view__id
+msgid "ID"
+msgstr "Tunnus"
 
 #. module: web_cohort
 #. odoo-javascript
@@ -107,12 +120,6 @@ msgstr "Kuukausi"
 
 #. module: web_cohort
 #. odoo-javascript
-#: code:addons/web_cohort/static/src/cohort_renderer.xml:0
-msgid "No data available."
-msgstr "Ei dataa saatavilla."
-
-#. module: web_cohort
-#. odoo-javascript
 #: code:addons/web_cohort/static/src/cohort_renderer.js:0
 msgid ""
 "Period: %(period)s\n"
@@ -120,6 +127,39 @@ msgid ""
 msgstr ""
 "Ajanjakso: %(period)s\n"
 "%(measure)s: %(count)s"
+
+#. module: web_cohort
+#. odoo-javascript
+#: code:addons/web_cohort/static/src/cohort_model.js:0
+msgid "Quarter"
+msgstr "Neljännes"
+
+#. module: web_cohort
+#. odoo-javascript
+#: code:addons/web_cohort/static/src/cohort_arch_parser.js:0
+msgid ""
+"The argument %(interval)s is not a valid interval. Here are the intervals: %"
+"(intervals)s"
+msgstr ""
+"%(interval)s ei ole kelvollinen väli. Tässä sallitut intervallit: %"
+"(intervals)s"
+
+#. module: web_cohort
+#. odoo-javascript
+#: code:addons/web_cohort/static/src/cohort_arch_parser.js:0
+msgid ""
+"The argument %(mode)s is not a valid mode. Here are the modes: %(modes)s"
+msgstr "%(mode)s ei ole kelvollinen tila. Sallitut tilat ovat: %(modes)s"
+
+#. module: web_cohort
+#. odoo-javascript
+#: code:addons/web_cohort/static/src/cohort_arch_parser.js:0
+msgid ""
+"The argument %(timeline)s is not a valid timeline. Here are the timelines: %"
+"(timelines)s"
+msgstr ""
+"%(timeline)s ei ole kelvollinen aikajana. Sallitut aikajanat ovat: %"
+"(timelines)s"
 
 #. module: web_cohort
 #: model:ir.model,name:web_cohort.model_ir_ui_view
@@ -143,3 +183,9 @@ msgstr "Viikko"
 #: code:addons/web_cohort/static/src/cohort_model.js:0
 msgid "Year"
 msgstr "Vuosi"
+
+#~ msgid "%s - By %s"
+#~ msgstr "%s - Tekijä %s"
+
+#~ msgid "No data available."
+#~ msgstr "Ei dataa saatavilla."

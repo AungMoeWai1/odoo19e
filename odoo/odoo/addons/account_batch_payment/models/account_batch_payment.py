@@ -70,6 +70,7 @@ class AccountBatchPayment(models.Model):
     export_filename = fields.Char(string='File Name', help="Name of the export file generated for this batch", store=True, copy=False)
 
     file_generation_enabled = fields.Boolean(help="Whether or not this batch payment should display the 'Generate File' button instead of 'Print' in form view.", compute='_compute_file_generation_enabled')
+    invalid_sct_partners_ids = fields.Many2many('res.partner', compute='_compute_invalid_sct_partners_ids')
 
     @api.depends('batch_type', 'journal_id', 'payment_method_id')
     def _compute_payment_ids_domain(self):
@@ -268,11 +269,12 @@ class AccountBatchPayment(models.Model):
         return rslt
 
     def unlink(self):
-        for payment in self.payment_ids:
-            payment.message_post(
-                body=_('Payment removed from batch %s', self._get_html_link(title=self.name)),
-                message_type='comment',
-            )
+        for batch in self:
+            for payment in batch.payment_ids:
+                payment.message_post(
+                    body=_('Payment removed from batch %s', batch._get_html_link(title=batch.name)),
+                    message_type='comment',
+                )
         return super().unlink()
 
     @api.model
@@ -289,6 +291,27 @@ class AccountBatchPayment(models.Model):
         state_values = dict(self._fields['state'].selection)
         for batch in self:
             batch.display_name = f'{batch.name} ({state_values.get(batch.state)})'
+
+    @api.depends('payment_method_id', 'payment_ids.partner_id.country_id', 'payment_ids.partner_id.city')
+    def _compute_invalid_sct_partners_ids(self):
+        sepa_batches = self.filtered(lambda b: b.payment_method_id.code == 'sepa_ct')
+        for batch in sepa_batches:
+            invalid_partners = self.env['res.partner']
+            for partner in batch.payment_ids.partner_id:
+                # sudo needed for accountant users that are not in hr (employee_ids)
+                addresses = partner.sudo()._get_all_addr()
+                has_valid_address = any(
+                    addr.get('city') and addr.get('country')
+                    for addr in addresses
+                )
+                if not has_valid_address:
+                    invalid_partners |= partner
+
+            batch.invalid_sct_partners_ids = invalid_partners
+        (self - sepa_batches).invalid_sct_partners_ids = self.env['res.partner']
+
+    def action_invalid_partners_from_sct(self):
+        return self.invalid_sct_partners_ids._get_records_action(name=_("Invalid Partners"))
 
     def validate_batch(self):
         """ Verifies the content of a batch and proceeds to its sending if possible.
@@ -343,12 +366,13 @@ class AccountBatchPayment(models.Model):
         specificities in the payments he's put in the batch. He will be able to
         ignore them.
 
-        :return:    A list of dictionaries, each one corresponding to a distinct
-                    warning and containing the following keys:
-                    - 'title': A short name for the warning (mandatory)
-                    - 'records': The recordset of payments concerned by this warning (mandatory)
-                    - 'help': A help text to give the user further information
-                              on the reason this warning exists (optional)
+        :return: A list of dictionaries, each one corresponding to a distinct
+            warning and containing the following keys:
+
+            - ``'title'``: A short name for the warning (mandatory)
+            - ``'records'``: The recordset of payments concerned by this warning (mandatory)
+            - ``'help'``: A help text to give the user further information
+              on the reason this warning exists (optional)
         """
         return []
 
@@ -360,12 +384,13 @@ class AccountBatchPayment(models.Model):
         extension for modules making a specific use of batch payments, such as SEPA
         ones.
 
-        :return:    A list of dictionaries, each one corresponding to a distinct
-                    error and containing the following keys:
-                    - 'title': A short name for the error (mandatory)
-                    - 'records': The recordset of payments facing this error (mandatory)
-                    - 'help': A help text to give the user further information
-                              on how to solve the error (optional)
+        :return: A list of dictionaries, each one corresponding to a distinct
+            error and containing the following keys:
+
+            - ``'title'``: A short name for the error (mandatory)
+            - ``'records'``: The recordset of payments facing this error (mandatory)
+            - ``'help'``: A help text to give the user further information
+              on how to solve the error (optional)
         """
         self.ensure_one()
         #We first try to post all the draft batch payments

@@ -3,22 +3,24 @@
 # * industry_fsm_stock
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Marta (wacm)" <wacm@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:35+0000\n"
-"PO-Revision-Date: 2025-09-18 02:43+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2025-12-30 18:45+0000\n"
+"PO-Revision-Date: 2026-01-07 13:27+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/"
 "industry_fsm_stock/pl/>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
-"|| n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.12.2\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && "
+"(n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: industry_fsm_stock
 #: model_terms:ir.ui.view,arch_db:industry_fsm_stock.view_task_form2_inherit
@@ -27,6 +29,9 @@ msgid ""
 "                            to Pick up\n"
 "                        </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            do odbioru\n"
+"                       </span>"
 
 #. module: industry_fsm_stock
 #: model_terms:ir.ui.view,arch_db:industry_fsm_stock.view_task_form2_inherit
@@ -38,9 +43,13 @@ msgstr "<span>Produkty</span>"
 #: code:addons/industry_fsm_stock/models/product.py:0
 msgid ""
 "Adding or updating this product is restricted due to its tracked status. "
-"Your current access rights do not allow you to perform these actions. Please"
-" contact your administrator to request the necessary permissions."
+"Your current access rights do not allow you to perform these actions. Please "
+"contact your administrator to request the necessary permissions."
 msgstr ""
+"Dodawanie lub aktualizowanie tego produktu jest ograniczone ze względu na "
+"jego status śledzenia. Twoje obecne uprawnienia dostępu nie pozwalają na "
+"wykonanie tych czynności. Skontaktuj się z administratorem, aby poprosić o "
+"niezbędne uprawnienia."
 
 #. module: industry_fsm_stock
 #: model_terms:ir.ui.view,arch_db:industry_fsm_stock.fsm_stock_tracking_line_view_form
@@ -141,7 +150,7 @@ msgstr "Numer partii/seria"
 #. odoo-python
 #: code:addons/industry_fsm_stock/models/project_task.py:0
 msgid "Pick Up Material"
-msgstr ""
+msgstr "Odbiór materiałów"
 
 #. module: industry_fsm_stock
 #: model:ir.model.fields,field_description:industry_fsm_stock.field_fsm_stock_tracking__product_id
@@ -161,7 +170,7 @@ msgstr "Produkty"
 #. module: industry_fsm_stock
 #: model:ir.model,name:industry_fsm_stock.model_project_project
 msgid "Project"
-msgstr ""
+msgstr "Projekt"
 
 #. module: industry_fsm_stock
 #: model:ir.model.fields,field_description:industry_fsm_stock.field_fsm_stock_tracking_line__quantity
@@ -196,7 +205,7 @@ msgstr "Przesunięcie"
 #. module: industry_fsm_stock
 #: model:ir.model.fields,field_description:industry_fsm_stock.field_project_task__stock_move_customer_product_count
 msgid "Stock Move Customer Product Count"
-msgstr ""
+msgstr "Ruch magazynowy Liczba produktów klienta"
 
 #. module: industry_fsm_stock
 #: model:ir.model,name:industry_fsm_stock.model_project_task
@@ -208,8 +217,8 @@ msgstr "Zadanie"
 #. odoo-python
 #: code:addons/industry_fsm_stock/models/product.py:0
 msgid ""
-"The ordered quantity cannot be decreased below the amount already delivered."
-" Instead, create a return in your inventory."
+"The ordered quantity cannot be decreased below the amount already delivered. "
+"Instead, create a return in your inventory."
 msgstr ""
 "Zamówiona ilość nie może zostać zmniejszona poniżej ilości już dostarczonej. "
 "Zamiast tego, utwórz zwrot w swoim magazynie."
@@ -238,8 +247,20 @@ msgid ""
 "        !! Set the task a high priority\n"
 "        !!! Set the task a urgent priority\n"
 "\n"
-"        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
+"        Make sure to use the right format and order e.g. Improve the "
+"configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
+"Użyj tych słów kluczowych w tytule, aby ustawić nowe zadania:\n"
+"\n"
+"        30h Przydziel 30 godzin na wykonanie zadania\n"
+"        #tagi Ustaw tagi dla zadania\n"
+"        @użytkownik Przypisz zadanie do użytkownika\n"
+"        ! Ustaw średni priorytet zadania\n"
+"        !! Ustaw wysoki priorytet zadania\n"
+"        !!! Ustaw pilny priorytet zadania\n"
+"\n"
+"        Pamiętaj, aby używać właściwego formatu i kolejności, np. Popraw "
+"ekran konfiguracji 5h #funkcja #v16 @Maciej !!"
 
 #. module: industry_fsm_stock
 #: model_terms:ir.ui.view,arch_db:industry_fsm_stock.fsm_stock_tracking_line_view_form

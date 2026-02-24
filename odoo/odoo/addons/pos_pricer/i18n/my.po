@@ -3,13 +3,14 @@
 # * pos_pricer
 #
 # Oakarmin Iron <oakarminiron@gmail.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-03 12:21+0000\n"
-"PO-Revision-Date: 2025-09-22 12:10+0000\n"
-"Last-Translator: Oakarmin Iron <oakarminiron@gmail.com>\n"
+"POT-Creation-Date: 2026-01-22 18:41+0000\n"
+"PO-Revision-Date: 2025-11-16 13:29+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Burmese <https://translate.odoo.com/projects/odoo-19/"
 "pos_pricer/my/>\n"
 "Language: my\n"
@@ -59,7 +60,7 @@ msgstr "ဖန်တီးသူ"
 #: model:ir.model.fields,field_description:pos_pricer.field_pricer_store__create_date
 #: model:ir.model.fields,field_description:pos_pricer.field_pricer_tag__create_date
 msgid "Created on"
-msgstr ""
+msgstr "တည်ဆောက်သည့်အချိန်"
 
 #. module: pos_pricer
 #: model:ir.model.fields,help:pos_pricer.field_pricer_store__last_update_datetime
@@ -74,18 +75,30 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_pricer.field_product_template__display_name
 #: model:ir.model.fields,field_description:pos_pricer.field_stock_move__display_name
 msgid "Display Name"
+msgstr "ပြသသော အမည်"
+
+#. module: pos_pricer
+#. odoo-python
+#: code:addons/pos_pricer/models/pricer_store.py:0
+msgid "Error"
 msgstr ""
 
 #. module: pos_pricer
 #. odoo-python
 #: code:addons/pos_pricer/models/pricer_store.py:0
-msgid "Error: %(status_code)s - %(message)s"
+msgid "Error: %(code)s - %(reason)s"
 msgstr ""
 
 #. module: pos_pricer
 #. odoo-python
 #: code:addons/pos_pricer/models/pricer_store.py:0
 msgid "Error: check Pricer credentials"
+msgstr ""
+
+#. module: pos_pricer
+#. odoo-python
+#: code:addons/pos_pricer/models/pricer_store.py:0
+msgid "Everything is already up to date with Pricer. No update needed."
 msgstr ""
 
 #. module: pos_pricer
@@ -102,7 +115,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_pricer.field_product_template__id
 #: model:ir.model.fields,field_description:pos_pricer.field_stock_move__id
 msgid "ID"
-msgstr ""
+msgstr "နံပါတ်"
 
 #. module: pos_pricer
 #: model:ir.model.fields,help:pos_pricer.field_pricer_store__pricer_store_identifier
@@ -142,7 +155,7 @@ msgstr "နောက်ဆုံးပြင်ဆင်သူ"
 #: model:ir.model.fields,field_description:pos_pricer.field_pricer_store__write_date
 #: model:ir.model.fields,field_description:pos_pricer.field_pricer_tag__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "နောက်ဆုံးပြင်ဆင်ချိန်"
 
 #. module: pos_pricer
 #: model:ir.model.fields,field_description:pos_pricer.field_pricer_store__link_tags_url
@@ -297,7 +310,7 @@ msgstr ""
 #. module: pos_pricer
 #: model:ir.model,name:pos_pricer.model_product_template
 msgid "Product"
-msgstr ""
+msgstr "ကုန်ပစ္စည်း"
 
 #. module: pos_pricer
 #. odoo-javascript
@@ -308,7 +321,7 @@ msgstr ""
 #. module: pos_pricer
 #: model:ir.model,name:pos_pricer.model_product_product
 msgid "Product Variant"
-msgstr ""
+msgstr "ကုန်ပစ္စည်း မူကွဲ"
 
 #. module: pos_pricer
 #: model:ir.model.fields,field_description:pos_pricer.field_pricer_store__dummy_prod_barcode
@@ -318,7 +331,7 @@ msgstr ""
 #. module: pos_pricer
 #: model:ir.model.fields,field_description:pos_pricer.field_pricer_store__product_ids
 msgid "Products"
-msgstr ""
+msgstr "ပစ္စည်းများ"
 
 #. module: pos_pricer
 #: model_terms:ir.ui.view,arch_db:pos_pricer.pricer_pricer_store_form_view
@@ -343,7 +356,7 @@ msgstr ""
 #. module: pos_pricer
 #: model:ir.model,name:pos_pricer.model_stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "စတော့ခ် အရွေ့"
 
 #. module: pos_pricer
 #: model:ir.model.fields,field_description:pos_pricer.field_pricer_store__name
@@ -386,8 +399,8 @@ msgstr ""
 #: model:ir.model.fields,help:pos_pricer.field_pricer_tag__pricer_store_id
 #: model:ir.model.fields,help:pos_pricer.field_product_product__pricer_store_id
 msgid ""
-"This product will be linked to and displayed on the Pricer tags of the store"
-" selected here"
+"This product will be linked to and displayed on the Pricer tags of the store "
+"selected here"
 msgstr ""
 
 #. module: pos_pricer
@@ -395,11 +408,6 @@ msgstr ""
 msgid ""
 "This product will be linked to and displayed on the Pricer tags with ids "
 "listed here. It is recommended to use a barcode scanner"
-msgstr ""
-
-#. module: pos_pricer
-#: model_terms:ir.ui.view,arch_db:pos_pricer.pricer_pricer_store_view_list
-msgid "Update all tags"
 msgstr ""
 
 #. module: pos_pricer

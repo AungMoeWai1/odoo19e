@@ -9,7 +9,7 @@ import mimetypes
 
 from odoo import http, tools, Command, _, fields
 from odoo.http import request, content_disposition
-from odoo.tools import consteq, format_date, posix_to_ldml
+from odoo.tools import consteq, format_date, posix_to_ldml, email_normalize
 from odoo.tools.pdf import PdfFileWriter, PdfFileReader
 from odoo.tools.misc import babel_locale_parse
 from odoo.addons.iap.tools import iap_tools
@@ -89,12 +89,13 @@ class Sign(http.Controller):
                 'action': 'open',
             })
 
-        lang_code = sign_request.communication_company_id.partner_id.lang
+        lang_code = (sign_request.communication_company_id or sign_request.create_uid.company_id).partner_id.lang
         lang = request.env['res.lang']._lang_get(lang_code)
         locale = babel_locale_parse(lang_code)
         date_format = ""
         if lang:
             date_format = posix_to_ldml(lang.date_format, locale=locale)
+        portal = post.get('portal')
 
         result['rendering_context'] = {
             'sign_request': sign_request,
@@ -112,11 +113,11 @@ class Sign(http.Controller):
             'readonly': not (current_request_item and current_request_item.state == 'sent' and sign_request.state in ['sent', 'shared']),
             'sign_item_types': sign_item_types,
             'sign_item_select_options': sign_request.template_id.sign_item_ids.mapped('option_ids'),
-            'portal': post.get('portal'),
+            'portal': portal,
             'company_id': (sign_request.communication_company_id or sign_request.create_uid.company_id).id,
             'today_formatted_date': format_date(http.request.env, fields.Date.today(), lang_code=lang_code),
             'date_format': date_format.lower(),
-            'show_thank_you_dialog': bool(sign_request.completed_document_attachment_ids),
+            'show_thank_you_dialog': bool(sign_request.completed_document_attachment_ids) and not portal,
         }
         return result
 
@@ -493,7 +494,16 @@ class Sign(http.Controller):
         if not sign_request or len(sign_request.request_item_ids) != 1 or sign_request.request_item_ids.partner_id:
             return False
 
-        partner = self.env['mail.thread'].sudo()._partner_find_from_emails_single([mail], no_create=False)
+        normalize_email = email_normalize(mail)
+        partner = self.env['mail.thread'].sudo()._partner_find_from_emails_single(
+            [mail],
+            additional_values={
+                normalize_email: {
+                    'name': name,
+                }
+            },
+            no_create=False
+        )
 
         new_sign_request_sudo = sign_request.with_user(sign_request.create_uid).with_context(no_sign_mail=True).sudo().copy({
             'reference': sign_request.reference.replace('-%s' % _("Shared"), ''),
@@ -558,17 +568,22 @@ class Sign(http.Controller):
         if not request_item_sudo or request_item_sudo.sign_request_id.validity and request_item_sudo.sign_request_id.validity < fields.Date.today():
             return {'success': False}
 
-        result = {'success': True}
+        sign_request = request_item_sudo.sign_request_id
+        company = sign_request.communication_company_id or sign_request.create_uid.company_id
+        result = {'success': True, 'company_country_code': company.country_id.code}
         if request_item_sudo.role_id.auth_method:
             result = self._validate_auth_method(request_item_sudo, sms_token=sms_token, **kwargs)
+            result['company_country_code'] = company.country_id.code
             if not result.get('success'):
                 return result
 
         sign_user = request.env['res.users'].sudo().search([('partner_id', '=', request_item_sudo.partner_id.id)], limit=1)
         if sign_user:
             # sign as a known user
-            request_item_sudo = request_item_sudo.with_user(sign_user).sudo()
-
+            context = {}
+            if request.env.user != sign_user and not request.env.user._is_public():
+                context.update(logged_user_id=request.env.user.id)
+            request_item_sudo = request_item_sudo.with_context(context).with_user(sign_user).sudo()
         request_item_sudo.sign(signature, **kwargs)
         return result
 
@@ -676,11 +691,12 @@ class Sign(http.Controller):
         """
         sign_request = request.env['sign.request'].browse(request_id).sudo()
         sign_item = request.env['sign.request.item'].browse(sign_item_id).sudo()
-        if not sign_request.exists() or not consteq(sign_request.access_token, token) or not sign_item.exists():
+        if not sign_request.exists() or not consteq(sign_request.access_token, token) or not sign_item.exists() or not sign_item.signer_email:
             return []
         uid = sign_request.create_uid.id
         items = request.env['sign.request.item'].sudo().search_read(
             domain=[
+                ('signer_email', '!=', False),
                 ('signer_email', '=', sign_item.signer_email),
                 ('state', '=', 'sent'),
                 ('sign_request_id.state', '=', 'sent'),
@@ -697,8 +713,8 @@ class Sign(http.Controller):
             'token': item['access_token'],
             'requestId': item['sign_request_id'][0],
             'name': item['sign_request_id'][1],
-            'userId': item['create_uid'][0],
-            'user': item['create_uid'][1],
+            'userId': item['create_uid'][0] if item['create_uid'] else False,
+            'user': item['create_uid'][1] if item['create_uid'] else False,
             'date': item['create_date'].date(),
         } for item in items]
 

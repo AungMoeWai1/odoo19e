@@ -162,10 +162,6 @@ class PosConfig(models.Model):
             fiscal_position = self.env['account.fiscal.position'].create({
                 'name': 'UrbanPiper'
             })
-            self.env['account.tax'].create({
-                'name': 'UrbanPiper',
-                'fiscal_position_ids': [Command.link(fiscal_position.id)],
-            })
         if self.module_pos_urban_piper:
             if not self.urbanpiper_fiscal_position_id:
                 self.urbanpiper_fiscal_position_id = fiscal_position
@@ -237,6 +233,9 @@ class PosConfig(models.Model):
             })
         if not urban_piper_test and new_status == 'Acknowledged':
             up.urbanpiper_order_reference_update(order)
+        if new_status == 'Cancelled':
+            # Prevent loading cancelled orders in `getServerOrders` triggered by `_send_delivery_order_count`
+            order.state = 'cancel'
         self._send_delivery_order_count(order_id)
         return {'is_success': is_success, 'message': message}
 
@@ -256,6 +255,7 @@ class PosConfig(models.Model):
             'amount': order.amount_total,
             'payment_method_id': payment_method.id,
         }).check()
+        order._compute_prices()
 
     def _send_delivery_order_count(self, order_id=None):
         """
@@ -400,6 +400,17 @@ class PosConfig(models.Model):
         except psycopg2.Error:
             pass
 
+    def _reset_urbanpiper_product_linkages(self):
+        """
+        Reset product linkage to Urbanpiper and products become available
+        for syncing again.
+        """
+        if linked_statuses := self.env['product.urban.piper.status'].search([
+            ('config_id', 'in', self.ids),
+            ('is_product_linked', '=', True)
+        ]):
+            linked_statuses.write({'is_product_linked': False})
+
     def get_urban_piper_provider_states(self):
         raw = self.env['ir.config_parameter'].sudo().get_param('pos_urban_piper.toggle_state') or "{}"
         config_state = json.loads(raw)
@@ -412,3 +423,10 @@ class PosConfig(models.Model):
         self.env['ir.config_parameter'].sudo().set_param('pos_urban_piper.toggle_state', json.dumps(config_state))
         self._notify('URBAN_PIPER_PROVIDER_STATES', config_state[str(self.id)])
         return config_state[str(self.id)]
+
+    def get_urbanpiper_special_products(self):
+        return [
+            self.env.ref("pos_urban_piper.product_other_charges", raise_if_not_found=False),
+            self.env.ref("pos_urban_piper.product_delivery_charges", raise_if_not_found=False),
+            self.env.ref("pos_urban_piper.product_packaging_charges", raise_if_not_found=False),
+        ]

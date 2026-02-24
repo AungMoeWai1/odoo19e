@@ -58,7 +58,7 @@ class ShipRocket:
         """
         data = {
             'email': self.carrier.shiprocket_email,
-            'password': self.carrier.shiprocket_password,
+            'password': self.carrier.sudo().shiprocket_password,
         }
         return self._make_api_request('external/auth/login', 'POST', data)
 
@@ -67,7 +67,7 @@ class ShipRocket:
         Generate an access token for shiprocket.
         The token is automatically generates after 9 days as it expires.
         """
-        if not (self.carrier.shiprocket_email and self.carrier.shiprocket_password):
+        if not (self.carrier.shiprocket_email and self.carrier.sudo().shiprocket_password):
             action = self.carrier.env.ref('delivery.action_delivery_carrier_form')
             raise RedirectWarning(
                 _("Please configure Shiprocket credentials in the shipping method"), action.id,
@@ -238,7 +238,7 @@ class ShipRocket:
         tax_ids = stock_move.sale_line_id and stock_move.sale_line_id.sudo().tax_ids or stock_move.product_id.sudo().taxes_id
         for tax in tax_ids.flatten_taxes_hierarchy():
             tax_tag_ids = tax.invoice_repartition_line_ids.tag_ids
-            if tax_tag_ids and any(tax.env.ref(f"l10n_in.tax_tag_{gst}gst", False) in tax_tag_ids for gst in ["c", "s", "i"]):
+            if tax_tag_ids and any((tax.env.ref(f"l10n_in.tax_tag_{gst}gst", False) or tax.env['account.account.tag']) in tax_tag_ids for gst in ["c", "s", "i"]):
                 gst_tax_amount += tax.amount
         return gst_tax_amount
 

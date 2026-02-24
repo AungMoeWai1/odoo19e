@@ -4,15 +4,18 @@ from base64 import b64decode
 from lxml import etree
 
 from odoo import Command
-from odoo.addons.account_iso20022.tests.test_iso20022_common import TestISO20022CommonCreditTransfer
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
 from odoo.tests.common import test_xsd
 
 
-class TestSEPACreditTransferUpdateCommon(TestISO20022CommonCreditTransfer):
+class TestSEPACreditTransferUpdateCommon(AccountTestInvoicingCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+
+        cls.env.user.group_ids |= cls.env.ref('account.group_validate_bank_account')
+
         cls.company_data['company'].write({
             'country_id': cls.env.ref('base.be').id,
             'vat': 'BE0477472701',
@@ -80,15 +83,12 @@ class TestSEPACreditTransferUpdate(TestSEPACreditTransferUpdateCommon):
         self.assertTrue(self.payment.is_sent)
         sct_doc = etree.fromstring(b64decode(self.batch.export_file))
 
-        uetr = self.payment.iso20022_uetr
         namespaces = {'ns': 'urn:iso:std:iso:20022:tech:xsd:pain.001.001.09'}
         execution_date = sct_doc.findtext('.//ns:PmtInf/ns:ReqdExctnDt/ns:Dt', namespaces=namespaces)
-        uetr_text = sct_doc.findtext('.//ns:CdtTrfTxInf/ns:PmtId/ns:UETR', namespaces=namespaces)
         cdtr_lei = sct_doc.findtext('.//ns:CdtTrfTxInf/ns:CdtrAgt/ns:FinInstnId/ns:LEI', namespaces=namespaces)
         dbtr_lei = sct_doc.findtext('.//ns:PmtInf/ns:Dbtr/ns:Id/ns:OrgId/ns:LEI', namespaces=namespaces)
 
         self.assertEqual(execution_date, self.batch.date.strftime('%Y-%m-%d'))
-        self.assertEqual(uetr_text, uetr)
         self.assertEqual(cdtr_lei, self.partner_a.iso20022_lei)
         self.assertEqual(dbtr_lei, self.company_data['company'].iso20022_lei)
 
@@ -97,11 +97,13 @@ class TestSEPACreditTransferUpdate(TestSEPACreditTransferUpdateCommon):
         postal_code = partner_address.findtext('ns:PstCd', namespaces=namespaces)
         city = partner_address.findtext('ns:TwnNm', namespaces=namespaces)
         adr_line = partner_address.findtext('ns:AdrLine', namespaces=namespaces)
+        end_to_end_id = sct_doc.find('.//ns:CdtTrfTxInf/ns:PmtId/ns:EndToEndId', namespaces=namespaces)
 
         self.assertEqual(street, self.partner_a.street)
         self.assertEqual(postal_code, self.partner_a.zip)
         self.assertEqual(city, self.partner_a.city)
         self.assertFalse(adr_line)
+        self.assertEqual(end_to_end_id.text, self.payment.end_to_end_uuid)
 
 
 @tagged('external_l10n', 'post_install', '-at_install', '-standard')

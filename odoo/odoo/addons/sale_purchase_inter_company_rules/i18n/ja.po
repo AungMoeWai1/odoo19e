@@ -3,13 +3,14 @@
 # * sale_purchase_inter_company_rules
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-01 12:12+0000\n"
-"PO-Revision-Date: 2025-09-15 12:03+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2025-12-30 18:47+0000\n"
+"PO-Revision-Date: 2026-02-14 10:10+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
 "sale_purchase_inter_company_rules/ja/>\n"
 "Language: ja\n"
@@ -17,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: sale_purchase_inter_company_rules
 #: model:ir.model.fields,field_description:sale_purchase_inter_company_rules.field_purchase_order__auto_generated
@@ -44,7 +45,7 @@ msgstr "会社"
 #. module: sale_purchase_inter_company_rules
 #: model:ir.model,name:sale_purchase_inter_company_rules.model_res_config_settings
 msgid "Config Settings"
-msgstr "詳細設定"
+msgstr "構成設定"
 
 #. module: sale_purchase_inter_company_rules
 #: model_terms:ir.ui.view,arch_db:sale_purchase_inter_company_rules.res_config_settings_view_form
@@ -117,7 +118,7 @@ msgstr "社内関係のために少なくとも1人のユーザーを%(name)sの
 #. odoo-python
 #: code:addons/sale_purchase_inter_company_rules/models/sale_order.py:0
 msgid "Provide one user for intercompany relation for %(name)s "
-msgstr "%(name)s用に社内関係のために1人のユーザを提供する "
+msgstr "%(name)s のグループ内関係に対して、ユーザを1人設定してください "
 
 #. module: sale_purchase_inter_company_rules
 #: model:ir.model,name:sale_purchase_inter_company_rules.model_purchase_order
@@ -143,14 +144,17 @@ msgstr "ソース販売オーダ"
 #. odoo-python
 #: code:addons/sale_purchase_inter_company_rules/models/purchase_order.py:0
 msgid ""
-"You cannot create SO from PO because sale price list currency is different than purchase price list currency.\n"
-"The currency of the SO is obtained from the pricelist of the company partner.\n"
+"You cannot create SO from PO because sale price list currency is different "
+"than purchase price list currency.\n"
+"The currency of the SO is obtained from the pricelist of the company "
+"partner.\n"
 "\n"
-"(SO currency: %(so_currency)s, Pricelist: %(pricelist)s, Partner: %(partner)s (ID: %(id)s))"
+"(SO currency: %(so_currency)s, Pricelist: %(pricelist)s, Partner: %"
+"(partner)s (ID: %(id)s))"
 msgstr ""
 "販売価格表の通貨が購買価格表の通貨と異なるため、購買オーダから販売オーダを作"
 "成することができません。\n"
 "販売オーダの通貨は取引先の価格表から取得します。\n"
 "\n"
-"（販売オーダの通貨：%(so_currency)s 価格表：%(pricelist)s 取引先：%(partner)"
-"s (ID: %(id)s))"
+"（販売オーダの通貨：%(so_currency)s 価格表：%(pricelist)s 取引先：%"
+"(partner)s (ID: %(id)s))"

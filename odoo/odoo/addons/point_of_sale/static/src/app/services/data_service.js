@@ -14,7 +14,6 @@ import DeviceIdentifierSequence from "../utils/devices_identifier_sequence";
 import { logPosMessage } from "../utils/pretty_console_log";
 
 const { DateTime } = luxon;
-const INDEXED_DB_VERSION = 1;
 const CONSOLE_COLOR = "#28ffeb";
 
 export class PosData extends Reactive {
@@ -137,6 +136,10 @@ export class PosData extends Reactive {
         await this.indexedDB.reset();
     }
 
+    async deleteRecordsInIndexedDB(model, ids) {
+        return await this.indexedDB.delete(model, ids);
+    }
+
     async initIndexedDB(relations) {
         // This method initializes indexedDB with all models loaded into the PoS. The default key is ID.
         // But some models have another key configured in data_service_options.js. These models are
@@ -150,7 +153,7 @@ export class PosData extends Reactive {
         });
 
         return new Promise((resolve) => {
-            this.indexedDB = new IndexedDB(this.databaseName, INDEXED_DB_VERSION, models, resolve);
+            this.indexedDB = new IndexedDB(this.databaseName, false, models, resolve);
         });
     }
 
@@ -362,7 +365,7 @@ export class PosData extends Reactive {
 
     async sanitizeData() {
         const order_to_delete = this.models["pos.order"].filter((order) =>
-            order.lines.some((line) => line.is_reward_line && !line.coupon_id)
+            order.lines.some((line) => line.is_reward_line && !line.coupon_id && !line.reward_id)
         );
         for (const order of order_to_delete) {
             for (let i = order.lines.length - 1; i >= 0; i--) {
@@ -923,20 +926,17 @@ export class PosData extends Reactive {
     }
 
     localDeleteCascade(record, removeFromServer = false) {
-        const recordModel = record.constructor.pythonModel;
+        const recordModel = record.model.name;
 
         const relationsToDelete = Object.values(this.relations[recordModel])
             .filter((rel) => this.opts.cascadeDeleteModels.includes(rel.relation))
             .map((rel) => rel.name);
-        const recordsToDelete = Object.entries(record)
-            .filter(([idx, values]) => relationsToDelete.includes(idx) && values)
-            .map(([idx, values]) => values)
-            .flat();
+        const recordsToDelete = relationsToDelete.flatMap((relation) => record[relation] || []);
 
         // Delete all children records before main record
-        this.indexedDB.delete(recordModel, [record.uuid]);
+        this.deleteRecordsInIndexedDB(recordModel, [record.uuid]);
         for (const item of recordsToDelete) {
-            this.indexedDB.delete(item.model.name, [item.uuid]);
+            this.deleteRecordsInIndexedDB(item.model.name, [item.uuid]);
             item.delete({ silent: !removeFromServer });
         }
 

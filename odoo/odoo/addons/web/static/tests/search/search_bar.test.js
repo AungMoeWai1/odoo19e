@@ -12,7 +12,7 @@ import {
     queryFirst,
     runAllTimers,
 } from "@odoo/hoot-dom";
-import { Deferred, animationFrame, mockTimeZone } from "@odoo/hoot-mock";
+import { Deferred, animationFrame, mockTimeZone, mockTouch } from "@odoo/hoot-mock";
 import { Component, onWillUpdateProps, xml } from "@odoo/owl";
 import {
     SELECTORS,
@@ -215,6 +215,45 @@ test("navigation with facets (2)", async () => {
     expect(queryFirst`.o_searchview .o_searchview_facet:nth-child(1)`).toBeFocused();
 });
 
+test.tags("desktop");
+test("navigation should move forward from search bar filter", async () => {
+    await mountWithSearch(SearchBar, {
+        resModel: "partner",
+        searchMenuTypes: ["groupBy"],
+        searchViewId: false,
+        context: { search_default_date_group_by: 1 },
+    });
+
+    expect(`.o_searchview .o_searchview_facet`).toHaveCount(1);
+    expect(queryFirst`.o_searchview input`).toBeFocused();
+
+    // press tab to navigate forward to the toggler
+    await keyDown("Tab");
+    await animationFrame();
+    expect(queryFirst`.o_searchview_dropdown_toggler`).toBeFocused();
+});
+
+test.tags("desktop");
+test("navigation should move backward from search bar filter", async () => {
+    await mountWithSearch(SearchBar, {
+        resModel: "partner",
+        searchMenuTypes: ["groupBy"],
+        searchViewId: false,
+        context: { search_default_date_group_by: 1 },
+    });
+
+    expect(`.o_searchview .o_searchview_facet`).toHaveCount(1);
+    expect(queryFirst`.o_searchview input`).toBeFocused();
+
+    // press shift+tab to navigate backward to the search icon button
+    await keyDown("Shift");
+    await press("Tab");
+    await animationFrame();
+    await press("Tab");
+    await animationFrame();
+    expect(queryFirst`.d-print-none.btn`).toBeFocused();
+});
+
 test.tags("mobile");
 test("search input is focused when being toggled", async () => {
     class Parent extends Component {
@@ -239,6 +278,18 @@ test("search input is focused when being toggled", async () => {
     await contains(`button .fa-search`).click();
     expect(".o_searchview input").toHaveCount(1);
     expect(queryFirst`.o_searchview input`).toBeFocused();
+});
+
+test.tags("desktop");
+test("search input is not focused on larger touch devices", async () => {
+    mockTouch(true);
+    await mountWithSearch(SearchBar, {
+        resModel: "partner",
+        searchMenuTypes: [],
+        searchViewId: false,
+    });
+    expect(".o_searchview input").toHaveCount(1);
+    expect(".o_searchview input").not.toBeFocused();
 });
 
 test("search date and datetime fields. Support of timezones", async () => {
@@ -1926,4 +1977,22 @@ test("no crash when search component is destroyed with input", async () => {
     await animationFrame();
     await runAllTimers();
     expect(".o_form_view").toHaveCount(1);
+});
+
+test("search on full query without waiting for display synchronisation", async () => {
+    /* Typically a barcode scan where the dropdown display doesn't have the time to update */
+    const searchBar = await mountWithSearch(SearchBar, {
+        resModel: "partner",
+        searchMenuTypes: [],
+        searchViewId: false,
+    });
+
+    await editSearch("01234");
+    expect(".o-dropdown-item:first").toHaveText("Search Foo for: 01234");
+    await press("5");
+    expect(".o-dropdown-item:first").toHaveText("Search Foo for: 01234");
+    await press("6");
+    expect(".o-dropdown-item:first").toHaveText("Search Foo for: 01234");
+    await keyDown("Enter");
+    expect(searchBar.env.searchModel.domain).toEqual([["foo", "ilike", "0123456"]]);
 });

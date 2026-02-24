@@ -5,6 +5,7 @@ import base64
 
 from odoo import fields, models, _
 from odoo.exceptions import UserError
+from lxml.etree import ParserError
 
 
 class IrActionsReport(models.Model):
@@ -58,18 +59,39 @@ class IrActionsReport(models.Model):
 
     def get_action_wizard(self, selected_device_ids=None):
         self.ensure_one()
-        wizard = self.env['select.printers.wizard'].create({
+        if selected_device_ids:
+            selected_device_ids = [
+                dev for dev in selected_device_ids
+                if dev in self.device_ids.ids
+            ]  # Filter out devices that are deleted/no longer linked to the report
+        wizard = self.env['select.printers.wizard'].create([{
             'display_device_ids': self.device_ids,
             'device_ids': selected_device_ids
-        })
+        }])
         return {
-                'name': _("Select Printers"),
-                'res_id': wizard.id,
-                'type': 'ir.actions.act_window',
-                'res_model': 'select.printers.wizard',
-                'target': 'new',
-                'views': [[False, 'form']],
-                'context': {
-                    'report_id': self.id,
-                },
+            'name': _("Select Printers for %s", self.name),
+            'res_id': wizard.id,
+            'type': 'ir.actions.act_window',
+            'res_model': 'select.printers.wizard',
+            'target': 'new',
+            'views': [[False, 'form']],
+            'context': {
+                'report_id': self.id,
+            },
         }
+
+    def _render_qweb_pdf(self, report_ref, *args, **kwargs):
+        """Override to ensure the user is informed when trying to print an empty report
+        without an IoT printer.
+
+        This can happen when trying to print delivery labels, that have empty reports used for assigning
+        IoT printers.
+        """
+        try:
+            return super()._render_qweb_pdf(report_ref, *args, **kwargs)
+        except ParserError:
+            raise UserError(_(
+                "The report you are trying to print requires an IoT Box to be printed.\n"
+                "Make sure you linked the report '%s' to the corresponding IoT printer device.",
+                report_ref
+            ))

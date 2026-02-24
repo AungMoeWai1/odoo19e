@@ -46,7 +46,7 @@ export function buildEditableInteractions(builders) {
     return result;
 }
 
-registry.category("services").add("website_edit", {
+export const websiteEditService = {
     dependencies: ["public.interactions"],
     start(env, { ["public.interactions"]: publicInteractions }) {
         let editableInteractions = null;
@@ -232,7 +232,9 @@ registry.category("services").add("website_edit", {
                 patch(publicInteractions.constructor.prototype, {
                     shouldStop(el, interaction) {
                         if (this.isRefreshing) {
-                            const mustBeRefreshed = super.shouldStop(el, interaction) || interaction.interaction.isImpactedBy(el);
+                            const mustBeRefreshed =
+                                super.shouldStop(el, interaction) ||
+                                interaction.interaction.isImpactedBy(el);
                             return mustBeRefreshed && interaction.interaction.shouldStop();
                         }
                         return super.shouldStop(el, interaction);
@@ -291,12 +293,12 @@ registry.category("services").add("website_edit", {
             callShared,
         };
 
-        window.parent.document.addEventListener("edit_page", (ev) => {
+        const handleEditPage = (ev) => {
             stop(ev.detail.iframeDocument);
-        });
+        };
 
         // Transfer the iframe website_edit service to the EditInteractionPlugin
-        window.parent.document.addEventListener("edit_interaction_plugin_loaded", (ev) => {
+        const handlePluginLoaded = (ev) => {
             ev.currentTarget.dispatchEvent(
                 new CustomEvent("transfer_website_edit_service", {
                     detail: {
@@ -307,11 +309,28 @@ registry.category("services").add("website_edit", {
             Object.assign(shared, ev.shared);
             historyCallbacks.ignoreDOMMutations = shared.history.ignoreDOMMutations;
             setupIgnoreDOMMutations(shared.history.ignoreDOMMutations);
+        };
+
+        window.parent.document.addEventListener("edit_page", handleEditPage);
+        window.parent.document.addEventListener(
+            "edit_interaction_plugin_loaded",
+            handlePluginLoaded
+        );
+
+        // Clean up parent document listeners when iframe unloads to prevent
+        // stale handlers from serving an outdated service to new plugins.
+        window.addEventListener("beforeunload", () => {
+            window.parent.document.removeEventListener("edit_page", handleEditPage);
+            window.parent.document.removeEventListener(
+                "edit_interaction_plugin_loaded",
+                handlePluginLoaded
+            );
         });
 
         return websiteEditService;
     },
-});
+};
+registry.category("services").add("website_edit", websiteEditService);
 
 // Patch PublicRoot.
 

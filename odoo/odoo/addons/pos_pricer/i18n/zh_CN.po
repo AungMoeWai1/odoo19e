@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-03 12:21+0000\n"
+"POT-Creation-Date: 2026-01-22 18:41+0000\n"
 "PO-Revision-Date: 2025-09-16 15:28+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -79,8 +79,14 @@ msgstr "显示名称"
 #. module: pos_pricer
 #. odoo-python
 #: code:addons/pos_pricer/models/pricer_store.py:0
-msgid "Error: %(status_code)s - %(message)s"
-msgstr "错误：%(status_code)s - %(message)s"
+msgid "Error"
+msgstr ""
+
+#. module: pos_pricer
+#. odoo-python
+#: code:addons/pos_pricer/models/pricer_store.py:0
+msgid "Error: %(code)s - %(reason)s"
+msgstr ""
 
 #. module: pos_pricer
 #. odoo-python
@@ -91,8 +97,15 @@ msgstr "错误:检查 Pricer 凭据"
 #. module: pos_pricer
 #. odoo-python
 #: code:addons/pos_pricer/models/pricer_store.py:0
+msgid "Everything is already up to date with Pricer. No update needed."
+msgstr ""
+
+#. module: pos_pricer
+#. odoo-python
+#: code:addons/pos_pricer/models/pricer_store.py:0
 msgid "Failed to unlink Pricer tag %(pricer_tag)s at API url %(api_url)s"
-msgstr "未能使用以下链接取消与 Pricer 价格牌%(pricer_tag)s的链接：API 地址%(api_url)s"
+msgstr ""
+"未能使用以下链接取消与 Pricer 价格牌%(pricer_tag)s的链接：API 地址%(api_url)s"
 
 #. module: pos_pricer
 #: model:ir.model.fields,field_description:pos_pricer.field_pos_config__id
@@ -386,8 +399,8 @@ msgstr "此价格表将用于设置该产品的 Pricer 标签上的销售额"
 #: model:ir.model.fields,help:pos_pricer.field_pricer_tag__pricer_store_id
 #: model:ir.model.fields,help:pos_pricer.field_product_product__pricer_store_id
 msgid ""
-"This product will be linked to and displayed on the Pricer tags of the store"
-" selected here"
+"This product will be linked to and displayed on the Pricer tags of the store "
+"selected here"
 msgstr "此产品将被链接到并显示在这里选择的商店的价格标签上"
 
 #. module: pos_pricer
@@ -396,11 +409,6 @@ msgid ""
 "This product will be linked to and displayed on the Pricer tags with ids "
 "listed here. It is recommended to use a barcode scanner"
 msgstr "此产品将链接到并显示在这里列出的价格标签id。建议使用条码扫描器"
-
-#. module: pos_pricer
-#: model_terms:ir.ui.view,arch_db:pos_pricer.pricer_pricer_store_view_list
-msgid "Update all tags"
-msgstr "更新所有标签"
 
 #. module: pos_pricer
 #. odoo-python
@@ -417,3 +425,9 @@ msgstr "更新税"
 #: model:ir.model.fields,help:pos_pricer.field_pricer_store__pricer_tenant_name
 msgid "Your company identifier at Pricer"
 msgstr "你在 Pricer 的公司标识"
+
+#~ msgid "Error: %(status_code)s - %(message)s"
+#~ msgstr "错误：%(status_code)s - %(message)s"
+
+#~ msgid "Update all tags"
+#~ msgstr "更新所有标签"

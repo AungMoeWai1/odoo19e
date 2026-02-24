@@ -217,6 +217,12 @@ class StockRule(models.Model):
         seller = 'supplierinfo' in values and values['supplierinfo'] or product.with_company(buy_rule.company_id)._select_seller(quantity=None)
         if not buy_rule:
             return delays, delay_description
+        if not seller:
+            delays['total_delay'] += 365
+            delays['no_vendor_found_delay'] += 365
+            if not bypass_delay_description:
+                delay_description.append((_('No Vendor Found'), _('+ %s day(s)', 365)))
+            return delays, delay_description
         buy_rule.ensure_one()
         if not self.env.context.get('ignore_vendor_lead_time'):
             supplier_delay = seller[:1].delay
@@ -361,7 +367,7 @@ class StockRule(models.Model):
             ('user_id', '=', partner.buyer_id.id),
             ('currency_id', '=', currency.id),
         )
-        if partner.group_rfq == 'default':
+        if partner.group_rfq == 'default' or self.picking_type_id.code == 'dropship':
             if values.get('reference_ids'):
                 domain += (('reference_ids', 'in', tuple(values['reference_ids'].ids)),)
         date_planned = fields.Datetime.from_string(values['date_planned'])
@@ -391,7 +397,7 @@ class StockRule(models.Model):
         return res
 
     def _get_partner_id(self, values, rule):
-        return values.get("supplierinfo_name") or (values.get("force_uom") and values.get("partner"))
+        return values.get("supplierinfo_name") or (values.get("force_uom") and values.get("partner_id"))
 
 
 class StockRoute(models.Model):

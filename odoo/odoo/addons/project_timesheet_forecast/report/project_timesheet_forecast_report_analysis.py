@@ -26,15 +26,22 @@ class ProjectTimesheetForecastReportAnalysis(models.Model):
     planned_costs = fields.Float('Planned Costs', readonly=True)
 
     def _number_of_days_without_weekend(self):
+        # this method should return working days based on resource calendar
+        # TODO: naming should be changed on master
         return """
             WITH no_weekend_days AS (
                 SELECT
                     F.id AS forecast_id,
-                    GREATEST(COUNT(*), 1) AS no_weekend_days_count
+                    GREATEST(COUNT(DISTINCT g::date), 1) AS no_weekend_days_count
                 FROM
-                    planning_slot F,
-                    generate_series(F.start_datetime, F.end_datetime, '1 day') AS g(day)
-                WHERE EXTRACT(ISODOW FROM g.day) < 6
+                    planning_slot F
+                    JOIN hr_employee E ON F.employee_id = E.id
+                    JOIN resource_resource R ON E.resource_id = R.id
+                    JOIN resource_calendar_attendance A ON A.calendar_id = R.calendar_id
+                    JOIN resource_calendar C ON R.calendar_id = C.id,
+                    generate_series(F.start_datetime::date, F.end_datetime::date, '1 day') g
+                WHERE
+                    EXTRACT(ISODOW FROM g) = (A.dayofweek::integer + 1) OR C.flexible_hours
                 GROUP BY F.id
             )
         """
@@ -45,7 +52,7 @@ class ProjectTimesheetForecastReportAnalysis(models.Model):
         select_str = """
             %s
             SELECT
-                d::date AS entry_date,
+                d.date::date AS entry_date,
                 F.employee_id AS employee_id,
                 F.company_id AS company_id,
                 F.project_id AS project_id,
@@ -64,15 +71,26 @@ class ProjectTimesheetForecastReportAnalysis(models.Model):
     @api.model
     def _from(self):
         from_str = """
-            FROM generate_series(
-                (SELECT min(start_datetime) FROM planning_slot)::date,
-                CURRENT_DATE,
-                '1 day'::interval
-            ) d
-                LEFT JOIN planning_slot F ON d::date >= F.start_datetime::date AND d::date <= F.end_datetime::date
-                LEFT JOIN hr_employee E ON F.employee_id = E.id
-                LEFT JOIN resource_resource R ON E.resource_id = R.id
-                LEFT JOIN no_weekend_days W ON F.id = W.forecast_id
+            FROM planning_slot F
+            JOIN hr_employee E ON F.employee_id = E.id
+            JOIN resource_resource R ON E.resource_id = R.id
+            LEFT JOIN no_weekend_days W ON F.id = W.forecast_id
+            CROSS JOIN LATERAL (
+                SELECT g.day::date AS date
+                FROM generate_series(
+                    (SELECT min(start_datetime) FROM planning_slot)::date,
+                    CURRENT_DATE,
+                    '1 day'::interval
+                ) AS g(day)
+                WHERE NOT EXISTS (
+                    SELECT 1
+                    FROM resource_calendar_leaves RL
+                    WHERE RL.calendar_id = R.calendar_id
+                      AND (RL.resource_id = R.id OR RL.resource_id IS NULL)
+                      AND NOT (F.end_datetime::date < RL.date_from::date OR F.start_datetime::date > RL.date_to::date)
+                      AND g.day::date BETWEEN RL.date_from::date AND RL.date_to::date
+                )
+            ) AS d
         """
         return from_str
 
@@ -125,15 +143,27 @@ class ProjectTimesheetForecastReportAnalysis(models.Model):
     @api.model
     def _where(self):
         where_str = """
-            WHERE
-                EXTRACT(ISODOW FROM d.date) IN (
-                    SELECT A.dayofweek::integer+1 FROM resource_calendar_attendance A WHERE A.calendar_id = R.calendar_id
+                WHERE EXISTS (
+                    SELECT 1
+                    FROM resource_calendar_attendance A
+                    JOIN resource_calendar C ON (
+                        C.id = A.calendar_id
+                        AND A.calendar_id = R.calendar_id
+                    )
+                    WHERE (
+                        C.flexible_hours
+                        OR (
+                            A.dayofweek::int + 1 = EXTRACT(ISODOW FROM d.date)
+                            AND F.start_datetime < (d.date::date + (A.hour_to || ' hour')::interval)
+                            AND F.end_datetime > (d.date::date + (A.hour_from || ' hour')::interval)
+                        )
+                    )
                 )
         """
         return where_str
 
     def init(self):
-        query = "(%s %s %s) UNION (%s %s %s %s)" % (
+        query = "(%s %s %s) UNION ALL (%s %s %s %s)" % (
             self._select(),
             self._from(),
             self._where(),

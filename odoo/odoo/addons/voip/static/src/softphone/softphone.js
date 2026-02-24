@@ -61,7 +61,11 @@ export class Softphone extends Component {
 
     /** @returns {boolean} */
     get shouldShowCallBanner() {
-        return this.userAgent.mainSession && this.userAgent.transferSession && this.pendingCall.state === "ongoing";
+        return (
+            this.userAgent.mainSession &&
+            this.userAgent.transferSession &&
+            this.pendingCall.state === "ongoing"
+        );
     }
 
     get tabs() {
@@ -87,13 +91,13 @@ export class Softphone extends Component {
             return "";
         }
         if (this.userAgent.hasCallInvitation) {
-            return _t("Incoming call");
+            return _t("Incoming call…");
         }
         if (this.userAgent.activeSession?.inviteState === "ringing") {
             return _t("Ringing…");
         }
         if (this.pendingCall.state === "calling") {
-            return _t("Calling…");
+            return _t("Outgoing call…");
         }
         if (this.pendingCall.state === "ongoing") {
             return _t("%(status)s - %(timer)s", {

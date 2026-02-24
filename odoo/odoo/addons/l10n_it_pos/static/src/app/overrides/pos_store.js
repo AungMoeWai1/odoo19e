@@ -38,8 +38,14 @@ patch(PosStore.prototype, {
         if (!isFiscalPrinterActive(this.config)) {
             return super.printReceipt(...arguments);
         }
+        const isFiscal = !basic && !printBillActionTriggered;
 
-        if (!order.nb_print) {
+        if (!isFiscal) {
+            await this.fiscalPrinter.printNonFiscalReceipt({
+                isBasicPrint: basic,
+                isEarlyPrint: printBillActionTriggered,
+            });
+        } else if (!order.nb_print) {
             const result = order.to_invoice
                 ? await this.fiscalPrinter.printFiscalInvoice()
                 : await this.fiscalPrinter.printFiscalReceipt();
@@ -58,7 +64,9 @@ patch(PosStore.prototype, {
                 return true;
             }
         } else {
-            this.fiscalPrinter.printDuplicateReceipt();
+            this.fiscalPrinter.printContentByNumbers({
+                order: order,
+            });
         }
     },
 });

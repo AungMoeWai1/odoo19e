@@ -4,12 +4,14 @@
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Odoo Translation Bot <c3p@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:36+0000\n"
-"PO-Revision-Date: 2025-09-30 10:53+0000\n"
+"POT-Creation-Date: 2025-12-30 18:42+0000\n"
+"PO-Revision-Date: 2025-12-06 10:11+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/mrp_mps/"
 "ko/>\n"
@@ -18,19 +20,19 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: mrp_mps
 #. odoo-python
 #: code:addons/mrp_mps/wizard/mrp_mps_forecast_suggestion.py:0
 msgid "%(month)s %(day)s %(year)s"
-msgstr ""
+msgstr "%(month)s %(day)s %(year)s"
 
 #. module: mrp_mps
 #. odoo-python
 #: code:addons/mrp_mps/wizard/mrp_mps_forecast_suggestion.py:0
 msgid "%(month)s %(year)s"
-msgstr ""
+msgstr "%(month)s %(year)s"
 
 #. module: mrp_mps
 #. odoo-python
@@ -144,12 +146,12 @@ msgstr "약속 가능 재고 수량"
 #. module: mrp_mps
 #: model:ir.model.fields,field_description:mrp_mps.field_mrp_mps_forecast_suggestion__based_on_readonly
 msgid "Based On Readonly"
-msgstr ""
+msgstr "읽기 전용 기준"
 
 #. module: mrp_mps
 #: model:ir.model.fields,field_description:mrp_mps.field_mrp_mps_forecast_suggestion__based_on
 msgid "Based on"
-msgstr ""
+msgstr "기준"
 
 #. module: mrp_mps
 #: model:ir.model,name:mrp_mps.model_mrp_bom
@@ -237,8 +239,7 @@ msgstr "모든 재고 운용에 사용되는 기본 단위입니다."
 #. module: mrp_mps
 #: model:ir.model.fields,help:mrp_mps.field_res_company__manufacturing_period
 #: model:ir.model.fields,help:mrp_mps.field_res_config_settings__manufacturing_period
-msgid ""
-"Default value for the time ranges in Master Production Schedule report."
+msgid "Default value for the time ranges in Master Production Schedule report."
 msgstr "주요 생산 계획 보고서의 시간 범위 기본값."
 
 #. module: mrp_mps
@@ -292,7 +293,7 @@ msgstr "수요 예측 표시"
 #. module: mrp_mps
 #: model:ir.model.fields,field_description:mrp_mps.field_res_company__mrp_mps_show_indirect_actual_demand
 msgid "Display Indirect Actual Demand"
-msgstr ""
+msgstr "간접적 실제 수요 표시"
 
 #. module: mrp_mps
 #: model:ir.model.fields,field_description:mrp_mps.field_res_company__mrp_mps_show_indirect_demand
@@ -354,18 +355,18 @@ msgstr "예상 수요 세부사항"
 #. module: mrp_mps
 #: model:ir.model,name:mrp_mps.model_mrp_mps_forecast_suggestion
 msgid "Forecast Demand Suggestion"
-msgstr ""
+msgstr "수요 예측 제안"
 
 #. module: mrp_mps
 #: model_terms:ir.ui.view,arch_db:mrp_mps.mrp_mps_forecast_suggestion_form_view
 msgid "Forecast Quantity for"
-msgstr ""
+msgstr "다음 관련 예상 수량"
 
 #. module: mrp_mps
 #: model:ir.model.fields.selection,name:mrp_mps.selection__mrp_production_schedule__replenish_state__low_forecast
 #: model_terms:ir.ui.view,arch_db:mrp_mps.mrp_mps_search_view
 msgid "Forecast Too Low"
-msgstr ""
+msgstr "예측량이 너무 낮음"
 
 #. module: mrp_mps
 #. odoo-javascript
@@ -421,7 +422,7 @@ msgstr "마스터 생산 스케줄의 템플릿 가져오기"
 #. odoo-javascript
 #: code:addons/mrp_mps/static/src/search/group_menu.xml:0
 msgid "Indirect Actual Demand"
-msgstr ""
+msgstr "간접 실수요"
 
 #. module: mrp_mps
 #: model_terms:ir.ui.view,arch_db:mrp_mps.mrp_mps_production_schedule_form_view
@@ -449,17 +450,17 @@ msgstr "제조 경로"
 #. module: mrp_mps
 #: model:ir.model.fields.selection,name:mrp_mps.selection__mrp_mps_forecast_suggestion__based_on__one_year
 msgid "Last 12 Months"
-msgstr ""
+msgstr "최근 12개월"
 
 #. module: mrp_mps
 #: model:ir.model.fields.selection,name:mrp_mps.selection__mrp_mps_forecast_suggestion__based_on__three_months
 msgid "Last 3 Months"
-msgstr ""
+msgstr "최근 3개월"
 
 #. module: mrp_mps
 #: model:ir.model.fields.selection,name:mrp_mps.selection__mrp_mps_forecast_suggestion__based_on__30_days
 msgid "Last 30 Days"
-msgstr ""
+msgstr "최근 30일"
 
 #. module: mrp_mps
 #: model:ir.model.fields,field_description:mrp_mps.field_mrp_mps_forecast_details__write_uid
@@ -486,7 +487,7 @@ msgstr "MPS"
 #. odoo-javascript
 #: code:addons/mrp_mps/static/src/components/mps_selection.js:0
 msgid "MPS Period Selection"
-msgstr ""
+msgstr "MPS 기간 선택"
 
 #. module: mrp_mps
 #: model:ir.actions.server,name:mrp_mps.ir_cron_replenish_automated_mps_ir_actions_server
@@ -544,7 +545,8 @@ msgstr "제조 기간"
 msgid ""
 "Manufacturing Settings: Your Master Production Schedule must always display "
 "at least 1 period."
-msgstr "제조 설정: 마스터 생산 일정에는 항상 하나 이상의 기간이 표시되어야 합니다."
+msgstr ""
+"제조 설정: 마스터 생산 일정에는 항상 하나 이상의 기간이 표시되어야 합니다."
 
 #. module: mrp_mps
 #. odoo-javascript
@@ -584,7 +586,7 @@ msgstr "문자열 이동"
 #. module: mrp_mps
 #: model:ir.model.fields,field_description:mrp_mps.field_mrp_mps_forecast_suggestion__mrp_mps_id
 msgid "Mrp Mps"
-msgstr ""
+msgstr "Mrp Mps"
 
 #. module: mrp_mps
 #: model:ir.model.fields.selection,name:mrp_mps.selection__mrp_production_schedule__replenish_trigger__never
@@ -666,7 +668,7 @@ msgstr "주문"
 #. module: mrp_mps
 #: model:ir.model.fields,field_description:mrp_mps.field_mrp_mps_forecast_suggestion__percent_factor
 msgid "Percent Factor"
-msgstr ""
+msgstr "백분율 계수"
 
 #. module: mrp_mps
 #. odoo-python
@@ -687,7 +689,7 @@ msgstr "선호하는 경로"
 #. module: mrp_mps
 #: model:ir.model.fields.selection,name:mrp_mps.selection__mrp_mps_forecast_suggestion__based_on__last_year
 msgid "Previous Year"
-msgstr ""
+msgstr "이전 연도"
 
 #. module: mrp_mps
 #: model:ir.model.fields,field_description:mrp_mps.field_mrp_product_forecast__procurement_launched
@@ -754,7 +756,7 @@ msgstr "수량"
 #. module: mrp_mps
 #: model:ir.model.fields,field_description:mrp_mps.field_mrp_mps_forecast_suggestion__quantity_before_scale
 msgid "Quantity Before Scale"
-msgstr ""
+msgstr "측량 전 수량"
 
 #. module: mrp_mps
 #: model:ir.model.fields,field_description:mrp_mps.field_mrp_mps_forecast_details__moves_qty
@@ -777,7 +779,8 @@ msgstr "RFQ 수량"
 msgid ""
 "Quantity predicted to be available for sale at the end of the period (= to "
 "replenish - actual demand)."
-msgstr "해당 기간이 끝날 때 판매될 것으로 예상되는 수량 (= 보충량 - 실 수요량)."
+msgstr ""
+"해당 기간이 끝날 때 판매될 것으로 예상되는 수량 (= 보충량 - 실 수요량)."
 
 #. module: mrp_mps
 #. odoo-python
@@ -923,7 +926,7 @@ msgstr "재고 규칙"
 #: code:addons/mrp_mps/static/src/components/line.xml:0
 #: code:addons/mrp_mps/wizard/mrp_mps_forecast_suggestion.py:0
 msgid "Suggest Forecasted Demand"
-msgstr ""
+msgstr "예상 수요 제안"
 
 #. module: mrp_mps
 #: model:ir.model.fields,help:mrp_mps.field_mrp_production_schedule__replenish_state
@@ -977,16 +980,18 @@ msgstr "기간 종료시 예상 재고량입니다."
 #. odoo-javascript
 #: code:addons/mrp_mps/static/src/components/main.xml:0
 msgid ""
-"The master schedule translates your sales and demand forecasts into a production and purchase planning for each component.\n"
-"                    It ensures everything gets scheduled on time, based on constraints such as: safety stock, production capacity, lead times.\n"
+"The master schedule translates your sales and demand forecasts into a "
+"production and purchase planning for each component.\n"
+"                    It ensures everything gets scheduled on time, based on "
+"constraints such as: safety stock, production capacity, lead times.\n"
 "                    It's the perfect tool to support your S&OP meetings."
 msgstr ""
-"주요 생산 계획은 판매 및 수요 예측을 토대로 각 부품에 대한 생산 및 구매 "
-"계획을 변환합니다.\n"
-"                    안전 재고 및 생산 능력, 리드타임과 같은 여러 제약 "
-"조건들을 고려하여 모든 일정을 제시간에 맞추도록 계산을 도와줍니다.\n"
-"                    판매 및 생산 계획 미팅을 지원하는 완벽한 도구를 사용해 "
-"보세요."
+"주요 생산 계획은 판매 및 수요 예측을 토대로 각 부품에 대한 생산 및 구매 계획"
+"을 변환합니다.\n"
+"                    안전 재고 및 생산 능력, 리드타임과 같은 여러 제약 조건들"
+"을 고려하여 모든 일정을 제시간에 맞추도록 계산을 도와줍니다.\n"
+"                    판매 및 생산 계획 미팅을 지원하는 완벽한 도구를 사용해 보"
+"세요."
 
 #. module: mrp_mps
 #. odoo-javascript
@@ -1000,8 +1005,10 @@ msgstr "견적 요청 및 제조 주문에 따라 보충되는 수량입니다."
 #. odoo-javascript
 #: code:addons/mrp_mps/static/src/components/line.xml:0
 msgid ""
-"The quantity to replenish through Purchase Orders or Manufacturing Orders."
-msgstr "구매 주문 또는 제조 주문을 통해 보충할 수량입니다."
+"The quantity to replenish through Purchase Orders or Manufacturing Orders.\n"
+"Color code: Green if to replenish now, Red if existing replenishment is too "
+"high for the period, Orange if current replenishment is too low."
+msgstr ""
 
 #. module: mrp_mps
 #: model:ir.model.fields,help:mrp_mps.field_mrp_production_schedule__forecast_target_qty
@@ -1056,7 +1063,7 @@ msgstr "주"
 #. odoo-python
 #: code:addons/mrp_mps/wizard/mrp_mps_forecast_suggestion.py:0
 msgid "Week %(week)s (%(start_day)s-%(end_day)s/%(month)s) %(year)s"
-msgstr ""
+msgstr "%(week)s 주 (%(start_day)s-%(end_day)s/%(month)s) %(year)s"
 
 #. module: mrp_mps
 #. odoo-python
@@ -1071,8 +1078,7 @@ msgstr "매주"
 
 #. module: mrp_mps
 #: model:ir.model.fields,help:mrp_mps.field_mrp_production_schedule__is_indirect
-msgid ""
-"When checked, this product will not appear in the 'To Forecast' filter."
+msgid "When checked, this product will not appear in the 'To Forecast' filter."
 msgstr "이 옵션을 선택하면 이 제품은 '예측 대상' 필터에서 제외됩니다."
 
 #. module: mrp_mps
@@ -1105,4 +1111,8 @@ msgstr "단위"
 #. module: mrp_mps
 #: model_terms:ir.ui.view,arch_db:mrp_mps.mrp_mps_forecast_suggestion_form_view
 msgid "units x"
-msgstr ""
+msgstr "x 개 단위"
+
+#~ msgid ""
+#~ "The quantity to replenish through Purchase Orders or Manufacturing Orders."
+#~ msgstr "구매 주문 또는 제조 주문을 통해 보충할 수량입니다."

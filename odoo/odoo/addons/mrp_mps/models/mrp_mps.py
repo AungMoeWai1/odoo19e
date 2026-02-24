@@ -229,7 +229,7 @@ class MrpProductionSchedule(models.Model):
                     ('product_id', 'in', product_ids)
                 ]).product_id.ids
                 product_ratio += [
-                    (l[0], l[0].product_qty * l[1]['qty'])
+                    (l[0], l[1]['qty'] / bom.product_qty)
                     for l in bom_lines if l[0].product_id.id not in product_ids_with_forecast
                 ]
 
@@ -1111,7 +1111,8 @@ class MrpProductionSchedule(models.Model):
     def _get_moves_and_date(self, moves_domain, order=False):
         moves = self.env['stock.move'].search(moves_domain, order=order)
         res_moves = []
-        for move in moves:
+        moves.fetch(['move_dest_ids', 'company_id', 'state', 'date', 'rule_id', 'product_id', 'location_id', 'origin_returned_move_id', 'product_qty'])
+        for move in moves.with_context(prefetch_fields=False):
             delay = self._get_dest_moves_delay(move)
             date = fields.Date.to_date(move.date) + relativedelta(days=delay)
             res_moves.append((move, date))

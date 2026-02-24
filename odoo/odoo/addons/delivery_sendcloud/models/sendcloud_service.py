@@ -327,7 +327,7 @@ class SendCloud:
         return list(parcel_items.values())
 
     def _get_house_number(self, address):
-        house_number = re.search(r"(\d+[-\/]?\d* ?[a-zA-Z]?\d*)(?![a-zA-Z])", address)
+        house_number = re.search(r"(\d+(?:[-\/]?\d+)* ?[a-zA-Z]?\d*)(?![a-zA-Z])", address)
         if house_number:
             return house_number.group()
         return ' '
@@ -396,7 +396,7 @@ class SendCloud:
         if not shipping_methods:
             raise UserError(_('There is no shipping method available for this picking with the selected carrier'))
         elif any(float_compare(pkg.weight, user_uom_max_weight, precision_rounding=user_weight_uom.rounding) > 0 for pkg in delivery_packages):
-            overweight_products = picking.move_ids.filtered(lambda m: float_compare(m.product_id.weight, user_uom_max_weight, precision_rounding=m.product_uom.rounding) > 0)
+            overweight_products = picking.move_ids.filtered(lambda m: float_compare(m.product_id.weight, user_uom_max_weight, precision_rounding=m.product_uom.rounding) > 0).product_id
             not_packed = bool(not picking.move_line_ids.result_package_id and picking.weight_bulk)
             if not_packed:
                 message = _('The total weight of your transfer is too heavy for the heaviest available shipping method.')
@@ -534,7 +534,7 @@ class SendCloud:
             return products_values
 
         for line in sale_order.order_line:
-            if line.product_id.type == 'consu' or line.display_type or float_is_zero(line.product_uom_qty, precision_rounding=line.product_uom_id.rounding) or line.product_uom_qty < 0:
+            if not line.product_id or line.product_id.type == 'consu' or line.display_type or float_is_zero(line.product_uom_qty, precision_rounding=line.product_uom_id.rounding) or line.product_uom_qty < 0:
                 continue
             if line.product_id.id in products_values:
                 products_values[line.product_id.id]['tot_qty'] += line.product_uom_qty
@@ -588,8 +588,10 @@ class SendCloud:
 
         if picking.sale_id:
             currency_name = picking.sale_id.currency_id.name
+            shipping_cost = sum(sol.price_total for sol in picking.sale_id.order_line if sol.is_delivery)
         else:
             currency_name = picking.company_id.currency_id.name
+            shipping_cost = sum(ml.sale_price for ml in picking.move_line_ids)
 
         parcel_common = {
             'name': (to_partner_id.name or to_partner_id.parent_id.name or '')[:75],
@@ -608,9 +610,12 @@ class SendCloud:
             'is_return': is_return,
             'shipping_method_checkout_name': sendcloud_product_id.name,
             'order_number': picking.sale_id.name or picking.name,
-            'customs_shipment_type': 4 if is_return else 2,
-            'customs_invoice_nr': picking.origin or '',
-            'total_order_value_currency': currency_name
+            'total_order_value_currency': currency_name,
+            'customs_information': {
+                'customs_shipment_type': 4 if is_return else 2,
+                'customs_invoice_nr': picking.sale_id.invoice_ids[:1].name or picking.origin or '',
+                'freight_costs': float_repr(shipping_cost, 2),
+            },
         }
         if sender_id:
             # "sender_id" implies that "not is_return" (c.f. send_shipment())
@@ -638,7 +643,7 @@ class SendCloud:
         return parcel_common
 
     def _get_pick_sender_address(self, picking):
-        warehouse_name = picking.location_id.warehouse_id.name.lower().replace(' ', '')
+        warehouse_name = picking._retrieve_warehouse_name().lower().replace(' ', '')
         addresses = self._get_addresses()
         res_id = None
         for addr in addresses:

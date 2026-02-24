@@ -5,6 +5,7 @@ from datetime import date
 from calendar import monthrange
 
 from odoo import api, fields, models, Command, _
+from odoo.fields import Domain
 from odoo.tools.float_utils import float_round
 from dateutil.relativedelta import relativedelta
 from odoo.tools import date_utils
@@ -76,13 +77,6 @@ class HrPayslip(models.Model):
         swiss_employees = self.env['hr.employee'].browse([val["employee_id"] for val in vals_list if "employee_id" in val]).filtered(lambda e: e.company_id.country_id.code == 'CH')
         swiss_employees._create_or_update_snapshot()
         return super().create(vals_list)
-
-    def _get_schedule_period_start(self):
-        if self.struct_id.code == "CHMONTHLYELM":
-            today = date.today()
-            return today.replace(day=1)
-        else:
-            return super()._get_schedule_period_start()
 
     def _get_schedule_timedelta(self):
         self.ensure_one()
@@ -174,15 +168,19 @@ class HrPayslip(models.Model):
                 continue
             payslip.l10n_ch_avs_status = contract.l10n_ch_avs_status
 
-    @api.depends('version_id.l10n_ch_is_model')
+    @api.depends("l10n_ch_is_code")
     def _compute_l10n_ch_is_model(self):
         for payslip in self:
-            if payslip.struct_id.country_id.code != "CH":
+            if payslip.struct_id.code != "CHMONTHLYELM":
                 continue
-            contract = payslip.version_id
-            if payslip.state != 'draft':
-                continue
-            payslip.l10n_ch_is_model = contract.l10n_ch_is_model
+            if payslip.l10n_ch_is_code:
+                st_canton = payslip.l10n_ch_is_code.split("-")[0]
+                if st_canton in ["GE", "FR", "TI", "VS", "VD"]:
+                    payslip.l10n_ch_is_model = "yearly"
+                else:
+                    payslip.l10n_ch_is_model = "monthly"
+            else:
+                payslip.l10n_ch_is_model = False
 
     @api.depends('version_id.l10n_ch_lpp_not_insured', 'state')
     def _compute_l10n_ch_lpp_not_insured(self):
@@ -200,8 +198,8 @@ class HrPayslip(models.Model):
             return total + 0.05 - (total % 0.05)
         return total - (total % 0.05)
 
-    def _filter_out_of_versions_payslips(self):
-        return super()._filter_out_of_versions_payslips().filtered(lambda p: p.struct_id.country_id.code != "CH")
+    def _filter_not_in_contract_payslips(self):
+        return super()._filter_not_in_contract_payslips().filtered(lambda p: p.struct_id.country_id.code != "CH")
 
     def _get_contract_days_in_payslip_range(self, date_start, date_end):
         """
@@ -275,7 +273,10 @@ class HrPayslip(models.Model):
         lesson_work_entry = self.env.ref('hr_work_entry.l10n_ch_swissdec_lesson_wt', raise_if_not_found=False)
         overtime_work_entry = self.env.ref('hr_work_entry.l10n_ch_swissdec_overtime_wt', raise_if_not_found=False)
         overtime_125_work_entry = self.env.ref('hr_work_entry.l10n_ch_swissdec_overtime_125_wt', raise_if_not_found=False)
-
+        overtime_150_work_entry = self.env.ref('l10n_ch_hr_payroll.l10n_ch_swissdec_overtime_150_wt', raise_if_not_found=False)
+        on_call_duty_125_work_entry = self.env.ref('l10n_ch_hr_payroll.l10n_ch_swissdec_oncall_125_wt', raise_if_not_found=False)
+        night_shift_110_work_entry = self.env.ref('l10n_ch_hr_payroll.l10n_ch_swissdec_night_110_wt', raise_if_not_found=False)
+        
         mapped_hourly_absence = {
             "CH_ACCIDENT": self.env.ref('hr_work_entry.l10n_ch_swissdec_accident_wt_hourly', raise_if_not_found=False),
             "CH_ILLNESS": self.env.ref('hr_work_entry.l10n_ch_swissdec_illness_wt_hourly', raise_if_not_found=False),
@@ -320,8 +321,10 @@ class HrPayslip(models.Model):
                 overlap_days = payslip._get_contract_days_in_payslip_range(overlap_start, overlap_end)
                 leave_type = leave.holiday_status_id
                 leave_days_map.setdefault(leave_type, [])
-                if leave.request_unit_half:
-                    overlap_days = overlap_days / 2
+                if leave.request_date_from_period == 'pm':
+                    overlap_days -= 0.5
+                if leave.request_date_to_period == 'am':
+                    overlap_days -= 0.5
                 leave_days_map[leave_type] += [(overlap_days, leave)]
 
             total_leave_days = 0.0
@@ -415,7 +418,7 @@ class HrPayslip(models.Model):
                     'sequence': 15,
                     'work_entry_type_id': overtime_work_entry.id,
                     'salary_base': hourly_wage,
-                    'rate': sum(grouped_recurring_by_input_wage_types.get("WT_Overtime").mapped('amount')),
+                    'rate': sum(grouped_one_time_by_input_wage_types.get("WT_Overtime").mapped('amount')),
                 })]
 
             if grouped_recurring_by_input_wage_types.get("WT_Overtime_125", False):
@@ -433,6 +436,57 @@ class HrPayslip(models.Model):
                     'work_entry_type_id': overtime_125_work_entry.id,
                     'salary_base': hourly_wage * 1.25,
                     'rate': sum(grouped_one_time_by_input_wage_types.get("WT_Overtime_125").mapped('amount')),
+                })]
+
+            if grouped_recurring_by_input_wage_types.get("WT_Overtime_150", False):
+                worked_day_vals += [(0, 0, {
+                    'sequence': 15,
+                    'work_entry_type_id': overtime_150_work_entry.id,
+                    'salary_base': hourly_wage * 1.5,
+                    'rate': sum(grouped_recurring_by_input_wage_types.get("WT_Overtime_150").mapped(
+                        'amount')) * base_days / total_days,
+                })]
+
+            if grouped_one_time_by_input_wage_types.get("WT_Overtime_150", False):
+                worked_day_vals += [(0, 0, {
+                    'sequence': 15,
+                    'work_entry_type_id': overtime_150_work_entry.id,
+                    'salary_base': hourly_wage * 1.5,
+                    'rate': sum(grouped_one_time_by_input_wage_types.get("WT_Overtime_150").mapped('amount')),
+                })]
+
+            if grouped_recurring_by_input_wage_types.get("WT_on_call_125", False):
+                worked_day_vals += [(0, 0, {
+                    'sequence': 15,
+                    'work_entry_type_id': on_call_duty_125_work_entry.id,
+                    'salary_base': hourly_wage * 1.25,
+                    'rate': sum(grouped_recurring_by_input_wage_types.get("WT_on_call_125").mapped(
+                        'amount')) * base_days / total_days,
+                })]
+
+            if grouped_one_time_by_input_wage_types.get("WT_on_call_125", False):
+                worked_day_vals += [(0, 0, {
+                    'sequence': 15,
+                    'work_entry_type_id': on_call_duty_125_work_entry.id,
+                    'salary_base': hourly_wage * 1.25,
+                    'rate': sum(grouped_one_time_by_input_wage_types.get("WT_on_call_125").mapped('amount')),
+                })]
+
+            if grouped_recurring_by_input_wage_types.get("WT_night_110", False):
+                worked_day_vals += [(0, 0, {
+                    'sequence': 15,
+                    'work_entry_type_id': night_shift_110_work_entry.id,
+                    'salary_base': hourly_wage * 1.1,
+                    'rate': sum(grouped_recurring_by_input_wage_types.get("WT_night_110").mapped(
+                        'amount')) * base_days / total_days,
+                })]
+
+            if grouped_one_time_by_input_wage_types.get("WT_night_110", False):
+                worked_day_vals += [(0, 0, {
+                    'sequence': 15,
+                    'work_entry_type_id': night_shift_110_work_entry.id,
+                    'salary_base': hourly_wage * 1.1,
+                    'rate': sum(grouped_one_time_by_input_wage_types.get("WT_night_110").mapped('amount')),
                 })]
 
             if grouped_recurring_by_input_wage_types.get("WT_Lesson_input", False):
@@ -470,7 +524,30 @@ class HrPayslip(models.Model):
         swiss_payslips = self.filtered(lambda p: p.struct_id.code == "CHMONTHLYELM")
         if not swiss_payslips:
             return
-        mapped_snapshots = self.env['l10n.ch.employee.yearly.values']._get_mapped_snapshots(domain=[('employee_id', 'in', swiss_payslips.mapped('employee_id').ids)])
+
+        mapped_snapshots = self.env['l10n.ch.employee.yearly.values']._get_mapped_snapshots(
+            domain=[('employee_id', 'in', swiss_payslips.mapped('employee_id').ids)]
+        )
+
+        slips_grouped_by_date = swiss_payslips.grouped('date_to')
+        new_snapshots_created = False
+
+        for date_group, slips in slips_grouped_by_date.items():
+            year = date_group.year
+            month = date_group.month
+
+            employees_missing_snapshot = slips.employee_id.filtered(
+                lambda e: not mapped_snapshots[e][year][month]
+            )
+
+            if employees_missing_snapshot:
+                employees_missing_snapshot.with_context(l10n_ch_reference_date=date_group)._create_or_update_snapshot()
+                new_snapshots_created = True
+
+        if new_snapshots_created:
+            mapped_snapshots = self.env['l10n.ch.employee.yearly.values']._get_mapped_snapshots(
+                domain=[('employee_id', 'in', swiss_payslips.mapped('employee_id').ids)]
+            )
         for payslip in swiss_payslips:
             month = payslip.date_to.month
             year = payslip.date_to.year
@@ -587,6 +664,7 @@ class HrPayslip(models.Model):
         payslips._compute_l10n_ch_is_correction()
         payslips._compute_l10n_ch_is_code()
         payslips._compute_l10n_ch_is_model()
+        payslips._compute_issues()
 
         self.env.flush_all()
         today = fields.Date.today()
@@ -604,7 +682,11 @@ class HrPayslip(models.Model):
         if not swiss_payslips:
             return res
         swiss_payslips.l10n_ch_is_correction.action_done()
-        swiss_payslips.employee_id.with_context(update_salaries=True, lock_pay_period=True)._create_or_update_snapshot()
+        for ref_date, payslips_by_date in swiss_payslips.grouped('date_from').items():
+            payslips_by_date.employee_id.with_context(
+                update_salaries=True,
+                l10n_ch_reference_date=ref_date
+            )._create_or_update_snapshot()
         return res
 
     def action_payslip_cancel(self):
@@ -614,7 +696,12 @@ class HrPayslip(models.Model):
             return res
         swiss_payslips.l10n_ch_is_correction.action_pending()
         swiss_payslips.l10n_ch_is_log_line_ids.unlink()
-        swiss_payslips.employee_id.with_context(update_salaries=True, unlock_pay_period=True)._create_or_update_snapshot()
+        for ref_date, payslips_by_date in swiss_payslips.grouped('date_from').items():
+            payslips_by_date.employee_id.with_context(
+                update_salaries=True,
+                unlock_pay_period=True,
+                l10n_ch_reference_date=ref_date
+            )._create_or_update_snapshot()
         return res
 
     @api.depends('employee_id', 'l10n_ch_monthly_snapshot')
@@ -634,6 +721,11 @@ class HrPayslip(models.Model):
                     source_tax_code = f"{source_tax_canton}-{source_tax_scale}-{source_tax_municipality}"
             payslip.l10n_ch_is_code = source_tax_code
             payslip.l10n_ch_txb_code = txb_code
+
+    def _has_lpp_in_percentage(self):
+        # To be overriden in ELM 5.3 certification module
+        self.ensure_one()
+        return False
 
     @api.depends('employee_id', 'version_id', 'struct_id', 'date_from', 'date_to', 'struct_id')
     def _compute_input_line_ids(self):
@@ -675,8 +767,9 @@ class HrPayslip(models.Model):
             input_line_vals = []
             wage_types = grouped_one_time_wages_dict[slip.version_id][slip.date_to.year][slip.date_to.month]
             recurring_wage_types = grouped_recurring_wages.get(slip.version_id, self.env['l10n.ch.hr.contract.wage'])
+            has_lpp_in_percentage = slip._has_lpp_in_percentage()
 
-            if not slip.l10n_ch_lpp_not_insured and slip.l10n_ch_lpp_insurance_id and not slip.l10n_ch_after_departure_payment and not has_pay_interruption.l10n_ch_lpp_interruption:
+            if not slip.l10n_ch_lpp_not_insured and slip.l10n_ch_lpp_insurance_id and not slip.l10n_ch_after_departure_payment and not has_pay_interruption.l10n_ch_lpp_interruption and not has_lpp_in_percentage:
                 if slip.version_id.lpp_employee_amount:
                     input_line_vals.append(Command.create({
                         'amount': slip.version_id.lpp_employee_amount,
@@ -702,10 +795,15 @@ class HrPayslip(models.Model):
                         'amount': wage_type.amount,
                         'input_type_id': wage_type.input_type_id.id,
                     }))
-
+            input_line_vals += slip._get_additional_input_line_vals()
             slip.update({'input_line_ids': input_line_vals})
 
         super(HrPayslip, self - swiss_slips)._compute_input_line_ids()
+
+
+    def _get_additional_input_line_vals(self):
+        # To be overriden in additional Swiss modules
+        return []
 
     def _reverse_log_lines(self, payslip_to_reverse, manual_correction=None):
         # Reversal, this requires heavy logic since one payslip could be corrected multiple times through various payslips
@@ -892,20 +990,6 @@ class HrPayslip(models.Model):
                 result["total"][canton][code] += total
         return result
 
-    @api.depends("l10n_ch_is_code")
-    def _compute_l10n_ch_is_model(self):
-        for payslip in self:
-            if payslip.struct_id.code != "CHMONTHLYELM":
-                continue
-            if payslip.l10n_ch_is_code:
-                st_canton = payslip.l10n_ch_is_code.split("-")[0]
-                if st_canton in ["GE", "FR", "TI", "VS", "VD"]:
-                    payslip.l10n_ch_is_model = "yearly"
-                else:
-                    payslip.l10n_ch_is_model = "monthly"
-            else:
-                payslip.l10n_ch_is_model = False
-
     def action_refresh_from_work_entries(self):
         swiss_slips = self.filtered(lambda p: p.struct_id.code == "CHMONTHLYELM" and p.state == 'draft')
         if not swiss_slips:
@@ -930,6 +1014,7 @@ class HrPayslip(models.Model):
         swiss_slips._compute_l10n_ch_is_model()
         swiss_slips._compute_l10n_ch_lpp_not_insured()
         swiss_slips._compute_l10n_ch_compensation_fund_id()
+        swiss_slips._compute_issues()
         swiss_slips.compute_sheet()
 
         super(HrPayslip, self - swiss_slips).action_refresh_from_work_entries()
@@ -960,6 +1045,7 @@ class HrPayslip(models.Model):
                 'data/hr_salary_rule_category_data.xml',
                 'data/hr_salary_rule_data.xml',
                 'data/hr_swiss_leave_types.xml',
+                'data/hr_payroll_dashboard_warning_data.xml',
             ])]
 
     @api.depends('date_from', 'date_to', 'struct_id')
@@ -1043,3 +1129,44 @@ class HrPayslip(models.Model):
             raise ValidationError(self.env._("This feature is not available for payslips in Switzerland. If you wish to correct amounts please cancel the payslip or report corrections to the next month."))
         else:
             return super().action_adjust_payslip()
+
+    def action_payslip_payment_report(self, export_format='iso20022_ch'):
+        action = super().action_payslip_payment_report()
+        if self.company_id.country_code != 'CH':
+            return action
+        action.update({
+            'context': {
+                **action['context'],
+                'default_export_format': export_format,
+            },
+        })
+        return action
+
+    @api.model
+    def _get_dashboard_warnings_domain(self):
+        res = super()._get_dashboard_warnings_domain()
+        if self.env.company.country_id.code == "CH":
+            res = Domain.AND([
+                res,
+                Domain('country_id.code', '!=', False),
+            ])
+
+        return res
+
+    def _get_third_party_payment_wage_types(self):
+        return {
+            'WT_2000',
+            'WT_2005',
+            'WT_2010',
+            'WT_2020',
+            'WT_2021',
+            'WT_2022',
+            'WT_2025',
+            'WT_2026',
+            'WT_2027',
+            'WT_2030',
+            'WT_2031',
+            'WT_2032',
+            'WT_2035',
+            "WT_2040",
+        }

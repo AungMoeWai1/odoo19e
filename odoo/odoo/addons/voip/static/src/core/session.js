@@ -24,6 +24,8 @@ export class Session {
      */
     static preferredInputDevice = "";
 
+    /** @type {string} */
+    controlHandle = "";
     /** @type {import("@voip/core/call_service").CallService} */
     callService;
     /**
@@ -41,6 +43,12 @@ export class Session {
      * @type {HTMLAudioElement|null}
      */
     remoteAudio = null;
+    /**
+     * Whether the session is responsible for playing the incoming ringtone.
+     *
+     * @type {boolean}
+     */
+    ringleader = false;
     /** @type {string|undefined} */
     transferTarget;
     /** @type {import("@voip/core/call_model").Call} */
@@ -140,7 +148,7 @@ export class Session {
         if (this.voip.mode === "demo") {
             return _t("Demo call");
         }
-        return _t("In call");
+        return _t("Calling…");
     }
 
     /**
@@ -176,6 +184,7 @@ export class Session {
      * @param {string} transferTarget
      */
     blindTransfer(transferTarget) {
+        this.voip.softphone.addressBook.searchInputValue = "";
         if (!this.sipSession) {
             this.userAgent.hangup({ session: this });
             return;

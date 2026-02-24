@@ -84,7 +84,8 @@ class HrAttendance(models.Model):
                 '&',
                 ('check_out', '<', start_date),
                 ('check_in', '>', fields.Datetime.from_string(start_date) - relativedelta(days=60)),
-                ('employee_id', 'not in', [group['employee_id'][0] for group in open_ended_gantt_data['groups']])
+                ('employee_id', 'not in', [group['employee_id'][0] for group in open_ended_gantt_data['groups']]),
+                ('employee_id.active', '=', True)
             ])
             previously_active_employees = super().get_gantt_data(active_employees_domain, groupby, read_specification, limit=None, offset=0, unavailability_fields=unavailability_fields, progress_bar_fields=progress_bar_fields, start_date=start_date, stop_date=stop_date, scale=scale)
             for group in previously_active_employees['groups']:

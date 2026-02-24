@@ -18,6 +18,7 @@ class SaleCommissionAchievementReport(models.Model):
     user_id = fields.Many2one('res.users', "Sales Person", readonly=True)
     team_id = fields.Many2one('crm.team', "Sales Team", readonly=True)
     achieved = fields.Monetary("Achieved", readonly=True, currency_field='currency_id')
+
     target_amount = fields.Monetary(readonly=True, currency_field='currency_id')
     commission_target_amount = fields.Monetary(readonly=True, currency_field='currency_id', aggregator='avg',
                                                help="Sum of target amount per plan paid on the same date")
@@ -36,7 +37,8 @@ class SaleCommissionAchievementReport(models.Model):
     ################################################################################
     # Readonly Cursor hacks
     # These methods use a readonly cursor everywhere else in odoo but here we need a RW cursor because
-    # we are creating a temporary table in _search.
+    # we are creating a view (necessary even if the view is not materialized).
+
     @api.model
     def web_search_read(self, domain, specification, offset=0, limit=None, order=None, count_limit=None):
         return super().web_search_read(domain, specification, offset=offset, limit=limit, order=order, count_limit=count_limit)
@@ -45,7 +47,7 @@ class SaleCommissionAchievementReport(models.Model):
 
     @api.model
     def formatted_read_group(self, domain, groupby=(), aggregates=(), having=(), offset=0, limit=None, order=None) -> list[dict]:
-        return super().formatted_read_group(domain, groupby, aggregates, having, limit, offset, order)
+        return super().formatted_read_group(domain, groupby, aggregates, having, offset, limit, order)
     formatted_read_group._readonly = False
 
     @api.model
@@ -57,49 +59,6 @@ class SaleCommissionAchievementReport(models.Model):
     formatted_read_grouping_sets._readonly = False
 
     ################################################################################
-
-    @api.model
-    def _create_temp_invoice_table(self, users=None, teams=None):
-        query = f"""
-        -- Tests may call this function multiple times within the same transaction;
-        DROP TABLE IF EXISTS invoices_rules;
-        -- Create a temporary table
-        CREATE TEMPORARY TABLE invoices_rules ON COMMIT DROP AS (
-            SELECT
-                COALESCE(scpu.date_from, scp.date_from) AS date_from,
-                COALESCE(scpu.date_to, scp.date_to) AS date_to,
-                scpu.user_id AS user_id,
-                scp.team_id AS team_id,
-                scp.id AS plan_id,
-                scpa.product_id,
-                scpa.product_categ_id,
-                scp.company_id,
-                {self.env.company.currency_id.id} AS currency_id,
-                scp.user_type = 'team' AS team_rule,
-                {self._rate_to_case(self._get_invoices_rates())}
-                {self._select_rules()}
-            FROM sale_commission_plan_achievement scpa
-            JOIN sale_commission_plan scp ON scp.id = scpa.plan_id
-            JOIN sale_commission_plan_user scpu ON scpa.plan_id = scpu.plan_id
-            WHERE scp.active
-              AND scp.state = 'approved'
-              AND scpa.type IN ({','.join("'%s'" % r for r in self._get_invoices_rates())})
-            {'AND scpu.user_id in (%s)' % ','.join(str(i) for i in users.ids) if users else ''}
-        );
-        -- Create a supporting index to avoid seq.scans
-        CREATE INDEX inv_rules_df_idx ON invoices_rules (date_from, date_to, team_id, team_rule) ;
-        CREATE INDEX inv_rules_user_idx ON invoices_rules (user_id) ;
-        CREATE INDEX inv_rules_plan_idx ON invoices_rules (plan_id) ;
-        CREATE INDEX inv_rules_product_idx ON invoices_rules (product_id) ;
-        CREATE INDEX inv_rules_company_idx ON invoices_rules (company_id) ;
-        -- Update statistics for correct planning
-        ANALYZE invoices_rules
-        """
-        self.env.cr.execute(query)
-
-    def fetch(self, field_names=None):
-        self._create_temp_invoice_table(users=None, teams=None)
-        return super().fetch(field_names=field_names)
 
     @api.model
     def _search(self, domain, *args, **kwargs):
@@ -114,8 +73,6 @@ class SaleCommissionAchievementReport(models.Model):
         if date_to_list and not 'conversion_date' in self.env.context:
             conversion_date = max(date_to_list)
             model = model.with_context(conversion_date=conversion_date.strftime('%Y-%m-%d'))
-        self.env.cr.execute("SET LOCAL JIT = OFF")
-        self._create_temp_invoice_table(users=None, teams=None)
         return super(SaleCommissionAchievementReport, model)._search(domain, *args, **kwargs)
 
     def open_related(self):
@@ -125,25 +82,6 @@ class SaleCommissionAchievementReport(models.Model):
             'res_id': self.related_res_id,
             'type': 'ir.actions.act_window',
         }
-
-    @api.model
-    def _get_achievement_default_dates(self):
-        """Return default date_from, date_to and company sql condition for the achievements filtered results
-        """
-        if self.env.context.get('active_plan_ids'):
-            plan_ids = self.env['sale.commission.plan'].sudo().browse(self.env.context['active_plan_ids'])
-            date_from = min(plan_ids.mapped('date_from'))
-            date_to = max(plan_ids.mapped('date_to'))
-        else:
-            all_plan_ids = self.env['sale.commission.plan'].sudo().search([('state', '=', 'approved')])
-            date_from = all_plan_ids and min(all_plan_ids.mapped('date_from'))
-            date_to = all_plan_ids and min(all_plan_ids.mapped('date_to'))
-        company_count = len(self.env.companies.ids)
-        if company_count == 1:
-            company_condition = f"AND company_id = {self.env.companies.id}"
-        else:
-            company_condition = f"AND company_id IN {tuple(self.env.companies.ids)}"
-        return date_from, date_to, company_condition
 
     @api.model
     def _get_currency_rate(self):
@@ -160,61 +98,127 @@ class SaleCommissionAchievementReport(models.Model):
             SELECT * FROM (VALUES {", ".join(map(str, currency_rate))}) AS currency_values(company_id, currency_id, conversion_date,rate)
         )"""
 
+    @api.model
+    def _get_achievement_default_dates(self):
+        """Return default date_from, date_to and company sql condition for the achievements filtered results
+        """
+        if self.env.context.get('active_plan_ids'):
+            plan_ids = self.env['sale.commission.plan'].sudo().browse(self.env.context['active_plan_ids'])
+            date_from = plan_ids and min(plan_ids.mapped('date_from'))
+            date_to = plan_ids and max(plan_ids.mapped('date_to'))
+        else:
+            all_plan_ids = self.env['sale.commission.plan'].sudo().search([('state', '=', 'approved')])
+            date_from = all_plan_ids and min(all_plan_ids.mapped('date_from'))
+            date_to = all_plan_ids and max(all_plan_ids.mapped('date_to'))
+        return date_from, date_to
+
     @property
     def _table_query(self):
-        # Deactivate the jit for this transaction
-        self.env.cr.execute("SET LOCAL JIT = OFF")
         users = self.env.context.get('commission_user_ids', [])
         if users:
             users = self.env['res.users'].browse(users).exists()
         teams = self.env.context.get('commission_team_ids', [])
         if teams:
             teams = self.env['crm.team'].browse(teams).exists()
-        query = self.with_context(achievement_report=True)._query(users=users, teams=teams)
-        table_query = SQL(
-            query
-        )
-        return table_query
+        date_from, date_to = self.env['sale.commission.achievement.report']._get_achievement_default_dates()
+        today = fields.Date.today().strftime('%Y-%m-%d')
+        date_from_condition = f"""AND date >= '{datetime.strftime(date_from, "%Y-%m-%d")}'""" if date_from else ""
+        achievement_view = self._get_report_view(users=users, teams=teams)
+        if not self._is_materialized_view() and achievement_view:
+            self.env.cr.execute(achievement_view)
+        query = f"""
+        WITH {self._get_currency_rate()}
+        SELECT cl.id,
+               cl.target_id,
+               cl.user_id,
+               cl.team_id,
+               cl.achieved * cr.rate AS achieved,
+               {self.env.company.currency_id.id} AS currency_id,
+               cl.plan_company_id as company_id,
+               cl.achievement_company_id as achievement_company_id,
+               cl.plan_id,
+               cl.related_res_model,
+               cl.related_res_id,
+               cl.date,
+               cl.partner_id,
+               era.amount * cr.rate AS target_amount,
+               era.payment_amount * cr.rate AS commission_target_amount,
+               CASE
+                   WHEN era.amount IS NULL OR era.amount = 0 THEN 0
+                   ELSE cl.achieved / (era.amount * cr.rate)
+               END as target_rate,
+               CASE
+                   WHEN era.payment_amount IS NULL OR era.payment_amount = 0 THEN 0
+                   ELSE cl.achieved / (era.payment_amount * cr.rate)
+               END as commission_rate
+          FROM sale_commission_achievement_report_view cl
+          JOIN sale_commission_plan_target era ON era.id = cl.target_id
+         JOIN currency_rate cr ON cr.company_id = cl.achievement_company_id
+        WHERE 1=1
+        {'AND user_id in (%s)' % ','.join(str(i) for i in users.ids) if users else ''}
+        {'AND team_id in (%s)' % ','.join(str(i) for i in teams.ids) if teams else ''}
+        {date_from_condition}
+        AND date <= '{datetime.strftime(date_to, "%Y-%m-%d") if date_to else today}'
+        """
+        return query
 
-    def _query(self,users=None, teams=None):
-        return f"""
-WITH {self._commission_lines_query(users=users, teams=teams)}
-SELECT
-    (cl.plan_id *10^13 + cl.related_res_id * 10^5 + 10^3 * LENGTH(cl.related_res_model) + cl.user_id + TO_CHAR(entropy_date, 'YYYYMMDDHH24MISS')::bigint + TO_CHAR(cl.date, 'YYMMDD')::integer)::bigint  AS id,
-    era.id AS target_id,
-    cl.user_id AS user_id,
-    cl.team_id AS team_id,
-    cl.achieved AS achieved,
-    cl.currency_id AS currency_id,
-    cl.company_id AS company_id,
-    cl.plan_id,
-    cl.related_res_model,
-    cl.related_res_id,
-    cl.date::date AS date,
-    cl.partner_id,
-    era.amount * cr.rate AS target_amount,
-    era.payment_amount * cr.rate AS commission_target_amount,
-    CASE
-        WHEN era.amount IS NULL OR era.amount = 0 THEN 0
-        ELSE cl.achieved / (era.amount * cr.rate)
-    END as target_rate,
-    CASE
-        WHEN era.payment_amount IS NULL OR era.payment_amount = 0 THEN 0
-        ELSE cl.achieved / (era.payment_amount * cr.rate)
-    END as commission_rate
-FROM commission_lines cl
-JOIN sale_commission_plan_target era
-    ON cl.plan_id = era.plan_id
-    AND cl.date::date >= era.date_from
-    AND cl.date::date <= era.date_to
-JOIN sale_commission_plan scp ON scp.id = cl.plan_id
-JOIN currency_rate cr
-  ON cr.company_id = scp.company_id
-"""
+    # ==== Materialized Achievement Generation Methods ====
+
+    def _get_view_parameters(self):
+        return "TEMPORARY"
+
+    def _view_post_creation(self):
+        return ""
+
+    def _is_materialized_view(self):
+        return False
+
+    def _get_report_view(self, users=None, teams=None):
+        # test the existance of the view. _get_report_view can be called twice in a single transaction by get_views and web_search_read for example.
+        # To avoid `psycopg2.errors.DuplicateTable: relation already exists` errors, we only create the view on the first call.
+        # Unfortunately tools.sql.table_exists can't be used here because the view is created in a temporary schema
+        self.env.cr.execute("""
+            SELECT 1 FROM pg_catalog.pg_class AS c
+                WHERE c.relname = 'sale_commission_achievement_report_view'
+                AND c.relkind = 'v'::"char"
+                AND pg_catalog.pg_table_is_visible(c.oid)
+        """)
+        res = self.env.cr.fetchone()
+        if res:
+            # The view is already defined in this transaction
+            return
+        query = f"""
+            CREATE {self._get_view_parameters()} VIEW sale_commission_achievement_report_view AS
+              WITH {self._commission_lines_query(users=users, teams=teams)}
+            SELECT
+                    cl.id,
+                    era.id AS target_id,
+                    cl.user_id AS user_id,
+                    cl.team_id AS team_id,
+                    cl.achieved AS achieved,
+                    cl.currency_id AS currency_id,
+                    -- company_id is the company of the achivement, used for currency conversion
+                    cl.plan_company_id AS plan_company_id,
+                    cl.achievement_company_id as achievement_company_id,
+                    cl.plan_id,
+                    cl.related_res_model,
+                    cl.related_res_id::INTEGER AS related_res_id,
+                    cl.date::date AS date,
+                    cl.partner_id::INTEGER AS partner_id
+              FROM commission_lines cl
+              JOIN sale_commission_plan_target era
+                ON cl.plan_id = era.plan_id
+               AND cl.date::date >= era.date_from
+               AND cl.date::date <= era.date_to;
+            {self._view_post_creation()}
+        """
+        return query
+
+    # ==== Query Helpers ====
 
     @api.model
     def _rate_to_case(self, rates):
-        case = "CASE WHEN scpa.type = '%s' THEN rate ELSE 0 END AS %s"
+        case = "CASE WHEN scpa.type::text = '%s'::text THEN rate ELSE 0::double precision END AS %s"
         return ",\n".join(case % (s, s + '_rate') for s in rates)
 
     @api.model
@@ -228,30 +232,29 @@ JOIN currency_rate cr
     @api.model
     def _get_sale_rates_product(self):
         return """
-            rules.amount_sold_rate * sol.price_subtotal * cr.rate / fo.currency_rate +
-            rules.qty_sold_rate * sol.product_uom_qty
+            rules.amount_sold_rate * sol.price_subtotal::double precision / fo.currency_rate::double precision +
+            rules.qty_sold_rate * sol.product_uom_qty::double precision
         """
 
     @api.model
     def _get_filtered_orders_cte(self, users=None, teams=None):
-        date_from, date_to, company_condition = self._get_achievement_default_dates()
+        date_from, date_to = self._get_achievement_default_dates()
         today = fields.Date.today().strftime('%Y-%m-%d')
-        date_from_condition = f"""AND date_order >= '{datetime.strftime(date_from, "%Y-%m-%d")}'""" if date_from else ""
+        date_from_condition = f"""AND date_order >= '{datetime.strftime(date_from, "%Y-%m-%d")}'::timestamp without time zone""" if date_from else ""
         query = f"""
         filtered_orders AS (
             SELECT
-                    id,
-                    team_id,
-                    state,
-                    currency_rate,
-                    company_id,
-                    user_id,
-                    date_order,
-                    write_date,
-                    partner_id
+                    sale_order.id,
+                    sale_order.team_id,
+                    sale_order.state,
+                    sale_order.currency_rate,
+                    sale_order.company_id,
+                    sale_order.currency_id,
+                    sale_order.user_id,
+                    sale_order.date_order,
+                    sale_order.partner_id
               FROM sale_order
-             WHERE state = 'sale'
-               {company_condition}
+             WHERE sale_order.state::text = 'sale'::text
                {'AND user_id in (%s)' % ','.join(str(i) for i in users.ids) if users else ''}
                {'AND team_id in (%s)' % ','.join(str(i) for i in teams.ids) if teams else ''}
                {date_from_condition}
@@ -262,27 +265,26 @@ JOIN currency_rate cr
 
     @api.model
     def _get_filtered_moves_cte(self, users=None, teams=None):
-        date_from, date_to, company_condition = self._get_achievement_default_dates()
+        date_from, date_to = self._get_achievement_default_dates()
         today = fields.Date.today().strftime('%Y-%m-%d')
         date_from_str = date_from and datetime.strftime(date_from, "%Y-%m-%d")
         date_from_condition = f"""AND date >= '{date_from_str}'""" if date_from_str else ""
         query = f"""
         filtered_moves AS (
             SELECT
-                    id,
-                    team_id,
-                    move_type,
-                    state,
-                    invoice_currency_rate,
-                    company_id,
-                    invoice_user_id,
-                    date,
-                    write_date,
-                    partner_id
+                    account_move.id::bigint,
+                    account_move.team_id,
+                    account_move.move_type,
+                    account_move.state,
+                    account_move.invoice_currency_rate,
+                    account_move.company_id,
+                    account_move.currency_id,
+                    account_move.invoice_user_id,
+                    account_move.date,
+                    account_move.partner_id
               FROM account_move
-             WHERE move_type IN ('out_invoice', 'out_refund')
+             WHERE account_move.move_type IN ('out_invoice', 'out_refund')
                AND state = 'posted'
-               {company_condition}
              {'AND invoice_user_id in (%s)' % ','.join(str(i) for i in users.ids) if users else ''}
              {'AND team_id in (%s)' % ','.join(str(i) for i in teams.ids) if teams else ''}
                {date_from_condition}
@@ -296,22 +298,13 @@ JOIN currency_rate cr
         return """
         CASE
             WHEN fm.move_type = 'out_invoice' THEN
-                rules.amount_invoiced_rate * aml.price_subtotal * cr.rate / fm.invoice_currency_rate +
+                rules.amount_invoiced_rate * aml.price_subtotal / fm.invoice_currency_rate +
                 rules.qty_invoiced_rate * aml.quantity
             WHEN fm.move_type = 'out_refund' THEN
-                (rules.amount_invoiced_rate * aml.price_subtotal * cr.rate / fm.invoice_currency_rate +
+                (rules.amount_invoiced_rate * aml.price_subtotal / fm.invoice_currency_rate +
                 rules.qty_invoiced_rate * aml.quantity) * -1
         END
         """
-    @api.model
-    def _get_company_condition(self, company_table, alias=False):
-        assert (company_table in ['scp', 'log'])
-        company_count = len(self.env.companies.ids)
-        table_val = f"\"{company_table}\"" if not alias else company_table
-        if company_count == 1:
-            return f"AND {table_val}.company_id = {self.env.companies.id}"
-        else:
-            return f"AND {table_val}.company_id IN {tuple(self.env.companies.ids)}"
 
     @api.model
     def _select_invoices(self):
@@ -320,12 +313,12 @@ JOIN currency_rate cr
           MAX(fm.team_id) AS team_id,
           rules.plan_id,
           SUM({self._get_invoice_rates_product()}) AS achieved,
-          {self.env.company.currency_id.id} AS currency_id,
+          MAX(fm.currency_id) AS currency_id,
           MAX(fm.date) AS date,
-          MAX(rules.company_id) AS company_id,
+          MAX(rules.company_id) AS plan_company_id,
+          MAX(fm.company_id) AS achievement_company_id,
           fm.id AS related_res_id,
-          MAX(fm.partner_id) AS partner_id,
-          MAX(fm.write_date) as entropy_date
+          MAX(fm.partner_id) AS partner_id
         """
 
     @api.model
@@ -343,8 +336,6 @@ JOIN currency_rate cr
             ON aml.product_id = pp.id
           LEFT JOIN product_template pt
             ON pp.product_tmpl_id = pt.id
-          JOIN currency_rate cr
-            ON cr.company_id = fm.company_id
         """
 
     @api.model
@@ -364,8 +355,7 @@ JOIN currency_rate cr
     def _select_sales(self):
         return """
           fo.id AS related_res_id,
-          MAX(fo.partner_id) AS partner_id,
-          MAX(fo.write_date) as entropy_date
+          MAX(fo.partner_id) AS partner_id
         """
 
     @api.model
@@ -379,8 +369,6 @@ JOIN currency_rate cr
         JOIN filtered_orders fo ON {jointure}
         JOIN sale_order_line sol
           ON sol.order_id = fo.id
-        JOIN currency_rate cr
-          ON cr.company_id=fo.company_id
         """
 
     @api.model
@@ -388,7 +376,7 @@ JOIN currency_rate cr
         where = """
           AND sol.display_type IS NULL
           AND (fo.date_order BETWEEN rules.date_from AND rules.date_to)
-          AND fo.state = 'sale'
+          AND fo.state::TEXT = 'sale'::TEXT
           AND (rules.product_id IS NULL OR rules.product_id = sol.product_id)
           AND (rules.product_categ_id IS NULL OR rules.product_categ_id = pt.categ_id)
           AND COALESCE(sol.is_expense, false) = false
@@ -409,12 +397,6 @@ JOIN currency_rate cr
             plan_ids = self.env['sale.commission.plan'].sudo().browse(self.env.context['active_plan_ids'])
             date_from = min(plan_ids.mapped('date_from'))
             date_to = max(plan_ids.mapped('date_to'))
-
-        company_count = len(self.env.companies.ids)
-        if company_count == 1:
-            company_condition = f"WHERE company_id = {self.env.companies.id}"
-        else:
-            company_condition = f"WHERE company_id IN {tuple(self.env.companies.ids)}"
         today = fields.Date.today().strftime('%Y-%m-%d')
         date_from_str = date_from and datetime.strftime(date_from, "%Y-%m-%d")
         date_from_condition = f"""AND date >= '{date_from_str}'""" if date_from_str else ""
@@ -422,16 +404,15 @@ JOIN currency_rate cr
         filtered_adjustments AS (
             SELECT
                     a.id,
-                    add_user_id,
-                    reduce_user_id,
-                    company_id,
-                    currency_id,
-                    currency_rate,
-                    achieved,
-                    date,
-                    write_date
+                    a.add_user_id,
+                    a.reduce_user_id,
+                    a.company_id,
+                    a.currency_id,
+                    a.currency_rate,
+                    a.achieved,
+                    a.date
               FROM sale_commission_achievement a
-             {company_condition}
+              WHERE 1=1
              {date_from_condition}
                AND date <= '{datetime.strftime(date_to, "%Y-%m-%d") if date_to else today}'
         )
@@ -444,34 +425,25 @@ JOIN currency_rate cr
 {self._get_filtered_achivement_cte(users=users, teams=teams)},
 achievement_commission_lines_add AS (
     SELECT
+        fa.id::bigint *10+8 as id,
         scpu.user_id AS user_id,
         scp.team_id AS team_id,
         scp.id AS plan_id,
-        fa.achieved * cr.rate / fa.currency_rate AS achieved,
-        {self.env.company.currency_id.id} AS currency_id,
+        fa.achieved::double precision / fa.currency_rate AS achieved,
+        fa.currency_id AS currency_id,
         fa.date AS date,
-        scp.company_id,
+        scp.company_id AS plan_company_id,
+        scp.company_id AS achievement_company_id,
         fa.id AS related_res_id,
         -- achievement don't involve a customer; needed to match UNION structure with other sources
         NULL::integer AS partner_id,
-        MAX(fa.write_date) AS entropy_date,
-        'sale.commission.achievement' AS related_res_model
+        'sale.commission.achievement'::text AS related_res_model
     FROM filtered_adjustments fa
     JOIN sale_commission_plan_user scpu ON scpu.id = fa.add_user_id
     JOIN sale_commission_plan scp ON scpu.plan_id = scp.id
-    JOIN currency_rate cr ON cr.company_id=scp.company_id
     WHERE scp.active
-      AND scp.state = 'approved'
+      AND scp.state::text = 'approved'::text
       {'AND scpu.user_id in (%s)' % ','.join(str(i) for i in users.ids) if users else ''}
-    GROUP BY scpu.user_id,
-             scp.team_id,
-             scp.id,
-             fa.currency_rate,
-             fa.achieved,
-             cr.rate,
-             fa.date,
-             scp.company_id,
-             fa.id
 )
 """, "achievement_commission_lines_add"
 
@@ -480,42 +452,58 @@ achievement_commission_lines_add AS (
         return f"""
 achievement_commission_lines_rem AS (
     SELECT
+        fa.id::bigint *10+9 as id,
         scpu.user_id AS user_id,
         scp.team_id AS team_id,
         scp.id AS plan_id,
-        - fa.achieved * cr.rate / fa.currency_rate AS achieved,
-        {self.env.company.currency_id.id} AS currency_id,
+        (- fa.achieved)::double precision / fa.currency_rate AS achieved,
+        fa.currency_id AS currency_id,
         fa.date AS date,
-        scp.company_id,
+        scp.company_id AS plan_company_id,
+        scp.company_id AS achievement_company_id,
         fa.id AS related_res_id,
         -- achievement don't involve a customer; needed to match UNION structure with other sources
         NULL::integer AS partner_id,
-        MAX(fa.write_date) AS entropy_date,
-        'sale.commission.achievement' AS related_res_model
+        'sale.commission.achievement'::text AS related_res_model
     FROM filtered_adjustments fa
     JOIN sale_commission_plan_user scpu ON scpu.id = fa.reduce_user_id
     JOIN sale_commission_plan scp ON scpu.plan_id = scp.id
-    JOIN currency_rate cr ON cr.company_id=scp.company_id
     WHERE scp.active
-      AND scp.state = 'approved'
+      AND scp.state::text = 'approved'::text
       {'AND scpu.user_id in (%s)' % ','.join(str(i) for i in users.ids) if users else ''}
-    GROUP BY scpu.user_id,
-             scp.team_id,
-             scp.id,
-             fa.currency_rate,
-             fa.achieved,
-             cr.rate,
-             fa.date,
-             scp.company_id,
-             fa.id
 )
 """, "achievement_commission_lines_rem"
 
     def _invoices_lines(self, users=None, teams=None):
         return f"""
 {self._get_filtered_moves_cte(users=users, teams=teams)},
+invoices_rules AS (
+    SELECT
+        scpa.id::bigint,
+        COALESCE(scpu.date_from, scp.date_from) AS date_from,
+        COALESCE(scpu.date_to, scp.date_to) AS date_to,
+        scpu.user_id AS user_id,
+        scp.team_id AS team_id,
+        scp.id AS plan_id,
+        scpa.product_id,
+        scpa.product_categ_id,
+        scp.company_id,
+        scp.currency_id AS currency_id,
+        scp.user_type::text = 'team'::text AS team_rule,
+        {self._rate_to_case(self._get_invoices_rates())}
+        {self._select_rules()}
+    FROM sale_commission_plan_achievement scpa
+    JOIN sale_commission_plan scp ON scp.id = scpa.plan_id
+    JOIN sale_commission_plan_user scpu ON scpa.plan_id = scpu.plan_id
+    WHERE scp.active
+      AND scp.state::text = 'approved'::text
+      AND scpa.type::text IN ({','.join("'%s'::character varying" % r for r in self._get_invoices_rates())})
+    {'AND scpu.user_id in (%s)' % ','.join(str(i) for i in users.ids) if users else ''}
+),
 invoice_commission_lines_team AS (
     SELECT
+       (MAX(aml.id)::bigint <<20) | max(rules.id)::bigint <<10 | rules.user_id <<10 as id,
+       --max(aml.id)::bigint as id,
         {self._select_invoices()}
     FROM invoices_rules rules
          {self._join_invoices(join_type='team')}
@@ -532,6 +520,8 @@ invoice_commission_lines_team AS (
         rules.user_id
 ), invoice_commission_lines_user AS (
     SELECT
+       -- row_number is needed here because we have 3 integer (32 bits) to use to create a unique 64 bits integer --> not possible
+       row_number() over(order by fm.id, rules.plan_id, rules.user_id) as id,
           {self._select_invoices()}
     FROM invoices_rules rules
          {self._join_invoices(join_type='user')}
@@ -543,13 +533,42 @@ invoice_commission_lines_team AS (
       AND (rules.product_id IS NULL OR rules.product_id = aml.product_id)
       AND (rules.product_categ_id IS NULL OR rules.product_categ_id = pt.categ_id)
     GROUP BY
+--        aml.id,
         fm.id,
         rules.plan_id,
         rules.user_id
 ), invoice_commission_lines AS (
-    (SELECT *, 'account.move' AS related_res_model FROM invoice_commission_lines_team)
+    (
+        SELECT invoice_commission_lines_team.id*10+1 as id,
+               invoice_commission_lines_team.user_id,
+               invoice_commission_lines_team.team_id,
+               invoice_commission_lines_team.plan_id,
+               invoice_commission_lines_team.achieved,
+               invoice_commission_lines_team.currency_id,
+               invoice_commission_lines_team.date,
+               invoice_commission_lines_team.plan_company_id,
+               invoice_commission_lines_team.achievement_company_id,
+               invoice_commission_lines_team.related_res_id,
+               invoice_commission_lines_team.partner_id,
+               'account.move' AS related_res_model
+          FROM invoice_commission_lines_team
+    )
     UNION ALL
-    (SELECT *, 'account.move' AS related_res_model FROM invoice_commission_lines_user)
+    (
+        SELECT invoice_commission_lines_user.id*10+2 as id,
+               invoice_commission_lines_user.user_id,
+               invoice_commission_lines_user.team_id,
+               invoice_commission_lines_user.plan_id,
+               invoice_commission_lines_user.achieved,
+               invoice_commission_lines_user.currency_id,
+               invoice_commission_lines_user.date,
+               invoice_commission_lines_user.plan_company_id,
+               invoice_commission_lines_user.achievement_company_id,
+               invoice_commission_lines_user.related_res_id,
+               invoice_commission_lines_user.partner_id,
+               'account.move' AS related_res_model
+          FROM invoice_commission_lines_user
+    )
 )""", 'invoice_commission_lines'
 
     def _sale_lines(self, users=None, teams=None):
@@ -565,27 +584,28 @@ sale_rules AS (
         scpa.product_id,
         scpa.product_categ_id,
         scp.company_id,
-        {self.env.company.currency_id.id} AS currency_id,
-        scp.user_type = 'team' AS team_rule,
+        scp.currency_id AS currency_id,
+        scp.user_type::text = 'team'::text AS team_rule,
         {self._rate_to_case(self._get_sale_rates())}
         {self._select_rules()}
     FROM sale_commission_plan_achievement scpa
     JOIN sale_commission_plan scp ON scp.id = scpa.plan_id
     JOIN sale_commission_plan_user scpu ON scpa.plan_id = scpu.plan_id
     WHERE scp.active
-      AND scp.state = 'approved'
-      {self._get_company_condition('scp')}
-      AND scpa.type IN ({','.join("'%s'" % r for r in self._get_sale_rates())})
+      AND scp.state::text = 'approved'::text
+      AND scpa.type IN ({','.join("'%s'::character varying" % r for r in self._get_sale_rates())})
     {'AND scpu.user_id in (%s)' % ','.join(str(i) for i in users.ids) if users else ''}
 ), sale_commission_lines_team AS (
     SELECT
+        MAX(sol.id)::BIGINT *10+3 as id,
         rules.user_id,
-        MAX(rules.team_id),
+        MAX(rules.team_id) AS team_id,
         rules.plan_id,
         SUM({self._get_sale_rates_product()}) AS achieved,
-        {self.env.company.currency_id.id},
+        MAX(fo.currency_id) AS currency_id,
         MAX(fo.date_order) AS date,
-        MAX(rules.company_id),
+        MAX(rules.company_id) AS plan_company_id,
+        MAX(fo.company_id) AS achievement_company_id,
         {self._select_sales()}
     FROM sale_rules rules
     {self._join_sales(join_type='team')}
@@ -603,13 +623,15 @@ sale_rules AS (
         rules.user_id
 ), sale_commission_lines_user AS (
     SELECT
+        MAX(sol.id)::BIGINT *10+4 as id,
         rules.user_id,
-        MAX(fo.team_id),
+        MAX(fo.team_id) AS team_id,
         rules.plan_id,
         SUM({self._get_sale_rates_product()}) AS achieved,
-        {self.env.company.currency_id.id} AS currency_id,
+        MAX(fo.currency_id) AS currency_id,
         MAX(fo.date_order) AS date,
-        MAX(rules.company_id),
+        MAX(rules.company_id) AS plan_company_id,
+        MAX(fo.company_id) AS achievement_company_id,
         {self._select_sales()}
     FROM sale_rules rules
     {self._join_sales(join_type='user')}
@@ -626,9 +648,37 @@ sale_rules AS (
         rules.plan_id,
         rules.user_id
 ), sale_commission_lines AS (
-    (SELECT *, 'sale.order' AS related_res_model FROM sale_commission_lines_team)
+    (
+    SELECT sale_commission_lines_team.id::bigint as id,
+           sale_commission_lines_team.user_id,
+           sale_commission_lines_team.team_id,
+           sale_commission_lines_team.plan_id,
+           sale_commission_lines_team.achieved,
+           sale_commission_lines_team.currency_id,
+           sale_commission_lines_team.date,
+           sale_commission_lines_team.plan_company_id,
+           sale_commission_lines_team.achievement_company_id,
+           sale_commission_lines_team.related_res_id,
+           sale_commission_lines_team.partner_id,
+           'sale.order'::text AS related_res_model
+      FROM sale_commission_lines_team
+    )
     UNION ALL
-    (SELECT *, 'sale.order' AS related_res_model FROM sale_commission_lines_user)
+    (
+    SELECT sale_commission_lines_user.id::bigint as id,
+           sale_commission_lines_user.user_id,
+           sale_commission_lines_user.team_id,
+           sale_commission_lines_user.plan_id,
+           sale_commission_lines_user.achieved,
+           sale_commission_lines_user.currency_id,
+           sale_commission_lines_user.date,
+           sale_commission_lines_user.plan_company_id,
+           sale_commission_lines_user.achievement_company_id,
+           sale_commission_lines_user.related_res_id,
+           sale_commission_lines_user.partner_id,
+           'sale.order'::text AS related_res_model
+      FROM sale_commission_lines_user
+    )
 )""", 'sale_commission_lines'
 
     def _commission_lines_cte(self, users=None, teams=None):
@@ -642,11 +692,16 @@ sale_rules AS (
         queries = [x[0] for x in ctes]
         table_names = [x[1] for x in ctes]
         # create temporary table to convert currencies
-        res =  f"""
-{self._get_currency_rate()},
+        res = f"""
 {','.join(queries)},
 commission_lines AS (
     {' UNION ALL '.join(f'(SELECT * FROM {name})' for name in table_names)}
 )
 """
         return res
+
+    def _pre_achievement_operation(self):
+        # Override in other modules. Mostly used in tests
+        self.env.flush_all()
+        self.env.invalidate_all()
+        return

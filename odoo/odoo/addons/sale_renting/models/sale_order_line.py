@@ -13,6 +13,8 @@ from odoo.tools.sql import SQL
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
+    product_id = fields.Many2one(group_expand='_read_group_expand_product_id')
+
     order_is_rental = fields.Boolean(related='order_id.is_rental_order', depends=['order_id'])
 
     # Stored because a product could have been rent_ok when added to the SO but then updated
@@ -40,7 +42,6 @@ class SaleOrderLine(models.Model):
         search='_search_rental_status',
     )
     rental_color = fields.Integer(compute='_compute_rental_color')
-    categ_id = fields.Many2one(related='product_id.categ_id')
 
     def _domain_product_id(self):
         super_part = ','.join(str(leaf) for leaf in super()._domain_product_id())
@@ -57,7 +58,7 @@ class SaleOrderLine(models.Model):
             group_by = self.env.context.get('group_by', [])
 
             if 'partner_id' not in group_by:
-                descriptions.append(sol.order_partner_id.name)
+                descriptions.append(sol.order_partner_id.display_name)
             if 'product_id' not in group_by:
                 descriptions.append(sol.product_id.name)
             descriptions.append(sol.order_id.name)
@@ -165,6 +166,23 @@ class SaleOrderLine(models.Model):
                 ))
             )
         )
+
+    def _read_group_expand_product_id(self, products, domain):
+        if not self.env.context.get('in_rental_schedule'):
+            return self.env['product.product']
+
+        expanded_products = self.env['product.product'].search(
+            Domain([
+                ('id', 'not in', products.ids),
+                ('rent_ok', '=', True),
+                ('type', '!=', 'combo'),
+            ]),
+            limit=80 - len(products),
+        )
+        # While `_web_read_group_expand` already includes `products` in the expanded set, it
+        # exhibits an unusual behavior of adding the expanded groups first, even though they are
+        # empty groups. Performing the union here reverses this behavior.
+        return products + expanded_products
 
     def web_gantt_write(self, vals):
         """Updates the sale order line with the provided values and performs necessary validations.

@@ -6,22 +6,24 @@
 # Martin Trigaux, 2022
 # Camille Dantinne <cmd@odoo.com>, 2022
 # Jolien De Paepe, 2023
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023, 2025.
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Bren Driesen <brdri@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-30 18:40+0000\n"
-"PO-Revision-Date: 2025-09-14 11:58+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-02-20 18:41+0000\n"
+"PO-Revision-Date: 2026-02-14 10:03+0000\n"
+"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/sign/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: sign
 #: model:ir.model.fields,field_description:sign.field_res_partner__signature_count
@@ -41,6 +43,8 @@ msgid ""
 "%(company_address)s\n"
 "%(phone)s"
 msgstr ""
+"%(company_address)s\n"
+"%(phone)s"
 
 #. module: sign
 #. odoo-python
@@ -215,7 +219,7 @@ msgstr "<b>Documenten:</b>"
 #. odoo-javascript
 #: code:addons/sign/static/src/js/tours/sign.js:0
 msgid "<b>Drag & drop \"Signature\"</b> into the bottom of the document."
-msgstr ""
+msgstr "<b>Versleep \"handtekening\"</b> naar de onderkant van het document."
 
 #. module: sign
 #: model_terms:ir.ui.view,arch_db:sign.green_savings_report
@@ -352,14 +356,12 @@ msgstr ""
 #. module: sign
 #: model_terms:ir.ui.view,arch_db:sign.sign_template_view_kanban
 msgid ""
-"<span class=\"badge rounded-pill text-bg-success\" title=\"Shared\" "
-"invisible=\"not is_sharing\">\n"
+"<span class=\"badge rounded-pill text-bg-success\" title=\"Shared\">\n"
 "                                    Shared\n"
 "                                </span>"
 msgstr ""
-"<span class=\"badge rounded-pill text-bg-success\" title=\"Shared\" "
-"invisible=\"not is_sharing\">\n"
-"                                    Gedeelde\n"
+"<span class=\"badge rounded-pill text-bg-success\" title=\"Shared\">\n"
+"                                    Gedeeld\n"
 "                                </span>"
 
 #. module: sign
@@ -368,11 +370,13 @@ msgid ""
 "<span class=\"fw-bold\">Cryptographic signature<i class=\"fa fa-building-o "
 "ms-1\"/></span>"
 msgstr ""
+"<span class=\"fw-bold\">Cryptografische handtekening<i class=\"fa fa-"
+"building-o ms-1\"/></span>"
 
 #. module: sign
 #: model_terms:ir.ui.view,arch_db:sign.sign_send_request_view_form
 msgid "<span class=\"fw-bold\">or</span>"
-msgstr ""
+msgstr "<span class=\"fw-bold\">of</span>"
 
 #. module: sign
 #: model_terms:ir.ui.view,arch_db:sign.sign_send_request_view_form
@@ -399,15 +403,7 @@ msgstr "<span class=\"text-muted\">Niet beschikbaar</span>"
 #: model_terms:ir.ui.view,arch_db:sign.sign_send_request_view_form
 msgid "<span class=\"text-nowrap\">Add certificate on each page</span>"
 msgstr ""
-
-#. module: sign
-#: model_terms:ir.ui.view,arch_db:sign.res_config_settings_view_form
-msgid ""
-"<span groups=\"base.group_system\">\n"
-"                                    Certify your documents using a "
-"provided .pfx or .p12 file.\n"
-"                                </span>"
-msgstr ""
+"<span class=\"text-nowrap\">Certificaat toevoegen op elke pagina</span>"
 
 #. module: sign
 #: model_terms:ir.ui.view,arch_db:sign.sign_template_view_kanban
@@ -563,8 +559,9 @@ msgid ""
 "Actions may trigger specific behavior like opening calendar view or "
 "automatically mark as done when a document is uploaded"
 msgstr ""
-"Acties kunnen specifiek gedrag doen afgaan zoals het openen van de kalender "
-"weergave of automatisch als gereed markeren wanneer een bestand geüpload is"
+"Acties kunnen specifiek gedrag triggeren, zoals het openen van de "
+"kalenderweergave of automatisch als gereed markeren wanneer een bestand "
+"geüpload is"
 
 #. module: sign
 #: model:ir.model.fields,field_description:sign.field_sign_item_type__active
@@ -620,7 +617,7 @@ msgstr "Toevoegen"
 #. odoo-javascript
 #: code:addons/sign/static/src/fields/many2many_binary_field/many2many_binary_field.xml:0
 msgid "Add Attachment"
-msgstr ""
+msgstr "Bijlage toevoegen"
 
 #. module: sign
 #. odoo-javascript
@@ -637,7 +634,7 @@ msgstr "Voeg hier documentlabels toe"
 #: model_terms:ir.ui.view,arch_db:sign.res_config_settings_view_form
 msgid "Add terms & conditions to the signature request email"
 msgstr ""
-"Algemene voorwaarden toevoegen aan de e-mail met het ondertekeningsverzoek"
+"Algemene voorwaarden toevoegen aan de e-mail met het handtekeningverzoek"
 
 #. module: sign
 #: model:res.groups,name:sign.group_sign_manager
@@ -716,6 +713,11 @@ msgid "Antwrep"
 msgstr "Antwrep"
 
 #. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_view_form
+msgid "Anyone"
+msgstr "Iedereen"
+
+#. module: sign
 #: model_terms:ir.ui.view,arch_db:sign.sign_request_view_kanban
 #: model_terms:ir.ui.view,arch_db:sign.sign_template_view_kanban
 msgid "Archive"
@@ -740,7 +742,7 @@ msgstr "Weet je zeker dat je deze tekenaanvraag wilt annuleren?"
 #: model:ir.model.fields,field_description:sign.field_sign_item_role__assign_to
 #: model_terms:ir.ui.view,arch_db:sign.sign_item_role_view_form
 msgid "Assign to"
-msgstr ""
+msgstr "Toewijzen aan"
 
 #. module: sign
 #: model:ir.model.fields,help:sign.field_sign_request__start_sign
@@ -751,7 +753,7 @@ msgstr "Minimaal één persoon heeft het document ondertekend."
 #. odoo-javascript
 #: code:addons/sign/static/src/fields/many2many_binary_field/many2many_binary_field.xml:0
 msgid "Attach"
-msgstr ""
+msgstr "Bijvoegen"
 
 #. module: sign
 #: model:ir.model.fields,field_description:sign.field_sign_document__attachment_id
@@ -808,14 +810,19 @@ msgid "Authorized Users:"
 msgstr "Bevoegde gebruikers:"
 
 #. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_item_type_view_form
+msgid "Autocomplete this field"
+msgstr "Dit veld automatisch aanvullen"
+
+#. module: sign
 #: model_terms:ir.ui.view,arch_db:sign.sign_send_request_view_form
 msgid "Autocomplete values and download signed document"
-msgstr ""
+msgstr "Waarden automatisch invullen en ondertekend document downloaden"
 
 #. module: sign
 #: model:ir.model.fields,field_description:sign.field_sign_send_request__available_template_ids
 msgid "Available Template"
-msgstr ""
+msgstr "Beschikbaar sjabloon"
 
 #. module: sign
 #: model_terms:ir.ui.view,arch_db:sign.res_config_settings_view_form
@@ -837,12 +844,6 @@ msgstr "Gebaseerd op"
 #: model_terms:ir.ui.view,arch_db:sign.green_savings_report
 msgid "Based on various websites, here are our comparisons:"
 msgstr "Op basis van verschillende websites zijn hier onze vergelijkingen:"
-
-#. module: sign
-#. odoo-javascript
-#: code:addons/sign/static/src/editor/plugins/signature.js:0
-msgid "Basic Bloc"
-msgstr ""
 
 #. module: sign
 #: model:ir.model.fields.selection,name:sign.selection__sign_log__request_state__sent
@@ -867,11 +868,15 @@ msgid ""
 "electronic representation of my hand-written signature/initials for all "
 "purposes when it is used on documents, including legally binding contracts."
 msgstr ""
+"Door te ondertekenen ga ik ermee akkoord dat de gekozen handtekening en "
+"initialen een geldige elektronische weergave zijn van mijn handgeschreven "
+"handtekening/initialen voor alle doeleinden wanneer deze worden gebruikt op "
+"documenten, inclusief wettelijk bindende contracten."
 
 #. module: sign
 #: model_terms:ir.ui.view,arch_db:sign.sign_send_request_view_form
 msgid "CC"
-msgstr ""
+msgstr "CC"
 
 #. module: sign
 #: model:ir.model.fields,field_description:sign.field_sign_send_request__message_cc
@@ -963,6 +968,11 @@ msgid "Certificate of completion - %s.pdf"
 msgstr "Voltooiingscertificaat - %s.pdf"
 
 #. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.res_config_settings_view_form
+msgid "Certify your documents using a provided .pfx or .p12 file."
+msgstr ""
+
+#. module: sign
 #: model:ir.model.fields,field_description:sign.field_sign_item_role__change_authorized
 #: model:ir.model.fields,field_description:sign.field_sign_request_item__change_authorized
 msgid "Change Authorized"
@@ -983,7 +993,7 @@ msgstr ""
 #. module: sign
 #: model_terms:ir.ui.view,arch_db:sign.sign_send_request_view_form
 msgid "Choose a template"
-msgstr ""
+msgstr "Kies een sjabloon"
 
 #. module: sign
 #. odoo-javascript
@@ -1029,7 +1039,7 @@ msgstr "Kleurindex"
 #. module: sign
 #: model_terms:ir.ui.view,arch_db:sign.sign_template_view_form
 msgid "Communication"
-msgstr ""
+msgstr "Communicatie"
 
 #. module: sign
 #: model_terms:ir.ui.view,arch_db:sign.sign_portal_my_request
@@ -1054,6 +1064,9 @@ msgid ""
 "Company Address\n"
 "Company Phone"
 msgstr ""
+"Bedrijfsnaam\n"
+"Adres bedrijf\n"
+"Telefoon bedrijf"
 
 #. module: sign
 #: model:ir.model.fields,field_description:sign.field_sign_request__communication_company_id
@@ -1118,6 +1131,11 @@ msgid "Congratulations, you signed your first document!"
 msgstr "Gefeliciteerd, je hebt je eerste document ondertekend!"
 
 #. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_logs_user
+msgid "Connected as"
+msgstr "Verbonden als"
+
+#. module: sign
 #: model:ir.model,name:sign.model_res_partner
 #: model:ir.model.fields,field_description:sign.field_sign_send_request_signer__partner_id
 #: model_terms:ir.ui.view,arch_db:sign.sign_request_view_form
@@ -1146,7 +1164,7 @@ msgstr ""
 #. module: sign
 #: model_terms:ir.ui.view,arch_db:sign.sign_request_share_view_form
 msgid "Copy link"
-msgstr ""
+msgstr "Link kopiëren"
 
 #. module: sign
 #: model:ir.model.fields,field_description:sign.field_sign_request__cc_partner_ids
@@ -1226,7 +1244,7 @@ msgstr "Aangemaakt"
 #. module: sign
 #: model_terms:ir.ui.view,arch_db:sign.sign_portal_my_request
 msgid "Current status of the signature request"
-msgstr "Huidige status van het handtekeningsverzoek"
+msgstr "Huidige status van het handtekeningverzoek"
 
 #. module: sign
 #. odoo-javascript
@@ -1300,7 +1318,7 @@ msgstr "Standaard volgorde"
 #. module: sign
 #: model:ir.model.fields,field_description:sign.field_sign_template__signature_request_validity
 msgid "Default signature request validity"
-msgstr ""
+msgstr "Geldigheid van standaardhandtekeningverzoeken"
 
 #. module: sign
 #. odoo-javascript
@@ -1329,6 +1347,12 @@ msgid "Delete signer \"%s\""
 msgstr "Ondertekenaar \"%s\" verwijderen"
 
 #. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/dialogs/thank_you_dialog.js:0
+msgid "Deleted User"
+msgstr "Verwijderde gebruiker"
+
+#. module: sign
 #: model_terms:ir.ui.view,arch_db:sign.res_config_settings_view_form
 msgid ""
 "Deliver one-time codes by SMS to identify signatories when signing a document"
@@ -1339,7 +1363,7 @@ msgstr ""
 #. module: sign
 #: model:ir.model.fields,field_description:sign.field_sign_request__send_channel
 msgid "Delivery Method"
-msgstr ""
+msgstr "Verzendmethode"
 
 #. module: sign
 #: model_terms:ir.ui.view,arch_db:sign.sign_request_logs_user
@@ -1354,7 +1378,7 @@ msgstr "Demo-IP"
 #. module: sign
 #: model_terms:ir.ui.view,arch_db:sign.sign_request_logs_user
 msgid "Demo Latitude"
-msgstr "Demo Breedtegraad"
+msgstr "Demo breedtegraad"
 
 #. module: sign
 #: model_terms:ir.ui.view,arch_db:sign.sign_request_logs_user
@@ -1415,7 +1439,7 @@ msgstr "Weergave"
 #. module: sign
 #: model:ir.model.fields,field_description:sign.field_sign_send_request__display_download_button
 msgid "Display Download Button"
-msgstr ""
+msgstr "Downloadknop weergeven"
 
 #. module: sign
 #: model:ir.model.fields,field_description:sign.field_ir_http__display_name
@@ -1443,7 +1467,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sign.field_sign_template_preview__display_name
 #: model:ir.model.fields,field_description:sign.field_sign_template_tag__display_name
 msgid "Display Name"
-msgstr "Schermnaam"
+msgstr "Weergavenaam"
 
 #. module: sign
 #: model:ir.model.fields,field_description:sign.field_res_config_settings__sign_preview_ready
@@ -1477,7 +1501,7 @@ msgstr "Document <i class=\"fa fa-download\"/>"
 #. module: sign
 #: model_terms:ir.ui.view,arch_db:sign.sign_request_logs_user
 msgid "Document Details"
-msgstr "Document details"
+msgstr "Documentdetails"
 
 #. module: sign
 #: model:ir.model.fields,field_description:sign.field_sign_request__reference
@@ -1488,7 +1512,7 @@ msgstr "Documentnaam"
 #. module: sign
 #: model:ir.model.fields,field_description:sign.field_sign_item__page
 msgid "Document Page"
-msgstr "Document pagina"
+msgstr "Documentpagina"
 
 #. module: sign
 #: model:ir.model.fields,field_description:sign.field_sign_item__document_id
@@ -1598,12 +1622,6 @@ msgid "Each item must contain 'name' and 'datas' keys."
 msgstr "Elk item moet de sleutels 'name' en 'datas' bevatten."
 
 #. module: sign
-#: model:ir.actions.report,name:sign.sign_report_green_savings_action
-msgid "Ecological Savings by using Electronic Signatures"
-msgstr ""
-"Ecologische besparingen door het gebruikt van elektronische handtekeningen"
-
-#. module: sign
 #. odoo-javascript
 #: code:addons/sign/static/src/backend_components/cog_menu/sign_template_custom_cog_menu.xml:0
 #: code:addons/sign/static/src/backend_components/sign_template/sign_template_sidebar_role_items.xml:0
@@ -1613,7 +1631,8 @@ msgstr "Bewerken"
 
 #. module: sign
 #. odoo-javascript
-#: code:addons/sign/static/src/backend_components/sign_template/sign_template_action.js:0
+#. odoo-python
+#: code:addons/sign/models/sign_template.py:0
 #: code:addons/sign/static/src/backend_components/sign_template/sign_template_sidebar.xml:0
 msgid "Edit Template"
 msgstr "Bewerk template"
@@ -1662,7 +1681,7 @@ msgstr ""
 #. module: sign
 #: model_terms:ir.ui.view,arch_db:sign.sign_send_request_view_form
 msgid "Enter your message"
-msgstr ""
+msgstr "Voer je bericht in"
 
 #. module: sign
 #. odoo-javascript
@@ -1711,7 +1730,7 @@ msgstr "Veldnaam"
 #. module: sign
 #: model:ir.model.fields,field_description:sign.field_sign_item_type__field_size
 msgid "Field Size"
-msgstr ""
+msgstr "Veldgrootte"
 
 #. module: sign
 #: model:ir.ui.menu,name:sign.sign_item_type_menu
@@ -1750,7 +1769,7 @@ msgstr "Bestandsnaam"
 #: model:sign.item.type,tip:sign.sign_item_type_radio
 #: model:sign.item.type,tip:sign.sign_item_type_text
 msgid "Fill in"
-msgstr ""
+msgstr "Invullen"
 
 #. module: sign
 #. odoo-javascript
@@ -1793,7 +1812,7 @@ msgstr ""
 #: model:ir.model.fields,help:sign.field_sign_item_role__auth_method
 msgid "Force the signatory to identify using a second authentication method"
 msgstr ""
-"Dwing de ondertekenaar om zich te identificeren met een tweede "
+"De ondertekenaar dwingen om zich te identificeren met een tweede "
 "authenticatiemethode"
 
 #. module: sign
@@ -1834,6 +1853,7 @@ msgid "Geolocation"
 msgstr "Geolocatie"
 
 #. module: sign
+#: model:ir.actions.report,name:sign.sign_report_green_savings_action
 #: model:ir.ui.menu,name:sign.sign_report_green_savings
 msgid "Green Savings"
 msgstr "Groene besparingen"
@@ -2081,7 +2101,7 @@ msgstr "Initialen"
 #. odoo-javascript
 #: code:addons/sign/static/src/editor/plugins/signature.js:0
 msgid "Insert your signature"
-msgstr ""
+msgstr "Voeg je handtekening in"
 
 #. module: sign
 #: model_terms:ir.ui.view,arch_db:sign.res_config_settings_view_form
@@ -2125,11 +2145,13 @@ msgstr "Is gebruiker ondertekenaar"
 
 #. module: sign
 #. odoo-python
-#: code:addons/sign/models/sign_document.py:0
+#: code:addons/sign/utils/pdf_handling.py:0
 msgid ""
 "It seems that we're not able to process one of the uploaded pdf. It is "
 "either encrypted, or encoded in a format we do not support."
 msgstr ""
+"Het lijkt erop dat we een van de geüploade pdf's niet kunnen verwerken. Hij "
+"is versleuteld of gecodeerd in een formaat dat wij niet ondersteunen."
 
 #. module: sign
 #. odoo-javascript
@@ -2252,18 +2274,18 @@ msgstr "Gekoppelde activiteit"
 #. module: sign
 #: model:ir.model.fields,field_description:sign.field_sign_request__reference_doc
 msgid "Linked To"
-msgstr "Gelinkt aan"
+msgstr "Gekoppeld aan"
 
 #. module: sign
 #: model:ir.model.fields,field_description:sign.field_sign_item_type__auto_field
 msgid "Linked field"
-msgstr ""
+msgstr "Gekoppeld veld"
 
 #. module: sign
 #: model:ir.model.fields,field_description:sign.field_sign_item_type__model_id
 #: model:ir.model.fields,field_description:sign.field_sign_send_request__reference_doc
 msgid "Linked to"
-msgstr "Gelinkt aan"
+msgstr "Gekoppeld aan"
 
 #. module: sign
 #: model:ir.model.fields,field_description:sign.field_sign_log__log_date
@@ -2296,7 +2318,7 @@ msgstr "Logs"
 #. module: sign
 #: model:ir.model.fields.selection,name:sign.selection__sign_item_type__field_size__long_text
 msgid "Long Text"
-msgstr ""
+msgstr "Lange tekst"
 
 #. module: sign
 #: model:ir.model.fields,field_description:sign.field_sign_log__longitude
@@ -2318,7 +2340,7 @@ msgstr "E-mailupdate"
 #. odoo-python
 #: code:addons/sign/models/sign_item_type.py:0
 msgid "Malformed expression: %(exp)s"
-msgstr "Misvormde uitdrukking: %(exp)s"
+msgstr "Misvormde expressie: %(exp)s"
 
 #. module: sign
 #: model:ir.model.fields,field_description:sign.field_res_config_settings__group_manage_template_access
@@ -2335,7 +2357,7 @@ msgstr "Verplicht veld"
 #. module: sign
 #: model:sign.item.type,tip:sign.sign_item_type_initial
 msgid "Mark it"
-msgstr ""
+msgstr "Markeren"
 
 #. module: sign
 #: model:ir.model.fields,field_description:sign.field_sign_template__message
@@ -2377,7 +2399,7 @@ msgstr "Model"
 #. module: sign
 #: model:ir.model.fields,field_description:sign.field_sign_template__model_name
 msgid "Model Name"
-msgstr ""
+msgstr "Modelnaam"
 
 #. module: sign
 #. odoo-javascript
@@ -2405,7 +2427,7 @@ msgstr "Meerdere regels tekst"
 #. module: sign
 #: model_terms:ir.ui.view,arch_db:sign.sign_request_share_view_form
 msgid "Multiple Signature Requests"
-msgstr "Meerdere handtekeningsverzoeken"
+msgstr "Meerdere handtekeningverzoeken"
 
 #. module: sign
 #: model_terms:ir.ui.view,arch_db:sign.sign_request_view_search
@@ -2448,6 +2470,10 @@ msgid ""
 "44654 Millersburg Ohio United States\n"
 "+1 555-555-5556"
 msgstr ""
+"My US Company\n"
+"1034 Wildwood Street\n"
+"44654 Millersburg Ohio United States\n"
+"+1 555-555-5556"
 
 #. module: sign
 #: model:sign.template.tag,name:sign.sign_template_tag_2
@@ -2501,12 +2527,6 @@ msgstr "Nieuw handtekeningverzoek"
 
 #. module: sign
 #. odoo-python
-#: code:addons/sign/models/sign_document.py:0
-msgid "New Template"
-msgstr "Nieuw sjabloon"
-
-#. module: sign
-#. odoo-python
 #: code:addons/sign/controllers/portal.py:0
 msgid "Newest"
 msgstr "Nieuwste"
@@ -2552,10 +2572,22 @@ msgid "No document yet"
 msgstr "Nog geen document"
 
 #. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/views/helper/sign_action_helper.xml:0
+msgid "No documents here"
+msgstr "Hier zijn geen documenten"
+
+#. module: sign
 #. odoo-python
 #: code:addons/sign/models/sign_request_item.py:0
 msgid "No specified reason"
 msgstr "Geen gespecificeerde reden"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/views/helper/sign_action_helper.xml:0
+msgid "No template here"
+msgstr "Hier is geen sjabloon"
 
 #. module: sign
 #: model_terms:ir.actions.act_window,help:sign.sign_template_action
@@ -2638,6 +2670,11 @@ msgstr ""
 "            "
 
 #. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.signer_status_wrapper
+msgid "On"
+msgstr "Op"
+
+#. module: sign
 #: model_terms:ir.ui.view,arch_db:sign.green_savings_report
 msgid "One can weighs 15 g"
 msgstr "Een blik weegt 15 g"
@@ -2656,7 +2693,7 @@ msgstr "Eén geüpload bestand kan niet worden gelezen. Is het een geldige pdf?"
 #. module: sign
 #: model:ir.model.fields,field_description:sign.field_sign_send_request__only_autofill_readonly
 msgid "Only Autofill"
-msgstr ""
+msgstr "Alleen automatisch invullen"
 
 #. module: sign
 #. odoo-javascript
@@ -2669,7 +2706,7 @@ msgstr "Alleen pdf-bestanden zijn toegestaan."
 #: code:addons/sign/controllers/main.py:0
 #: code:addons/sign/controllers/terms.py:0
 msgid "Oops"
-msgstr "Oep"
+msgstr "Oeps"
 
 #. module: sign
 #. odoo-python
@@ -2724,7 +2761,7 @@ msgstr "PDF-bestand is beschadigd. Probeer het met een ander bestand."
 #. module: sign
 #: model_terms:ir.ui.view,arch_db:sign.sign_item_view_tree
 msgid "Page"
-msgstr ""
+msgstr "Pagina"
 
 #. module: sign
 #: model_terms:ir.ui.view,arch_db:sign.green_report_container
@@ -2880,6 +2917,11 @@ msgid "Redirect Link"
 msgstr "Doorverwijzing URL"
 
 #. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_view_form
+msgid "Redirect signers to a page after signing"
+msgstr "Ondertekenaars na ondertekening doorsturen naar een pagina"
+
+#. module: sign
 #: model:ir.model.fields.selection,name:sign.selection__sign_log__action__refuse
 msgid "Refuse"
 msgstr "Afkeuren"
@@ -2898,17 +2940,17 @@ msgstr "Handtekening afgewezen"
 #. module: sign
 #: model:ir.model.fields.selection,name:sign.selection__sign_item_type__field_size__regular_text
 msgid "Regular Text"
-msgstr ""
+msgstr "Gewone tekst"
 
 #. module: sign
 #: model:ir.model.fields,field_description:sign.field_sign_send_request__res_ids
 msgid "Related Document IDs"
-msgstr ""
+msgstr "Gerelateerde document-ID's"
 
 #. module: sign
 #: model:ir.model.fields,field_description:sign.field_sign_send_request__model
 msgid "Related Document Model"
-msgstr ""
+msgstr "Gerelateerde documentmodel"
 
 #. module: sign
 #: model:ir.model.fields,field_description:sign.field_sign_request__reminder
@@ -2938,6 +2980,18 @@ msgstr "Verwijder van favorieten"
 #: model:sign.template.tag,name:sign.sign_template_tag_4
 msgid "Rental"
 msgstr "Verhuur"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/backend_components/sign_template/sign_template_action.js:0
+msgid "Replace Document"
+msgstr "Document vervangen"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/backend_components/sign_template/sign_template_sidebar.xml:0
+msgid "Replace document"
+msgstr "Document vervangen"
 
 #. module: sign
 #: model:ir.ui.menu,name:sign.sign_reports
@@ -3101,12 +3155,12 @@ msgstr "Opgeslagen"
 #. module: sign
 #: model_terms:ir.ui.view,arch_db:sign.sign_send_request_view_form
 msgid "Schedule"
-msgstr ""
+msgstr "Inplannen"
 
 #. module: sign
 #: model:ir.model.fields,field_description:sign.field_sign_send_request__scheduled_date
 msgid "Scheduled Date"
-msgstr ""
+msgstr "Geplande datum"
 
 #. module: sign
 #. odoo-python
@@ -3153,7 +3207,7 @@ msgstr "Selectievak mag niet leeg zijn. Voeg minimaal één optie toe."
 #. module: sign
 #: model:ir.model.fields,field_description:sign.field_sign_item__option_ids
 msgid "Selection options"
-msgstr "Selectie opties"
+msgstr "Keuzemogelijkheden"
 
 #. module: sign
 #. odoo-javascript
@@ -3170,7 +3224,7 @@ msgstr "Verzenden"
 #. odoo-javascript
 #: code:addons/sign/static/src/dialogs/sms_signer_dialog.xml:0
 msgid "Send SMS"
-msgstr "SMS verzenden"
+msgstr "Sms verzenden"
 
 #. module: sign
 #: model:ir.model.fields,field_description:sign.field_sign_send_request__signer_id
@@ -3213,7 +3267,7 @@ msgstr "Verzonden door"
 #. module: sign
 #: model_terms:ir.ui.view,arch_db:sign.sign_portal_my_requests
 msgid "Sent on"
-msgstr ""
+msgstr "Verzonden op"
 
 #. module: sign
 #: model:ir.model.fields,field_description:sign.field_sign_document__sequence
@@ -3274,7 +3328,7 @@ msgstr "Gedeeld"
 #. module: sign
 #: model:ir.model.fields.selection,name:sign.selection__sign_item_type__field_size__short_text
 msgid "Short Text"
-msgstr ""
+msgstr "Korte Tekst"
 
 #. module: sign
 #: model_terms:ir.ui.view,arch_db:sign.sign_request_view_search
@@ -3320,7 +3374,7 @@ msgstr "Onderteken algemene voorwaarden als webpagina"
 #. module: sign
 #: model_terms:ir.ui.view,arch_db:sign.sign_item_type_view_search
 msgid "Sign Item Type Search"
-msgstr ""
+msgstr "Zoeken op type ondertekenitem"
 
 #. module: sign
 #. odoo-javascript
@@ -3362,13 +3416,13 @@ msgstr "Ondertekenverzoek"
 #. odoo-python
 #: code:addons/sign/wizard/sign_send_request.py:0
 msgid "Sign Request "
-msgstr ""
+msgstr "Handtekeningverzoek "
 
 #. module: sign
 #. odoo-python
 #: code:addons/sign/wizard/sign_send_request.py:0
 msgid "Sign Request - %s"
-msgstr ""
+msgstr "Handtekeningverzoek - %s"
 
 #. module: sign
 #: model:ir.model.fields,field_description:sign.field_sign_log__sign_request_item_id
@@ -3383,7 +3437,7 @@ msgstr "Ondertekenverzoek verzenden"
 #. module: sign
 #: model_terms:ir.ui.view,arch_db:sign.res_config_settings_view_form
 msgid "Sign Settings"
-msgstr "Instellingen ondertekenen"
+msgstr "Instellingen Ondertekenen"
 
 #. module: sign
 #: model:ir.model,name:sign.model_sign_template_preview
@@ -3393,7 +3447,7 @@ msgstr "Sjabloon ondertekenen weergeven"
 #. module: sign
 #: model:ir.model.fields,field_description:sign.field_sign_send_request__template_id
 msgid "Sign Template"
-msgstr ""
+msgstr "Ondertekensjabloon"
 
 #. module: sign
 #: model:ir.model,name:sign.model_sign_template_tag
@@ -3436,7 +3490,7 @@ msgstr "Document ondertekenen"
 #. module: sign
 #: model:sign.item.type,tip:sign.sign_item_type_signature
 msgid "Sign it"
-msgstr ""
+msgstr "Ondertekenen"
 
 #. module: sign
 #: model:ir.model,name:sign.model_sign_request_share
@@ -3475,12 +3529,12 @@ msgstr ""
 #. module: sign
 #: model:ir.model.fields,field_description:sign.field_res_config_settings__module_sign_emsigner
 msgid "Sign with Aadhaar eSign"
-msgstr ""
+msgstr "Ondertekenen met Aadhaar eSign"
 
 #. module: sign
 #: model_terms:ir.ui.view,arch_db:sign.res_config_settings_view_form
 msgid "Sign your important documents using Aadhaar esign."
-msgstr ""
+msgstr "Onderteken je belangrijke documenten met Aadhaar esign."
 
 #. module: sign
 #: model:ir.actions.server,name:sign.sign_reminder_cron_ir_actions_server
@@ -3530,7 +3584,7 @@ msgstr "Ondertekeningsdocument"
 #. module: sign
 #: model:ir.actions.act_window,name:sign.sign_item_type_action
 msgid "Signature Fields"
-msgstr ""
+msgstr "Ondertekenvelden"
 
 #. module: sign
 #: model:ir.model.fields,field_description:sign.field_sign_request_item_value__sign_item_id
@@ -3555,7 +3609,7 @@ msgstr "Handtekening item soort"
 #. module: sign
 #: model:ir.model,name:sign.model_sign_request_item_value
 msgid "Signature Item Value"
-msgstr "Handtekening verzoek waarde"
+msgstr "Handtekeningverzoek waarde"
 
 #. module: sign
 #: model:ir.model.fields,field_description:sign.field_sign_document__sign_item_ids
@@ -3577,28 +3631,28 @@ msgstr "Verzoek om handtekening"
 #. odoo-python
 #: code:addons/sign/wizard/sign_send_request.py:0
 msgid "Signature Request - %(file_name)s"
-msgstr "Handtekeningsverzoek - %(file_name)s"
+msgstr "Handtekeningverzoek - %(file_name)s"
 
 #. module: sign
 #. odoo-python
 #: code:addons/sign/wizard/sign_send_request.py:0
 msgid "Signature Request - %(template_name)s - %(res_name)s"
-msgstr ""
+msgstr "Handtekeningverzoek - %(template_name)s - %(res_name)s"
 
 #. module: sign
 #: model:ir.model,name:sign.model_sign_request_item
 msgid "Signature Request Item"
-msgstr "Handtekening verzoek item"
+msgstr "Handtekeningverzoek item"
 
 #. module: sign
 #: model:ir.actions.act_window,name:sign.sign_request_item_action
 msgid "Signature Request Items"
-msgstr "Handtekeningsverzoekregels"
+msgstr "Handtekeningverzoekregels"
 
 #. module: sign
 #: model:ir.model.fields,field_description:sign.field_sign_request_item_value__sign_request_item_id
 msgid "Signature Request item"
-msgstr "Handtekeningsverzoek item"
+msgstr "Handtekeningverzoek item"
 
 #. module: sign
 #: model:ir.model.fields,field_description:sign.field_sign_template__sign_request_ids
@@ -3696,6 +3750,8 @@ msgid ""
 "Signed documents cannot be deleted for legal reasons. Please archive them "
 "instead."
 msgstr ""
+"Ondertekende documenten kunnen om juridische redenen niet worden verwijderd. "
+"Je kan ze wel archiveren."
 
 #. module: sign
 #: model:ir.model.fields,field_description:sign.field_sign_request_item__signing_date
@@ -3719,9 +3775,19 @@ msgstr "Ondertekenaar"
 #. module: sign
 #. odoo-javascript
 #: code:addons/sign/static/src/backend_components/sign_template/sign_template_action.js:0
+msgid "Signer "
+msgstr "Ondertekenaar "
+
+#. module: sign
+#. odoo-javascript
 #: code:addons/sign/static/src/backend_components/sign_template/sign_template_sidebar.js:0
 msgid "Signer %s"
-msgstr ""
+msgstr "Ondertekenaar %s"
+
+#. module: sign
+#: model:sign.item.role,name:sign.sign_item_role_default
+msgid "Signer 1"
+msgstr "Ondertekenaar 1"
 
 #. module: sign
 #. odoo-javascript
@@ -3733,7 +3799,7 @@ msgstr "Ondertekenaar Eén 2 Velen"
 #. odoo-javascript
 #: code:addons/sign/static/src/backend_components/sign_template/sign_template_sidebar_role_items.js:0
 msgid "Signer Settings"
-msgstr ""
+msgstr "Instellingen ondertekenaar"
 
 #. module: sign
 #. odoo-javascript
@@ -3832,6 +3898,8 @@ msgid ""
 "Specify the default validity period (in days) for signature requests. Set to "
 "0 for requests that don't expire."
 msgstr ""
+"Specificeer de standaard geldigheidsperiode (in dagen) voor "
+"handtekeningverzoeken. Stel in op 0 voor verzoeken die niet verlopen."
 
 #. module: sign
 #: model:ir.model.fields,help:sign.field_sign_send_request__set_sign_order
@@ -3851,17 +3919,12 @@ msgstr ""
 #: model:ir.model.fields.selection,name:sign.selection__sign_item_type__item_type__stamp
 #: model:sign.item.type,name:sign.sign_item_type_stamp
 msgid "Stamp"
-msgstr ""
+msgstr "Stempel"
 
 #. module: sign
 #: model:sign.item.type,tip:sign.sign_item_type_stamp
 msgid "Stamp it"
-msgstr ""
-
-#. module: sign
-#: model:sign.item.role,name:sign.sign_item_role_default
-msgid "Standard"
-msgstr "Standaard"
+msgstr "Bestempelen"
 
 #. module: sign
 #: model:ir.model.fields,field_description:sign.field_sign_request__state
@@ -4044,10 +4107,10 @@ msgid ""
 "        "
 msgstr ""
 "Voorwaarden in e-mail - De tekst wordt onderaan elke e-mail met "
-"handtekeningsverzoeken weergegeven.\n"
+"handtekeningverzoeken weergegeven.\n"
 "\n"
 "        Voorwaarden als webpagina - Onderaan elke e-mail met "
-"handtekeningsverzoeken wordt een link geplakt die naar de inhoud leidt.\n"
+"handtekeningverzoeken wordt een link geplakt die naar de inhoud leidt.\n"
 "        "
 
 #. module: sign
@@ -4080,7 +4143,7 @@ msgid ""
 "request might have been deleted or modified."
 msgstr ""
 "Het Odoo Ondertekenen-document dat je probeert te bereiken, bestaat niet. "
-"Het handtekeningsverzoek is mogelijk verwijderd of gewijzigd."
+"Het handtekeningverzoek is mogelijk verwijderd of gewijzigd."
 
 #. module: sign
 #. odoo-python
@@ -4131,6 +4194,16 @@ msgid "The document %s has been fully signed."
 msgstr "Het document %s is volledig ondertekend."
 
 #. module: sign
+#. odoo-python
+#: code:addons/sign/models/sign_template.py:0
+msgid ""
+"The document you're trying to update doesn't exist or doesn't belong to this "
+"template."
+msgstr ""
+"Het document dat je probeert bij te werken bestaat niet of hoort niet bij "
+"deze sjabloon."
+
+#. module: sign
 #: model_terms:ir.ui.view,arch_db:sign.sign_request_logs_user
 msgid ""
 "The final document and this completion history have been sent by email "
@@ -4169,7 +4242,7 @@ msgstr "De mail is verzonden naar contactpersonen in kopie: %(contacts)s"
 #. module: sign
 #: model:ir.model.constraint,message:sign.constraint_sign_template_signature_request_validity_check
 msgid "The number of days for expiration must be a positive value."
-msgstr ""
+msgstr "Het aantal dagen voor de vervaldatum moet een positieve waarde zijn."
 
 #. module: sign
 #. odoo-python
@@ -4258,6 +4331,8 @@ msgid ""
 "The template model %(t_name)s is incompatible with the signature fields %"
 "(model_name)s."
 msgstr ""
+"Sjabloonmodel %(t_name)s is niet compatibel met de ondertekenvelden %"
+"(model_name)s."
 
 #. module: sign
 #: model_terms:ir.ui.view,arch_db:sign.green_savings_report
@@ -4284,7 +4359,7 @@ msgstr ""
 #. module: sign
 #: model_terms:ir.ui.view,arch_db:sign.sign_portal_my_requests
 msgid "There are no signatures request."
-msgstr "Er zijn geen handtekeningsverzoeken."
+msgstr "Er zijn geen handtekeningverzoeken."
 
 #. module: sign
 #. odoo-python
@@ -4356,7 +4431,7 @@ msgstr "Dit ondertekenverzoek kan niet worden ondertekend"
 #. odoo-python
 #: code:addons/sign/models/sign_request_item.py:0
 msgid "This sign request is not valid anymore"
-msgstr "Het handtekeningsverzoek is niet langer geldig"
+msgstr "Het handtekeningverzoek is niet langer geldig"
 
 #. module: sign
 #. odoo-python
@@ -4514,6 +4589,19 @@ msgstr "Algemene voorwaarden bijwerken"
 
 #. module: sign
 #. odoo-javascript
+#: code:addons/sign/static/src/backend_components/sign_template/sign_template_action.js:0
+msgid ""
+"Updating a document generates a new template with the same sign items. The "
+"copied items will land in the same coordinates as their originals if the "
+"number of pages match with the previous PDF. Do you want to proceed?"
+msgstr ""
+"Bij het bijwerken van een document wordt een nieuw sjabloon met dezelfde "
+"ondertekenitems gegenereerd. De gekopieerde items komen op dezelfde "
+"coördinaten terecht als hun originelen als het aantal pagina's overeenkomt "
+"met de vorige pdf. Wil je doorgaan?"
+
+#. module: sign
+#. odoo-javascript
 #: code:addons/sign/static/src/views/helper/sign_action_helper.xml:0
 msgid "Upload"
 msgstr "Upload"
@@ -4596,7 +4684,7 @@ msgstr "Geldig t/m"
 #. module: sign
 #: model_terms:ir.ui.view,arch_db:sign.sign_template_view_form
 msgid "Valid for"
-msgstr ""
+msgstr "Geldig voor"
 
 #. module: sign
 #. odoo-javascript
@@ -4610,7 +4698,7 @@ msgid ""
 "Validate <span class=\"o_sign_validate_text\"> &amp; Send Completed "
 "Document</span>"
 msgstr ""
-"Valideer <span class=\"o_sign_validate_text\">& Verstuur voltooid document</"
+"Valideer <span class=\"o_sign_validate_text\">& verstuur voltooid document</"
 "span>"
 
 #. module: sign
@@ -4704,7 +4792,7 @@ msgstr ""
 #. module: sign
 #: model_terms:ir.ui.view,arch_db:sign.deleted_sign_request
 msgid "We couldn't find the signature request you're looking for!"
-msgstr "We konden het handtekeningsverzoek dat je zoekt niet vinden!"
+msgstr "We konden het handtekeningverzoek dat je zoekt niet vinden!"
 
 #. module: sign
 #: model_terms:ir.ui.view,arch_db:sign.green_savings_report
@@ -4730,6 +4818,10 @@ msgid ""
 "                Your refusal reason will be included to keep things clear "
 "and transparent for everyone."
 msgstr ""
+"We brengen de afzender, ondertekenaar en gekopieerde contacten op de "
+"hoogte.\n"
+"                Je afwijsreden wordt vermeld om het voor duidelijkheid en "
+"transparantie te zorgen."
 
 #. module: sign
 #: model:ir.model.fields,field_description:sign.field_sign_request__website_message_ids
@@ -4847,6 +4939,13 @@ msgstr ""
 
 #. module: sign
 #. odoo-python
+#: code:addons/sign/models/sign_template.py:0
+msgid "You need at least one field type in order to sign a document!"
+msgstr ""
+"Je hebt minstens één veldtype nodig om een document te kunnen ondertekenen!"
+
+#. module: sign
+#. odoo-python
 #: code:addons/sign/models/sign_request_item.py:0
 msgid "You need to define a signatory"
 msgstr "Je moet een ondertekenaar definiëren"
@@ -4862,6 +4961,16 @@ msgstr "Je moet ten minsten een te downloaden document selecteren."
 #: code:addons/sign/static/src/dialogs/thank_you_dialog.js:0
 msgid "You will get the signed document by email."
 msgstr "Je ontvangt het ondertekende document via e-mail."
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/dialogs/thank_you_dialog.js:0
+msgid ""
+"You will get the signed document by email. You may also request a paper copy "
+"from the sender."
+msgstr ""
+"Je ontvangt het ondertekende document per e-mail. Je kunt ook een papieren "
+"exemplaar aanvragen bij de afzender."
 
 #. module: sign
 #: model_terms:ir.actions.act_window,help:sign.sign_all_request_action
@@ -4933,7 +5042,7 @@ msgstr "en:"
 #. module: sign
 #: model:ir.model.fields,help:sign.field_sign_item_role__assign_to
 msgid "assign the current user or the customer as a signer by default"
-msgstr ""
+msgstr "de huidige gebruiker of de klant standaard als ondertekenaar toewijzen"
 
 #. module: sign
 #: model_terms:ir.ui.view,arch_db:sign.sign_template_mail_not_enough_credits
@@ -4949,7 +5058,7 @@ msgstr ""
 #. module: sign
 #: model:ir.model.fields,field_description:sign.field_sign_send_request__body
 msgid "body"
-msgstr ""
+msgstr "Hoofdtekst"
 
 #. module: sign
 #: model_terms:ir.ui.view,arch_db:sign.green_report_container
@@ -4971,7 +5080,7 @@ msgstr "klik hier om te annuleren."
 #. module: sign
 #: model_terms:ir.ui.view,arch_db:sign.sign_template_view_form
 msgid "days"
-msgstr ""
+msgstr "dagen"
 
 #. module: sign
 #: model_terms:ir.ui.view,arch_db:sign.sign_request_view_form
@@ -5196,6 +5305,11 @@ msgid "trees"
 msgstr "bomen"
 
 #. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.signer_status_wrapper
+msgid "via"
+msgstr "via"
+
+#. module: sign
 #. odoo-javascript
 #: code:addons/sign/static/src/backend_components/sign_template/sign_template_sidebar.xml:0
 msgid "visualization"
@@ -5219,13 +5333,51 @@ msgstr "zonder de gevraagde extra authenticatiestap ("
 #. module: sign
 #: model_terms:ir.ui.view,arch_db:sign.sign_template_mail_completed
 msgid "you"
-msgstr "jij"
+msgstr "jou"
 
 #. module: sign
 #: model_terms:ir.ui.view,arch_db:sign.green_report_el
 #: model_terms:ir.ui.view,arch_db:sign.green_report_el_pdf
 msgid "{{0}} Summary"
 msgstr "{{0}} Samenvatting"
+
+#~ msgid ""
+#~ "<span groups=\"base.group_system\">\n"
+#~ "                                    Certify your documents using a "
+#~ "provided .pfx or .p12 file.\n"
+#~ "                                </span>"
+#~ msgstr ""
+#~ "<span groups=\"base.group_system\">\n"
+#~ "                                    Certificeer je documenten met behulp "
+#~ "van een meegeleverd .pfx- of .p12-bestand.\n"
+#~ "                                </span>"
+
+#~ msgid ""
+#~ "<span class=\"badge rounded-pill text-bg-success\" title=\"Shared\" "
+#~ "invisible=\"not is_sharing\">\n"
+#~ "                                    Shared\n"
+#~ "                                </span>"
+#~ msgstr ""
+#~ "<span class=\"badge rounded-pill text-bg-success\" title=\"Shared\" "
+#~ "invisible=\"not is_sharing\">\n"
+#~ "                                    Gedeelde\n"
+#~ "                                </span>"
+
+#~ msgid "Ecological Savings by using Electronic Signatures"
+#~ msgstr ""
+#~ "Ecologische besparingen door het gebruikt van elektronische handtekeningen"
+
+#~ msgid "New Template"
+#~ msgstr "Nieuw sjabloon"
+
+#~ msgid "Update Document"
+#~ msgstr "Document bijwerken"
+
+#~ msgid "Standard"
+#~ msgstr "Standaard"
+
+#~ msgid "Basic Bloc"
+#~ msgstr "Basisblok"
 
 #~ msgid "<b>Drag & drop “Signature”</b> into the bottom of the document."
 #~ msgstr "<b>Sleep “Handtekening”</b> naar de onderkant van het document."

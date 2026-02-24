@@ -3,13 +3,15 @@
 # * knowledge
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-03 18:44+0000\n"
-"PO-Revision-Date: 2025-09-15 21:14+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2025-12-30 18:42+0000\n"
+"PO-Revision-Date: 2026-02-14 10:09+0000\n"
+"Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Catalan <https://translate.odoo.com/projects/odoo-19/"
 "knowledge/ca/>\n"
 "Language: ca\n"
@@ -17,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: knowledge
 #. odoo-javascript
@@ -1936,13 +1938,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/knowledge/static/src/components/options_dropdown/options_dropdown.xml:0
 msgid "Add to Favorites"
-msgstr ""
+msgstr "Afegir als favorits"
 
 #. module: knowledge
 #. odoo-javascript
 #: code:addons/knowledge/static/src/components/options_dropdown/options_dropdown.xml:0
 msgid "Add to Templates"
-msgstr ""
+msgstr "Afegeix a les plantilles"
 
 #. module: knowledge
 #. odoo-javascript
@@ -2395,7 +2397,7 @@ msgstr ""
 #. module: knowledge
 #: model:ir.model.fields,field_description:knowledge.field_knowledge_article_member__article_member_avatar
 msgid "Avatar 128"
-msgstr ""
+msgstr "Avatar 128"
 
 #. module: knowledge
 #: model_terms:knowledge.article,template_body:knowledge.knowledge_article_template_company_newsletter
@@ -2448,7 +2450,7 @@ msgstr ""
 #: model:knowledge.article,template_name:knowledge.knowledge_article_template_brand_assets
 #: model_terms:knowledge.article,template_body:knowledge.knowledge_article_template_brand_assets
 msgid "Brand Assets"
-msgstr ""
+msgstr "Actius de marca"
 
 #. module: knowledge
 #: model_terms:knowledge.article,template_body:knowledge.knowledge_article_template_marketing_customer_persona_1
@@ -2928,7 +2930,7 @@ msgstr ""
 #. module: knowledge
 #: model:ir.model,website_form_label:knowledge.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "Crear un client"
 
 #. module: knowledge
 #. odoo-javascript
@@ -3073,14 +3075,14 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/knowledge/static/src/search/search_bar_menu/search_bar_menu.js:0
 msgid "Delete Filter"
-msgstr ""
+msgstr "Elimina el filtre"
 
 #. module: knowledge
 #. odoo-javascript
 #: code:addons/knowledge/static/src/components/article_template_picker_dialog/article_template_picker_dialog.js:0
 #: code:addons/knowledge/static/src/components/article_template_picker_dialog/article_template_picker_dialog.xml:0
 msgid "Delete Template"
-msgstr ""
+msgstr "Eliminar plantilla"
 
 #. module: knowledge
 #. odoo-javascript
@@ -3407,7 +3409,7 @@ msgstr "Amplada completa"
 #. module: knowledge
 #: model_terms:ir.ui.view,arch_db:knowledge.knowledge_article_view_search
 msgid "Future Activities"
-msgstr ""
+msgstr "Activitats futures"
 
 #. module: knowledge
 #: model_terms:knowledge.article,template_body:knowledge.knowledge_article_template_marketing_customer_personas
@@ -4177,7 +4179,7 @@ msgstr "Última actualització el"
 #. module: knowledge
 #: model_terms:ir.ui.view,arch_db:knowledge.knowledge_article_view_search
 msgid "Late Activities"
-msgstr ""
+msgstr "Activitats endarrerides"
 
 #. module: knowledge
 #. odoo-javascript
@@ -4371,7 +4373,7 @@ msgstr "Informació dels membres"
 #: model:ir.model.fields.selection,name:knowledge.selection__knowledge_article__inherited_permission__none
 #: model:ir.model.fields.selection,name:knowledge.selection__knowledge_article__internal_permission__none
 msgid "Members only"
-msgstr ""
+msgstr "Només membres"
 
 #. module: knowledge
 #: model:ir.model.fields,field_description:knowledge.field_knowledge_article__root_article_id
@@ -4603,7 +4605,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/knowledge/static/src/components/permission_panel/permission_panel.js:0
 msgid "No Access"
-msgstr ""
+msgstr "Sense accés"
 
 #. module: knowledge
 #. odoo-javascript
@@ -4961,7 +4963,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/knowledge/static/src/mail/composer/composer_patch.js:0
 msgid "Post"
-msgstr ""
+msgstr "Publicar"
 
 #. module: knowledge
 #: model_terms:knowledge.article,template_body:knowledge.knowledge_article_template_post_mortem
@@ -5148,7 +5150,7 @@ msgstr "Refresca"
 #. module: knowledge
 #: model:knowledge.article,template_name:knowledge.knowledge_article_template_release_note
 msgid "Release Notes"
-msgstr ""
+msgstr "Novetats de la versió"
 
 #. module: knowledge
 #: model_terms:knowledge.article,template_body:knowledge.knowledge_article_template_release_note
@@ -5210,7 +5212,7 @@ msgstr ""
 #: code:addons/knowledge/static/src/components/article_template_picker_dialog/article_template_picker_dialog.xml:0
 #: code:addons/knowledge/static/src/components/options_dropdown/options_dropdown.xml:0
 msgid "Remove from Templates"
-msgstr ""
+msgstr "Elimina de les plantilles"
 
 #. module: knowledge
 #. odoo-javascript
@@ -5351,7 +5353,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/knowledge/static/src/components/form_status_indicator/form_status_indicator.xml:0
 msgid "Save manually"
-msgstr ""
+msgstr "Desar manualment"
 
 #. module: knowledge
 #. odoo-javascript
@@ -5539,6 +5541,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:knowledge.knowledge_article_view_search
 msgid "Show all records whose next activity date is past"
 msgstr ""
+"Mostrar tots els registres amb data de pròxima activitat anterior a l'actual"
 
 #. module: knowledge
 #. odoo-javascript
@@ -5701,7 +5704,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/knowledge/static/src/components/item_calendar_props_dialog/item_calendar_props_dialog.xml:0
 msgid "Start Date"
-msgstr "Data inicial"
+msgstr "Data d'inici"
 
 #. module: knowledge
 #. odoo-javascript
@@ -5789,7 +5792,7 @@ msgstr ""
 #. module: knowledge
 #: model:ir.model.fields,field_description:knowledge.field_knowledge_article__template_description
 msgid "Template Description"
-msgstr ""
+msgstr "Descripció de la plantilla"
 
 #. module: knowledge
 #: model_terms:ir.ui.view,arch_db:knowledge.knowledge_article_template_view_search
@@ -6078,7 +6081,7 @@ msgstr "Per assegurar-se de mantenir-se actualitzat, segueix-nos el"
 #. module: knowledge
 #: model_terms:ir.ui.view,arch_db:knowledge.knowledge_article_view_search
 msgid "Today Activities"
-msgstr ""
+msgstr "Activitats d'avui"
 
 #. module: knowledge
 #. odoo-javascript
@@ -6245,7 +6248,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/knowledge/static/src/search/search_bar_menu/search_bar_menu.js:0
 msgid "Warning"
-msgstr ""
+msgstr "Avís"
 
 #. module: knowledge
 #: model:knowledge.article,template_name:knowledge.knowledge_article_template_shared_todos_water_the_plants

@@ -2,12 +2,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import unittest
 
-from odoo import Command
+from odoo import Command, fields
 from odoo.addons.mrp_workorder.tests.common import TestMrpWorkorderCommon
 from odoo.addons.base.tests.common import HttpCase
 from odoo.tests import Form, tagged
 from odoo.tools import mute_logger
 from odoo.exceptions import UserError
+from datetime import timedelta
+from freezegun import freeze_time
 import logging
 
 _logger = logging.getLogger(__name__)
@@ -573,14 +575,78 @@ class TestWorkOrder(TestMrpWorkorderCommon):
         self.assertEqual(mo.state, 'to_close')
         # Try to finish the production without assigning an SN
         mo.move_raw_ids.filtered(lambda m: not m.operation_id).picked = True
-        with self.assertRaises(UserError):
-            mo.button_mark_done()
-        # Assign an SN and mark the production as done
-        mo.action_generate_serial()
+        mo.button_mark_done()
+
         self.assertEqual(operation_1.finished_lot_ids, mo.lot_producing_ids)
         self.assertEqual(operation_2.finished_lot_ids, mo.lot_producing_ids)
-        mo.button_mark_done()
         self.assertEqual(mo.state, 'done')
+
+    @freeze_time('2025-10-01')
+    def test_workorder_duration_inverse_time_ids_consistency(self):
+        """
+        Verify that the inverse method of the workorder duration field correctly
+        mirrors the logic of its compute method.
+
+        Specifically, the duration is computed as the total interval duration,
+        counting overlapping time_ids only once. This ensures that the inverse
+        method does not accidentally unlink any time_ids when updating durations.
+        """
+        now = fields.Datetime.now()
+        mo = self.env['mrp.production'].create({
+            'product_qty': 1,
+            'product_id': self.product_1.id,
+            'workorder_ids': [Command.create({
+                'name': 'workorder_1',
+                'workcenter_id': self.workcenter_1.id,
+                'time_ids': [
+                    Command.create({
+                        'workcenter_id': self.workcenter_1.id,
+                        'date_start': now - timedelta(minutes=30),
+                        'date_end': now,
+                        'loss_id': self.ref('mrp.block_reason4'),
+                    }),
+                    Command.create({
+                        'workcenter_id': self.workcenter_1.id,
+                        'date_start': now - timedelta(minutes=20),
+                        'date_end': now - timedelta(minutes=5),
+                        'loss_id': self.ref('mrp.block_reason4'),
+                    }),
+                ],
+            })],
+        })
+        wo = mo.workorder_ids
+        wo.duration = wo.duration
+        self.assertEqual(wo.duration, 30.0)
+        self.assertRecordValues(wo.time_ids, [{'duration': 30.0}, {'duration': 15.0}])
+
+    def test_workorder_timelog_for_assigned_employee(self):
+        """This test ensures that when a work order is assigned to an employee (not the current/logged-in user)
+        and is marked as done by the current user, the time log for workorder is correctly recorded
+        under the assigned employee instead of the current user.
+        """
+        # Create employees
+        assigned_employee, current_employee = self.env['hr.employee'].create([
+            {'name': 'Assigned Employee'},
+            {'name': 'Current User Employee', 'user_id': self.env.user.id},
+        ])
+
+        # Create and confirm a Manufacturing Order with workorders.
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.submarine_pod
+        mo_form.bom_id = self.bom_submarine
+        mo = mo_form.save()
+        mo.action_confirm()
+
+        workorder_1, workorder_2 = mo.workorder_ids[:2]
+        # Assign a different employee to the workorder_1 and keep workorder_2 unassigned.
+        workorder_1.employee_assigned_ids = assigned_employee
+        # mark the workorders as done.
+        mo.workorder_ids.action_mark_as_done()
+
+        # The time log should be assigned to the employee assigned in the workorder_1,
+        # and to the current user in workorder_2.
+        self.assertEqual(workorder_1.time_ids[0].employee_id, assigned_employee)
+        self.assertEqual(workorder_2.time_ids[0].employee_id, current_employee)
 
 
 @tagged("post_install", "-at_install")
@@ -626,77 +692,3 @@ class TestShopFloor(HttpCase, TestMrpWorkorderCommon):
         mo.button_plan()
         self.start_tour(
             "/", 'test_access_shop_floor_with_multicompany', login="admin")
-
-    @unittest.skip  # TODO: tour needs to be updated.
-    def test_add_component_from_shop_floor(self):
-        """
-        Check that components added to a WO from the shopfloor are visible
-        on both the WO and the MO.
-        """
-        user_admin = self.env.ref('base.user_admin')
-        user_admin.write({
-            'group_ids': [Command.link(self.ref('mrp.group_mrp_routings'))],
-        })
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.product_id = self.bom_2.product_id
-        mo_form.bom_id = self.bom_2
-        self.bom_2.bom_line_ids.product_id.is_storable = False
-        self.bom_2.operation_ids.name = "Super Operation"
-        mo_form.product_qty = 1
-        mo = mo_form.save()
-        mo.name = "Lovely MO"
-        mo.action_confirm()
-        # Put some "Wood" in stock to be added to the MO
-        self.product_2.is_storable = True
-        self.product_2.name = "Super Wood"
-        self.env['stock.quant']._update_available_quantity(self.product_2, mo.warehouse_id.lot_stock_id, quantity=10.0)
-        # Put some "Courage" in stock to be added to the WO
-        self.product_1.is_storable = True
-        self.env['stock.quant']._update_available_quantity(self.product_1, mo.warehouse_id.lot_stock_id, quantity=10.0)
-        action = mo.workorder_ids.action_open_mes()
-        url = '/web?#action=%s' % (action['id'])
-        self.start_tour(url, "test_add_component_from_shop_floor", login='admin')
-        # Check that the Wood was added to the component
-        self.assertRecordValues(mo.move_raw_ids.filtered(lambda m: m.product_id == self.product_2), [{
-            "product_uom_qty": 1.0,
-        }])
-        # Check that the Courage is associated with the operation
-        self.assertEqual(mo.workorder_ids, mo.move_raw_ids.filtered(lambda m: m.product_id == self.product_1).workorder_id)
-
-    @unittest.skip  # TODO: tour needs to be updated.
-    def test_add_component_from_shop_floor_in_multi_step_manufacturing(self):
-        """
-        Check that components added from the shopfloor in multi step
-        manufacturing generate the associated transfers.
-        """
-        self.env.ref('base.group_user').implied_ids += (
-            self.env.ref('mrp.group_mrp_routings')
-        )
-        warehouse = self.warehouse_1
-        # manufacture in 2 steps
-        warehouse.manufacture_steps = "pbm"
-        mo_form = Form(self.env['mrp.production'].with_context(warehouse_id=warehouse.id))
-        mo_form.product_id = self.bom_2.product_id
-        mo_form.bom_id = self.bom_2
-        self.bom_2.bom_line_ids.product_id.is_storable = False
-        self.bom_2.operation_ids.name = "Super Operation"
-        mo_form.product_qty = 1
-        mo = mo_form.save()
-        mo.name = "Lovely MO"
-        mo.action_confirm()
-        pick = mo.picking_ids
-        self.assertEqual(pick.picking_type_id, warehouse.pbm_type_id)
-        pick.button_validate()
-        self.assertEqual(pick.state, 'done')
-        # Put some "Courage" in stock to be added to the MO
-        self.product_1.is_storable = True
-        self.env['stock.quant']._update_available_quantity(self.product_1, mo.warehouse_id.lot_stock_id, quantity=10.0)
-        action = mo.workorder_ids.action_open_mes()
-        url = '/web?#action=%s' % (action['id'])
-        self.start_tour(url, "test_add_component_from_shop_floor_in_multi_step_manufacturing", login='admin')
-        new_pick = mo.picking_ids - pick
-        self.assertEqual(new_pick.picking_type_id, warehouse.pbm_type_id)
-        self.assertRecordValues(new_pick.move_ids, [{
-            'quantity': 2.0,
-            'product_id': self.product_1.id,
-        }])

@@ -6,13 +6,14 @@
 # Wil Odoo, 2025
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-06 09:45+0000\n"
-"PO-Revision-Date: 2025-09-16 12:12+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-01-22 18:41+0000\n"
+"PO-Revision-Date: 2025-11-16 17:53+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
 "projects/odoo-19/pos_pricer/zh_Hant/>\n"
 "Language: zh_TW\n"
@@ -41,6 +42,11 @@ msgstr "關聯產品"
 #: model:ir.model.fields,field_description:pos_pricer.field_pricer_store__auth_url
 msgid "Auth Url"
 msgstr "授權網址"
+
+#. module: pos_pricer
+#: model:product.pricelist,name:pos_pricer.pricer_demo_pricelist
+msgid "Christmas"
+msgstr "聖誕節"
 
 #. module: pos_pricer
 #: model:ir.model.fields,field_description:pos_pricer.field_pricer_store__create_or_update_products_url
@@ -77,14 +83,26 @@ msgstr "顯示名稱"
 #. module: pos_pricer
 #. odoo-python
 #: code:addons/pos_pricer/models/pricer_store.py:0
-msgid "Error: %(status_code)s - %(message)s"
-msgstr "錯誤： %(status_code)s - %(message)s"
+msgid "Error"
+msgstr ""
+
+#. module: pos_pricer
+#. odoo-python
+#: code:addons/pos_pricer/models/pricer_store.py:0
+msgid "Error: %(code)s - %(reason)s"
+msgstr ""
 
 #. module: pos_pricer
 #. odoo-python
 #: code:addons/pos_pricer/models/pricer_store.py:0
 msgid "Error: check Pricer credentials"
 msgstr "錯誤：檢查 Pricer 登入憑證"
+
+#. module: pos_pricer
+#. odoo-python
+#: code:addons/pos_pricer/models/pricer_store.py:0
+msgid "Everything is already up to date with Pricer. No update needed."
+msgstr ""
 
 #. module: pos_pricer
 #. odoo-python
@@ -237,7 +255,9 @@ msgstr "Pricer 商店識別碼"
 msgid ""
 "Pricer Store ID must only contain lowercase a-z, 0-9 or '-' and not start "
 "with '-'"
-msgstr "Pricer 商店識別碼必須只包含小寫字母 a-z、0-9 或 '-'（橫劃線），而且不能以 '-' 開頭。"
+msgstr ""
+"Pricer 商店識別碼必須只包含小寫字母 a-z、0-9 或 '-'（橫劃線），而且不能以 "
+"'-' 開頭。"
 
 #. module: pos_pricer
 #: model:ir.model.fields,help:pos_pricer.field_pricer_store__name
@@ -384,8 +404,8 @@ msgstr "為此產品設定 Pricer 價錢牌銷售價格時，將使用此價目�
 #: model:ir.model.fields,help:pos_pricer.field_pricer_tag__pricer_store_id
 #: model:ir.model.fields,help:pos_pricer.field_product_product__pricer_store_id
 msgid ""
-"This product will be linked to and displayed on the Pricer tags of the store"
-" selected here"
+"This product will be linked to and displayed on the Pricer tags of the store "
+"selected here"
 msgstr "產品將連結至並顯示在此處所選取商店的 Pricer 價錢牌上"
 
 #. module: pos_pricer
@@ -393,12 +413,8 @@ msgstr "產品將連結至並顯示在此處所選取商店的 Pricer 價錢牌�
 msgid ""
 "This product will be linked to and displayed on the Pricer tags with ids "
 "listed here. It is recommended to use a barcode scanner"
-msgstr "產品將連結至並顯示在此處列出識別碼的 Pricer 價錢牌上。建議使用條碼掃瞄器"
-
-#. module: pos_pricer
-#: model_terms:ir.ui.view,arch_db:pos_pricer.pricer_pricer_store_view_list
-msgid "Update all tags"
-msgstr "更新所有標籤"
+msgstr ""
+"產品將連結至並顯示在此處列出識別碼的 Pricer 價錢牌上。建議使用條碼掃瞄器"
 
 #. module: pos_pricer
 #. odoo-python
@@ -415,3 +431,9 @@ msgstr "更新標籤"
 #: model:ir.model.fields,help:pos_pricer.field_pricer_store__pricer_tenant_name
 msgid "Your company identifier at Pricer"
 msgstr "你公司在 Pricer 的識別碼"
+
+#~ msgid "Error: %(status_code)s - %(message)s"
+#~ msgstr "錯誤： %(status_code)s - %(message)s"
+
+#~ msgid "Update all tags"
+#~ msgstr "更新所有標籤"

@@ -14,7 +14,7 @@ patch(PosStore.prototype, {
             totalDue: 0,
             posOrdersAmountDue: 0,
             invoicesAmountDue: 0,
-            totalWithCart: order?.amount_total ?? 0,
+            totalWithCart: order ? this.currency.round(order.priceIncl) : 0,
             creditLimit: 0,
             useLimit: false,
             overDue: false,
@@ -70,9 +70,15 @@ patch(PosStore.prototype, {
             this.config.id,
         ]);
         for (const partner of partners) {
-            const updatedPartner = partners_total_due.find(
+            const updatedPartnerRecord = partners_total_due.find(
                 (p) => p["res.partner"][0].id == [partner.id]
-            )["res.partner"][0];
+            );
+            if (!updatedPartnerRecord) {
+                // the partner has been deleted from the server
+                partner.delete();
+                continue;
+            }
+            const updatedPartner = updatedPartnerRecord["res.partner"][0];
             partner.total_due = updatedPartner.total_due;
             partner.pos_orders_amount_due = updatedPartner.pos_orders_amount_due;
             partner.invoices_amount_due = updatedPartner.invoices_amount_due;
@@ -137,9 +143,13 @@ patch(PosStore.prototype, {
                 } else {
                     newOrder = this.addNewOrder();
                 }
-                const payment = newOrder.addPaymentline(selectedPaymentMethod);
+                const result = newOrder.addPaymentline(selectedPaymentMethod);
+                if (!result.status) {
+                    return false;
+                }
+
                 newOrder.is_settling_account = true;
-                payment.setAmount(amount);
+                result.data.setAmount(amount);
                 newOrder.setPartner(partner);
                 newOrder.is_settling_account = true;
                 this.navigate("PaymentScreen", {

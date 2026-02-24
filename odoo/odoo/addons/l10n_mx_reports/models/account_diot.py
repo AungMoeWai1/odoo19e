@@ -27,7 +27,7 @@ def diot_country_adapt(values):
         'QA': 'QAT', 'TD': 'TCD', 'CL': 'CHL', 'CN': 'CHN', 'CY': 'CYP', 'CO': 'COL', 'KM': 'COM', 'KP': 'PRK', 'KR': 'KOR', 'CI': 'CIV',
         'CR': 'CRI', 'HR': 'HRV', 'CU': 'CUB', 'CW': 'CUW', 'DK': 'DNK', 'DM': 'DMA', 'EC': 'ECU', 'EG': 'EGY', 'SV': 'SLV', 'AE': 'ARE',
         'ER': 'ERI', 'SK': 'SVK', 'SI': 'SVN', 'ES': 'ESP', 'US': 'USA', 'EE': 'EST', 'ET': 'ETH', 'PH': 'PHL', 'FI': 'FIN', 'FJ': 'FJI',
-        'FR': 'FRA', 'GA': 'GAB', 'GM': 'GMB', 'GE': 'GEO', 'GH': 'GHA', 'GI': 'GIB', 'GD': 'GRD', 'GR': 'GRC', 'GL': 'GRL', 'GP': 'GLP',
+        'FR': 'FRA', 'GA': 'GAB', 'GB': 'GBR', 'GM': 'GMB', 'GE': 'GEO', 'GH': 'GHA', 'GI': 'GIB', 'GD': 'GRD', 'GR': 'GRC', 'GL': 'GRL', 'GP': 'GLP',
         'GU': 'GUM', 'GT': 'GTM', 'GF': 'GUF', 'GG': 'GGY', 'GN': 'GIN', 'GW': 'GNB', 'GQ': 'GNY', 'HT': 'HTI', 'HN': 'HND', 'HK': 'HKG',
         'HU': 'HUN', 'IN': 'IND', 'IQ': 'IRQ', 'IR': 'IRN', 'IE': 'IRL', 'BV': 'BVT', 'IM': 'IMN', 'CX': 'CXR', 'NF': 'NFK', 'IS': 'ISL',
         'KY': 'CYM', 'CC': 'CCK', 'CK': 'COK', 'FO': 'FRO', 'GS': 'SGS', 'HM': 'HMD', 'FK': 'FLK', 'MP': 'MNP', 'MH': 'MHL', 'PN': 'PCN',
@@ -168,7 +168,7 @@ class L10n_MxReportHandler(models.AbstractModel):
                 continue
 
             data = [0] * 54
-            if values['operation_type_code'] != '87':
+            if values.get('operation_type_code') != '87':
                 self.l10n_mx_diot_get_values(values, data, partner)
                 for i in range(7, 53):
                     if not data[i]:
@@ -313,6 +313,8 @@ class L10n_MxReportHandler(models.AbstractModel):
         partner_to_label_val = {}
         for label, partner_to_value_list in label_dict.items():
             for partner_id, value in partner_to_value_list:
+                if not partner_id:
+                    raise UserError(_("The report cannot be generated because there are entries with tax amounts but no partner assigned."))
                 partner_to_label_val.setdefault(self.env['res.partner'].browse(partner_id), {})[label] = value
         return dict(sorted(partner_to_label_val.items(), key=lambda item: item[0].name))
 

@@ -3,13 +3,13 @@
 # * esg_project
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025.
+# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:31+0000\n"
-"PO-Revision-Date: 2025-09-29 12:10+0000\n"
+"POT-Creation-Date: 2025-12-30 18:44+0000\n"
+"PO-Revision-Date: 2026-01-29 09:07+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
 "esg_project/ko/>\n"
@@ -18,26 +18,40 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: esg_project
 #. odoo-python
 #: code:addons/esg_project/models/project_project.py:0
 msgid ""
 "\n"
-"                <a class=\"btn btn-secondary mt-3\" type=\"action\" name=\"%d\">Load sample data</a>\n"
+"                <a class=\"btn btn-secondary mt-3\" type=\"action\" "
+"name=\"%d\">Load sample data</a>\n"
 "            "
 msgstr ""
+"\n"
+"                <a class=\"btn btn-secondary mt-3\" type=\"action\" "
+"name=\"%d\">샘플 데이터 불러오기</a>\n"
+"            "
 
 #. module: esg_project
 #. odoo-python
 #: code:addons/esg_project/models/project_project.py:0
 msgid ""
 "\n"
-"            <p class=\"o_view_nocontent_smiling_face\">No tasks found. Let's create one!</p>\n"
-"            <p>Keep track of the progress of your initiatives to take action on your impact from creation to completion.<br/>Collaborate efficiently by chatting in real-time or via email.</p>\n"
+"            <p class=\"o_view_nocontent_smiling_face\">No tasks found. Let's "
+"create one!</p>\n"
+"            <p>Keep track of the progress of your initiatives to take action "
+"on your impact from creation to completion.<br/>Collaborate efficiently by "
+"chatting in real-time or via email.</p>\n"
 "        "
 msgstr ""
+"\n"
+"            <p class=\"o_view_nocontent_smiling_face\">검색된 작업이 없습니"
+"다. 새로 생성해 주세요!</p>\n"
+"            <p>이니셔티브가 진행되는 상황을 추적하여 처음부터 끝까지 완벽하"
+"게 관리하세요.<br/>실시간 채팅이나 이메일을 통해 효율적으로 협업하세요.</p>\n"
+"        "
 
 #. module: esg_project
 #: model:ir.ui.menu,name:esg_project.menu_esg_act
@@ -52,17 +66,17 @@ msgstr "인지도"
 #. module: esg_project
 #: model:project.tags,name:esg_project.esg_project_tags_11
 msgid "Business Travel"
-msgstr ""
+msgstr "비즈니스 출장"
 
 #. module: esg_project
 #: model:project.tags,name:esg_project.esg_project_tags_5
 msgid "Carbon Footprint"
-msgstr ""
+msgstr "탄소 발자국"
 
 #. module: esg_project
 #: model:project.tags,name:esg_project.esg_project_tags_1
 msgid "Circular Economy"
-msgstr ""
+msgstr "순환 경제"
 
 #. module: esg_project
 #. odoo-javascript
@@ -73,7 +87,7 @@ msgstr "이니셔티브 생성"
 #. module: esg_project
 #: model:project.tags,name:esg_project.esg_project_tags_10
 msgid "Digital Efficiency"
-msgstr ""
+msgstr "디지털 효율성"
 
 #. module: esg_project
 #: model:ir.model.fields,field_description:esg_project.field_project_project__display_name
@@ -88,12 +102,12 @@ msgstr "완료 🌳🌲"
 #. module: esg_project
 #: model:project.tags,name:esg_project.esg_project_tags_2
 msgid "Energy Efficiency"
-msgstr ""
+msgstr "에너지 효율"
 
 #. module: esg_project
 #: model:project.tags,name:esg_project.esg_project_tags_6
 msgid "GHG Reduction"
-msgstr ""
+msgstr "온실가스 감축"
 
 #. module: esg_project
 #: model:project.tags,name:esg_project.esg_project_tags_7
@@ -108,7 +122,7 @@ msgstr "ID"
 #. module: esg_project
 #: model:project.tags,name:esg_project.esg_project_tags_4
 msgid "IT Policy"
-msgstr ""
+msgstr "IT 정책"
 
 #. module: esg_project
 #: model:project.task.type,name:esg_project.esg_project_stage_0
@@ -136,7 +150,7 @@ msgstr "이니셔티브 서버 작업"
 #. module: esg_project
 #: model:ir.actions.server,name:esg_project.action_load_demo_data
 msgid "Load ESG Project demo data"
-msgstr ""
+msgstr "ESG 프로젝트 데모 데이터 불러오기"
 
 #. module: esg_project
 #: model:project.tags,name:esg_project.esg_project_tags_8
@@ -146,7 +160,7 @@ msgstr "모빌리티"
 #. module: esg_project
 #: model:project.tags,name:esg_project.esg_project_tags_9
 msgid "Operational Excellence"
-msgstr ""
+msgstr "운영상의 탁월성"
 
 #. module: esg_project
 #: model:ir.model,name:esg_project.model_project_project
@@ -156,12 +170,12 @@ msgstr "프로젝트"
 #. module: esg_project
 #: model:project.tags,name:esg_project.esg_project_tags_3
 msgid "Scope 2"
-msgstr ""
+msgstr "범위 2"
 
 #. module: esg_project
 #: model:project.tags,name:esg_project.esg_project_tags_0
 msgid "Scope 3"
-msgstr ""
+msgstr "범위 3"
 
 #. module: esg_project
 #: model:project.project,label_tasks:esg_project.esg_project_project_0

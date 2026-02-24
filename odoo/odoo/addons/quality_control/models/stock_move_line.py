@@ -36,7 +36,7 @@ class StockMoveLine(models.Model):
 
     def write(self, vals):
         if self._create_quality_check_at_write(vals):
-            self.filtered(lambda ml: not ml.picked and not ml.sudo().check_ids)._create_check()
+            self.filtered(lambda ml: ml.state != 'done' and not ml.sudo().check_ids)._create_check()
         return super().write(vals)
 
     def unlink(self):
@@ -99,7 +99,22 @@ class StockMoveLine(models.Model):
             'picking_id': self.picking_id.id,
             'move_line_id': self.id,
             'lot_name': self.lot_name,
+            'company_id': self.company_id.id,
         }
 
     def _get_quality_points_all_products(self, quality_points_by_product_picking_type):
         return quality_points_by_product_picking_type.get((None, self.move_id.picking_type_id), set())
+
+    def _is_checkable_from_context(self):
+        if self.env.context.get('picking_validation'):
+            return self.move_id.picked
+        return True
+
+    def _is_checkable(self, check_picked=False):
+        self.ensure_one()
+        if self.product_uom_id.is_zero(self.quantity):
+            return False
+        if check_picked:
+            if not self._is_checkable_from_context():
+                return False
+        return True

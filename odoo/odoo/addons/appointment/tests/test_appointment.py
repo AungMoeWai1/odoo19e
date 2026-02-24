@@ -366,6 +366,63 @@ class AppointmentTest(AppointmentCommon, HttpCaseWithUserDemo):
         self.assertFalse(appt_form.slot_ids)
         self.assertFalse(apt_type.start_datetime or apt_type.end_datetime)
 
+    @freeze_time('2022-02-14')
+    @users('apt_manager')
+    def test_appointment_type_remaining_capacity_for_multiple_bookings(self):
+        """ Test the remaining capacity computation for appointment type having multiple bookings. """
+        apt_user, apt_resource = self.apt_user_multiple_bookings, self.apt_resource_multiple_bookings
+
+        user = self.staff_user_bxls
+        resource = self.env['appointment.resource'].create({
+            'appointment_type_ids': [(4, apt_resource.id)],
+            'capacity': 2,
+            'name': 'Resource 1',
+        })
+
+        start = datetime(2022, 2, 15, 14, 0, 0)
+        end = start + timedelta(hours=1)
+
+        user_remaining_capacity = apt_user._get_users_remaining_capacity(user, start, end)['total_remaining_capacity']
+        resource_remaining_capacity = apt_resource._get_resources_remaining_capacity(resource, start, end)['total_remaining_capacity']
+
+        # Check initial remaining capacity
+        self.assertEqual(
+            user_remaining_capacity, 3, 'Initial user remaining capacity should be 3.'
+        )
+        self.assertEqual(
+            resource_remaining_capacity, 3,
+            'Initial resource remaining capacity should be 3.',
+        )
+
+        # Create 3 bookings one-by-one for both appointment types
+        for booking_number in range(1, 4):
+            self.env['calendar.event'].with_context(self._test_context).create([{
+                'appointment_type_id': apt_user.id,
+                'booking_line_ids': [(0, 0, {'capacity_reserved': 1})],
+                'name': 'Booking 1',
+                'start': start,
+                'stop': end,
+                'user_id': user.id,
+            }, {
+                'appointment_type_id': apt_resource.id,
+                'booking_line_ids': [(0, 0, {'capacity_reserved': 1, 'appointment_resource_id': resource.id})],
+                'name': 'Booking 2',
+                'start': start,
+                'stop': end,
+            }])
+
+            user_remaining_capacity = apt_user._get_users_remaining_capacity(user, start, end)['total_remaining_capacity']
+            resource_remaining_capacity = apt_resource._get_resources_remaining_capacity(resource, start, end)['total_remaining_capacity']
+
+            self.assertEqual(
+                user_remaining_capacity, 3 - booking_number,
+                f'User remaining capacity should be {5 - booking_number} after {booking_number} booking(s)',
+            )
+            self.assertEqual(
+                resource_remaining_capacity, 3 - booking_number,
+                f'Resource remaining capacity should be {5 - booking_number} after {booking_number} booking(s).',
+            )
+
     @mute_logger('odoo.sql_db')
     @users('apt_manager')
     def test_appointment_slot_start_and_end_datetimes_constraint(self):
@@ -612,21 +669,19 @@ class AppointmentTest(AppointmentCommon, HttpCaseWithUserDemo):
 
     @users('apt_manager')
     def test_customer_event_description(self):
-        """Check calendar file description and summary generation."""
+        """
+        Check calendar description and summary generation.
+
+        This test verifies that the `_get_customer_description` method
+        correctly appends the appointment type's `message_confirmation`
+        and the reschedule link to the event's base description.
+
+        It also validates the `_get_customer_summary` method for both
+        user-based and resource-based appointments.
+        """
         appointment_type = self.apt_type_bxls_2days
-        host_partner = self.apt_manager.partner_id
         appointment_type.message_confirmation = '<p>Please try to be there <strong>5 minutes</strong> before the time.<p><br>Thank you.'
-        appointment_question = self.env['appointment.question'].create({
-            'appointment_type_ids': [(6, 0, appointment_type.ids)],
-            'name': 'How are you ?',
-            'question_type': 'char',
-        })
-        appointment_answer_input_values = {
-            'appointment_type_id': appointment_type.id,
-            'question_id': appointment_question.id,
-            'value_text_box': 'I am Good',
-        }
-        attendee = self.env['res.partner'].sudo().create({
+        booker = self.env['res.partner'].sudo().create({
             'name': '<p>John Doe</p>',
             'email': 'john@example.com',
             'phone': '123456789',
@@ -636,44 +691,47 @@ class AppointmentTest(AppointmentCommon, HttpCaseWithUserDemo):
             'email': 'jean@example.com',
             'phone': '888888888',
         })
-        host_partner.phone = '+32456111111'
-        appointment = self.env['calendar.event'].create({
-            'name': '%s with %s' % (appointment_type.name, attendee.name),
-            'start': datetime.now(),
-            'start_date': datetime.now(),
-            'stop': datetime.now() + timedelta(hours=1),
-            'allday': False,
-            'duration': appointment_type.appointment_duration,
-            'location': appointment_type.location,
-            'partner_ids': [odoo.Command.link(partner.id) for partner in [attendee, host_partner, extra_attendee]],
-            'appointment_booker_id': attendee.id,
-            'appointment_type_id': appointment_type.id,
-            'appointment_answer_input_ids': [(0, 0, appointment_answer_input_values)],
-            'user_id': self.apt_manager.id,
-        })
+
+        start_dt = datetime.now()
+        appointment = (
+            self.env["calendar.event"]
+            .with_context(skip_contact_description=True)
+            .create({
+                **appointment_type._prepare_calendar_event_values(
+                    asked_capacity=1,
+                    booking_line_values=[{'capacity_reserved': 1, 'capacity_used': 1}],
+                    description="A beautiful description written for external calendar",
+                    duration=appointment_type.appointment_duration,
+                    allday=False,
+                    appointment_invite=self.env['appointment.invite'],
+                    guests=extra_attendee,
+                    name=booker.name,
+                    customer=booker,
+                    staff_user=self.staff_user_bxls,
+                    start=start_dt,
+                    stop=start_dt + timedelta(hours=appointment_type.appointment_duration),
+                ),
+            })
+        )
+
         url = f"{appointment_type.get_base_url()}/calendar/view/{appointment.access_token}"
-        description = (
-            '<div><strong>Organized by</strong><br>Appointment Manager<br>'
-            '<a href="mailto:apt_manager@test.example.com">apt_manager@test.example.com</a><br>'
-            '<a href="tel:+32456111111">+32456111111</a><br><br>'
-            '<strong>Contact Details</strong><br>&lt;p&gt;John Doe&lt;/p&gt;<br>'
-            '<a href="mailto:john@example.com">john@example.com</a><br>'
-            '<a href="tel:123456789">123456789</a></div><br>'
+        customer_description = (
+            '<p>A beautiful description written for external calendar</p><br>'
             '<p>Please try to be there <strong>5 minutes</strong> before the time.</p>'
             '<p><br>Thank you.</p><span>Need to reschedule? <a href=%s>Click here</a></span>'
         ) % (url)
-        self.assertEqual(appointment._get_customer_description(), description)
+        self.assertEqual(appointment._get_customer_description(), customer_description)
 
         # Test summary for all appointment types
         resource_appointment = self.apt_type_resource
         resource_event = self.env['calendar.event'].create({
-            'name': '%s - %s' % (resource_appointment.name, attendee.name),
+            'name': '%s - %s' % (resource_appointment.name, booker.name),
             'start': datetime.now(),
             'stop': datetime.now() + timedelta(hours=1),
             'appointment_type_id': resource_appointment.id,
             'user_id': self.apt_manager.id,
         })
-        user_summary = f'{appointment_type.name} with {host_partner.name or "somebody"}'
+        user_summary = f'{appointment_type.name} with {self.staff_user_bxls.name or "somebody"}'
         for event, summary in ((appointment, user_summary), (resource_event, resource_event.name)):
             with self.subTest(summary=summary):
                 self.assertEqual(event._get_customer_summary(), summary)
@@ -1683,6 +1741,153 @@ class AppointmentTest(AppointmentCommon, HttpCaseWithUserDemo):
         self.assertEqual(booking_3.unavailable_resource_ids, court3)
         self.assertEqual(booking_4.unavailable_resource_ids, court3)
 
+    @freeze_time('2022-02-14')
+    def test_resource_unavailability_with_multiple_appointment_events(self):
+        """ Test that resources are correctly computed as unavailable when multiple appointments are booked
+        on the same resource and overlapping events.
+        Here are the cases which are tested, resource with:
+        - bookings in appointments, some with manage capacity True and some with False.
+        - bookings in appointment with manage capacity and exceeding the resource capacity.
+        - bookings in appointment without manage capacity and exceeding the booking appointment capacity.
+        - bookings in appointments with all manage capacity False.
+        - bookings in appointments with manage capacity and unshareable resource type.
+        """
+        court1, court2, court3 = self.env['appointment.resource'].create([{
+            'appointment_type_ids': self.apt_resource_multiple_bookings.ids,
+            'name': 'Court 1',
+            'capacity': 5,
+        }, {
+            'appointment_type_ids': self.apt_type_resource.ids,
+            'capacity': 4,
+            'name': 'Court 2',
+            'shareable': True,
+        }, {
+            'appointment_type_ids': (self.apt_resource_multiple_bookings + self.apt_type_resource).ids,
+            'capacity': 6,
+            'name': 'Court 3',
+        }])
+        start = datetime(2022, 2, 14, 15, 0, 0)
+        end = start + timedelta(hours=1)
+
+        # Book for one appointments for each resources
+        booking1, booking2, booking3 = self.env['calendar.event'].create([{
+            'appointment_type_id': self.apt_resource_multiple_bookings.id,
+            'booking_line_ids': [(0, 0, {'appointment_resource_id': court1.id, 'capacity_reserved': 1})],
+            'name': 'Booking 1',
+            'start': start,
+            'stop': end,
+        }, {
+            'appointment_type_id': self.apt_type_resource.id,
+            'booking_line_ids': [(0, 0, {'appointment_resource_id': court2.id, 'capacity_reserved': 2})],
+            'name': 'Booking 2',
+            'start': start,
+            'stop': end,
+        }, {
+            'appointment_type_id': self.apt_type_resource.id,
+            'booking_line_ids': [(0, 0, {'appointment_resource_id': court3.id, 'capacity_reserved': 2})],
+            'name': 'Booking 3',
+            'start': start,
+            'stop': end,
+        }])
+
+        self.assertFalse(booking1.unavailable_resource_ids, 'Booking 1 should not have unavailable resources')
+        self.assertFalse(booking2.unavailable_resource_ids, 'Booking 2 should not have unavailable resources')
+        self.assertFalse(booking3.unavailable_resource_ids, 'Booking 3 should not have unavailable resources')
+
+        appointment_wcapacity = self.apt_type_resource.copy()
+        appointment_wocapacity = self.apt_resource_multiple_bookings.copy()
+        self.apt_resource_multiple_bookings.write({'max_bookings': 1})
+
+        for (appointment, resource, capacity_reserved, unavailable_resource, conflicting_booking) in [
+            # Multiple capacity methods
+            (self.apt_resource_multiple_bookings, court3, 1, court3, booking3),
+            # All managing capacity and exceeding resource capacity (2 + 4 > 4)
+            (appointment_wcapacity, court2, 4, court2, booking2),
+            # Un shareable resource in more than one appointment with manage capacity True.
+            (appointment_wcapacity, court3, 2, court3, booking3),
+            # Manage capacity false and exceeding appointment booking capacity (2 > 1)
+            (self.apt_resource_multiple_bookings, court1, 1, court1, booking1),
+            # All not managing capacity and booking in more than one appointment.
+            (appointment_wocapacity, court1, 1, court1, booking1),
+        ]:
+            with self.subTest(
+                appointment=appointment, resource=resource, capacity_reserved=capacity_reserved,
+                unavailable_resource=unavailable_resource, conflicting_booking=conflicting_booking
+            ):
+                booking = self.env['calendar.event'].create({
+                    'appointment_type_id': appointment.id,
+                    'booking_line_ids': [(0, 0, {'appointment_resource_id': resource.id, 'capacity_reserved': capacity_reserved})],
+                    'name': 'Booking',
+                    'start': start,
+                    'stop': end,
+                })
+                (booking + conflicting_booking)._compute_unavailable_resource_ids()
+                self.assertEqual(conflicting_booking.unavailable_resource_ids, unavailable_resource)
+                self.assertEqual(booking.unavailable_resource_ids, unavailable_resource)
+                booking.unlink()
+
+    @freeze_time('2022-02-14')
+    @users('apt_manager')
+    def test_staff_user_unavailability_with_multiple_appointment_events(self):
+        """ Test that unavailable users are correctly computed when multiple appointments are booked
+        on the same user at the same time.
+        """
+        user1, user2 = self.staff_user_aust, self.staff_user_bxls
+        start = datetime(2022, 2, 14, 15, 0, 0)
+        end = start + timedelta(hours=1)
+
+        self.apt_type_manage_capacity_users.write({'user_capacity': 5})
+        self.apt_user_multiple_bookings.write({'max_bookings': 1})
+
+        # Book one appointment for each users
+        booking1 = self.env['calendar.event'].with_context(self._test_context).create({
+            'appointment_type_id': self.apt_type_manage_capacity_users.id,
+            'booking_line_ids': [(0, 0, {'appointment_user_id': user1.id, 'capacity_reserved': 3})],
+            'name': 'Booking 1',
+            'partner_ids': [(4, user1.partner_id.id), (4, self.env.user.partner_id.id)],
+            'start': start,
+            'stop': end,
+            'user_id': user1.id,
+        })
+        booking2 = self.env['calendar.event'].with_context(self._test_context).create({
+            'appointment_type_id': self.apt_user_multiple_bookings.id,
+            'booking_line_ids': [(0, 0, {'appointment_user_id': user2.id, 'capacity_reserved': 1})],
+            'name': 'Booking 2',
+            'partner_ids': [(4, user2.partner_id.id), (4, self.env.user.partner_id.id)],
+            'start': start,
+            'stop': end,
+            'user_id': user2.id,
+        })
+
+        self.assertNotIn(user1.partner_id, booking1.unavailable_partner_ids, f'Booking 1 should not have {user1.partner_id} as unavailable.')
+        self.assertNotIn(user2.partner_id, booking2.unavailable_partner_ids, f'Booking 2 should not have {user2.partner_id} as unavailable.')
+
+        for (appointment, user, capacity_reserved, unavailable_user, conflicting_booking) in [
+                # More than one appointments
+                (self.apt_type_manage_capacity_users, user2, 2, user2, booking2),
+                # Exceeding appointment booking capacity (2 > 1)
+                (self.apt_user_multiple_bookings, user2, 1, user2, booking2),
+                # Exceeding user capacity (6 > 5)
+                (self.apt_type_manage_capacity_users, user1, 3, user1, booking1),
+            ]:
+            with self.subTest(
+                appointment=appointment, user=user, capacity_reserved=capacity_reserved,
+                unavailable_user=unavailable_user, conflicting_booking=conflicting_booking
+            ):
+                booking = self.env['calendar.event'].with_context(self._test_context).create({
+                    'appointment_type_id': appointment.id,
+                    'booking_line_ids': [(0, 0, {'appointment_user_id': user.id, 'capacity_reserved': capacity_reserved})],
+                    'name': 'Booking',
+                    'partner_ids': [(4, user.partner_id.id), (4, self.env.user.partner_id.id)],
+                    'start': start,
+                    'stop': end,
+                    'user_id': user.id,
+                })
+                (booking + conflicting_booking)._compute_unavailable_partner_ids()
+                self.assertIn(unavailable_user.partner_id, conflicting_booking.unavailable_partner_ids)
+                self.assertIn(unavailable_user.partner_id, booking.unavailable_partner_ids)
+                booking.unlink()
+
     @users('apt_manager')
     def test_appointment_user_remaining_capacity(self):
         """ Test that the remaining capacity of users are correctly computed """
@@ -1794,3 +1999,46 @@ class AppointmentTest(AppointmentCommon, HttpCaseWithUserDemo):
         self.assertIn(self.staff_user_bxls.id, available_user_1)
         # User is not available for other appointment when booking has been made for them.
         self.assertNotIn(self.staff_user_bxls.id, available_user_2)
+
+    @users('apt_manager')
+    def test_appointment_user_must_have_appointment_type_access(self):
+        appointment_type = self.env['appointment.type'].create([{
+            'name': 'Test appointment',
+            'staff_user_ids': [(6, 0, [self.apt_user.id])],
+        }])
+
+        # Case 1: Staff user should be allowed
+        event_staff = self.env['calendar.event'].create({
+            'name': 'Staff user event',
+            'appointment_type_id': appointment_type.id,
+            'booking_line_ids': [(0, 0, {
+                'appointment_user_id': self.apt_user.id,
+                'capacity_reserved': 1,
+            })],
+            'user_id': self.apt_user.id,
+        })
+        self.assertTrue(event_staff.exists())
+
+        # Case 2: appointment manager should be allowed
+        event_apt_manager = self.env['calendar.event'].create({
+            'name': 'Admin non-staff event',
+            'appointment_type_id': appointment_type.id,
+            'booking_line_ids': [(0, 0, {
+                'appointment_user_id': self.env.user.id,
+                'capacity_reserved': 1,
+            })],
+            'user_id': self.env.user.id,
+        })
+        self.assertTrue(event_apt_manager.exists())
+
+        # Case 3: User who cannot read the appointment type -> Should raise ValidationError
+        with self.assertRaises(ValidationError):
+            self.env['calendar.event'].create({
+                'name': 'Restricted event',
+                'appointment_type_id': appointment_type.id,
+                'booking_line_ids': [(0, 0, {
+                    'appointment_user_id': self.staff_user_bxls.id,
+                    'capacity_reserved': 1,
+                })],
+                'user_id': self.staff_user_bxls.id,
+            })

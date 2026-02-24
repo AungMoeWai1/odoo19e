@@ -2,7 +2,14 @@ import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { click, queryOne } from "@odoo/hoot-dom";
 import { animationFrame, mockDate, advanceTime, runAllTimers } from "@odoo/hoot-mock";
-import { defineModels, defineParams, fields, models, onRpc, contains } from "@web/../tests/web_test_helpers";
+import {
+    defineModels,
+    defineParams,
+    fields,
+    models,
+    onRpc,
+    contains,
+} from "@web/../tests/web_test_helpers";
 import {
     getCell,
     getGridContent,
@@ -74,7 +81,7 @@ test("Open Ended record today", async () => {
         },
     });
     const { range, rows } = getGridContent();
-    expect(range).toBe("From: 12/10/2018 to: 12/10/2018");
+    expect(range).toBe("12/10/2018 -> 12/10/2018");
     expect(rows).toEqual([
         {
             pills: [
@@ -115,7 +122,7 @@ test("Future Open Ended record not displayed", async () => {
         },
     });
     const { range, rows } = getGridContent();
-    expect(range).toBe("From: 12/10/2018 to: 12/10/2018");
+    expect(range).toBe("12/10/2018 -> 12/10/2018");
     expect(rows).toEqual([
         {
             pills: [
@@ -151,7 +158,7 @@ test("Open Ended record spanning multiple days", async () => {
         },
     });
     let gridContent = getGridContent();
-    expect(gridContent.range).toBe("From: 12/12/2018 to: 12/12/2018");
+    expect(gridContent.range).toBe("12/12/2018 -> 12/12/2018");
     expect(gridContent.rows).toEqual([
         {
             pills: [
@@ -168,7 +175,7 @@ test("Open Ended record spanning multiple days", async () => {
     await advanceTime(500);
     await animationFrame();
     gridContent = getGridContent();
-    expect(gridContent.range).toBe("From: 12/11/2018 to: 12/11/2018");
+    expect(gridContent.range).toBe("12/11/2018 -> 12/11/2018");
     expect(gridContent.rows).toEqual([
         {
             pills: [
@@ -185,7 +192,7 @@ test("Open Ended record spanning multiple days", async () => {
     await advanceTime(500);
     await animationFrame();
     gridContent = getGridContent();
-    expect(gridContent.range).toBe("From: 12/10/2018 to: 12/10/2018");
+    expect(gridContent.range).toBe("12/10/2018 -> 12/10/2018");
     expect(gridContent.rows).toEqual([
         {
             pills: [
@@ -243,7 +250,7 @@ test("Concurrent open-ended records", async () => {
         },
     });
     const { range, rows } = getGridContent();
-    expect(range).toBe("From: 12/20/2018 to: 12/20/2018");
+    expect(range).toBe("12/20/2018 -> 12/20/2018");
     expect(rows).toEqual([
         {
             pills: [
@@ -284,7 +291,7 @@ test("Open ended record Precision", async () => {
         },
     });
     const { range, rows } = getGridContent();
-    expect(range).toBe("From: 12/20/2018 to: 12/20/2018");
+    expect(range).toBe("12/20/2018 -> 12/20/2018");
     expect(rows).toEqual([
         {
             pills: [
@@ -320,7 +327,7 @@ test("Open ended record updated correctly", async () => {
         },
     });
     let gridContent = getGridContent();
-    expect(gridContent.range).toBe("From: 12/20/2018 to: 12/20/2018");
+    expect(gridContent.range).toBe("12/20/2018 -> 12/20/2018");
     expect(gridContent.rows).toEqual([
         {
             pills: [
@@ -341,7 +348,7 @@ test("Open ended record updated correctly", async () => {
     await advanceTime(500);
     await animationFrame();
     gridContent = getGridContent();
-    expect(gridContent.range).toBe("From: 12/20/2018 to: 12/20/2018");
+    expect(gridContent.range).toBe("12/20/2018 -> 12/20/2018");
     // TODO fixme: end hour is non deterministic and alternates between 7pm and 8pm.
     const endHour = parseInt(gridContent.rows[0].pills[0].colSpan.match(/->\s*(\d+)/)[1]);
     expect(endHour).toBeWithin(6, 7);
@@ -387,7 +394,7 @@ test("Future Open ended record not shown before it happens and appears after sta
         },
     });
     let gridContent = getGridContent();
-    expect(gridContent.range).toBe("From: 11/02/2018 to: 11/02/2018");
+    expect(gridContent.range).toBe("11/02/2018 -> 11/02/2018");
     expect(gridContent.rows).toEqual([
         {
             pills: [
@@ -397,7 +404,7 @@ test("Future Open ended record not shown before it happens and appears after sta
                     title: "Attendance 5",
                 },
             ],
-            title: "User 1", 
+            title: "User 1",
         },
     ]);
     mockDate("2018-11-02 17:00:00", +0);
@@ -408,7 +415,7 @@ test("Future Open ended record not shown before it happens and appears after sta
     await advanceTime(500);
     await animationFrame();
     gridContent = getGridContent();
-    expect(gridContent.range).toBe("From: 11/02/2018 to: 11/02/2018");
+    expect(gridContent.range).toBe("11/02/2018 -> 11/02/2018");
     expect(gridContent.rows).toEqual([
         {
             pills: [
@@ -464,7 +471,7 @@ test("Domain correctly applied when allow_open_ended=1.", async () => {
         },
     });
     const { rows, range } = getGridContent();
-    expect(range).toBe("From: 11/02/2018 to: 11/02/2018");
+    expect(range).toBe("11/02/2018 -> 11/02/2018");
     expect(rows).toEqual([
         {
             pills: [
@@ -502,7 +509,7 @@ test("Dragging half column in week scale preserves checkout context", async () =
             </form>
         `,
     };
-    onRpc("onchange", ({kwargs}) => {
+    onRpc("onchange", ({ kwargs }) => {
         expect(kwargs.context.check_out).not.toBeEmpty();
         expect(kwargs.context.default_check_out).not.toBeEmpty();
     });
@@ -514,9 +521,9 @@ test("Dragging half column in week scale preserves checkout context", async () =
             default_stop_date: "2025-08-07",
         },
     });
-    const {moveTo, drop} = await contains(getCell("Friday 1", "Week 31, Jul 27 - Aug 2")).drag();
-    moveTo(getCell("Friday 1", "Week 31, Jul 27 - Aug 2"));
+    const { moveTo, drop } = await contains(getCell("Friday 1", "Week 31, Jul 27 - Aug 2")).drag();
+    await moveTo(getCell("Friday 1", "Week 31, Jul 27 - Aug 2"));
     await runAllTimers(); // Pointer move is subjected to throttleForAnimation in gantt
-    drop();
+    await drop();
     await animationFrame();
 });

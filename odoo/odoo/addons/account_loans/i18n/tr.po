@@ -3,13 +3,16 @@
 # * account_loans
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# DeepL <noreply-mt-deepl@weblate.org>, 2025.
+# Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:25+0000\n"
-"PO-Revision-Date: 2025-09-18 02:45+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2025-12-30 18:42+0000\n"
+"PO-Revision-Date: 2025-11-20 13:21+0000\n"
+"Last-Translator: Odoo Turkish Import <dyki+tr@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
 "account_loans/tr/>\n"
 "Language: tr\n"
@@ -48,21 +51,23 @@ msgstr "30U/360"
 #: model_terms:ir.ui.view,arch_db:account_loans.account_loan_form_view
 msgid ""
 "<span class=\"oe_inline\" invisible=\"duration == 1\">months</span>\n"
-"                                        <span class=\"oe_inline\" invisible=\"duration != 1\">month</span>"
+"                                        <span class=\"oe_inline\" "
+"invisible=\"duration != 1\">month</span>"
 msgstr ""
 "<span class=\"oe_inline\" invisible=\"duration == 1\">ay</span>\n"
-"                                        <span class=\"oe_inline\" invisible="
-"\"duration != 1\">ay</span>"
+"                                        <span class=\"oe_inline\" "
+"invisible=\"duration != 1\">ay</span>"
 
 #. module: account_loans
 #: model_terms:ir.ui.view,arch_db:account_loans.view_account_loan_compute_wizard
 msgid ""
 "<span class=\"oe_inline\" invisible=\"loan_term == 1\">years</span>\n"
-"                                    <span class=\"oe_inline\" invisible=\"loan_term != 1\">year</span>"
+"                                    <span class=\"oe_inline\" "
+"invisible=\"loan_term != 1\">year</span>"
 msgstr ""
 "<span class=\"oe_inline\" invisible=\"loan_term == 1\">yıl</span>\n"
-"                                    <span class=\"oe_inline\" invisible="
-"\"loan_term != 1\">yıl</span>"
+"                                    <span class=\"oe_inline\" "
+"invisible=\"loan_term != 1\">yıl</span>"
 
 #. module: account_loans
 #: model_terms:ir.ui.view,arch_db:account_loans.view_account_loan_compute_wizard
@@ -92,7 +97,7 @@ msgstr "A/A ISDA"
 #. module: account_loans
 #: model:ir.model,name:account_loans.model_account_return
 msgid "Accounting Return"
-msgstr ""
+msgstr "Muhasebe İadesi"
 
 #. module: account_loans
 #: model:ir.model.fields,field_description:account_loans.field_account_loan__message_needaction
@@ -239,9 +244,11 @@ msgstr "Onayla"
 #. module: account_loans
 #: model:account.return.check.template,description:account_loans.account_return_check_template_loans_recording
 msgid ""
-"Confirm that all loans recorded in the accounts actually exist and match the"
-" loan agreements."
+"Confirm that all loans recorded in the accounts actually exist and match the "
+"loan agreements."
 msgstr ""
+"Hesaplara kaydedilen tüm kredilerin gerçekten var olduğunu ve kredi "
+"sözleşmeleriyle eşleştiğini teyit edin."
 
 #. module: account_loans
 #: model:ir.model.fields,field_description:account_loans.field_account_loan__count_linked_assets
@@ -350,10 +357,15 @@ msgstr "Ay Sonu"
 #. module: account_loans
 #: model:account.return.check.template,description:account_loans.account_return_check_template_loans_classification
 msgid ""
-"Ensure that loans are properly classified as current vs. non-current, and disclosed in accordance with Belgian GAAP. \n"
+"Ensure that loans are properly classified as current vs. non-current, and "
+"disclosed in accordance with Belgian GAAP. \n"
 "Loans payable within 1 year → Account 42\n"
 "Loans > 1 year → Account 17"
 msgstr ""
+"Kredilerin cari ve cari olmayan olarak uygun şekilde sınıflandırıldığından "
+"ve Belçika GAAP uyarınca açıklandığından emin olun. \n"
+"1 yıl içinde ödenecek krediler → Hesap 42\n"
+"Krediler > 1 yıl → Hesap 17"
 
 #. module: account_loans
 #: model:ir.model.fields,help:account_loans.field_account_loan_line__generated_move_ids
@@ -629,12 +641,12 @@ msgstr "Kredi Analizi"
 #. module: account_loans
 #: model:account.return.check.template,name:account_loans.account_return_check_template_loans_classification
 msgid "Loans classification"
-msgstr ""
+msgstr "Kredilerin sınıflandırılması"
 
 #. module: account_loans
 #: model:account.return.check.template,name:account_loans.account_return_check_template_loans_recording
 msgid "Loans recording"
-msgstr ""
+msgstr "Kredi kaydı"
 
 #. module: account_loans
 #: model:ir.model.fields,field_description:account_loans.field_account_loan__long_term_account_id
@@ -705,6 +717,9 @@ msgid ""
 "period. Ensure your loans are properly registered for automatic "
 "amortizations calculation."
 msgstr ""
+"Odoo amortismanlarınızı otomatik olarak yönetir. Bu dönem için hiçbir kredi "
+"bulunamadı. Otomatik amortisman hesaplaması için kredilerinizin doğru "
+"şekilde kaydedildiğinden emin olun."
 
 #. module: account_loans
 #. odoo-python
@@ -911,8 +926,8 @@ msgid ""
 "The loan amount %(loan_amount)s should be equal to the sum of the "
 "principals: %(principal_sum)s (difference %(principal_difference)s)"
 msgstr ""
-"Kredi tutarı %(loan_amount)s, anaparalar toplamına eşit olmalıdır: "
-"%(principal_sum)s (fark %(principal_difference)s)"
+"Kredi tutarı %(loan_amount)s, anaparalar toplamına eşit olmalıdır: %"
+"(principal_sum)s (fark %(principal_difference)s)"
 
 #. module: account_loans
 #. odoo-python
@@ -999,8 +1014,7 @@ msgstr "Yüklenen dosya"
 msgid ""
 "Upon confirmation of the loan, Odoo will ignore the loan lines that are up "
 "to this date (included) and not create entries for them. This is useful if "
-"you have already manually created entries prior to the creation of this "
-"loan."
+"you have already manually created entries prior to the creation of this loan."
 msgstr ""
 "Kredi onaylandığında, Odoo belirtilen tarihe kadar (bu tarih dahil) olan "
 "kredi satırlarını yok sayar ve bunlar için muhasebe kaydı oluşturmaz. Bu, "
@@ -1022,13 +1036,13 @@ msgstr "Websitesi iletişim geçmişi"
 #: code:addons/account_loans/models/account_asset.py:0
 #: code:addons/account_loans/models/account_loan.py:0
 msgid "id"
-msgstr ""
+msgstr "kimlik"
 
 #. module: account_loans
 #. odoo-python
 #: code:addons/account_loans/models/account_loan.py:0
 msgid "reversed"
-msgstr ""
+msgstr "tersine çevrildi"
 
 #. module: account_loans
 #: model_terms:ir.ui.view,arch_db:account_loans.view_account_loan_close_wizard

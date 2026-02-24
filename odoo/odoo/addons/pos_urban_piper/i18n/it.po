@@ -3,13 +3,16 @@
 # * pos_urban_piper
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Marianna Ciofani (cima)" <cima@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Odoo Translation Bot <c3p@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:39+0000\n"
-"PO-Revision-Date: 2025-09-18 02:47+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2025-12-30 18:46+0000\n"
+"PO-Revision-Date: 2025-11-27 14:15+0000\n"
+"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-19/"
 "pos_urban_piper/it/>\n"
 "Language: it\n"
@@ -17,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: pos_urban_piper
 #. odoo-javascript
@@ -30,6 +33,22 @@ msgstr " offline."
 #: code:addons/pos_urban_piper/static/src/point_of_sale_overrirde/app/services/pos_store.js:0
 msgid " is online on ."
 msgstr " online."
+
+#. module: pos_urban_piper
+#. odoo-python
+#: code:addons/pos_urban_piper/models/product.py:0
+msgid ""
+"\"%s\" is not synchronized with the UrbanPiper. Please sync it before "
+"proceeding."
+msgstr ""
+"\"%s\" non è sincronizzato con UrbanPiper. Sincronizzalo prima di procedere."
+
+#. module: pos_urban_piper
+#. odoo-javascript
+#: code:addons/pos_urban_piper/static/src/point_of_sale_overrirde/app/services/pos_store.js:0
+msgid "%s is %s online food delivery for all platform in this locations."
+msgstr ""
+"%s è %s consegna di cibo online per tutte le piattaforme in queste località."
 
 #. module: pos_urban_piper
 #. odoo-python
@@ -67,6 +86,12 @@ msgstr "Un identificatore interno del punto vendita."
 #: model_terms:ir.ui.view,arch_db:pos_urban_piper.res_config_settings_view_form_pos_urban_piper
 msgid "Api Key"
 msgstr "Chiave API"
+
+#. module: pos_urban_piper
+#. odoo-javascript
+#: code:addons/pos_urban_piper/static/src/point_of_sale_overrirde/app/components/popups/product_info_popup/product_info_popup.xml:0
+msgid "Available"
+msgstr "Disponibile"
 
 #. module: pos_urban_piper
 #: model:ir.model.fields,field_description:pos_urban_piper.field_pos_delivery_provider__available_country_ids
@@ -131,7 +156,8 @@ msgstr ""
 #: model:ir.model.fields,help:pos_urban_piper.field_product_product__urbanpiper_pos_config_ids
 #: model:ir.model.fields,help:pos_urban_piper.field_product_template__urbanpiper_pos_config_ids
 msgid "Check this if the product is available for food delivery."
-msgstr "Spunta la casella se il prodotto è disponibile per la consegna di cibo."
+msgstr ""
+"Spunta la casella se il prodotto è disponibile per la consegna di cibo."
 
 #. module: pos_urban_piper
 #: model:ir.model.fields,help:pos_urban_piper.field_pos_payment_method__is_delivery_payment
@@ -334,6 +360,7 @@ msgstr "Spedito"
 
 #. module: pos_urban_piper
 #: model:ir.model.fields,field_description:pos_urban_piper.field_ir_config_parameter__display_name
+#: model:ir.model.fields,field_description:pos_urban_piper.field_pos_category__display_name
 #: model:ir.model.fields,field_description:pos_urban_piper.field_pos_config__display_name
 #: model:ir.model.fields,field_description:pos_urban_piper.field_pos_delivery_provider__display_name
 #: model:ir.model.fields,field_description:pos_urban_piper.field_pos_order__display_name
@@ -397,6 +424,12 @@ msgid "Error to send in preparation display."
 msgstr "Errore da inviare allo schermo di preparazione."
 
 #. module: pos_urban_piper
+#. odoo-javascript
+#: code:addons/pos_urban_piper/static/src/point_of_sale_overrirde/app/components/popups/product_info_popup/product_info_popup.js:0
+msgid "Failed to update food delivery availability."
+msgstr "Impossibile aggiornare la disponibilità della consegna di cibo."
+
+#. module: pos_urban_piper
 #: model_terms:ir.ui.view,arch_db:pos_urban_piper.res_config_settings_view_form_pos_urban_piper
 msgid "Fill this form to get Username &amp; Api key"
 msgstr "Completa il modulo per ottenere un nome utente e una chiave API"
@@ -424,7 +457,7 @@ msgstr "Valore sconto fisso per ordine di prova."
 #. module: pos_urban_piper
 #: model_terms:ir.ui.view,arch_db:pos_urban_piper.product_template_search_view_inherit_pos_urban_piper
 msgid "Food Delivery Location"
-msgstr ""
+msgstr "Luogo consegna cibo"
 
 #. module: pos_urban_piper
 #: model_terms:ir.ui.view,arch_db:pos_urban_piper.res_config_settings_view_form_pos_urban_piper
@@ -471,6 +504,7 @@ msgstr "Codice HungerStation"
 
 #. module: pos_urban_piper
 #: model:ir.model.fields,field_description:pos_urban_piper.field_ir_config_parameter__id
+#: model:ir.model.fields,field_description:pos_urban_piper.field_pos_category__id
 #: model:ir.model.fields,field_description:pos_urban_piper.field_pos_config__id
 #: model:ir.model.fields,field_description:pos_urban_piper.field_pos_delivery_provider__id
 #: model:ir.model.fields,field_description:pos_urban_piper.field_pos_order__id
@@ -591,7 +625,7 @@ msgstr "Min"
 #. odoo-javascript
 #: code:addons/pos_urban_piper/static/src/point_of_sale_overrirde/override/components/order_display/order_display.xml:0
 msgid "Min(s)"
-msgstr ""
+msgstr "Min(s)"
 
 #. module: pos_urban_piper
 #: model:ir.model.fields.selection,name:pos_urban_piper.selection__product_template__urbanpiper_meal_type__4
@@ -629,6 +663,12 @@ msgstr "Non vegetariano"
 
 #. module: pos_urban_piper
 #. odoo-javascript
+#: code:addons/pos_urban_piper/static/src/point_of_sale_overrirde/app/components/popups/product_info_popup/product_info_popup.xml:0
+msgid "Not Available"
+msgstr "Non disponibile"
+
+#. module: pos_urban_piper
+#. odoo-javascript
 #: code:addons/pos_urban_piper/static/src/point_of_sale_overrirde/app/components/popups/order_info_popup/order_info_popup.js:0
 msgid "Not Specified"
 msgstr "Non specificato"
@@ -659,6 +699,30 @@ msgstr "Metodi di pagamento online consegna"
 #: model:ir.model.fields,field_description:pos_urban_piper.field_res_config_settings__pos_urbanpiper_delivery_provider_ids
 msgid "Online Delivery Providers"
 msgstr "Fornitori servizi di consegna online"
+
+#. module: pos_urban_piper
+#. odoo-javascript
+#: code:addons/pos_urban_piper/static/src/point_of_sale_overrirde/app/components/popups/product_info_popup/product_info_popup.xml:0
+msgid "Online Food Delivery:"
+msgstr "Consegna di cibo online:"
+
+#. module: pos_urban_piper
+#. odoo-javascript
+#: code:addons/pos_urban_piper/static/src/point_of_sale_overrirde/app/services/pos_store.js:0
+msgid "Online Order"
+msgstr "Ordine online"
+
+#. module: pos_urban_piper
+#. odoo-javascript
+#. odoo-python
+#: code:addons/pos_urban_piper/models/pos_order.py:0
+#: code:addons/pos_urban_piper/static/src/point_of_sale_overrirde/app/services/pos_store.js:0
+msgid ""
+"Online orders cannot be deleted. If needed, reject the order instead or "
+"contact the food delivery provider."
+msgstr ""
+"Gli ordini online non possono essere cancellati. Se necessario, rifiuta "
+"l'ordine o contatta il fornitore del servizio di consegna."
 
 #. module: pos_urban_piper
 #. odoo-javascript
@@ -793,6 +857,11 @@ msgstr "Devi prima iniziare una sessione POS.\n"
 #: model:ir.model.fields,field_description:pos_urban_piper.field_pos_config__name
 msgid "Point of Sale"
 msgstr "Punto vendita"
+
+#. module: pos_urban_piper
+#: model:ir.model,name:pos_urban_piper.model_pos_category
+msgid "Point of Sale Category"
+msgstr "Categoria punto vendita"
 
 #. module: pos_urban_piper
 #: model:ir.model,name:pos_urban_piper.model_pos_config
@@ -948,8 +1017,7 @@ msgstr "\"%(providerName)s\" non può rifiutare l'ordine"
 #. module: pos_urban_piper
 #: model:ir.model.fields,help:pos_urban_piper.field_pos_order__delivery_provider_id
 #: model:ir.model.fields,help:pos_urban_piper.field_pos_payment_method__delivery_provider_id
-msgid ""
-"Responsible delivery provider for online order, e.g., UberEats, Zomato."
+msgid "Responsible delivery provider for online order, e.g., UberEats, Zomato."
 msgstr ""
 "Fornitore consegna responsabile degli ordini online, ad es. UberEats, Zomato."
 
@@ -995,7 +1063,8 @@ msgstr "Configura l'ID POS in UrbanPiper nella sezione Ubicazioni."
 #. module: pos_urban_piper
 #: model:ir.model.fields,help:pos_urban_piper.field_pos_delivery_provider__journal_code
 msgid "Short code of the journal to be used for journal creation"
-msgstr "Codice breve del registro da usare per la creazione del registro stesso"
+msgstr ""
+"Codice breve del registro da usare per la creazione del registro stesso"
 
 #. module: pos_urban_piper
 #. odoo-javascript
@@ -1147,6 +1216,15 @@ msgstr "Nome utente dell'account API UrbanPiper."
 #: code:addons/pos_urban_piper/static/src/point_of_sale_overrirde/app/delivery_button/delivery_button.xml:0
 msgid "There are no active delivery providers(s)."
 msgstr "Non ci sono fornitori attivi."
+
+#. module: pos_urban_piper
+#: model_terms:ir.ui.view,arch_db:pos_urban_piper.res_config_settings_view_form_pos_urban_piper
+msgid ""
+"This action will flush(delete) the entire menu from Atlas for this store and "
+"re-sync it if any menu data is available."
+msgstr ""
+"L'azione libererà (eliminerà) l'intero menu da Atlas per questo negozio e lo "
+"risincronizzerà se sono disponibili dati menu."
 
 #. module: pos_urban_piper
 #. odoo-javascript
@@ -1316,7 +1394,18 @@ msgstr "Impossibile modificare il pos_urban_piper.uuid."
 #. module: pos_urban_piper
 #. odoo-python
 #: code:addons/pos_urban_piper/models/res_config_settings.py:0
-msgid ""
-"Your company %s needs to have a correct city in order create the store."
+msgid "Your company %s needs to have a correct city in order create the store."
 msgstr ""
 "L'azienda %s deve disporre di una città corretta per poter creare il negozio."
+
+#. module: pos_urban_piper
+#. odoo-javascript
+#: code:addons/pos_urban_piper/static/src/point_of_sale_overrirde/app/services/pos_store.js:0
+msgid "disabled"
+msgstr "disattivato"
+
+#. module: pos_urban_piper
+#. odoo-javascript
+#: code:addons/pos_urban_piper/static/src/point_of_sale_overrirde/app/services/pos_store.js:0
+msgid "enabled"
+msgstr "attivato"

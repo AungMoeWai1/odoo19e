@@ -2,6 +2,7 @@
 from datetime import timedelta
 
 from odoo import exceptions, fields
+from odoo.exceptions import UserError
 from odoo.fields import Command
 from odoo.tests import Form, HttpCase, freeze_time, tagged
 from odoo.tools import float_compare, float_repr, float_round
@@ -820,6 +821,125 @@ class TestBoM(TestMrpCommon):
         # 5 min 'Prepare biscuits' + 3 min 'Prepare butter' + 5 min 'Mix manually' = 13 minutes
         self.assertEqual(report_values['lines']['operations_time'], 660.0, 'Operation time should be the same for 1 unit or for the batch')
 
+    def test_bom_report_planning_with_producible_qty(self):
+        """ Simulate a BoM of a pickaxe, and test that the BoM structure report
+            respects the hardcoded limit of 700 planning days (mocked as 28 days).
+        """
+        # Workcenter is working 24/7
+        self.full_availability()
+
+        location = self.env.ref('stock.stock_location_stock')
+        pickaxe = self.env['product.product'].create({
+            'name': 'Iron Pickaxe',
+            'is_storable': True,
+            'route_ids': [(6, 0, [self.ref('mrp.route_warehouse0_manufacture')])],
+        })
+        stick = self.env['product.product'].create({
+            'name': 'Stick',
+            'is_storable': True,
+        })
+        iron = self.env['product.product'].create({
+            'name': 'Iron Ingot',
+            'is_storable': True,
+        })
+
+        bom_form_pickaxe = Form(self.env['mrp.bom'])
+        bom_form_pickaxe.product_tmpl_id = pickaxe.product_tmpl_id
+        bom_form_pickaxe.product_qty = 1
+        bom_pickaxe = bom_form_pickaxe.save()
+
+        workcenter = self.env['mrp.workcenter'].create({
+            'costs_hour': 10,
+            'name': 'Crafting Table'
+        })
+
+        # Required to display `operation_ids` in the form view
+        self.env.user.group_ids += self.env.ref("mrp.group_mrp_routings")
+        bom_pickaxe.write({
+            "bom_line_ids": [
+                Command.create({"product_id": stick.id, "product_qty": 2}),
+                Command.create({"product_id": iron.id, "product_qty": 3}),
+            ],
+            "operation_ids": [
+                Command.create({"workcenter_id": workcenter.id, "name": "Place items", "time_cycle_manual": 10}),
+                Command.create({"workcenter_id": workcenter.id, "name": "Craft items", "time_cycle_manual": 5}),
+            ]
+        })
+
+        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_pickaxe.id, searchQty=1, searchVariant=False)
+        # 10 min 'Place items' + 5 min 'Craft items' = 15 minutes for 1 pickaxe
+        self.assertEqual(report_values['lines']['operations_time'], 15.0)
+        self.assertEqual(report_values['lines']['producible_qty'], 0)
+
+        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_pickaxe.id, searchQty=2, searchVariant=False)
+        # 10 min 'Place items' + 5 min 'Craft items' = 30 minutes for 2 pickaxes
+        self.assertEqual(report_values['lines']['operations_time'], 30.0)
+        self.assertEqual(report_values['lines']['producible_qty'], 0)
+
+        # Limit the planning to two fortnights, and fill it almost completely while keeping
+        # 15 minutes available, so that we can still plan a single operation.
+        self.env['ir.config_parameter'].sudo().set_param('mrp.workcenter_max_planning_iterations', '2')
+        date_start = fields.Datetime.today() + timedelta(days=14 * 2 - 1)
+        end_of_day = date_start + timedelta(days=1)
+
+        # Populate the workcenter's planning
+        self.env['resource.calendar.leaves'].create({
+            'name': 'Game update',
+            'date_from': fields.Date.today(),
+            'date_to': end_of_day - timedelta(minutes=15),
+            'resource_id': workcenter.resource_id.id,
+            'time_type': 'other',
+        })
+
+        # Check that we still have one available slot of 15 minutes
+        self.assertEqual(
+            workcenter._get_first_available_slot(date_start, 15),
+            (end_of_day - timedelta(minutes=15), end_of_day),
+        )
+
+        # 1 quantity should still work
+        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_pickaxe.id, searchQty=1, searchVariant=False)
+        self.assertEqual(report_values['lines']['operations_time'], 15.0)
+        self.assertEqual(report_values['lines']['producible_qty'], 0)
+
+        # 2 quantities should be over the limit
+        with self.assertRaises(exceptions.UserError):
+            report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_pickaxe.id, searchQty=2, searchVariant=False)
+            # should raise above; test the operations time for easier debugging
+            self.assertEqual(report_values['lines']['operations_time'], 15.0)
+            self.assertEqual(report_values['lines']['producible_qty'], 0)
+
+        # Add quantities on hand to increase the 'producible_qty'
+        self.env['stock.quant']._update_available_quantity(stick, location, 2.0)
+        self.env['stock.quant']._update_available_quantity(iron, location, 3.0)
+        (stick | iron).invalidate_recordset(['free_qty'])
+        self.assertEqual(stick.free_qty, 2)
+        self.assertEqual(iron.free_qty, 3)
+
+        # 1 quantity should work too
+        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_pickaxe.id, searchQty=1, searchVariant=False)
+        self.assertEqual(report_values['lines']['operations_time'], 15.0)
+        self.assertEqual(report_values['lines']['producible_qty'], 1)
+
+        # Add a second procucible quantity
+        self.env['stock.quant']._update_available_quantity(stick, location, 2.0)
+        self.env['stock.quant']._update_available_quantity(iron, location, 3.0)
+        (stick | iron).invalidate_recordset(['free_qty'])
+        self.assertEqual(stick.free_qty, 4)
+        self.assertEqual(iron.free_qty, 6)
+
+        # If we have 2 producible quantity, it should still work, as we requested 1 quantity
+        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_pickaxe.id, searchQty=1, searchVariant=False)
+        self.assertEqual(report_values['lines']['operations_time'], 15.0)
+        self.assertEqual(report_values['lines']['producible_qty'], 2)
+
+        with self.assertRaises(exceptions.UserError):
+            # but 2 won't, as expected
+            report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_pickaxe.id, searchQty=2, searchVariant=False)
+            # should raise above
+            self.assertEqual(report_values['lines']['operations_time'], 15.0)
+            self.assertEqual(report_values['lines']['producible_qty'], 2)
+
     def test_21_bom_report_variant(self):
         """ Test a sub BoM process with multiple variants.
         BOM 1:
@@ -1541,7 +1661,11 @@ class TestBoM(TestMrpCommon):
         bom = self.env['mrp.bom'].create({
             'product_tmpl_id': finished_product.product_tmpl_id.id,
             'product_qty': 1.0,
-            'bom_line_ids': [Command.create({'product_id': p.id, 'product_qty': 1}) for p in [component_1, component_2]],
+            'bom_line_ids': [Command.create({'product_id': p.id, 'product_qty': 1}) for p in [component_1, component_2, component_3]],
+            'operation_ids': [Command.create({
+                'name': "Operation to delete",
+                'workcenter_id': self.workcenter_1.id,
+            })]
         })
 
         # Creates a MO.
@@ -1556,6 +1680,8 @@ class TestBoM(TestMrpCommon):
         with mo_form.move_raw_ids.edit(0) as raw_move:
             raw_move.product_uom_qty = 123
         mo_1 = mo_form.save()
+        initial_move_raws = mo_1.move_raw_ids
+        inital_workorder_ids = mo_1.workorder_ids
         self.assertEqual(mo_1.move_raw_ids[0].product_uom_qty, 123)
         self.assertEqual(mo_1.is_outdated_bom, False,
             "Making a modification in the MO shouldn't mark the BoM as updated")
@@ -1563,7 +1689,7 @@ class TestBoM(TestMrpCommon):
         # Now, adds an operation and a by-product in the BoM.
         bom.byproduct_ids = [Command.create({'product_id': by_product.id, 'product_qty': 2})]
         bom_byproduct = bom.byproduct_ids
-        bom.operation_ids = [Command.create({
+        bom.operation_ids = [Command.clear(), Command.create({
             'name': "Gently insert the Monster in the Jar",
             'workcenter_id': self.workcenter_1.id,
         })]
@@ -1571,6 +1697,7 @@ class TestBoM(TestMrpCommon):
 
         self.assertEqual(mo_1.is_outdated_bom, True,
             "By-Product and Operation were added to the BoM, it should be marked as updated")
+        bom.bom_line_ids = bom.bom_line_ids[:-1]
         # Call "Update BoM" action, it should reset the MO as defined by the BoM.
         mo_1.action_update_bom()
         self.assertEqual(mo_1.product_qty, 10,
@@ -1579,6 +1706,11 @@ class TestBoM(TestMrpCommon):
             "After 'Update BoM' action, MO's BoM should no longer be marked as updated")
         self.assertEqual(mo_1.workorder_ids.operation_id.id, operation.id)
         self.assertEqual(mo_1.move_byproduct_ids.byproduct_id.id, bom_byproduct.id)
+        # Check that the deleted move_raws were unlinked
+        self.assertTrue(initial_move_raws - mo_1.move_raw_ids)
+        self.assertFalse((initial_move_raws - mo_1.move_raw_ids).exists())
+        self.assertTrue(inital_workorder_ids - mo_1.workorder_ids)
+        self.assertFalse((inital_workorder_ids - mo_1.workorder_ids).exists())
 
         # Now, checks the update works also with confirmed MO.
         mo_1.action_confirm()
@@ -1720,11 +1852,19 @@ class TestBoM(TestMrpCommon):
             move_raw.product_uom_qty = 1
             move_raw.product_uom = self.uom_dozen
         mo_2 = mo_form.save()
+        self.assertEqual(mo_2.state, 'draft')
         mo_2.action_confirm()
+        self.assertEqual(mo_2.state, 'confirmed')
         self.assertRecordValues(mo_2.move_raw_ids, [
             {'product_id': component_1.id, 'product_uom_qty': 2, 'product_uom': self.uom_dozen.id},
             {'product_id': component_2.id, 'product_uom_qty': 1, 'product_uom': self.uom_dozen.id}
         ])
+        mo_form = Form(mo_2)
+        with mo_form.move_raw_ids.edit(0) as move_raw:
+            move_raw.quantity = 5
+        with mo_form.move_raw_ids.edit(1) as move_raw:
+            move_raw.quantity = 5
+        mo_2 = mo_form.save()
 
         # Updates the BoM by set the second BoM line's quantity to 2.
         bom_form = Form(bom)
@@ -2690,6 +2830,49 @@ class TestBoM(TestMrpCommon):
         mo = mo_form.save()
         self.assertEqual(mo.workorder_ids.operation_id, kit_bom.operation_ids.filtered(lambda op: op.bom_product_template_attribute_value_ids == blue))
 
+    def test_correct_bom_final_product_unit(self):
+        """
+        Checks if the Final product (tracked by lot) is manufactured with the correct unit.
+        """
+        final_product = self.env['product.product'].create(dict({'is_storable': True}, name="Product to manufacture"))
+        final_product.tracking = 'lot'
+        # Create MO.with a different UOM
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = final_product
+        mo_form.product_qty = 1
+        mo_form.product_uom_id = self.uom_dozen
+        mo = mo_form.save()
+        mo.action_confirm()
+        mo.button_mark_done()
+        self.assertEqual(mo.finished_move_line_ids.product_uom_id, self.uom_dozen)
+
+    def test_bom_overview_with_decimal_quantity(self):
+        """
+        Checks that the times for a bom with a decimal quantity
+        are correctly computed in the bom overview
+        """
+        product_in_square_meter = self.env['product.template'].create({
+            'name': 'test',
+            'uom_id': self.env.ref('uom.product_uom_square_meter').id,
+        })
+        workcenter = self.env['mrp.workcenter'].create({
+            'name': 'workcenter',
+        })
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': product_in_square_meter.id,
+            'product_qty': 1.5,
+            'operation_ids': [
+                Command.create({'name': 'operation', 'workcenter_id': workcenter.id, 'time_cycle_manual': 16}),
+            ],
+        })
+        bom_overview = self.env['report.mrp.report_bom_structure']._get_report_data(bom.id, 1.4)['lines']
+        self.assertEqual(bom_overview['operations_time'], 16)
+        bom_overview = self.env['report.mrp.report_bom_structure']._get_report_data(bom.id, 1.5)['lines']
+        self.assertEqual(bom_overview['operations_time'], 16)
+        bom_overview = self.env['report.mrp.report_bom_structure']._get_report_data(bom.id, 1.6)['lines']
+        self.assertEqual(bom_overview['operations_time'], 32)
+
+
 @tagged('-at_install', 'post_install')
 class TestTourBoM(HttpCase):
     @classmethod
@@ -2758,3 +2941,98 @@ class TestTourBoM(HttpCase):
         self.env['stock.quant']._update_available_quantity(comp, location, 3.0)
         # With 3 components on hand, 1.5 products could be created, rounded down to 1.0 due to the integer uom
         self.assertEqual(prod.qty_available, 1.0)
+
+    def test_byproduct_bom_cost_share_constraint_with_variants(self):
+        """
+        Check that the cost share constraint is well behaved with respect to product attribute values:
+        the sum of the cost share's of the bom of any product variant should can not exceed 100%
+        """
+        attributes = self.env['product.attribute'].create([
+            {'name': name} for name in ('Size', 'Color')
+        ])
+        attributes_values = ((attributes[0], ('S', 'M')), (attributes[1], ('Blue', 'Red')))
+        self.env['product.attribute.value'].create([{
+            'name': name,
+            'attribute_id': attribute.id
+        } for attribute, names in attributes_values for name in names])
+        product_template = self.env['product.template'].create({
+            'name': "lovely product",
+            'is_storable': True,
+        })
+        size_attribute_lines, color_attribute_lines = self.env['product.template.attribute.line'].create([{
+            'product_tmpl_id': product_template.id,
+            'attribute_id': attribute.id,
+            'value_ids': [Command.set(attribute.value_ids.ids)]
+        } for attribute in attributes])
+        self.assertEqual(product_template.product_variant_count, 4)
+        c1, c2, c3 = self.env['product.product'].create([
+            {'name': f'Comp {i}'} for i in range(1, 4)
+        ])
+
+        # Check that optional lines (with a product_qty of 0) are ignored -> Valid
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': product_template.id,
+            'product_uom_id': product_template.uom_id.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'byproduct_ids': [
+                Command.create({'product_id': c1.id, 'product_qty': 1, 'cost_share': 100}),
+                Command.create({'product_id': c2.id, 'product_qty': 0, 'cost_share': 100}),
+            ],
+        })
+
+        # All possible variant combination sum up to 100 cost_share -> Valid
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': product_template.id,
+            'product_uom_id': product_template.uom_id.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'byproduct_ids': [
+                Command.create({'product_id': c1.id, 'product_qty': 1, 'cost_share': 30, 'bom_product_template_attribute_value_ids': [
+                    Command.link(size_attribute_lines.product_template_value_ids[0].id)
+                ]}),  # S
+                Command.create({'product_id': c1.id, 'product_qty': 1, 'cost_share': 15, 'bom_product_template_attribute_value_ids': [
+                    Command.link(size_attribute_lines.product_template_value_ids[1].id)
+                ]}),  # M
+                Command.create({'product_id': c2.id, 'product_qty': 1, 'cost_share': 15, 'bom_product_template_attribute_value_ids': [
+                    Command.link(size_attribute_lines.product_template_value_ids[1].id)
+                ]}),  # M
+                Command.create({'product_id': c2.id, 'product_qty': 1, 'cost_share': 70}),  # All attributes
+            ],
+        })
+
+        # Set up fails for M, Blue only (total cost_share of 130) -> only valid if this variants do not exist
+        with self.assertRaises(UserError):
+            self.env['mrp.bom'].create({
+                'product_tmpl_id': product_template.id,
+                'product_uom_id': product_template.uom_id.id,
+                'product_qty': 1.0,
+                'type': 'normal',
+                'byproduct_ids': [
+                    Command.create({'product_id': c1.id, 'product_qty': 1, 'cost_share': 30, 'bom_product_template_attribute_value_ids': [
+                        Command.link(size_attribute_lines.product_template_value_ids[1].id),
+                    ]}),  # M
+                    Command.create({'product_id': c2.id, 'product_qty': 1, 'cost_share': 30, 'bom_product_template_attribute_value_ids': [
+                        Command.link(color_attribute_lines.product_template_value_ids[0].id),
+                    ]}),  # Blue
+                    Command.create({'product_id': c3.id, 'product_qty': 1, 'cost_share': 70}),  # All attributes
+                ],
+            })
+        # Keep only the S Blue and the M Red variant
+        product_template.product_variant_ids[1:3].action_archive()
+        self.assertEqual(product_template.product_variant_count, 2)
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': product_template.id,
+            'product_uom_id': product_template.uom_id.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'byproduct_ids': [
+                    Command.create({'product_id': c1.id, 'product_qty': 1, 'cost_share': 30, 'bom_product_template_attribute_value_ids': [
+                        Command.link(size_attribute_lines.product_template_value_ids[1].id),
+                    ]}),  # M
+                    Command.create({'product_id': c2.id, 'product_qty': 1, 'cost_share': 30, 'bom_product_template_attribute_value_ids': [
+                        Command.link(color_attribute_lines.product_template_value_ids[0].id),
+                    ]}),  # Blue
+                    Command.create({'product_id': c3.id, 'product_qty': 1, 'cost_share': 70}),  # All attributes
+            ],
+        })

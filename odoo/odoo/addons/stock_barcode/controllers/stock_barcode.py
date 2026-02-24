@@ -6,7 +6,7 @@ from collections import defaultdict
 
 from odoo import fields, http, _
 from odoo.http import request
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import pdf, split_every
 from odoo.tools.misc import file_open
@@ -22,17 +22,22 @@ class StockBarcodeController(http.Controller):
         """
         barcode_type = None
         nomenclature = request.env.company.nomenclature_id
-        parsed_results = nomenclature.parse_barcode(barcode)
+        try:
+            parsed_results = nomenclature.parse_barcode(barcode)
+        except ValidationError:
+            parsed_results = False
         if parsed_results and nomenclature.is_gs1_nomenclature:
             # search with the last feasible rule
             for result in parsed_results[::-1]:
-                if result['rule'].type in ['product', 'package', 'location', 'dest_location']:
-                    barcode_type = result['rule'].type
+                if result['type'] in ['product', 'package', 'location', 'dest_location']:
+                    barcode_type = result['type']
                     break
 
         # Alias support
         elif parsed_results:
-            barcode = parsed_results.get('code', barcode)
+            for res in parsed_results if isinstance(parsed_results, list) else [parsed_results]:
+                barcode = res.get('code', barcode)
+                break
 
         if not barcode_type:
             ret_open_picking = self._try_open_picking(barcode)
@@ -76,7 +81,7 @@ class StockBarcodeController(http.Controller):
         if not res_id:
             return request.env[model].barcode_write(write_vals)
         target_record = request.env[model].browse(res_id)
-        target_record.write({write_field: write_vals})
+        target_record.with_context(avoid_putaway_rules=True).write({write_field: write_vals})
         return target_record._get_stock_barcode_data()
 
     @http.route('/stock_barcode/get_barcode_data', type='jsonrpc', auth='user')
@@ -117,6 +122,7 @@ class StockBarcodeController(http.Controller):
         }
         quant_count = request.env['stock.quant'].search_count([
             '|', ('user_id', '=', user.id), ('user_id', '=', False),
+            ("company_id", "=", self._get_allowed_company_ids()[0]),
             ("location_id.usage", "in", ["internal", "transit"]),
             ("inventory_date", "<=", fields.Date.context_today(user)),
             ("inventory_quantity_set", "=", False),
@@ -296,12 +302,13 @@ class StockBarcodeController(http.Controller):
                 'action': {
                     'name': product_display_name,
                     'res_model': 'stock.quant',
-                    'views': [(kanban_view_id, 'kanban'), (tree_view_id, 'list')],
+                    'views': [(tree_view_id, 'list'), (kanban_view_id, 'kanban')],
                     'type': 'ir.actions.act_window',
                     'domain': [('product_id', '=', product_id)],
                     'context': {
                         'search_default_internal_loc': True,
                     },
+                    'mobile_view_mode': 'kanban',
                 }
             }
 

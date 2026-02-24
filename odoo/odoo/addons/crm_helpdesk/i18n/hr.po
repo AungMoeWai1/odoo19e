@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* crm_helpdesk
+# * crm_helpdesk
 #
 # Translators:
 # Stjepan Lovasić <stjepan.lovasic@gmail.com>, 2022
@@ -10,47 +10,77 @@
 # Davor Bojkić <davor.bojkic@storm.hr>, 2022
 # Karolina Tonković <karolina.tonkovic@storm.hr>, 2022
 # Tina Milas, 2022
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 16:01+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Tina Milas, 2022\n"
-"Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
+"POT-Creation-Date: 2025-12-30 18:42+0000\n"
+"PO-Revision-Date: 2025-11-16 05:25+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Croatian <https://translate.odoo.com/projects/odoo-19/"
+"crm_helpdesk/hr/>\n"
 "Language: hr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: crm_helpdesk
-#: model_terms:ir.ui.view,arch_db:crm_helpdesk.helpdesk_ticket_to_lead_view_form
-msgid "Convert"
-msgstr ""
+#. odoo-python
+#: code:addons/crm_helpdesk/wizard/helpdesk_ticket_to_lead.py:0
+msgid "An archived ticket cannot be converted into a lead."
+msgstr "Arhivirana prijava ne može se pretvoriti u potencijal."
+
+#. module: crm_helpdesk
+#: model:ir.model.fields,field_description:crm_helpdesk.field_helpdesk_ticket_to_lead__convert_to
+msgid "Conversion Action"
+msgstr "Akcija konverzije"
 
 #. module: crm_helpdesk
 #: model:ir.model,name:crm_helpdesk.model_helpdesk_ticket_to_lead
 #: model_terms:ir.ui.view,arch_db:crm_helpdesk.helpdesk_ticket_to_lead_view_form
 msgid "Convert Ticket to Lead"
-msgstr ""
+msgstr "Pretvori prijavu u potencijal"
 
 #. module: crm_helpdesk
-#: model:ir.actions.act_window,name:crm_helpdesk.helpdesk_ticket_to_lead_action
+#. odoo-python
+#: code:addons/crm_helpdesk/models/helpdesk_ticket.py:0
+#: model_terms:ir.ui.view,arch_db:crm_helpdesk.helpdesk_ticket_to_lead_view_form
+#: model_terms:ir.ui.view,arch_db:crm_helpdesk.helpdesk_ticket_view_form_inherited
 msgid "Convert to Lead"
-msgstr ""
+msgstr "Pretvori u potencijal"
+
+#. module: crm_helpdesk
+#. odoo-python
+#: code:addons/crm_helpdesk/models/helpdesk_ticket.py:0
+#: model_terms:ir.ui.view,arch_db:crm_helpdesk.helpdesk_ticket_to_lead_view_form
+#: model_terms:ir.ui.view,arch_db:crm_helpdesk.helpdesk_ticket_view_form_inherited
+msgid "Convert to Opportunity"
+msgstr "Pretvori u priliku"
 
 #. module: crm_helpdesk
 #: model:ir.actions.act_window,name:crm_helpdesk.crm_lead_convert2ticket_action
 #: model_terms:ir.ui.view,arch_db:crm_helpdesk.crm_lead_convert2ticket_view_form
 #: model_terms:ir.ui.view,arch_db:crm_helpdesk.crm_lead_view_form
 msgid "Convert to Ticket"
-msgstr ""
+msgstr "Pretvori u prijavu"
+
+#. module: crm_helpdesk
+#: model:ir.model.fields.selection,name:crm_helpdesk.selection__helpdesk_ticket_to_lead__convert_to__convert
+msgid "Convert to opportunity"
+msgstr "Pretvori u priliku"
 
 #. module: crm_helpdesk
 #: model_terms:ir.ui.view,arch_db:crm_helpdesk.crm_lead_convert2ticket_view_form
 msgid "Create Ticket"
+msgstr "Kreiraj prijavu"
+
+#. module: crm_helpdesk
+#: model:ir.model,website_form_label:crm_helpdesk.model_helpdesk_ticket
+msgid "Create a Ticket"
 msgstr ""
 
 #. module: crm_helpdesk
@@ -81,10 +111,11 @@ msgstr "Kupac"
 #: model_terms:ir.ui.view,arch_db:crm_helpdesk.crm_lead_convert2ticket_view_form
 #: model_terms:ir.ui.view,arch_db:crm_helpdesk.helpdesk_ticket_to_lead_view_form
 msgid "Discard"
-msgstr ""
+msgstr "Odbaci"
 
 #. module: crm_helpdesk
 #: model:ir.model.fields,field_description:crm_helpdesk.field_crm_lead_convert2ticket__display_name
+#: model:ir.model.fields,field_description:crm_helpdesk.field_helpdesk_ticket__display_name
 #: model:ir.model.fields,field_description:crm_helpdesk.field_helpdesk_ticket_to_lead__display_name
 msgid "Display Name"
 msgstr "Naziv"
@@ -95,15 +126,30 @@ msgid "Do not link to a customer"
 msgstr "Bez poveznice s partnerom"
 
 #. module: crm_helpdesk
+#: model:ir.model.fields,field_description:crm_helpdesk.field_helpdesk_ticket_to_lead__force_assignment
+msgid "Force assignment"
+msgstr ""
+
+#. module: crm_helpdesk
 #: model:ir.model,name:crm_helpdesk.model_helpdesk_ticket
 msgid "Helpdesk Ticket"
 msgstr "Prijava podrške"
 
 #. module: crm_helpdesk
 #: model:ir.model.fields,field_description:crm_helpdesk.field_crm_lead_convert2ticket__id
+#: model:ir.model.fields,field_description:crm_helpdesk.field_helpdesk_ticket__id
 #: model:ir.model.fields,field_description:crm_helpdesk.field_helpdesk_ticket_to_lead__id
 msgid "ID"
 msgstr "ID"
+
+#. module: crm_helpdesk
+#: model:ir.model.fields,help:crm_helpdesk.field_helpdesk_ticket_to_lead__force_assignment
+msgid ""
+"If checked, forces salesman to be updated on updated opportunities even if "
+"already set."
+msgstr ""
+"Ako je označeno, prisiljava prodajnog predstavnika da bude obaviješten o "
+"ažuriranim prilikama, čak i ako je već postavljen."
 
 #. module: crm_helpdesk
 #: model:ir.model.fields,field_description:crm_helpdesk.field_crm_lead_convert2ticket__write_uid
@@ -126,12 +172,18 @@ msgstr "Potencijal"
 #. odoo-python
 #: code:addons/crm_helpdesk/wizard/crm_lead_convert2ticket.py:0
 msgid "Lead Converted"
-msgstr ""
+msgstr "Potencijal pretvoren"
 
 #. module: crm_helpdesk
 #: model:ir.model,name:crm_helpdesk.model_crm_lead_convert2ticket
 msgid "Lead convert to Ticket"
 msgstr ""
+
+#. module: crm_helpdesk
+#. odoo-python
+#: code:addons/crm_helpdesk/wizard/crm_lead_convert2ticket.py:0
+msgid "Lead converted into ticket %s"
+msgstr "Potencijal pretvoren u prijavu %s"
 
 #. module: crm_helpdesk
 #. odoo-python
@@ -143,6 +195,12 @@ msgstr "Trag kreiran"
 #: model:ir.model.fields.selection,name:crm_helpdesk.selection__helpdesk_ticket_to_lead__action__exist
 msgid "Link to an existing customer"
 msgstr "Veza na postojećeg partnera"
+
+#. module: crm_helpdesk
+#. odoo-python
+#: code:addons/crm_helpdesk/wizard/helpdesk_ticket_to_lead.py:0
+msgid "Opportunity created"
+msgstr "prilika kreirana"
 
 #. module: crm_helpdesk
 #: model:ir.model.fields,field_description:crm_helpdesk.field_helpdesk_ticket_to_lead__action
@@ -168,14 +226,14 @@ msgstr "Tim"
 #. module: crm_helpdesk
 #. odoo-python
 #: code:addons/crm_helpdesk/wizard/helpdesk_ticket_to_lead.py:0
-msgid "The archived ticket can not converted as lead."
-msgstr ""
+msgid "This lead has been created from ticket: %s"
+msgstr "Ovaj potencijal je kreiran iz prijave: %s"
 
 #. module: crm_helpdesk
 #. odoo-python
 #: code:addons/crm_helpdesk/wizard/helpdesk_ticket_to_lead.py:0
-msgid "This lead has been created from ticket: %s"
-msgstr ""
+msgid "This opportunity has been created from ticket: %s"
+msgstr "Ovaj prilika je kreirana iz prijave: %s"
 
 #. module: crm_helpdesk
 #: model:ir.model.fields,field_description:crm_helpdesk.field_helpdesk_ticket_to_lead__ticket_id
@@ -186,15 +244,16 @@ msgstr "Prijava"
 #. odoo-python
 #: code:addons/crm_helpdesk/wizard/helpdesk_ticket_to_lead.py:0
 msgid "Ticket Converted"
-msgstr ""
-
-#. module: crm_helpdesk
-#: model:ir.model.fields,field_description:crm_helpdesk.field_crm_lead_convert2ticket__ticket_type_id
-msgid "Ticket Type"
-msgstr "Vrsta ulaznice"
+msgstr "Prijava pretvorena"
 
 #. module: crm_helpdesk
 #. odoo-python
 #: code:addons/crm_helpdesk/wizard/crm_lead_convert2ticket.py:0
-msgid "Ticket created"
+msgid "Ticket Created"
 msgstr "Kreirana prijava"
+
+#~ msgid "Ticket Type"
+#~ msgstr "Vrsta ulaznice"
+
+#~ msgid "Ticket created"
+#~ msgstr "Kreirana prijava"

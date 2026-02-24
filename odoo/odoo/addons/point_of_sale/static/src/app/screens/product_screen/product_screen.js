@@ -73,7 +73,7 @@ export class ProductScreen extends Component {
 
         onWillRender(() => {
             // If its a shared order it can be paid from another POS
-            if (this.currentOrder?.state !== "draft") {
+            if (this.currentOrder?.state !== "draft" && !this.isValidatingOrder) {
                 this.pos.addNewOrder();
             }
         });
@@ -194,7 +194,7 @@ export class ProductScreen extends Component {
         return this.pos.getOrder();
     }
     get total() {
-        return this.env.utils.formatCurrency(this.currentOrder?.getTotalWithTax() ?? 0);
+        return this.currentOrder?.currencyDisplayPrice || 0;
     }
     get items() {
         return this.env.utils.formatProductQty(
@@ -289,6 +289,7 @@ export class ProductScreen extends Component {
     async _barcodeGS1Action(parsed_results) {
         const productBarcode = parsed_results.find((element) => element.type === "product");
         const lotBarcode = parsed_results.find((element) => element.type === "lot");
+        const qty = parsed_results.find((element) => element.type === "quantity");
         const product = await this._getProductByBarcode(productBarcode);
 
         if (!product) {
@@ -297,11 +298,17 @@ export class ProductScreen extends Component {
             );
             return;
         }
+        const vals = { product_id: product, product_tmpl_id: product.product_tmpl_id };
+        if (
+            qty &&
+            product.uom_id &&
+            qty.rule?.associated_uom_id &&
+            product.uom_id.id == qty.rule.associated_uom_id[0]
+        ) {
+            vals.qty = qty.value;
+        }
 
-        await this.pos.addLineToCurrentOrder(
-            { product_id: product, product_tmpl_id: product.product_tmpl_id },
-            { code: lotBarcode }
-        );
+        await this.pos.addLineToCurrentOrder(vals, { code: lotBarcode });
         this.numberBuffer.reset();
         this.showOptionalProductPopupIfNeeded(product);
     }
@@ -312,10 +319,6 @@ export class ProductScreen extends Component {
     switchPane() {
         this.pos.scanning = false;
         this.pos.switchPane();
-    }
-
-    getProductPrice(product) {
-        return this.pos.getProductPrice(product, false, true);
     }
 
     getProductImage(product) {
@@ -406,7 +409,12 @@ export class ProductScreen extends Component {
     }
 
     async fastValidate(paymentMethod) {
-        await this.pos.validateOrderFast(paymentMethod);
+        try {
+            this.isValidatingOrder = true;
+            await this.pos.validateOrderFast(paymentMethod);
+        } finally {
+            this.isValidatingOrder = false;
+        }
     }
 }
 

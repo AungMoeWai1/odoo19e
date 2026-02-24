@@ -3,13 +3,16 @@
 # * theme_bewise
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# DeepL <noreply-mt-deepl@weblate.org>, 2025.
+# Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-01 12:57+0000\n"
-"PO-Revision-Date: 2025-09-18 02:51+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2025-10-09 10:55+0000\n"
+"PO-Revision-Date: 2025-11-22 19:40+0000\n"
+"Last-Translator: Odoo Turkish Import <dyki+tr@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
 "theme_bewise/tr/>\n"
 "Language: tr\n"
@@ -87,12 +90,12 @@ msgstr "Her yıl 3.000 öğrenci mezun oluyor ve 2 ay içinde iş buluyor."
 #. module: theme_bewise
 #: model_terms:theme.ir.ui.view,arch:theme_bewise.s_numbers_boxed
 msgid "30+"
-msgstr ""
+msgstr "30'dan fazla"
 
 #. module: theme_bewise
 #: model_terms:theme.ir.ui.view,arch:theme_bewise.s_numbers_boxed
 msgid "45%"
-msgstr ""
+msgstr "%45"
 
 #. module: theme_bewise
 #: model_terms:theme.ir.ui.view,arch:theme_bewise.s_numbers
@@ -123,16 +126,24 @@ msgstr "<b>Tony Fred</b>"
 #: model_terms:theme.ir.ui.view,arch:theme_bewise.s_color_blocks_2
 msgid ""
 "<br/>\n"
-"        Are you searching for a school where cutting-edge programmes are taught, in a continually evolving environment and located in the heart of a dynamic city? You have just found it!\n"
+"        Are you searching for a school where cutting-edge programmes are "
+"taught, in a continually evolving environment and located in the heart of a "
+"dynamic city? You have just found it!\n"
 "        <br/>\n"
 "        <br/>"
 msgstr ""
+"<br/>\n"
+"        Dinamik bir şehrin kalbinde yer alan ve sürekli gelişen bir ortamda "
+"en yeni programların öğretildiği bir okul mu arıyorsunuz? Buldunuz işte!\n"
+"       <br/>\n"
+"        <br/>"
 
 #. module: theme_bewise
 #: model_terms:theme.ir.ui.view,arch:theme_bewise.s_text_image
 msgid ""
 "<br/>\n"
-"        Teachers are selected among experts of their domains. They are not just professors, they are professionals in their field of expertise."
+"        Teachers are selected among experts of their domains. They are not "
+"just professors, they are professionals in their field of expertise."
 msgstr ""
 "<br/>\n"
 "        Öğretmenler, kendi alanlarında uzman kişiler arasından seçilir. "
@@ -143,16 +154,25 @@ msgstr ""
 #: model_terms:theme.ir.ui.view,arch:theme_bewise.s_color_blocks_2
 msgid ""
 "<br/>\n"
-"        The small and modern campus is only a 10-minute walk away from the city centre and is easily accessible by car and public transport. It is also close to the train stations.\n"
+"        The small and modern campus is only a 10-minute walk away from the "
+"city centre and is easily accessible by car and public transport. It is also "
+"close to the train stations.\n"
 "        <br/>\n"
 "        <br/>"
 msgstr ""
+"<br/>\n"
+"        Küçük ve modern kampüs, şehir merkezine sadece 10 dakikalık yürüme "
+"mesafesindedir ve araba ve toplu taşıma araçlarıyla kolayca ulaşılabilir. "
+"Tren istasyonlarına da yakındır.\n"
+"       <br/>\n"
+"        <br/>"
 
 #. module: theme_bewise
 #: model_terms:theme.ir.ui.view,arch:theme_bewise.s_image_text
 msgid ""
 "<br/>\n"
-"        We make sure that everyone blossoms. We keep a human size in a warm and modern setting. All students benefit from individualised support."
+"        We make sure that everyone blossoms. We keep a human size in a warm "
+"and modern setting. All students benefit from individualised support."
 msgstr ""
 "<br/>\n"
 "        Herkesin potansiyelini ortaya çıkarmasını sağlıyoruz. Samimi ve "
@@ -168,12 +188,17 @@ msgid ""
 "research opportunities, we empower you to achieve your academic goals and "
 "prepare for a successful future.<br/><br/>"
 msgstr ""
+"<br/>Öğreniminizi yükseltmek için tasarlanmış bir üniversite deneyimini "
+"keşfedin. Son teknoloji tesisler ve uzman öğretim üyeleriyle, bilginin "
+"geliştiği bir ortam sağlıyoruz. Yenilikçi programlardan uygulamalı araştırma "
+"fırsatlarına kadar, akademik hedeflerinize ulaşmanız ve başarılı bir "
+"geleceğe hazırlanmanız için sizi güçlendiriyoruz.<br/><br/>"
 
 #. module: theme_bewise
 #: model_terms:theme.ir.ui.view,arch:theme_bewise.s_empowerment
 msgid ""
-"<br/>Empowering future leaders with exceptional education and "
-"opportunities.<br/><br/>"
+"<br/>Empowering future leaders with exceptional education and opportunities."
+"<br/><br/>"
 msgstr ""
 "<br/>Geleceğin liderlerine üstün eğitim ve fırsatlar sunuyoruz.<br/><br/>"
 
@@ -197,16 +222,18 @@ msgid ""
 msgstr ""
 "<font class=\"bg-o-color-4\">İyi metin, ürününüzün veya hizmetinizin "
 "müşterilerinize nasıl fayda sağladığını anlamakla başlar. Basit kelimeler, "
-"gösterişli ve ağdalı dilden çok daha etkili iletişim kurulmasını "
-"sağlar.</font>"
+"gösterişli ve ağdalı dilden çok daha etkili iletişim kurulmasını sağlar.</"
+"font>"
 
 #. module: theme_bewise
 #: model_terms:theme.ir.ui.view,arch:theme_bewise.s_big_number
 msgid ""
 "<font class=\"text-gradient\" style=\"background-image: linear-"
-"gradient(0deg, var(--rgba(0,0,0,0.25)) 0%, var(--o-color-4) "
-"90%);\">60+</font>"
+"gradient(0deg, var(--rgba(0,0,0,0.25)) 0%, var(--o-color-4) 90%);\">60+</"
+"font>"
 msgstr ""
+"<font class=\"text-gradient\" style=\"background-image: linear-gradient("
+"0deg, var(--rgba(0,0,0,0.25)) 0%, var(--o-color-4) 90%);\">%);\">60+</font>"
 
 #. module: theme_bewise
 #: model_terms:theme.ir.ui.view,arch:theme_bewise.s_empowerment
@@ -230,8 +257,8 @@ msgstr "Çarpıcı bir başlık"
 #. module: theme_bewise
 #: model_terms:theme.ir.ui.view,arch:theme_bewise.s_pricelist_boxed
 msgid ""
-"A variety of pencils and pens provided for writing assignments, note-taking,"
-" and completing tests and quizzes."
+"A variety of pencils and pens provided for writing assignments, note-taking, "
+"and completing tests and quizzes."
 msgstr ""
 "Yazılı ödevler, not alma ve test-quiz çözümü için sağlanan çeşitli kalem ve "
 "kurşun kalemler."
@@ -311,8 +338,8 @@ msgstr "Kimya Profesörü"
 #. module: theme_bewise
 #: model_terms:theme.ir.ui.view,arch:theme_bewise.s_pricelist_boxed
 msgid ""
-"Complete set of art supplies including colored pencils, markers, paints, and"
-" brushes to encourage creativity in art classes."
+"Complete set of art supplies including colored pencils, markers, paints, and "
+"brushes to encourage creativity in art classes."
 msgstr ""
 "Sanat derslerinde yaratıcılığı teşvik eden boya kalemleri, keçeli kalemler, "
 "boyalar ve fırçaları içeren eksiksiz sanat malzemesi seti."
@@ -333,7 +360,8 @@ msgstr ""
 
 #. module: theme_bewise
 #: model_terms:theme.ir.ui.view,arch:theme_bewise.s_empowerment
-msgid "Discover Our Courses   <i class=\"fa fa-long-arrow-right\" role=\"img\"/>"
+msgid ""
+"Discover Our Courses   <i class=\"fa fa-long-arrow-right\" role=\"img\"/>"
 msgstr ""
 "Kurslarımızı Keşfedin   <i class=\"fa fa-long-arrow-right\" role=\"img\"/>"
 
@@ -355,12 +383,12 @@ msgstr "Yeni kampüsümüzü <br/>keşfedin"
 #. module: theme_bewise
 #: model_terms:theme.ir.ui.view,arch:theme_bewise.s_carousel_intro
 msgid "Discover your potential"
-msgstr ""
+msgstr "Potansiyelinizi keşfedin"
 
 #. module: theme_bewise
 #: model:ir.model.fields,field_description:theme_bewise.field_theme_utils__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "İsim Göster"
 
 #. module: theme_bewise
 #: model_terms:theme.ir.ui.view,arch:theme_bewise.s_key_images
@@ -404,8 +432,8 @@ msgstr "Genç zihinleri güçlendirin"
 #. module: theme_bewise
 #: model_terms:theme.ir.ui.view,arch:theme_bewise.s_striped_center_top
 msgid ""
-"Empower young minds with quality education and engaging learning experiences"
-" that nurture creativity, play, and academic excellence."
+"Empower young minds with quality education and engaging learning experiences "
+"that nurture creativity, play, and academic excellence."
 msgstr ""
 "Yaratıcılığı, oyunla öğrenmeyi ve akademik başarıyı besleyen kaliteli eğitim "
 "ve ilgi çekici öğrenme deneyimleriyle genç zihinleri güçlendirin."
@@ -418,12 +446,16 @@ msgid ""
 "an environment where knowledge and innovation thrive.<br/><br/> Prepare for "
 "a future of success."
 msgstr ""
+"Üniversite öğrencileri için tasarlanmış kapsamlı programlarımızla akademik "
+"yolculuğunuzu güçlendirin. Araştırma fırsatlarından kampüs yaşamına kadar, "
+"bilgi ve yeniliğin geliştiği bir ortamı teşvik ediyoruz.<br/><br/> Başarılı "
+"bir geleceğe hazırlanın."
 
 #. module: theme_bewise
 #: model_terms:theme.ir.ui.view,arch:theme_bewise.s_card_offset
 msgid ""
-"Empower your academic journey with our comprehensive university programs. We"
-" foster a dynamic environment that encourages learning, innovation, and "
+"Empower your academic journey with our comprehensive university programs. We "
+"foster a dynamic environment that encourages learning, innovation, and "
 "personal growth."
 msgstr ""
 "Kapsamlı üniversite programlarımızla akademik yolculuğunuzu güçlendirin. "
@@ -457,8 +489,8 @@ msgstr "Akademik geleceğinize güç katıyoruz"
 #. module: theme_bewise
 #: model_terms:theme.ir.ui.view,arch:theme_bewise.s_cards_grid
 msgid ""
-"Engage in our cutting-edge learning programs that offer specialized courses,"
-" hands-on experiences for in-depth exploration in your field of interest."
+"Engage in our cutting-edge learning programs that offer specialized courses, "
+"hands-on experiences for in-depth exploration in your field of interest."
 msgstr ""
 "İlgi alanınıza yönelik özel kurslar ve uygulamalı deneyimler sunan ileri "
 "düzey öğrenme programlarımızla bilgilerinizi derinleştirin."
@@ -475,7 +507,7 @@ msgstr ""
 #. module: theme_bewise
 #: model_terms:theme.ir.ui.view,arch:theme_bewise.s_split_intro
 msgid "Enhance your<br/>academic journey"
-msgstr ""
+msgstr "<br/>akademik yolculuğunuzu geliştirin"
 
 #. module: theme_bewise
 #: model_terms:theme.ir.ui.view,arch:theme_bewise.s_striped_center_top
@@ -494,7 +526,7 @@ msgstr ""
 #. module: theme_bewise
 #: model_terms:theme.ir.ui.view,arch:theme_bewise.s_pricelist_boxed
 msgid "Essential School Supplies"
-msgstr ""
+msgstr "Zorunlu Okul Malzemeleri"
 
 #. module: theme_bewise
 #: model_terms:theme.ir.ui.view,arch:theme_bewise.s_key_benefits
@@ -559,7 +591,8 @@ msgstr ""
 #. module: theme_bewise
 #: model_terms:theme.ir.ui.view,arch:theme_bewise.s_images_mosaic
 msgid "Explore our new courses and programs for your educational journey."
-msgstr "Eğitim yolculuğunuz için yeni kurslarımızı ve programlarımızı keşfedin."
+msgstr ""
+"Eğitim yolculuğunuz için yeni kurslarımızı ve programlarımızı keşfedin."
 
 #. module: theme_bewise
 #: model_terms:theme.ir.ui.view,arch:theme_bewise.s_cards_grid
@@ -634,12 +667,17 @@ msgid ""
 "design for undergraduate and graduate students. He is active in Problem and "
 "Project based learning. He is the promoter of 8 doctoral theses."
 msgstr ""
+"Mekanik, Malzeme ve İnşaat Mühendisliği Enstitüsü'nde 2000 yılından beri "
+"profesör olarak görev yapmaktadır. Lisans ve yüksek lisans öğrencilerine "
+"mekanik çizim ve mekanik tasarım dersleri vermektedir. Problem ve Proje "
+"Yönetimi tabanlı öğrenme konusunda aktiftir. Kendisi 8 doktora tezinin "
+"destekleyicisidir."
 
 #. module: theme_bewise
 #: model_terms:theme.ir.ui.view,arch:theme_bewise.s_pricelist_boxed
 msgid ""
-"High-quality lined notebooks for taking notes, available for all students to"
-" support their daily learning needs."
+"High-quality lined notebooks for taking notes, available for all students to "
+"support their daily learning needs."
 msgstr ""
 "Tüm öğrencilerin günlük öğrenim ihtiyaçlarına yönelik, not almak için ideal "
 "yüksek kaliteli çizgili defterler."
@@ -648,15 +686,19 @@ msgstr ""
 #: model_terms:theme.ir.ui.view,arch:theme_bewise.s_quotes_carousel
 msgid ""
 "I have learned a lot, and I have realised professional projects thanks to "
-"the support of the mentors! The team is always at the top and always looking"
-" for solutions to problems, I felt accompanied and supported! It's not easy "
+"the support of the mentors! The team is always at the top and always looking "
+"for solutions to problems, I felt accompanied and supported! It's not easy "
 "every day, but it's a great adventure!"
 msgstr ""
+"Mentorların desteği sayesinde çok şey öğrendim ve profesyonel proje yönetimi "
+"gerçekleştirdim! Ekip her zaman zirvede ve her zaman sorunlara çözüm arıyor, "
+"kendimi eşlik ediyor ve destekleniyor hissettim! Her gün kolay değil ama "
+"harika bir macera!"
 
 #. module: theme_bewise
 #: model:ir.model.fields,field_description:theme_bewise.field_theme_utils__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: theme_bewise
 #: model_terms:theme.ir.ui.view,arch:theme_bewise.s_company_team
@@ -710,9 +752,10 @@ msgstr "Daha parlak bir gelecek inşa etmek için bize katılın."
 #. module: theme_bewise
 #: model_terms:theme.ir.ui.view,arch:theme_bewise.s_text_image
 msgid ""
-"Journalists, directors, developers, etc. working effectively in their fields"
-" of excellence."
-msgstr "Alanlarında etkili çalışan gazeteciler, yönetmenler, geliştiriciler vb."
+"Journalists, directors, developers, etc. working effectively in their fields "
+"of excellence."
+msgstr ""
+"Alanlarında etkili çalışan gazeteciler, yönetmenler, geliştiriciler vb."
 
 #. module: theme_bewise
 #: model_terms:theme.ir.ui.view,arch:theme_bewise.s_pricelist_boxed
@@ -793,8 +836,8 @@ msgstr "Defterler"
 #. module: theme_bewise
 #: model_terms:theme.ir.ui.view,arch:theme_bewise.s_company_team_detail
 msgid ""
-"Olivia Reed is a passionate mathematics teacher with a deep understanding of"
-" algebra, calculus, and mathematical modeling."
+"Olivia Reed is a passionate mathematics teacher with a deep understanding of "
+"algebra, calculus, and mathematical modeling."
 msgstr ""
 "Olivia Reed, cebir, kalkülüs ve matematiksel modelleme konularında derin "
 "bilgiye sahip tutkulu bir matematik öğretmenidir."
@@ -812,8 +855,8 @@ msgstr "Kurslarımız"
 #. module: theme_bewise
 #: model_terms:theme.ir.ui.view,arch:theme_bewise.s_freegrid
 msgid ""
-"Our educational programs are designed to empower students with the knowledge"
-" and skills they need for the future. Explore our innovative approach to "
+"Our educational programs are designed to empower students with the knowledge "
+"and skills they need for the future. Explore our innovative approach to "
 "learning and personal development."
 msgstr ""
 "Eğitim programlarımız, öğrencileri geleceğe hazırlamak için ihtiyaç "
@@ -886,7 +929,7 @@ msgstr "Derslerinizi <br/>tanıtın. Kolayca."
 #. module: theme_bewise
 #: model_terms:theme.ir.ui.view,arch:theme_bewise.s_wavy_grid
 msgid "Quality and Expertise"
-msgstr ""
+msgstr "Kalite ve Uzmanlık"
 
 #. module: theme_bewise
 #: model_terms:theme.ir.ui.view,arch:theme_bewise.s_key_benefits
@@ -925,7 +968,7 @@ msgstr "Bilimsel Hesap Makineleri"
 #. module: theme_bewise
 #: model_terms:theme.ir.ui.view,arch:theme_bewise.s_striped_center_top
 msgid "Shaping Tomorrow's <br/>Game Changers"
-msgstr ""
+msgstr "Yarının Oyun Değiştiricilerini Şekillendirin <br/>"
 
 #. module: theme_bewise
 #: model_terms:theme.ir.ui.view,arch:theme_bewise.s_card_offset
@@ -944,6 +987,9 @@ msgid ""
 "She has worked in various major law firms based in Brussels, as member and "
 "then head of their litigation/arbitration practice groups."
 msgstr ""
+"2006'dan beri Fransızca konuşulan Brüksel Barosu'nda avukatlık yapmaktadır. "
+"Brüksel'de bulunan çeşitli büyük hukuk bürolarında dava/tahkim uygulama "
+"gruplarının üyesi ve daha sonra başkanı olarak çalışmıştır."
 
 #. module: theme_bewise
 #: model_terms:theme.ir.ui.view,arch:theme_bewise.s_company_team_detail
@@ -967,12 +1013,12 @@ msgstr "Tabletler"
 #. module: theme_bewise
 #: model_terms:theme.ir.ui.view,arch:theme_bewise.s_key_benefits
 msgid "Tailored Academic Programs"
-msgstr ""
+msgstr "Özel Akademik Programlar"
 
 #. module: theme_bewise
 #: model_terms:theme.ir.ui.view,arch:theme_bewise.s_company_team
 msgid "Team leader professor"
-msgstr ""
+msgstr "Takım lideri profesör"
 
 #. module: theme_bewise
 #: model_terms:theme.ir.ui.view,arch:theme_bewise.s_quotes_carousel
@@ -1005,6 +1051,10 @@ msgid ""
 "degree in 1998 and 2004. After a post-doctoral experience  he joined the "
 "school as professor of mechatronics in 2006. In 2010, he became Head of IT."
 msgstr ""
+"Tony, 1998 ve 2004 yıllarında Elektrik ve Makine Mühendisliği alanında "
+"lisans ve doktora derecesi almıştır. Doktora sonrası deneyiminin ardından "
+"2006 yılında mekatronik profesörü olarak okula katıldı. 2010 yılında Bilgi "
+"İşlem Müdürü oldu."
 
 #. module: theme_bewise
 #: model_terms:theme.ir.ui.view,arch:theme_bewise.s_image_title
@@ -1020,7 +1070,7 @@ msgstr ""
 #. module: theme_bewise
 #: model_terms:theme.ir.ui.view,arch:theme_bewise.s_unveil
 msgid "Unlock Your Full Potential"
-msgstr ""
+msgstr "Tam Potansiyelinizi Ortaya Çıkarın"
 
 #. module: theme_bewise
 #: model_terms:theme.ir.ui.view,arch:theme_bewise.s_cta_box
@@ -1063,16 +1113,15 @@ msgstr "Öğrencilerimize sunduklarımız:"
 
 #. module: theme_bewise
 #: model_terms:theme.ir.ui.view,arch:theme_bewise.s_striped_center_top
-msgid ""
-"Where tradition meets innovation – a legacy of excellence in education."
+msgid "Where tradition meets innovation – a legacy of excellence in education."
 msgstr ""
 "Gelenek ile yeniliğin buluştuğu yer – eğitimde kusursuzluğun bir mirası."
 
 #. module: theme_bewise
 #: model_terms:theme.ir.ui.view,arch:theme_bewise.s_wavy_grid
 msgid ""
-"With extensive experience and deep academic knowledge, we offer insights and"
-" education that keep you ahead in your field of study."
+"With extensive experience and deep academic knowledge, we offer insights and "
+"education that keep you ahead in your field of study."
 msgstr ""
 "Geniş deneyim ve derin akademik bilgi birikimimizle, kendi alanınızda sizi "
 "bir adım öne taşıyacak içgörüler ve eğitim sunuyoruz."
@@ -1093,21 +1142,21 @@ msgid ""
 "Your success is our mission. Our support services are always available, "
 "ensuring you have a rewarding and enriching academic experience."
 msgstr ""
-"Başarınız bizim için bir misyon. Destek hizmetlerimiz her zaman ulaşılabilir;"
-" size tatmin edici ve zenginleştirici bir akademik deneyim sağlamak için "
-"buradayız."
+"Başarınız bizim için bir misyon. Destek hizmetlerimiz her zaman "
+"ulaşılabilir; size tatmin edici ve zenginleştirici bir akademik deneyim "
+"sağlamak için buradayız."
 
 #. module: theme_bewise
 #: model_terms:theme.ir.ui.view,arch:theme_bewise.s_big_number
 msgid "academic programs available"
-msgstr ""
+msgstr "kullanılabilir akademi̇k programlar"
 
 #. module: theme_bewise
 #: model_terms:theme.ir.ui.view,arch:theme_bewise.s_pricelist_boxed
 msgid "✽  Classroom Supplies"
-msgstr ""
+msgstr "✽ Sınıf Malzemeleri"
 
 #. module: theme_bewise
 #: model_terms:theme.ir.ui.view,arch:theme_bewise.s_pricelist_boxed
 msgid "✽  Technology Essentials"
-msgstr ""
+msgstr "✽ Teknoloji Temelleri"

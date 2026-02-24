@@ -210,7 +210,7 @@ class QualityCheck(models.Model):
     is_user_working = fields.Boolean(related="workorder_id.is_user_working")
     consumption = fields.Selection(related="workorder_id.consumption")
     working_state = fields.Selection(related="workorder_id.working_state")
-    is_deleted = fields.Boolean('Deleted in production')
+    is_deleted = fields.Boolean('Deleted in production')  # TODO DELETE in MASTER
 
     # Computed fields
     title = fields.Char('Title', compute='_compute_title')
@@ -314,7 +314,7 @@ class QualityCheck(models.Model):
             xml_id = 'stock.label_lot_template'
         else:
             xml_id = 'stock.action_report_lot_label'
-        res = self.env.ref(xml_id).report_action([self.workorder_id.finished_lot_ids.ids] * qty)
+        res = self.env.ref(xml_id).report_action(self.workorder_id.finished_lot_ids.ids * qty)
         res['id'] = self.env.ref(xml_id).id
         return res
 

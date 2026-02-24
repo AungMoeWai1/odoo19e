@@ -30,8 +30,6 @@ export class Call extends Record {
     }
 
     activity;
-    /** @type {string} */
-    country_code_from_phone;
     /** @type {luxon.DateTime} */
     create_date;
     /** @type {"incoming"|"outgoing"} */
@@ -41,6 +39,8 @@ export class Call extends Record {
     /** @type {luxon.DateTime} */
     end_date;
     partner_id;
+    /** @type {import("@mail/core/country_model").Country | undefined} */
+    phone_country_id = fields.One("res.country");
     /** @type {string} */
     phone_number;
     /** @type {luxon.DateTime} */
@@ -94,7 +94,9 @@ export class Call extends Record {
                 // example), the call may be stuck in the “calling” or “ongoing”
                 // state, meaning we can't rely on the state alone, hence the
                 // need to also check for the session.
-                return Boolean(this.store.env.services["voip.user_agent"].activeSession?.call.eq(this));
+                return Boolean(
+                    this.store.env.services["voip.user_agent"].activeSession?.call.eq(this)
+                );
             default:
                 return false;
         }

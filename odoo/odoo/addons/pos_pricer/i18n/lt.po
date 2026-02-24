@@ -1,19 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* pos_pricer
+# * pos_pricer
 #
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-03 12:21+0000\n"
-"PO-Revision-Date: 2025-07-03 12:21+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"POT-Creation-Date: 2026-01-22 18:41+0000\n"
+"PO-Revision-Date: 2025-11-16 13:38+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Lithuanian <https://translate.odoo.com/projects/odoo-19/"
+"pos_pricer/lt/>\n"
+"Language: lt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Plural-Forms: nplurals=3; plural=(n % 10 == 1 && (n % 100 < 11 || n % 100 > "
+"19)) ? 0 : ((n % 10 >= 2 && n % 10 <= 9 && (n % 100 < 11 || n % 100 > 19)) ? "
+"1 : 2);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: pos_pricer
 #: model:ir.model.constraint,message:pos_pricer.constraint_pricer_tag_name_unique
@@ -38,7 +44,7 @@ msgstr ""
 #. module: pos_pricer
 #: model:product.pricelist,name:pos_pricer.pricer_demo_pricelist
 msgid "Christmas"
-msgstr ""
+msgstr "Kalėdos"
 
 #. module: pos_pricer
 #: model:ir.model.fields,field_description:pos_pricer.field_pricer_store__create_or_update_products_url
@@ -49,13 +55,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_pricer.field_pricer_store__create_uid
 #: model:ir.model.fields,field_description:pos_pricer.field_pricer_tag__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Sukūrė"
 
 #. module: pos_pricer
 #: model:ir.model.fields,field_description:pos_pricer.field_pricer_store__create_date
 #: model:ir.model.fields,field_description:pos_pricer.field_pricer_tag__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Sukurta"
 
 #. module: pos_pricer
 #: model:ir.model.fields,help:pos_pricer.field_pricer_store__last_update_datetime
@@ -70,18 +76,30 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_pricer.field_product_template__display_name
 #: model:ir.model.fields,field_description:pos_pricer.field_stock_move__display_name
 msgid "Display Name"
+msgstr "Rodomas pavadinimas"
+
+#. module: pos_pricer
+#. odoo-python
+#: code:addons/pos_pricer/models/pricer_store.py:0
+msgid "Error"
 msgstr ""
 
 #. module: pos_pricer
 #. odoo-python
 #: code:addons/pos_pricer/models/pricer_store.py:0
-msgid "Error: %(status_code)s - %(message)s"
+msgid "Error: %(code)s - %(reason)s"
 msgstr ""
 
 #. module: pos_pricer
 #. odoo-python
 #: code:addons/pos_pricer/models/pricer_store.py:0
 msgid "Error: check Pricer credentials"
+msgstr ""
+
+#. module: pos_pricer
+#. odoo-python
+#: code:addons/pos_pricer/models/pricer_store.py:0
+msgid "Everything is already up to date with Pricer. No update needed."
 msgstr ""
 
 #. module: pos_pricer
@@ -98,7 +116,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_pricer.field_product_template__id
 #: model:ir.model.fields,field_description:pos_pricer.field_stock_move__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: pos_pricer
 #: model:ir.model.fields,help:pos_pricer.field_pricer_store__pricer_store_identifier
@@ -121,7 +139,7 @@ msgstr ""
 #. module: pos_pricer
 #: model:ir.model.fields,field_description:pos_pricer.field_pricer_store__last_update_datetime
 msgid "Last Update"
-msgstr ""
+msgstr "Paskutinis atnaujinimas"
 
 #. module: pos_pricer
 #: model:ir.model.fields,field_description:pos_pricer.field_pricer_store__last_update_status_message
@@ -132,13 +150,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_pricer.field_pricer_store__write_uid
 #: model:ir.model.fields,field_description:pos_pricer.field_pricer_tag__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Paskutinį kartą atnaujino"
 
 #. module: pos_pricer
 #: model:ir.model.fields,field_description:pos_pricer.field_pricer_store__write_date
 #: model:ir.model.fields,field_description:pos_pricer.field_pricer_tag__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Paskutinį kartą atnaujinta"
 
 #. module: pos_pricer
 #: model:ir.model.fields,field_description:pos_pricer.field_pricer_store__link_tags_url
@@ -174,7 +192,7 @@ msgstr ""
 #. module: pos_pricer
 #: model:ir.model,name:pos_pricer.model_pos_config
 msgid "Point of Sale Configuration"
-msgstr ""
+msgstr "Pardavimo taško konfigūracija"
 
 #. module: pos_pricer
 #: model:ir.model.fields,help:pos_pricer.field_product_product__on_sale_price
@@ -185,7 +203,7 @@ msgstr ""
 #: model:ir.ui.menu,name:pos_pricer.pos_menu_pricer_configuration
 #: model_terms:ir.ui.view,arch_db:pos_pricer.product_product_form_view_pricers
 msgid "Pricer"
-msgstr ""
+msgstr "Kainų nustatymo įrankis"
 
 #. module: pos_pricer
 #: model:ir.model.fields,field_description:pos_pricer.field_product_product__pricer_display_price
@@ -293,7 +311,7 @@ msgstr ""
 #. module: pos_pricer
 #: model:ir.model,name:pos_pricer.model_product_template
 msgid "Product"
-msgstr ""
+msgstr "Produktas"
 
 #. module: pos_pricer
 #. odoo-javascript
@@ -304,7 +322,7 @@ msgstr ""
 #. module: pos_pricer
 #: model:ir.model,name:pos_pricer.model_product_product
 msgid "Product Variant"
-msgstr ""
+msgstr "Produkto variantas"
 
 #. module: pos_pricer
 #: model:ir.model.fields,field_description:pos_pricer.field_pricer_store__dummy_prod_barcode
@@ -314,7 +332,7 @@ msgstr ""
 #. module: pos_pricer
 #: model:ir.model.fields,field_description:pos_pricer.field_pricer_store__product_ids
 msgid "Products"
-msgstr ""
+msgstr "Produktai"
 
 #. module: pos_pricer
 #: model_terms:ir.ui.view,arch_db:pos_pricer.pricer_pricer_store_form_view
@@ -339,7 +357,7 @@ msgstr ""
 #. module: pos_pricer
 #: model:ir.model,name:pos_pricer.model_stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "Atsargų perkėlimas"
 
 #. module: pos_pricer
 #: model:ir.model.fields,field_description:pos_pricer.field_pricer_store__name
@@ -382,8 +400,8 @@ msgstr ""
 #: model:ir.model.fields,help:pos_pricer.field_pricer_tag__pricer_store_id
 #: model:ir.model.fields,help:pos_pricer.field_product_product__pricer_store_id
 msgid ""
-"This product will be linked to and displayed on the Pricer tags of the store"
-" selected here"
+"This product will be linked to and displayed on the Pricer tags of the store "
+"selected here"
 msgstr ""
 
 #. module: pos_pricer
@@ -391,11 +409,6 @@ msgstr ""
 msgid ""
 "This product will be linked to and displayed on the Pricer tags with ids "
 "listed here. It is recommended to use a barcode scanner"
-msgstr ""
-
-#. module: pos_pricer
-#: model_terms:ir.ui.view,arch_db:pos_pricer.pricer_pricer_store_view_list
-msgid "Update all tags"
 msgstr ""
 
 #. module: pos_pricer

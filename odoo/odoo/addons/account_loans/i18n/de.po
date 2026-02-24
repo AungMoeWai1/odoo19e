@@ -3,13 +3,14 @@
 # * account_loans
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:25+0000\n"
-"PO-Revision-Date: 2025-09-15 21:12+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2025-12-30 18:42+0000\n"
+"PO-Revision-Date: 2026-02-14 10:03+0000\n"
+"Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/"
 "account_loans/de/>\n"
 "Language: de\n"
@@ -17,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: account_loans
 #: model_terms:ir.ui.view,arch_db:account_loans.account_loan_form_view
@@ -48,21 +49,23 @@ msgstr "30U/360"
 #: model_terms:ir.ui.view,arch_db:account_loans.account_loan_form_view
 msgid ""
 "<span class=\"oe_inline\" invisible=\"duration == 1\">months</span>\n"
-"                                        <span class=\"oe_inline\" invisible=\"duration != 1\">month</span>"
+"                                        <span class=\"oe_inline\" "
+"invisible=\"duration != 1\">month</span>"
 msgstr ""
 "<span class=\"oe_inline\" invisible=\"duration == 1\">Monate</span>\n"
-"                                        <span class=\"oe_inline\" invisible="
-"\"duration != 1\">Monat</span>"
+"                                        <span class=\"oe_inline\" "
+"invisible=\"duration != 1\">Monat</span>"
 
 #. module: account_loans
 #: model_terms:ir.ui.view,arch_db:account_loans.view_account_loan_compute_wizard
 msgid ""
 "<span class=\"oe_inline\" invisible=\"loan_term == 1\">years</span>\n"
-"                                    <span class=\"oe_inline\" invisible=\"loan_term != 1\">year</span>"
+"                                    <span class=\"oe_inline\" "
+"invisible=\"loan_term != 1\">year</span>"
 msgstr ""
 "<span class=\"oe_inline\" invisible=\"loan_term == 1\">Jahre</span>\n"
-"                                    <span class=\"oe_inline\" invisible="
-"\"loan_term != 1\">Jahr</span>"
+"                                    <span class=\"oe_inline\" "
+"invisible=\"loan_term != 1\">Jahr</span>"
 
 #. module: account_loans
 #: model_terms:ir.ui.view,arch_db:account_loans.view_account_loan_compute_wizard
@@ -97,7 +100,7 @@ msgstr "Steuererklärung"
 #. module: account_loans
 #: model:ir.model.fields,field_description:account_loans.field_account_loan__message_needaction
 msgid "Action Needed"
-msgstr "Aktion notwendig"
+msgstr "Aktion erforderlich"
 
 #. module: account_loans
 #: model:ir.model.fields,field_description:account_loans.field_account_loan__active
@@ -239,9 +242,11 @@ msgstr "Bestätigen"
 #. module: account_loans
 #: model:account.return.check.template,description:account_loans.account_return_check_template_loans_recording
 msgid ""
-"Confirm that all loans recorded in the accounts actually exist and match the"
-" loan agreements."
+"Confirm that all loans recorded in the accounts actually exist and match the "
+"loan agreements."
 msgstr ""
+"Bestätigen Sie, dass alle in den Konten erfassten Darlehen tatsächlich "
+"existieren und mit den Darlehensverträgen übereinstimmen."
 
 #. module: account_loans
 #: model:ir.model.fields,field_description:account_loans.field_account_loan__count_linked_assets
@@ -350,10 +355,16 @@ msgstr "Ende des Monats"
 #. module: account_loans
 #: model:account.return.check.template,description:account_loans.account_return_check_template_loans_classification
 msgid ""
-"Ensure that loans are properly classified as current vs. non-current, and disclosed in accordance with Belgian GAAP. \n"
+"Ensure that loans are properly classified as current vs. non-current, and "
+"disclosed in accordance with Belgian GAAP. \n"
 "Loans payable within 1 year → Account 42\n"
 "Loans > 1 year → Account 17"
 msgstr ""
+"Stellen Sie sicher, dass Darlehen ordnungsgemäß als kurzfristig oder "
+"langfristig klassifiziert und gemäß den belgischen allgemein anerkannten "
+"Rechnungslegungsgrundsätzen ausgewiesen werden.\n"
+"Innerhalb eines Jahres fällige Darlehen → Konto 42\n"
+"Darlehen > 1 Jahr → Konto 17"
 
 #. module: account_loans
 #: model:ir.model.fields,help:account_loans.field_account_loan_line__generated_move_ids
@@ -629,12 +640,12 @@ msgstr "Darlehensanalyse"
 #. module: account_loans
 #: model:account.return.check.template,name:account_loans.account_return_check_template_loans_classification
 msgid "Loans classification"
-msgstr ""
+msgstr "Klassifizierung von Darlehen"
 
 #. module: account_loans
 #: model:account.return.check.template,name:account_loans.account_return_check_template_loans_recording
 msgid "Loans recording"
-msgstr ""
+msgstr "Erfassung von Darlehen"
 
 #. module: account_loans
 #: model:ir.model.fields,field_description:account_loans.field_account_loan__long_term_account_id
@@ -649,7 +660,8 @@ msgstr "Langfristig"
 #. module: account_loans
 #: model_terms:ir.actions.act_window,help:account_loans.action_view_account_loans
 msgid "Manage Your Acquired Loans with Automated Adjustments."
-msgstr "Verwalten Sie Ihre erhaltenen Darlehen mit automatisierten Anpassungen."
+msgstr ""
+"Verwalten Sie Ihre erhaltenen Darlehen mit automatisierten Anpassungen."
 
 #. module: account_loans
 #: model:ir.model.fields,field_description:account_loans.field_account_loan__message_has_error
@@ -685,7 +697,7 @@ msgstr "Anzahl der Aktionen"
 #. module: account_loans
 #: model:ir.model.fields,field_description:account_loans.field_account_loan__message_has_error_counter
 msgid "Number of errors"
-msgstr "Anzahl der Fehler"
+msgstr "Anzahl Fehler"
 
 #. module: account_loans
 #: model:ir.model.fields,help:account_loans.field_account_loan__message_needaction_counter
@@ -695,7 +707,7 @@ msgstr "Anzahl der Nachrichten, die eine Aktion erfordern"
 #. module: account_loans
 #: model:ir.model.fields,help:account_loans.field_account_loan__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "Anzahl der Nachrichten mit Zustellungsfehler."
+msgstr "Anzahl Nachrichten mit Zustellungsfehler"
 
 #. module: account_loans
 #. odoo-python
@@ -914,8 +926,8 @@ msgid ""
 "The loan amount %(loan_amount)s should be equal to the sum of the "
 "principals: %(principal_sum)s (difference %(principal_difference)s)"
 msgstr ""
-"Der Darlehensbetrag %(loan_amount)s sollte der Kapitalsumme entsprechen: "
-"%(principal_sum)s (Differenz %(principal_difference)s)"
+"Der Darlehensbetrag %(loan_amount)s sollte der Kapitalsumme entsprechen: %"
+"(principal_sum)s (Differenz %(principal_difference)s)"
 
 #. module: account_loans
 #. odoo-python
@@ -1006,8 +1018,7 @@ msgstr "Hochgeladene Datei"
 msgid ""
 "Upon confirmation of the loan, Odoo will ignore the loan lines that are up "
 "to this date (included) and not create entries for them. This is useful if "
-"you have already manually created entries prior to the creation of this "
-"loan."
+"you have already manually created entries prior to the creation of this loan."
 msgstr ""
 "Bei der Bestätigung des Darlehens ignoriert Odoo die Darlehensposten bis zu "
 "diesem Datum (einschließlich) und erstellt keine Buchungen für diese. Dies "

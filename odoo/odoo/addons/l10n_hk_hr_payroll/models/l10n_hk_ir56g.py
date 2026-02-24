@@ -51,7 +51,7 @@ class L10n_HkIr56g(models.Model):
                 code: sum(all_line_values[code][p.id]['total'] for p in payslips)
                 for code in line_codes}
 
-            start_date = self.start_period if self.start_period > employee.contract_date_start else employee.contract_date_start
+            start_date = self.start_period if self.start_period > employee._get_first_version_date() else employee._get_first_version_date()
             end_date = employee.version_id.contract_date_end or self.end_period
 
             rental_ids = employee.l10n_hk_rental_ids.filtered_domain([
@@ -76,7 +76,7 @@ class L10n_HkIr56g(models.Model):
                 'AmtOfBpEtc': int(mapped_total['BACKPAY']),
                 'NatureOtherRAP1': 'Internet Allowance' if int(mapped_total['ALW.INT']) else '',
                 'AmtOfOtherRAP1': int(mapped_total['ALW.INT']),
-                'TotalIncome': int(mapped_total['MPF_GROSS']),
+                'TotalIncome': int(mapped_total['MPF_GROSS'] - mapped_total['HRA']),
                 'PlaceOfResInd': int(bool(rental_ids)),
                 'AddrOfPlace1': '',
                 'NatureOfPlace1': '',

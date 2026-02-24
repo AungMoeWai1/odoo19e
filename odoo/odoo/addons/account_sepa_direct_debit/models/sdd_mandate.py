@@ -3,7 +3,7 @@
 from datetime import datetime
 
 from odoo import Command, api, fields, models, _
-from odoo.exceptions import RedirectWarning, UserError
+from odoo.exceptions import AccessError, RedirectWarning, UserError
 from odoo.tools import date_utils, SQL
 
 SDD_MIN_PRENOT_PERIOD = 2
@@ -150,41 +150,21 @@ class SddMandate(models.Model):
             self.payment_ids = False
             return
 
-        self.env.cr.execute(SQL(
-            """
-            SELECT payment.sdd_mandate_id,
-                   ARRAY_AGG(DISTINCT move.id) AS invoice_ids
-              FROM account_payment payment
-              JOIN account_move__account_payment rel ON payment.id = rel.payment_id
-              JOIN account_move move ON rel.invoice_id = move.id
-             WHERE payment.sdd_mandate_id = ANY(%s)
-               AND move.move_type IN %s
-               AND move.state = 'posted'
-               AND move.payment_state = 'paid'
-          GROUP BY payment.sdd_mandate_id;
-            """,
-            self.ids,
-            tuple(self.env['account.move'].get_invoice_types()),
-        ))
-        results = dict(self.env.cr.fetchall())
-
-        for mandate in self:
-            invoice_ids = results.get(mandate.id, [])
-            mandate.paid_invoice_ids = [Command.set(invoice_ids)]
-            mandate.paid_invoices_nber = len(invoice_ids)
-
         results = dict(
             self.env['account.payment']._read_group([
                 ('sdd_mandate_id', 'in', self.ids),
                 ('payment_method_code', 'in', self.env['account.payment.method']._get_sdd_payment_method_code()),
                 ('state', 'in', ('in_process', 'paid')),
-            ], groupby=['sdd_mandate_id'], aggregates=['id:array_agg'])
+            ], groupby=['sdd_mandate_id'], aggregates=['id:recordset'])
         )
 
         for mandate in self:
-            payment_ids = results.get(mandate, [])
-            mandate.payment_ids = [Command.set(payment_ids)]
-            mandate.payments_to_collect_nber = len(payment_ids)
+            payments = results.get(mandate, self.env['account.payment'])
+            mandate.payment_ids = [Command.set(payments.ids)]
+            mandate.payments_to_collect_nber = len(payments)
+            invoices = payments.reconciled_invoice_ids.filtered(lambda move: move.payment_state == 'paid')
+            mandate.paid_invoice_ids = [Command.set(invoices.ids)]
+            mandate.paid_invoices_nber = len(invoices)
 
     def _update_and_partition_state_by_validity(self):
         """
@@ -276,6 +256,8 @@ class SddMandate(models.Model):
     def action_validate_mandate(self):
         """ Called by the 'validate' button of the form view.
         """
+        if not self.env.user.has_group('account.group_validate_bank_account'):
+            raise AccessError(self.env._("You don't have the rights to validate SDD mandates."))
         self._ensure_required_data()
 
         for mandate in self:

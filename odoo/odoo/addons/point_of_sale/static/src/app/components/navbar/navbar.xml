@@ -73,7 +73,7 @@
                                 <DropdownItem t-if="showCreateProductButton" onSelected="() => this.pos.editProduct()">
                                     Create Product
                                 </DropdownItem>
-                                <DropdownItem t-if="isBarcodeScannerSupported() and this.pos.router.state.current == 'ProductScreen' and ui.isSmall and pos.config.module_pos_restaurant" onSelected="() => this.onClickScan()">
+                                <DropdownItem t-if="isBarcodeScannerSupported() and this.pos.router.state.current == 'ProductScreen' and ui.isSmall and !pos.config.module_pos_restaurant" onSelected="() => this.onClickScan()">
                                     <span t-if="this.pos.scanning">Stop Barcode Scanner</span>
                                     <span t-else="">Barcode Scanner</span>
                                 </DropdownItem>
@@ -86,6 +86,11 @@
                                 <DropdownItem onSelected="() => this.pos.closeSession()">
                                     Close Register
                                 </DropdownItem>
+                            </div>
+                            <div class="border-top p-2">
+                                <span t-on-click="openLnaPopup" t-attf-class="btn btn-{{this.pos.lnaState.type}} btn-sm rounded" title="Local Network Access">
+                                    <i class="fa fa-wifi" aria-hidden="true" /> Local Network Access
+                                </span>
                             </div>
                         </t>
                     </Dropdown>

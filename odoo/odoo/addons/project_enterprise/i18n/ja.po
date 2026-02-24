@@ -3,13 +3,15 @@
 # * project_enterprise
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-13 21:47+0000\n"
-"PO-Revision-Date: 2025-09-15 12:03+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2025-12-30 18:46+0000\n"
+"PO-Revision-Date: 2026-01-29 09:08+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
 "project_enterprise/ja/>\n"
 "Language: ja\n"
@@ -17,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: project_enterprise
 #. odoo-python
@@ -31,8 +33,8 @@ msgid ""
 "<i class=\"fa fa-exclamation-circle me-2\" role=\"img\" title=\"Dependency "
 "warning\"/>"
 msgstr ""
-"<i class=\"fa fa-exclamation-circle me-2\" role=\"img\" title="
-"\"Dependency warning\"/>"
+"<i class=\"fa fa-exclamation-circle me-2\" role=\"img\" title=\"Dependency "
+"warning\"/>"
 
 #. module: project_enterprise
 #: model_terms:ir.ui.view,arch_db:project_enterprise.project_task_view_form
@@ -133,7 +135,8 @@ msgstr "マイルストン"
 msgid ""
 "One parameter is missing to use this method. You should give a start and end "
 "dates."
-msgstr "この方法を使用するには、パラメータが1つ足りません。開始日と終了日を指定して下"
+msgstr ""
+"この方法を使用するには、パラメータが1つ足りません。開始日と終了日を指定して下"
 "さい。"
 
 #. module: project_enterprise
@@ -188,6 +191,8 @@ msgid ""
 "Some tasks have been successfully scheduled for the upcoming periods. Some "
 "warnings were generated. Please review them for details."
 msgstr ""
+"一部のタスクは今後の期間に正常にスケジュールされました。いくつかの警告が生成"
+"されていますので、詳細をご確認ください。"
 
 #. module: project_enterprise
 #. odoo-python
@@ -304,8 +309,9 @@ msgstr "このプログレスバーは実装されていません。"
 msgid ""
 "This task cannot be planned before the following tasks on which it depends: %"
 "(task_list)s"
-msgstr "このタスクは、それが依存する次のタスクより先に計画することはできません: "
-"%(task_list)s"
+msgstr ""
+"このタスクは、それが依存する次のタスクより先に計画することはできません: %"
+"(task_list)s"
 
 #. module: project_enterprise
 #. odoo-python
@@ -313,7 +319,8 @@ msgstr "このタスクは、それが依存する次のタスクより先に計
 msgid ""
 "This user isn't expected to have any tasks assigned during this period "
 "because they don't have any running contract."
-msgstr "このユーザは現行の契約がないため、この期間に割当てられるタスクはありません。"
+msgstr ""
+"このユーザは現行の契約がないため、この期間に割当てられるタスクはありません。"
 
 #. module: project_enterprise
 #: model_terms:ir.ui.view,arch_db:project_enterprise.res_config_settings_view_form
@@ -326,7 +333,7 @@ msgstr "タイムシート"
 #: model_terms:ir.ui.view,arch_db:project_enterprise.project_task_view_gantt
 #: model_terms:ir.ui.view,arch_db:project_enterprise.project_task_view_gantt_inherited_project_sharing_task
 msgid "Unschedule"
-msgstr "予定解除する"
+msgstr "予定解除"
 
 #. module: project_enterprise
 #: model:ir.model.fields,help:project_enterprise.field_project_task__display_name
@@ -343,6 +350,17 @@ msgid ""
 "        Make sure to use the right format and order e.g. Improve the "
 "configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
+"新しいタスクを設定するには、タイトルに以下のキーワードを使用してください:\n"
+"\n"
+"        30h タスクに30時間を割り当てる\n"
+"        #タグ タスクにタグを設定する\n"
+"        @ユーザ タスクを特定のユーザに割り当てる\n"
+"        ! 優先度：中程度\n"
+"        !! 優先度：高\n"
+"        !!! 優先度：緊急\n"
+"\n"
+"        タイトルは以下の順番で記述してください 例：設定画面を改善する 5h "
+"#feature #v16@Mitchell !"
 
 #. module: project_enterprise
 #: model:ir.model,name:project_enterprise.model_res_users

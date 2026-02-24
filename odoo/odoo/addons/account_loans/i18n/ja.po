@@ -3,13 +3,14 @@
 # * account_loans
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:25+0000\n"
-"PO-Revision-Date: 2025-09-15 12:01+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2025-12-30 18:42+0000\n"
+"PO-Revision-Date: 2026-02-02 13:40+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
 "account_loans/ja/>\n"
 "Language: ja\n"
@@ -17,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: account_loans
 #: model_terms:ir.ui.view,arch_db:account_loans.account_loan_form_view
@@ -48,21 +49,23 @@ msgstr "30U/360"
 #: model_terms:ir.ui.view,arch_db:account_loans.account_loan_form_view
 msgid ""
 "<span class=\"oe_inline\" invisible=\"duration == 1\">months</span>\n"
-"                                        <span class=\"oe_inline\" invisible=\"duration != 1\">month</span>"
+"                                        <span class=\"oe_inline\" "
+"invisible=\"duration != 1\">month</span>"
 msgstr ""
 "<span class=\"oe_inline\" invisible=\"duration == 1\">月</span>\n"
-"                                        <span class=\"oe_inline\" invisible="
-"\"duration != 1\">月</span>"
+"                                        <span class=\"oe_inline\" "
+"invisible=\"duration != 1\">月</span>"
 
 #. module: account_loans
 #: model_terms:ir.ui.view,arch_db:account_loans.view_account_loan_compute_wizard
 msgid ""
 "<span class=\"oe_inline\" invisible=\"loan_term == 1\">years</span>\n"
-"                                    <span class=\"oe_inline\" invisible=\"loan_term != 1\">year</span>"
+"                                    <span class=\"oe_inline\" "
+"invisible=\"loan_term != 1\">year</span>"
 msgstr ""
 "<span class=\"oe_inline\" invisible=\"loan_term == 1\">年</span>\n"
-"                                    <span class=\"oe_inline\" invisible="
-"\"loan_term != 1\">年</span>"
+"                                    <span class=\"oe_inline\" "
+"invisible=\"loan_term != 1\">年</span>"
 
 #. module: account_loans
 #: model_terms:ir.ui.view,arch_db:account_loans.view_account_loan_compute_wizard
@@ -103,7 +106,7 @@ msgstr "要アクション"
 #: model:ir.model.fields,field_description:account_loans.field_account_loan__active
 #: model:ir.model.fields,field_description:account_loans.field_account_loan_line__active
 msgid "Active"
-msgstr "アクティブ"
+msgstr "有効"
 
 #. module: account_loans
 #: model_terms:ir.ui.view,arch_db:account_loans.view_account_loan_close_wizard
@@ -239,9 +242,11 @@ msgstr "確定"
 #. module: account_loans
 #: model:account.return.check.template,description:account_loans.account_return_check_template_loans_recording
 msgid ""
-"Confirm that all loans recorded in the accounts actually exist and match the"
-" loan agreements."
+"Confirm that all loans recorded in the accounts actually exist and match the "
+"loan agreements."
 msgstr ""
+"勘定に計上されているすべてのローンが実際に存在し、ローン契約と一致しているこ"
+"とを確認してください。"
 
 #. module: account_loans
 #: model:ir.model.fields,field_description:account_loans.field_account_loan__count_linked_assets
@@ -324,7 +329,7 @@ msgstr "ドラフト & 現行ローン"
 #. odoo-python
 #: code:addons/account_loans/models/account_loan.py:0
 msgid "Due"
-msgstr "未払"
+msgstr "返済期日"
 
 #. module: account_loans
 #: model:ir.model.fields,field_description:account_loans.field_account_loan__duration
@@ -350,10 +355,15 @@ msgstr "月末"
 #. module: account_loans
 #: model:account.return.check.template,description:account_loans.account_return_check_template_loans_classification
 msgid ""
-"Ensure that loans are properly classified as current vs. non-current, and disclosed in accordance with Belgian GAAP. \n"
+"Ensure that loans are properly classified as current vs. non-current, and "
+"disclosed in accordance with Belgian GAAP. \n"
 "Loans payable within 1 year → Account 42\n"
 "Loans > 1 year → Account 17"
 msgstr ""
+"貸付金が流動負債と固定負債に正しく分類され、ベルギー会計基準(GAAP)に従って開"
+"示されていることを確認します。 \n"
+"1年以内に支払う貸付金 → 勘定科目 42 \n"
+"1年超の貸付金 → 勘定科目 17"
 
 #. module: account_loans
 #: model:ir.model.fields,help:account_loans.field_account_loan_line__generated_move_ids
@@ -418,7 +428,7 @@ msgstr "チェックした場合は、新しいメッセージに注意が必要
 #: model:ir.model.fields,help:account_loans.field_account_loan__message_has_error
 #: model:ir.model.fields,help:account_loans.field_account_loan__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "チェックした場合は、一部のメッセージに配信エラーが発生されました。"
+msgstr "有効にすると、一部のメッセージに配信エラーが発生します。"
 
 #. module: account_loans
 #. odoo-python
@@ -629,12 +639,12 @@ msgstr "ローン分析"
 #. module: account_loans
 #: model:account.return.check.template,name:account_loans.account_return_check_template_loans_classification
 msgid "Loans classification"
-msgstr ""
+msgstr "ローン分類"
 
 #. module: account_loans
 #: model:account.return.check.template,name:account_loans.account_return_check_template_loans_recording
 msgid "Loans recording"
-msgstr ""
+msgstr "ローン記録"
 
 #. module: account_loans
 #: model:ir.model.fields,field_description:account_loans.field_account_loan__long_term_account_id
@@ -690,7 +700,7 @@ msgstr "エラー数"
 #. module: account_loans
 #: model:ir.model.fields,help:account_loans.field_account_loan__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr "アクションを必要とするメッセージの数"
+msgstr "対応が必要なメッセージ数"
 
 #. module: account_loans
 #: model:ir.model.fields,help:account_loans.field_account_loan__message_has_error_counter
@@ -705,10 +715,9 @@ msgid ""
 "period. Ensure your loans are properly registered for automatic "
 "amortizations calculation."
 msgstr ""
-"Odoo "
-"は償却を自動的に管理します。この期間にはローンが見つかりませんでした。自動償"
-"却計算が正しく行われるよう、ローンが正しく登録されていることを確認してくださ"
-"い。"
+"Odoo は償却を自動的に管理します。この期間にはローンが見つかりませんでした。自"
+"動償却計算が正しく行われるよう、ローンが正しく登録されていることを確認してく"
+"ださい。"
 
 #. module: account_loans
 #. odoo-python
@@ -828,7 +837,7 @@ msgstr "実行中"
 #. module: account_loans
 #: model:ir.model.fields,field_description:account_loans.field_account_loan__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr "SMS配信エラー"
+msgstr "SMS送信エラー"
 
 #. module: account_loans
 #: model_terms:ir.ui.view,arch_db:account_loans.account_loan_line_search_view
@@ -846,7 +855,8 @@ msgstr "ドラフトとして設定"
 msgid ""
 "Set up your amortization schedule, or import it, and let Odoo handle the "
 "monthly interest and principal adjustments automatically."
-msgstr "償却スケジュールを設定するか、インポートすれば、Odooが月次の利息と元本の調整"
+msgstr ""
+"償却スケジュールを設定するか、インポートすれば、Odooが月次の利息と元本の調整"
 "を自動的に処理します。"
 
 #. module: account_loans
@@ -875,7 +885,7 @@ msgstr "開始日"
 #: model:ir.model.fields,field_description:account_loans.field_account_loan__state
 #: model:ir.model.fields,field_description:account_loans.field_account_loan_line__loan_state
 msgid "Status"
-msgstr "状態"
+msgstr "ステータス"
 
 #. module: account_loans
 #. odoo-python
@@ -914,8 +924,8 @@ msgid ""
 "The loan amount %(loan_amount)s should be equal to the sum of the "
 "principals: %(principal_sum)s (difference %(principal_difference)s)"
 msgstr ""
-"借入額 %(loan_amount)sは元本の合計額と一致する必要があります: "
-"%(principal_sum)s (差異 %(principal_difference)s)"
+"借入額 %(loan_amount)sは元本の合計額と一致する必要があります: %"
+"(principal_sum)s (差異 %(principal_difference)s)"
 
 #. module: account_loans
 #. odoo-python
@@ -1002,8 +1012,7 @@ msgstr "アップロード済ファイル"
 msgid ""
 "Upon confirmation of the loan, Odoo will ignore the loan lines that are up "
 "to this date (included) and not create entries for them. This is useful if "
-"you have already manually created entries prior to the creation of this "
-"loan."
+"you have already manually created entries prior to the creation of this loan."
 msgstr ""
 "ローンが確認された時点で、Odooは同日(その日を含む)までのローン明細を無視し、"
 "それらの仕訳を作成しません。これは、ローンの作成前にすでに手動で仕訳を作成し"

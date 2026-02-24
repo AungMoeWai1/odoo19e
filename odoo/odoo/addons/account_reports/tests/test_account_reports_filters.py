@@ -1643,6 +1643,26 @@ class TestAccountReportsFilters(TestAccountReportsCommon, odoo.tests.HttpCase):
             },
         )
 
+        self.env.company.fiscalyear_last_day = 31
+        self.env.company.fiscalyear_last_month = '5'
+
+        self._assert_filter_date(
+            generic_tax_report,
+            {'date': {'period': -1, 'filter': 'previous_return_period'}, 'no_report_reroute': True},
+            {
+                'string': '2023',
+                'period_type': 'return_period',
+                'mode': 'range',
+                'filter': 'previous_return_period',
+                'period': -1,
+                'date_from': '2023-01-01',
+                'date_to': '2023-12-31',
+                'currency_table_period_key': '2023-01-01_2023-12-31',
+            },
+        )
+
+        self.env.company.fiscalyear_last_month = '12'
+
         # Setting a periodicity on the return type should take precedence over the company setting
         return_type.deadline_periodicity = 'semester'
 
@@ -1650,7 +1670,7 @@ class TestAccountReportsFilters(TestAccountReportsCommon, odoo.tests.HttpCase):
             generic_tax_report,
             {'no_report_reroute': True},
             {
-                'string': '01/01/2024 - 06/30/2024',
+                'string': 'Jan 2024 - Jun 2024',
                 'period_type': 'return_period',
                 'mode': 'range',
                 'filter': 'previous_return_period',
@@ -1814,3 +1834,175 @@ class TestAccountReportsFilters(TestAccountReportsCommon, odoo.tests.HttpCase):
                 'currency_table_period_key': '2022-10-01_2022-12-31',
             },
         )
+
+    ####################################################
+    # CONSOLIDATION
+    ####################################################
+
+    def test_filter_consolidation(self):
+        company1 = self.company_data['company']
+        company2 = self.company_data_2['company']
+        self.env['res.currency.rate'].search([]).unlink()
+        self.company_data_2['default_account_receivable'].with_company(company1).code = '121000'
+        self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2024-06-06',
+            'invoice_line_ids': [Command.create({
+                'price_unit': 50,
+            })],
+            'company_id': company1.id,
+        }).action_post()
+        self.env['account.move'].with_company(company2).create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2024-06-06',
+            'invoice_line_ids': [Command.create({
+                'price_unit': 50,
+            })],
+            'company_id': company2.id,
+        }).action_post()
+
+        report = self.env['account.report'].create({
+            'name': "Simple Report",
+            'filter_multi_company': 'selector',
+            'filter_account_type': 'both',
+            'column_ids': [Command.create({
+                'name': 'Balance',
+                'expression_label': 'balance',
+            })],
+            'line_ids': [Command.create({
+                'name': "The line",
+                'groupby': 'account_id',
+                'expression_ids': [Command.create({
+                    'label': 'balance',
+                    'engine': 'domain',
+                    'formula': [],
+                    'subformula': 'sum',
+                })],
+            })],
+        })
+        options = self._generate_options(report, '2024-01-01', '2024-12-31')
+        self.assertLinesValues(
+            report._get_lines(options),
+            [0, 1],
+            [
+                ('The line', 100),
+                ('121000 Account Receivable', 50),
+                ('121000 Account Receivable', 50),
+                ('Total The line', 100)
+            ],
+            options,
+        )
+
+        options['consolidation'] = True
+        self.assertLinesValues(
+            report._get_lines(options),
+            [0, 1],
+            [
+                ('The line', 100),
+                ('121000 Account Receivable', 100),
+                ('Total The line', 100)
+            ],
+            options,
+        )
+
+    def test_available_variants_options(self):
+        # Ensure variants are visible in the variants selector if their availability condition is met
+        def assert_available_variants_match(options, reports):
+            expected_variants = [v['id'] for v in options.get('available_variants', [])]
+            actual_reports = reports.mapped('id')
+
+            self.assertEqual(
+                expected_variants,
+                actual_reports,
+                msg=f"Expected available variants {expected_variants} but got {actual_reports}"
+            )
+
+        root_report = self.env['account.report'].create({
+            'name': "Root Report",
+            'allow_foreign_vat': True,
+        })
+
+        report_always = self.env['account.report'].create({
+            'name': "Report Always available",
+            'root_report_id': root_report.id,
+        })
+
+        report_generic_coa = self.env['account.report'].create({
+            'name': "Report generic COA",
+            'root_report_id': root_report.id,
+            'availability_condition': 'coa',
+            'chart_template': 'generic_coa',
+        })
+
+        report_us_country = self.env['account.report'].create({
+            'name': "Report US country",
+            'root_report_id': root_report.id,
+            'availability_condition': 'country',
+            'country_id': self.env.ref('base.us').id,
+        })
+
+        report_be_country = self.env['account.report'].create({
+            'name': "Report BE country",
+            'root_report_id': root_report.id,
+            'availability_condition': 'country',
+            'country_id': self.env.ref('base.be').id,
+        })
+
+        report_us_coa = self.env['account.report'].create({
+            'name': "Report US COA",
+            'root_report_id': root_report.id,
+            'availability_condition': 'coa',
+            'chart_template': 'us',
+        })
+
+        # Selecting Root Report
+        options = self._generate_options(root_report, '2024-01-01', '2024-12-31')
+        expected_reports = root_report + report_always + report_generic_coa + report_us_country
+        assert_available_variants_match(options, expected_reports)
+
+        # Selecting a child shouldn't change the order
+        options = self._generate_options(report_always, '2024-01-01', '2024-12-31')
+        assert_available_variants_match(options, expected_reports)
+
+        self.env['account.fiscal.position'].create({
+            'name': 'Test Fiscal Position',
+            'auto_apply': True,
+            'foreign_vat': 'BE980737405',
+            'country_id': self.env.ref('base.be').id,
+        })
+
+        # Adding fiscal position should make BE-reports available since it allows foreign vat
+        options = self._generate_options(root_report, '2024-01-01', '2024-12-31')
+        assert_available_variants_match(options, expected_reports + report_be_country)
+
+        (expected_reports + report_be_country).allow_foreign_vat = False
+        options = self._generate_options(root_report, '2024-01-01', '2024-12-31')
+        assert_available_variants_match(options, expected_reports)
+
+        self.company_data['company'].chart_template = 'us'
+        options = self._generate_options(root_report, '2024-01-01', '2024-12-31')
+        # Multi-company environment with first company with US COA and second with generic COA
+        assert_available_variants_match(options, root_report + report_always + report_generic_coa + report_us_coa + report_us_country)
+
+        # only allow company 1 (US COA)
+        self.env.user.company_ids = self.company_data['company']
+        options = self._generate_options(root_report, '2024-01-01', '2024-12-31')
+        assert_available_variants_match(options, root_report + report_always + report_us_coa + report_us_country)
+
+    def test_send_customer_statement_without_template(self):
+        """Test sending the customer statement without an email template."""
+        report = self.env.ref('account_reports.customer_statement_report')
+        options = report.get_options({})
+        options['partner_ids'] = [self.partner.id]
+
+        wizard = self.env['account.report.send'].create({
+            'account_report_id': report.id,
+            'mail_subject': 'Customer Statement',
+            'report_options': options,
+        })
+        self.assertEqual(wizard.mode, 'single')
+        self.assertFalse(wizard.mail_template_id)
+
+        wizard.action_send_and_print()

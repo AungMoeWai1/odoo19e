@@ -179,16 +179,10 @@ test("Freeze&Share a spreadsheet with an odoo list", async function () {
             expect.step("open_share");
         },
     });
-    onRpc(
-        "/spreadsheet/data/documents.document/2",
-        () => ({
-            data: model.exportData(),
-            revisions: [],
-        }),
-        {
-            pure: true,
-        }
-    );
+    onRpc("/spreadsheet/data/documents.document/2", () => ({
+        data: model.exportData(),
+        revisions: [],
+    }));
     await makeDocumentsSpreadsheetMockEnv({
         serverData,
         mockRPC: async function (route, args) {
@@ -546,6 +540,27 @@ test("Cannot download spreadsheets", async () => {
     // Button should remain even if some records are not downloadable
     await contains(`.o_kanban_record:contains('Spreadsheet')`).click({ ctrlKey: true });
     await waitFor(".o_control_panel_actions:contains('Download')");
+});
+
+test("Share button is hidden for spreadsheet in Trash", async () => {
+    const serverData = getTestServerData();
+    serverData.models["documents.document"].records[1].active = false;
+
+    await makeDocumentsSpreadsheetMockEnv({ serverData });
+    await mountView({
+        type: "kanban",
+        resModel: "documents.document",
+        arch: basicDocumentKanbanArch,
+        searchViewArch: getEnrichedSearchArch(),
+    });
+
+    await contains(".o_search_panel_label_title:contains('Trash')").click();
+    await contains(".o_kanban_record:contains('My spreadsheet') .o_record_selector").click({
+        ctrlKey: true,
+    });
+    await animationFrame();
+    await waitForNone(".o_control_panel_actions:contains('Share')");
+    await waitForNone(".o_control_panel_actions:contains('Freeze and share')");
 });
 
 test("Restoring trashed XLSX without folder should not set localStorage variable to undefined", async () => {

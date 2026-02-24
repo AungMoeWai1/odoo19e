@@ -3,9 +3,11 @@ from contextlib import contextmanager
 from unittest.mock import patch, DEFAULT
 import requests
 
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tests import TransactionCase, tagged
 from odoo import Command, _
+
+from ..models.sendcloud_service import SendCloud
 
 BALEARES_RANGE = {str(i) for i in range(7025, 7035)}
 CARRIER_CODE_BY_METHOD_ID = {
@@ -227,14 +229,14 @@ class TestDeliverySendCloud(TransactionCase):
                                 })
         # deco_art will be in europe
         cls.eu_partner = cls.env['res.partner'].create({
-            'name': 'Deco Addict',
+            'name': 'Acme Corporation',
             'is_company': True,
             'street': '77 Santa Barbara Rd',
             'city': 'Pleasant Hill',
             'country_id': cls.env.ref('base.nl').id,
             'zip': '1105AA',
             'state_id': False,
-            'email': 'deco.addict82@example.com',
+            'email': 'acme.corp82@example.com',
             'phone': '(603)-996-3829',
         })
         # partner in us (azure)
@@ -542,7 +544,9 @@ class TestDeliverySendCloud(TransactionCase):
             ('123-456 Main Street', '123-456'),
             ('456B Elm St', '456B'),
             ('789 C Oak Avenue', '789 C'),
-            ('20A1 Vo Thi Sau Street, Tan Dinh Ward, District 1', '20A1')
+            ('20A1 Vo Thi Sau Street, Tan Dinh Ward, District 1', '20A1'),
+            ('Innsbruck Straße 8/1/13', '8/1/13'),
+            ('7-3/11A Hochköning Straße', '7-3/11A'),
         ]
         for address in addresses:
             self.assertEqual(api._get_house_number(address[0]), address[1])
@@ -679,3 +683,140 @@ class TestDeliverySendCloud(TransactionCase):
         })
         with self.assertRaises(UserError):
             picking.open_website_url()
+
+    def test_overweight_individual_products_error_message(self):
+        """
+        Test that when individual products are too heavy for the shipping method,
+        a specific error message is raised mentioning the overweight products.
+        """
+        products = self.env["product.product"].create([{
+            'name': 'Super Heavy Door',
+            'type': 'consu',
+            'weight': 25.0,  # exceeds the 20kg limit
+        }, {
+            'name': 'Massive Window',
+            'type': 'consu',
+            'weight': 30.0,  # also exceeds the limit
+        }, {
+            'name': 'Light Chair',
+            'type': 'consu',
+            'weight': 5.0,  # within limits
+        }])
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.eu_partner.id,
+            'order_line': [
+                Command.create({
+                    'product_id': product.id,
+                    'product_uom_qty': 1.0,
+                }) for product in products
+            ]
+        })
+
+        wiz_action = sale_order.action_open_delivery_wizard()
+        choose_delivery_carrier = self.env[wiz_action['res_model']].with_context(wiz_action['context']).create({
+            'carrier_id': self.sendcloud.id,
+            'order_id': sale_order.id,
+        })
+
+        with _mock_sendcloud_call(self.warehouse_id):
+            choose_delivery_carrier.update_price()
+            choose_delivery_carrier.button_confirm()
+            sale_order.action_confirm()
+            picking = sale_order.picking_ids[0]
+            picking.action_assign()
+
+            with self.assertRaises(UserError) as cm:
+                picking._action_done()
+
+            error_message = str(cm.exception)
+            self.assertIn("Additionally, some individual product(s) are too heavy for the heaviest available shipping method", error_message)
+            self.assertIn("Super Heavy Door", error_message)
+            self.assertIn("Massive Window", error_message)
+            self.assertNotIn("Light Chair", error_message)
+
+    def test_sendcloud_delivery_with_downpayment(self):
+        """
+        Test validating the delivery of a SO with a downpayment.
+        """
+        basic_tax = self.env['account.tax'].create({
+            'name': 'Basic 15% tax',
+            'amount': 15,
+        })
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.eu_partner.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_to_ship1.id,
+                    'product_uom_qty': 1.0,
+                    'price_unit': 100,
+                    'tax_id': basic_tax,
+                }),
+            ]
+        })
+        # Create downpayment
+        so_context = {
+            'active_model': 'sale.order',
+            'active_ids': [sale_order.id],
+            'active_id': sale_order.id,
+        }
+        payment_params = {
+            'advance_payment_method': 'fixed',
+            'fixed_amount': 50,
+        }
+        downpayment = self.env['sale.advance.payment.inv'].with_context(so_context).create(payment_params)
+        downpayment.create_invoices()
+        # Downpayment adds 2 SOL
+        self.assertEqual(len(sale_order.order_line), 3)
+
+        wiz_action = sale_order.action_open_delivery_wizard()
+        choose_delivery_carrier = self.env[wiz_action['res_model']].with_context(wiz_action['context']).create({
+            'carrier_id': self.sendcloud.id,
+            'order_id': sale_order.id,
+        })
+        with _mock_sendcloud_call(self.warehouse_id):
+            choose_delivery_carrier.update_price()
+            choose_delivery_carrier.button_confirm()
+            sale_order.action_confirm()
+            self.assertGreater(len(sale_order.picking_ids), 0)
+            picking = sale_order.picking_ids[0]
+            picking.action_assign()
+            picking._action_done()
+            self.assertTrue(picking.sendcloud_parcel_ref)
+
+    def test_customs_information(self):
+        '''
+        Ensure customs information is correctly transmitted in the parcel request
+        '''
+        original_send_request = SendCloud._send_request
+
+        def patched_send_request(self, endpoint, method='get', data=None, params=None, route="https://panel.sendcloud.sc/api/v2/"):
+            if endpoint == 'parcels' and not data['parcels'][0].get('customs_information', False):
+                raise (ValidationError("International shipment without customs information"))
+            return original_send_request(self, endpoint, method, data, params, route)
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.us_partner.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_to_ship1.id
+                }),
+            ]
+        })
+        wiz_action = sale_order.action_open_delivery_wizard()
+        choose_delivery_carrier = self.env[wiz_action['res_model']].with_context(wiz_action['context']).create({
+            'carrier_id': self.sendcloud.id,
+            'order_id': sale_order.id
+        })
+        with patch.object(SendCloud, '_send_request', side_effect=patched_send_request, autospec=True):
+            with _mock_sendcloud_call(self.warehouse_id):
+                choose_delivery_carrier.update_price()
+                choose_delivery_carrier.button_confirm()
+                sale_order.action_confirm()
+                self.assertGreater(len(sale_order.picking_ids), 0)
+
+                picking = sale_order.picking_ids[0]
+                self.assertEqual(picking.carrier_id.id, sale_order.carrier_id.id)
+                picking.action_assign()
+
+                picking._action_done()

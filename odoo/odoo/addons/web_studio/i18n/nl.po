@@ -7,13 +7,16 @@
 # Jolien De Paepe, 2023
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Bren Driesen <brdri@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Odoo Translation Bot <c3p@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-13 21:41+0000\n"
-"PO-Revision-Date: 2025-09-14 11:58+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2025-12-30 18:41+0000\n"
+"PO-Revision-Date: 2026-01-10 01:33+0000\n"
+"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/web_studio/"
 "nl/>\n"
 "Language: nl\n"
@@ -21,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: web_studio
 #. odoo-python
@@ -137,7 +140,7 @@ msgstr "%(user_name)s heeft zijn delegatie aan %(revoked_users)s ingetrokken"
 #. odoo-python
 #: code:addons/web_studio/controllers/main.py:0
 msgid "%s (Copy)"
-msgstr ""
+msgstr "%s (Kopie)"
 
 #. module: web_studio
 #. odoo-python
@@ -192,8 +195,8 @@ msgstr ""
 #: model_terms:web_tour.tour,rainbow_man_message:web_studio.web_studio_new_app_tour
 msgid "<span><b>Good job!</b> You went through all steps of this tour.</span>"
 msgstr ""
-"<span><b>Goed gedaan!</b> Je hebt alle stappen van deze tour "
-"doorlopen.</span>"
+"<span><b>Goed gedaan!</b> Je hebt alle stappen van deze tour doorlopen.</"
+"span>"
 
 #. module: web_studio
 #. odoo-javascript
@@ -887,7 +890,7 @@ msgstr "Wijzig afbeelding"
 #. odoo-javascript
 #: code:addons/web_studio/static/src/client_action/report_editor/report_editor_wysiwyg/editor_plugins/report_editor_plugin.js:0
 msgid "Change the placeholder or the expression for an existing field"
-msgstr ""
+msgstr "Wijzig de placeholder of de expression voor een bestaand veld"
 
 #. module: web_studio
 #. odoo-javascript
@@ -1520,7 +1523,7 @@ msgstr "Weergavemodus"
 #: model:ir.model.fields,field_description:web_studio.field_studio_export_wizard_data__display_name
 #: model:ir.model.fields,field_description:web_studio.field_studio_mixin__display_name
 msgid "Display Name"
-msgstr "Schermnaam"
+msgstr "Weergavenaam"
 
 #. module: web_studio
 #. odoo-javascript
@@ -1573,7 +1576,7 @@ msgstr "Sleep een menu naar rechts om een submenu aan te maken"
 #. odoo-javascript
 #: code:addons/web_studio/static/src/client_action/view_editor/editors/kanban/kanban_editor_record_menu.xml:0
 msgid "Dropdown menu"
-msgstr ""
+msgstr "Dropdown menu"
 
 #. module: web_studio
 #: model_terms:ir.ui.view,arch_db:web_studio.act_report_xml_view_kanban
@@ -1626,7 +1629,7 @@ msgstr "Wijzig waardes"
 #. odoo-javascript
 #: code:addons/web_studio/static/src/client_action/report_editor/report_editor_wysiwyg/editor_plugins/report_editor_plugin.js:0
 msgid "Edit field"
-msgstr ""
+msgstr "Veld bewerken"
 
 #. module: web_studio
 #. odoo-javascript
@@ -1923,7 +1926,7 @@ msgstr "Formulier"
 #. odoo-javascript
 #: code:addons/web_studio/static/src/client_action/xml_resource_editor/xml_resource_editor.xml:0
 msgid "Format"
-msgstr "Formatteer"
+msgstr "Formaat"
 
 #. module: web_studio
 #. odoo-javascript
@@ -2215,6 +2218,11 @@ msgid ""
 "as pictures, files, etc.\n"
 "        Include the corresponding fields in the export to get them."
 msgstr ""
+"Als dit is ingesteld worden bijlagen met betrekking tot de geëxporteerde "
+"records meegeleverd.\n"
+"Dit geldt niet voor bijlagen die zijn geüpload in binaire velden, zoals "
+"afbeeldingen, bestanden, enz.\n"
+"Voeg de betreffende velden toe aan de export om ze mee te krijgen."
 
 #. module: web_studio
 #: model:ir.model.fields,help:web_studio.field_studio_export_model__is_demo_data
@@ -2289,7 +2297,7 @@ msgstr "Gegevens opnemen"
 #. module: web_studio
 #: model:ir.model.fields,field_description:web_studio.field_studio_export_wizard__include_demo_data
 msgid "Include Demo Data"
-msgstr "Demogegevens opnemen"
+msgstr "Demodata opnemen"
 
 #. module: web_studio
 #. odoo-javascript
@@ -2310,7 +2318,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web_studio/static/src/client_action/report_editor/report_editor_wysiwyg/editor_plugins/studio_dynamic_placeholder_popover.xml:0
 msgid "Insert"
-msgstr ""
+msgstr "Invoegen"
 
 #. module: web_studio
 #. odoo-javascript
@@ -2506,7 +2514,7 @@ msgstr "Lijst"
 #. odoo-javascript
 #: code:addons/web_studio/static/src/client_action/model_configurator/model_configurator.js:0
 msgid "Manually sort records in the kanban and list view"
-msgstr ""
+msgstr "Handmatig records sorteren in de Kanban- en lijstweergave"
 
 #. module: web_studio
 #. odoo-javascript
@@ -2719,8 +2727,8 @@ msgstr "Meer"
 #. module: web_studio
 #. odoo-javascript
 #: code:addons/web_studio/static/src/client_action/view_editor/editors/components/view_fields.js:0
-msgid "Multine Text"
-msgstr "Tekst met meerdere regels"
+msgid "Multiline Text"
+msgstr "Meerdere regels tekst"
 
 #. module: web_studio
 #. odoo-javascript
@@ -2964,7 +2972,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web_studio/static/src/client_action/report_editor/report_editor_wysiwyg/editor_plugins/studio_dynamic_placeholder_popover.xml:0
 msgid "Only visible during the edition of the report"
-msgstr ""
+msgstr "Alleen zichtbaar tijdens het bewerken van het rapport"
 
 #. module: web_studio
 #. odoo-javascript
@@ -3926,7 +3934,7 @@ msgstr "Studio Mixin"
 #. odoo-javascript
 #: code:addons/web_studio/static/src/client_action/view_editor/view_editor_model.js:0
 msgid "Subview %(viewType)s"
-msgstr ""
+msgstr "Subview %(viewType)s"
 
 #. module: web_studio
 #. odoo-javascript
@@ -3972,7 +3980,7 @@ msgstr "Technische naam"
 #. odoo-javascript
 #: code:addons/web_studio/static/src/client_action/report_editor/report_editor_wysiwyg/editor_plugins/studio_dynamic_placeholder_popover.xml:0
 msgid "Technical name"
-msgstr ""
+msgstr "Technische naam"
 
 #. module: web_studio
 #. odoo-python
@@ -4265,7 +4273,7 @@ msgstr "Soort"
 #. odoo-python
 #: code:addons/web_studio/models/ir_ui_view.py:0
 msgid "Type down your notes here..."
-msgstr "Noteer hier je notities..."
+msgstr "Voeg hier notities toe..."
 
 #. module: web_studio
 #. odoo-javascript
@@ -4294,7 +4302,7 @@ msgstr "Wijzigbaar"
 #. odoo-javascript
 #: code:addons/web_studio/static/src/client_action/report_editor/report_editor_wysiwyg/editor_plugins/studio_dynamic_placeholder_popover.xml:0
 msgid "Update"
-msgstr ""
+msgstr "Bijwerken"
 
 #. module: web_studio
 #. odoo-javascript
@@ -4613,6 +4621,9 @@ msgstr "x_studio_"
 #: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/field_configuration/selection_content_dialog.xml:0
 msgid "{{ item.isInEdition ? 'Add selection' : 'Edit selection' }}"
 msgstr "{{ item.isInEdition ? 'Add selection' : 'Edit selection' }}"
+
+#~ msgid "Multine Text"
+#~ msgstr "Tekst met meerdere regels"
 
 #~ msgid ""
 #~ " <p class=\"o_view_nocontent_smiling_face\">\n"

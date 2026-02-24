@@ -73,6 +73,13 @@ class IrUiView(models.Model):
         'web.external_layout_bubble',
     ]
 
+    def _get_closest_primary_view(self):
+        self.ensure_one()
+        view = self
+        while view.mode != "primary":
+            view = view.inherit_id
+        return view
+
     def _get_x2many_missing_view_archs(self, field, field_node, node_info):
         missing = super()._get_x2many_missing_view_archs(field, field_node, node_info)
         if not missing or not self.env.context.get("studio"):
@@ -360,6 +367,8 @@ class IrUiView(models.Model):
         filters = list()
         groupbys = list()
         fields.append(E.field(name=rec_name))
+        if isinstance(model, self.pool['mail.activity.mixin']):
+            filters.append(E.filter(name="filter_activities_my", domain="[['activity_user_id', '=', uid]]"))
         if 'x_studio_partner_id' in model._fields:
             fields.append(E.field(name='x_studio_partner_id', operator='child_of'))
             groupbys.append(E.filter(name='groupby_x_partner', string=_('Partner'), context="{'group_by': 'x_studio_partner_id'}", domain="[]"))
@@ -606,7 +615,7 @@ class IrUiView(models.Model):
             return super().apply_inheritance_specs(source, specs_tree, pre_locate=pre_locate_studio)
 
     def normalize(self, arch_to_normalize=None):
-        if not self.inherit_id:
+        if self.mode == "primary":
             base_arch = self.get_combined_arch()
         else:
             base_arch = self.with_context(ir_ui_view_tree_cut_off_view=self).get_combined_arch()
@@ -660,7 +669,7 @@ class IrUiView(models.Model):
             ('key', '!=', new.key),
             ('key', '=like', '%s_copy_%%' % new.key),
             '!', ('key', '=like', '%s_copy_%%_copy_%%' % new.key)]
-        old_copies = self.search_read(domain, order='key desc')
+        old_copies = self.with_context(active_test=False).search_read(domain, order='key desc')
         nos = [int(old_copy.get('key').split('_copy_').pop()) for old_copy in old_copies]
         copy_no = (nos and max(nos) or 0) + 1
         new_key = '%s_copy_%s' % (new.key, copy_no)

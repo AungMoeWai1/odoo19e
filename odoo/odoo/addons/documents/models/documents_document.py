@@ -15,7 +15,7 @@ from werkzeug.urls import url_encode
 
 import odoo
 from odoo import _, api, Command, fields, models, modules, SUPERUSER_ID
-from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import groupby, SQL
 from odoo.tools.image import image_process
@@ -135,7 +135,7 @@ class DocumentsDocument(models.Model):
     parent_path = fields.Char(index=True)  # see '_parent_store' implementation in the ORM for details
     folder_id = fields.Many2one('documents.document', string='Folder', ondelete='set null', tracking=True,
                                 domain="[('type', '=', 'folder'), ('shortcut_document_id', '=', False)]",
-                                required=False, index=True)
+                                required=False, index=True, search='_search_folder_id')
     user_folder_id = fields.Char(string='Parent', compute='_compute_user_folder_id', search='_search_user_folder_id')
     children_ids = fields.One2many('documents.document', 'folder_id')
 
@@ -398,12 +398,57 @@ class DocumentsDocument(models.Model):
         domain = Domain.OR(domain_parts)
 
         if operator == 'child_of':
-            # as ('id', 'child_of', domain') doesn't work, and for performance reasons.
-            # (rules will be applied on final domain)
-            top_level = self.with_context(active_test=False).sudo().search_fetch(domain, ['type'])
-            top_level_folders = top_level.filtered(lambda d: d.type == 'folder')
-            return Domain('id', 'in', top_level.ids) | Domain('folder_id', 'child_of', top_level_folders.ids)
+            if len(values) > 1:
+                raise UserError(_('Only one value can be searched for children of `user_folder_id`'))
+            return self._get_child_of_domain(domain, values.pop())
         return domain
+
+    @api.model
+    def _get_child_of_domain(self, roots_domain, value: str | int):
+        """Make sure that all intermediate folders are also part of the result."""
+        if not isinstance(value, str | int):
+            raise UserError(_('Only one string or number value can be searched for documents `child_of`.'))
+        if value == 'SHARED':
+            # Can't use sudo speedup here
+            shared_roots = self.with_context(active_test=False).search_fetch(roots_domain, ['id'])
+            return Domain('id', 'child_of', shared_roots.ids)
+        candidates, top_level_folders = (
+            query.select(*(self._field_to_sql(query.table, fname, query) for fname in ('id', 'folder_id')))
+            for query in (
+                self.with_context(active_test=False)._search([('type', '=', 'folder')]),
+                self.with_context(active_test=False)._search(roots_domain & Domain('type', '=', 'folder'))
+            )
+        )
+        children = SQL(
+            """
+        WITH RECURSIVE
+            candidates as (%(candidates)s),
+            top_level as (%(top_level_folders)s),
+            children AS (
+                SELECT id
+                  FROM top_level
+                 UNION ALL
+                SELECT c.id
+                  FROM candidates c
+                  JOIN children f
+                    ON c.folder_id = f.id
+            )
+        SELECT id FROM children
+        """,
+            candidates=candidates,
+            top_level_folders=top_level_folders,
+        )
+        return roots_domain | Domain('folder_id', 'any', children)
+
+    @api.model
+    def _search_folder_id(self, operator, operand):
+        if operator != 'child_of':
+            return Domain(Domain('folder_id', operator, operand), internal=True)
+        values = {operand} if isinstance(operand, int) else set(operand)
+        if len(values) > 1:
+            raise UserError(_("Only one value can be searched for child of `folder_id`."))
+        value = values.pop()
+        return self._get_child_of_domain(Domain('folder_id', '=', value) | Domain('id', '=', value), value)
 
     @api.model
     def _clean_vals_for_user_folder_id(self, vals):
@@ -490,7 +535,7 @@ class DocumentsDocument(models.Model):
                 if (
                     not (company := document.company_id)
                     or company in self.env.companies
-                    or company not in self.env.user.company_ids
+                    or company not in self.env.user.with_context(active_test=True).company_ids
                 ):
                     document.user_permission = 'edit'
                 else:
@@ -500,6 +545,9 @@ class DocumentsDocument(models.Model):
         permission_by_document = self._get_permission_without_token_multi()
 
         for document in self:
+            if document.company_id and not document.company_id.active:
+                document.user_permission = 'none'
+                continue
             document.user_permission = permission_by_document[document]
             if document.user_permission == 'view' and document.access_via_link == 'edit':
                 document.user_permission = 'edit'
@@ -514,7 +562,7 @@ class DocumentsDocument(models.Model):
 
             if document.user_permission == 'none' and document.folder_id and document.access_via_link != 'none' \
                     and not document.is_access_via_link_hidden \
-                    and (document.company_id in self.env.companies or document.company_id not in self.env.user.company_ids):
+                    and (document.company_id in self.env.companies or document.company_id not in self.env.user.with_context(active_test=True).company_ids):
                 # If the user can access the parent, they have the link.
                 # This only works one level up, as it mimics accessing through the interface.
                 with contextlib.suppress(AccessError):
@@ -530,7 +578,7 @@ class DocumentsDocument(models.Model):
         documents_to_process = self
         for document in self:
             exclude_ownership = bool(document.shortcut_document_id)
-            is_user_company = document.company_id and document.company_id in self.env.user.company_ids
+            is_user_company = document.company_id and document.company_id in self.env.user.with_context(active_test=False).company_ids
             is_disabled_company = is_user_company and document.company_id not in self.env.companies
             if is_disabled_company:
                 permission_by_document[document] = 'none'
@@ -597,16 +645,22 @@ class DocumentsDocument(models.Model):
             return Domain.FALSE
         searched_roles = list(searched_roles)
 
-        other_company = Domain('company_id', '!=', False) & Domain('company_id', 'not in', self.env.user.company_ids.ids)
+        other_company = Domain('company_id', '!=', False) & Domain('company_id', 'not in', self.env.user.with_context(active_test=False).company_ids.ids)
         allowed_or_no_company = Domain('company_id', 'in', [False] + self.env.companies.ids)
-        any_except_disabled_company = (
+        any_except_disabled_company = Domain.OR([
+            Domain('company_id', 'in', self.env.companies.ids),
+            Domain('company_id', 'not in', self.env.user.company_ids.ids),
+            Domain('company_id.active', '=', False),
+        ])
+        any_except_disabled_and_archived_company = (
             Domain('company_id', 'in', self.env.companies.ids)
-            | Domain('company_id', 'not in', self.env.user.company_ids.ids)
+            | Domain('company_id', 'not in', self.env.user.with_context(active_test=False).company_ids.ids)
         )
 
         if self.env.user.has_group('documents.group_documents_system'):
             if searched_roles == ['view']:
                 return Domain.FALSE  # System Administrator has "edit" on all documents, so finds none with "view" only.
+            # System Administrator should always be able to edit documents from archived companies (even with active_test=False)
             return any_except_disabled_company
 
         # Access from membership
@@ -639,7 +693,7 @@ class DocumentsDocument(models.Model):
                 if set(searched_roles) == {'edit'}
                 else Domain.FALSE,
             ])
-        direct_domain = any_except_disabled_company & (
+        direct_domain = any_except_disabled_and_archived_company & (
             access_domain if 'edit' not in searched_roles else access_domain | owner_domain
         )
 
@@ -665,7 +719,7 @@ class DocumentsDocument(models.Model):
 
         # Look one level up for links unless hidden
         link_via_parent_domain = Domain.AND([
-            any_except_disabled_company,
+            any_except_disabled_and_archived_company,
             [('access_via_link', 'in', searched_roles)],
             [('is_access_via_link_hidden', '=', False)],
             [('folder_id', 'any', direct_domain)],
@@ -697,7 +751,10 @@ class DocumentsDocument(models.Model):
             if record.attachment_id:
                 record.res_name = record.attachment_id.res_name
             elif record.res_id and record.res_model:
-                record.res_name = self.env[record.res_model].browse(record.res_id).display_name
+                try:
+                    record.res_name = self.env[record.res_model].browse(record.res_id).display_name
+                except MissingError:
+                    record.res_name = False
             else:
                 record.res_name = False
 
@@ -723,7 +780,7 @@ class DocumentsDocument(models.Model):
     def _compute_thumbnail(self):
         for document in self:
             if document.shortcut_document_id:
-                if document.shortcut_document_id.user_permission != 'none':
+                if document.shortcut_document_id:
                     document.thumbnail = document.shortcut_document_id.thumbnail
                     document.thumbnail_status = document.shortcut_document_id.thumbnail_status
                 else:
@@ -760,12 +817,10 @@ class DocumentsDocument(models.Model):
         if not folders_sudo:
             return {}
         all_embedded_actions_sudo = self.env['ir.embedded.actions'].sudo().search(
-            domain=[
-                ('parent_action_id', '=', self.env.ref("documents.document_action").id),
-                ('action_id.type', '=', 'ir.actions.server'),
-                ('parent_res_model', '=', 'documents.document'),
-                ('parent_res_id', 'in', (folders_sudo + folders_sudo.shortcut_document_id).ids),
-            ],
+            domain=Domain.AND([
+                self.env['ir.embedded.actions'].sudo()._get_documents_embed_base_domain(),
+                [('parent_res_id', 'in', (folders_sudo + folders_sudo.shortcut_document_id).ids)],
+            ]),
             order='sequence',
         )
         # Filtering on action_id.groups_id above is not possible because the orm "considers" action_id
@@ -1372,7 +1427,13 @@ class DocumentsDocument(models.Model):
     @api.model
     def _get_embeddable_server_action_domain(self):
         """Wrap `_get_base_server_actions_domain`'s domain to exclude children and actions with invalid children."""
-        candidate_actions_sudo = self.env["ir.actions.server"].sudo()._search(self._get_base_server_actions_domain())
+        candidate_actions_sudo = self.env["ir.actions.server"].sudo()._search(
+            Domain.AND([
+                self._get_base_server_actions_domain(),
+                Domain.OR([[('group_ids', 'any', [('id', 'in', self.env.user.all_group_ids.ids)])],
+                           [('group_ids', '=', False)]]),
+            ]),
+        )
         return Domain.AND([
             [('id', 'in', candidate_actions_sudo)],
             [('parent_id', '=', False)],  # no child action
@@ -1388,8 +1449,6 @@ class DocumentsDocument(models.Model):
         return Domain.AND([
             [('model_id', '=', self.env['ir.model']._get_id('documents.document'))],
             [('usage', 'in', ('ir_actions_server', 'documents_embedded'))],
-            Domain.OR([[('group_ids', 'any', [('id', 'in', self.env.user.all_group_ids.ids)])],
-                       [('group_ids', '=', False)]]),
         ])
 
     @api.model
@@ -1399,7 +1458,7 @@ class DocumentsDocument(models.Model):
         :param int folder_id: The folder on which we pin the actions
         :param int action_id: The id of the action to enable
         """
-        if not self.env.user.has_group('documents.group_documents_user'):
+        if not self.env.user.has_group('documents.group_documents_user') and not self.env.su:
             raise AccessError(_("You are not allowed to pin/unpin embedded Actions."))
         server_actions_groups_domain = [
             '|', ('group_ids', 'any', [('id', 'in', self.env.user.all_group_ids.ids)]),
@@ -1416,13 +1475,12 @@ class DocumentsDocument(models.Model):
         if folder.shortcut_document_id:
             return self.action_folder_embed_action(folder.shortcut_document_id.id, action_id)
 
-        all_embedded_actions_sudo = self.env['ir.embedded.actions'].sudo().search([
-            ('parent_action_id', '=', self.env.ref("documents.document_action").id),
-            ('action_id', '=', action_id),
-            ('action_id.type', '=', 'ir.actions.server'),
-            ('parent_res_model', '=', 'documents.document'),
-            ('parent_res_id', '=', folder_id),
-        ])
+        all_embedded_actions_sudo = self.env['ir.embedded.actions'].sudo().search(
+            Domain.AND([
+                self.env['ir.embedded.actions'].sudo()._get_documents_embed_base_domain(),
+                [('action_id', '=', action_id), ('parent_res_id', '=', folder_id)],
+            ])
+        )
         # See _get_folder_embedded_actions
         accessible_server_action_ids = self.env['ir.actions.server'].sudo().search([
             ('id', 'in', all_embedded_actions_sudo.action_id.ids),
@@ -1447,7 +1505,8 @@ class DocumentsDocument(models.Model):
             })
             action_name_translations = action._fields['name']._get_stored_translations(action)
             for lang, translation in action_name_translations.items():
-                embedded_action.with_context(lang=lang).name = translation
+                if self.env['res.lang']._lang_get(lang):
+                    embedded_action.with_context(lang=lang).name = translation
 
         return self.get_documents_actions(folder_id)
 
@@ -1470,6 +1529,18 @@ class DocumentsDocument(models.Model):
             return self.env['ir.actions.server'].with_context(documents_active_ids=ids).browse(embedded_action.action_id.id).run()
 
         raise UserError(_("Unavailable action."))
+
+    def _embed_action(self, action_id):
+        """Embed a server action on the current folder(s) if not already done."""
+        IrEmbeddedActions = self.env['ir.embedded.actions']
+        embedded_actions = self._get_folder_embedded_actions(self.ids)
+
+        new_embedding_folders = self.env['documents.document']
+        for folder in self:
+            if action_id not in embedded_actions.get(folder.id, IrEmbeddedActions).action_id.ids:
+                folder.action_folder_embed_action(folder.id, action_id)
+                new_embedding_folders |= folder
+        return new_embedding_folders
 
     def action_link_to_record(self, model=False):
         """Open the `link_to_record_wizard` to choose a record to link to the current documents.
@@ -1794,6 +1865,8 @@ class DocumentsDocument(models.Model):
             return self
         if not all(self.mapped('active')):
             raise UserError(_('You cannot duplicate document(s) in the Trash.'))
+        if default and default.get('user_folder_id') == 'MY':
+            default['owner_id'] = self.env.user.id
 
         # As we avoid to propagate the folder permission by setting access_ids to False (see copy_data), user has no
         # right to create the document. So after checking permission, we execute the copy in sudo.
@@ -1814,6 +1887,9 @@ class DocumentsDocument(models.Model):
 
         folders = (self - shortcuts).filtered(lambda d: d.type == 'folder')
         if folders:
+            if not is_manager and default and default.get('user_folder_id') == 'COMPANY':
+                raise AccessError(_('Only Documents Managers can create in company folder.'))
+
             embedded_actions = self._get_folder_embedded_actions(folders.ids)
             new_folders = folders.sudo()._copy_with_access(default=default).sudo(False)
 
@@ -1833,7 +1909,12 @@ class DocumentsDocument(models.Model):
                 owner_id_in_default = (default or {}).get('owner_id') is not None
                 if owner_id_in_default:
                     children_default.update(owner_id=default['owner_id'])
+
+                # check if we are not copying a folder into itself or one of its descendants
+                if new_folder.parent_path.startswith(old_folder.parent_path):
+                    raise UserError(_("You cannot copy a folder into itself or into one of its own descendants."))
                 old_folder.children_ids.with_context(documents_copy_skip_rename=True).copy(children_default)
+
                 new_documents[documents_order[old_folder.id]] = new_folder
                 if is_manager and old_folder._is_company_root_folder() and not owner_id_in_default:
                     new_folder.owner_id = old_folder.owner_id
@@ -2378,10 +2459,9 @@ class DocumentsDocument(models.Model):
         self._ensure_user_role_without_propagation('edit', previous_owner_access_to_keep)
 
         if new_parent_folder and (documents_to_sync := documents_to_move.filtered(lambda d: not d.shortcut_document_id)):
-            documents_to_sync.sudo().action_update_access_rights(
+            documents_to_sync.action_update_access_rights(
                 access_internal=new_parent_folder.access_internal,
                 access_via_link=new_parent_folder.access_via_link,
-                is_access_via_link_hidden=new_parent_folder.is_access_via_link_hidden,
                 # Simply add partners of destination
                 partners={access.partner_id: (access.role, access.expiration_date)
                           for access in new_parent_folder.access_ids if access.role},
@@ -2437,11 +2517,10 @@ class DocumentsDocument(models.Model):
                     domain & Domain('folder_id', 'child_of', unique_folder_id),
                     search_panel_fields,
                 )
-                map(convert_user_folder_ids_to_int, values)
                 for record in values:
+                    convert_user_folder_ids_to_int(record)
                     if record['id'] == unique_folder_id:
                         record['user_folder_id'] = False  # Set as root
-                        break
                 return {
                     'parent_field': 'user_folder_id',
                     'values': values,
@@ -2647,7 +2726,7 @@ class DocumentsDocument(models.Model):
         self.ensure_one()
         if access_uid and not force_website and self.active and self.env.user.has_group("documents.group_documents_user"):
             url_params = url_encode({
-                'preview_id': self.id,
+                'documents_init_document_id': self.id,
                 'view_id': self.env.ref("documents.document_view_kanban").id,
                 'menu_id': self.env.ref("documents.menu_root").id,
                 'folder_id': self.folder_id.id,

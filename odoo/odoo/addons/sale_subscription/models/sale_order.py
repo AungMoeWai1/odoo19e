@@ -400,6 +400,8 @@ class SaleOrder(models.Model):
         # First we get the invoices using the subscription_id value on the account.move.line.
         # It is useful if the sale.order.line are deleted and replaced by others during the subscription life.
         subscription_move_lines = self.env['account.move.line'].search([('subscription_id', 'in', all_subscription_ids)])
+        subscription_move_lines.fetch(['subscription_id', 'move_id'])
+        subscription_move_lines.subscription_id.fetch(['origin_order_id'])
         move_by_origin = defaultdict(list)
         for aml in subscription_move_lines:
             origin_order = aml.subscription_id.origin_order_id.id or aml.subscription_id.id
@@ -425,6 +427,8 @@ class SaleOrder(models.Model):
         for origin_order_id, invoices_ids in orders_vals + list(move_by_origin.items()):
             other_move_ids = move_by_origin[origin_order_id]
             all_move_ids = set(invoices_ids + other_move_ids)
+            # Filtered only account.move that user can see
+            all_move_ids = self.env['account.move'].browse(all_move_ids)._filtered_access('read').ids
             so_by_origin[origin_order_id].update({
                 'invoice_ids': [Command.set(all_move_ids)],
                 'invoice_count': len(all_move_ids)
@@ -600,6 +604,13 @@ class SaleOrder(models.Model):
         if not kwargs.get('model_description') and self.is_subscription:
             kwargs['model_description'] = _("Subscription")
         super()._notify_thread(message, msg_vals=msg_vals, **kwargs)
+
+    def _fetch_duplicate_orders(self):
+        # Renewal and upsell subscription orders should not duplicate orders
+        non_renewal_upsell_orders = self.filtered_domain([
+            ('subscription_state', 'not in', ('2_renewal', '7_upsell'))
+        ])
+        return super(SaleOrder, non_renewal_upsell_orders)._fetch_duplicate_orders()
 
     ###########
     # CRUD    #
@@ -779,7 +790,7 @@ class SaleOrder(models.Model):
                         order.subscription_state = '1_draft'
                 elif order.subscription_state != '7_upsell':
                     order.subscription_state = False
-                if all(sol._is_postpaid_line() for sol in order.order_line):
+                if order.order_line._is_all_postpaid():
                     post_paid |= order
 
             # _prepare_confirmation_values will update subscription_state for all confirmed subscription.
@@ -843,7 +854,8 @@ class SaleOrder(models.Model):
                 raise ValidationError(_("You cannot upsell a subscription whose next invoice date is in the past.\n"
                                         "Please, invoice directly the %s contract.", so.subscription_id.name))
         existing_line_ids = self.subscription_id.order_line
-        dummy, update_values = self.update_existing_subscriptions()
+        with self.env.protecting([self.subscription_id.order_line._fields['discount']], self.subscription_id.order_line):
+            _dummy, update_values = self.update_existing_subscriptions()
         updated_line_ids = self.env['sale.order.line'].browse({val[1] for val in update_values})
         new_lines_ids = self.subscription_id.order_line - existing_line_ids
         # Example: with a new yearly line starting in june when the expected next invoice date is december,
@@ -1064,6 +1076,7 @@ class SaleOrder(models.Model):
             'origin_order_id': self.origin_order_id.id,
             'subscription_id': self.subscription_id.id,
             'subscription_state': self.env.context.get('default_subscription_state', '2_renewal'),
+            'next_invoice_date': self.next_invoice_date,
         })
         action = alternative_so._get_associated_so_action()
         action['views'] = [(self.env.ref('sale_subscription.sale_subscription_primary_form_view').id, 'form')]
@@ -1273,11 +1286,15 @@ class SaleOrder(models.Model):
         )
         invoiceable_line_ids = []
         downpayment_line_ids = []
-        pending_section = None
+        section_line_ids = []
+        subsection_line_ids = []
         for line in self.order_line:
-            if line.display_type in ('line_section', 'line_subsection'):
-                # Only add section if one of its lines is invoiceable
-                pending_section = line
+            if line.display_type == 'line_section':
+                section_line_ids = [line.id]  # Start a new section.
+                subsection_line_ids = []
+                continue
+            if line.display_type == 'line_subsection':
+                subsection_line_ids = [line.id]  # Start a new subsection.
                 continue
 
             if line.state != 'sale':
@@ -1295,9 +1312,22 @@ class SaleOrder(models.Model):
                     # downpayment line must be kept at the end in its dedicated section
                     downpayment_line_ids.append(line.id)
                     continue
-                if pending_section:
-                    invoiceable_line_ids.append(pending_section.id)
-                    pending_section = False
+                if subsection_line_ids:
+                    if line.display_type:
+                        subsection_line_ids.append(line.id)
+                        continue
+                    # Extend the subsection lines too if altleast one invoicable line is under subsection
+                    invoiceable_line_ids.extend(section_line_ids + subsection_line_ids)
+                    subsection_line_ids = []
+                    section_line_ids = []
+                # If the invoicable line is under section
+                elif section_line_ids:
+                    if line.display_type:
+                        section_line_ids.append(line.id)
+                        continue
+                    invoiceable_line_ids.extend(section_line_ids)
+                    section_line_ids = []
+                    subsection_line_ids = []
                 invoiceable_line_ids.append(line.id)
             if line.display_type == "subscription_discount":
                 invoiceable_line_ids.append(line.id)
@@ -1540,9 +1570,12 @@ class SaleOrder(models.Model):
 
         return all_subscriptions, need_cron_trigger
 
-    def _subscription_commit_cursor(self, auto_commit, progress=0):
+    def _subscription_commit_cursor(self, auto_commit, remaining=None):
         if auto_commit:
-            self.env['ir.cron']._commit_progress(progress)
+            if remaining is not None:
+                self.env['ir.cron']._commit_progress(processed=1, remaining=remaining)
+            else:
+                self.env.cr.commit()
         else:
             self.env.flush_all()
             self.env.cr.flush()
@@ -1595,7 +1628,7 @@ class SaleOrder(models.Model):
         if auto_commit:
             self.env['ir.cron']._commit_progress(remaining=len(all_subscriptions))
         self._subscription_commit_cursor(auto_commit)
-        for subscription in all_subscriptions:
+        for done, subscription in enumerate(all_subscriptions, start=1):
             if auto_commit:
                 # prefetch only the current subscription because the cache is invalidated after commits
                 subscription = subscription.with_prefetch()
@@ -1629,7 +1662,8 @@ class SaleOrder(models.Model):
                         subscription.payment_exception = True
                     # We still update the next_invoice_date if it is due
                     elif updatable_invoice_date:
-                        updatable_invoice_date._update_next_invoice_date()
+                        # increment next invoice date, even for non invoiced postpaid contracts
+                        updatable_invoice_date.with_context(force_postpaid_next_invoice=True)._update_next_invoice_date()
                         if invoice_is_free:
                             for line in invoiceable_lines:
                                 line.qty_invoiced = line.product_uom_qty
@@ -1676,11 +1710,14 @@ class SaleOrder(models.Model):
                     _logger.exception("Error during post invoice action")
                     subscription._handle_post_invoice_hook_exception()
                 subscription.is_invoice_cron = False
-                self._subscription_commit_cursor(auto_commit, progress=1)
+                self._subscription_commit_cursor(auto_commit, remaining=len(all_subscriptions) - done)
             except Exception:
                 name_list = [f"{sub.name} {sub.client_order_ref}" for sub in subscription]
                 _logger.exception("Error during renewal of contract %s", "; ".join(name_list))
                 self._subscription_rollback_cursor(auto_commit)
+        # As we are out of the loop we are done, no need to relaunch the cron. If somehow
+        # the remaining was not 0 yet
+        self._subscription_commit_cursor(auto_commit, remaining=0)
         # There is still some subscriptions to process. Then, make sure the CRON will be triggered again asap.
         if need_cron_trigger:
             self._subscription_launch_cron_parallel(batch_size)
@@ -2232,7 +2269,7 @@ class SaleOrder(models.Model):
         :param order: the new order
         """
         for follower in self.message_follower_ids:
-            if follower.partner_id not in order.message_follower_ids.partner_id and not follower.partner_id.partner_share:
+            if follower.partner_id not in order.message_follower_ids.partner_id:
                 order.message_subscribe(
                     partner_ids=follower.partner_id.ids,
                     subtype_ids=follower.subtype_ids.ids

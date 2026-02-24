@@ -3,13 +3,14 @@
 # * product_barcodelookup
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:39+0000\n"
-"PO-Revision-Date: 2025-09-15 12:03+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2025-12-30 18:46+0000\n"
+"PO-Revision-Date: 2025-11-06 07:15+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
 "product_barcodelookup/ja/>\n"
 "Language: ja\n"
@@ -23,22 +24,24 @@ msgstr ""
 #. odoo-python
 #: code:addons/product_barcodelookup/wizard/product_fetch_image_wizard.py:0
 msgid ""
-"%(matching_images_count)s matching images have been found for "
-"%(product_count)s products."
-msgstr "%(matching_images_count)sの一致する画像が%(product_count)s "
-"のプロダクト用に見つかりました。"
+"%(matching_images_count)s matching images have been found for %"
+"(product_count)s products."
+msgstr ""
+"%(matching_images_count)sの一致する画像が%(product_count)s のプロダクト用に見"
+"つかりました。"
 
 #. module: product_barcodelookup
 #: model_terms:ir.ui.view,arch_db:product_barcodelookup.product_fetch_image_wizard_view_form
 msgid ""
 "<span invisible=\"nb_products_selected &lt;= 1000\">\n"
-"                            As only 1000 products can be processed per day, the remaining will be\n"
+"                            As only 1000 products can be processed per day, "
+"the remaining will be\n"
 "                            done tomorrow.\n"
 "                        </span>"
 msgstr ""
 "<span invisible=\"nb_products_selected &lt;= 1000\">\n"
-"                            一日に1,000プロダクトしか処理されないため、"
-"残りは\n"
+"                            一日に1,000プロダクトしか処理されないため、残り"
+"は\n"
 "                            明日処理されます。\n"
 "                        </span>"
 
@@ -46,12 +49,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product_barcodelookup.product_fetch_image_wizard_view_form
 msgid ""
 "<strong>Note: </strong>\n"
-"                        Some images may not be royalty-free and should not be published online."
+"                        Some images may not be royalty-free and should not "
+"be published online."
 msgstr ""
 "<strong>メモ: </strong>\n"
-"                        "
-"一部の画像はロイヤリティフリーではない可能性があり、オンラインで公開すべきで"
-"はありません。"
+"                        一部の画像はロイヤリティフリーではない可能性があり、"
+"オンラインで公開すべきではありません。"
 
 #. module: product_barcodelookup
 #. odoo-python
@@ -59,7 +62,8 @@ msgstr ""
 msgid ""
 "A task to process products in the background is already running. Please try "
 "again later."
-msgstr "バックグラウンドでプロダクトを処理するタスクがすでに実行中です。後ほどもう一"
+msgstr ""
+"バックグラウンドでプロダクトを処理するタスクがすでに実行中です。後ほどもう一"
 "度お試し下さい。"
 
 #. module: product_barcodelookup
@@ -90,7 +94,7 @@ msgstr "キャンセル"
 #. module: product_barcodelookup
 #: model:ir.model,name:product_barcodelookup.model_res_config_settings
 msgid "Config Settings"
-msgstr "詳細設定"
+msgstr "構成設定"
 
 #. module: product_barcodelookup
 #: model_terms:ir.ui.view,arch_db:product_barcodelookup.res_config_settings_view_form
@@ -120,8 +124,9 @@ msgstr "表示名"
 #: model:ir.model,name:product_barcodelookup.model_product_fetch_image_wizard
 msgid ""
 "Fetch product images from Barcode Lookup based on the product's barcode."
-msgstr "プロダクトのバーコードに基づいたBarcode "
-"Lookupからプロダクト画像を取得します。"
+msgstr ""
+"プロダクトのバーコードに基づいたBarcode Lookupからプロダクト画像を取得しま"
+"す。"
 
 #. module: product_barcodelookup
 #: model_terms:ir.ui.view,arch_db:product_barcodelookup.product_fetch_image_wizard_view_form
@@ -138,7 +143,7 @@ msgstr "Barcode Lookupから画像を取得"
 #. odoo-python
 #: code:addons/product_barcodelookup/wizard/product_fetch_image_wizard.py:0
 msgid "Go to Settings"
-msgstr ""
+msgstr "設定に移動する"
 
 #. module: product_barcodelookup
 #: model:ir.model.fields,field_description:product_barcodelookup.field_ir_cron_trigger__id
@@ -230,16 +235,17 @@ msgstr "Barcode Lookup用のAPIキーは、一般設定で設定する必要が�
 msgid ""
 "The Barcode Lookup API key is not set properly or it is invalid. Check your "
 "API key in setting and retry."
-msgstr "Barcode Lookup "
-"APIキーが正しく設定されていないか、無効です。設定したAPIキーを確認し、再度お"
-"試し下さい。"
+msgstr ""
+"Barcode Lookup APIキーが正しく設定されていないか、無効です。設定したAPIキーを"
+"確認し、再度お試し下さい。"
 
 #. module: product_barcodelookup
 #: model:ir.model.fields,help:product_barcodelookup.field_product_fetch_image_wizard__products_to_process
 msgid ""
 "The list of selected products that meet the criteria (have a barcode and no "
 "image)"
-msgstr "条件（バーコードがあり、画像がない）を満たす、選択されたプロダクトのリスト"
+msgstr ""
+"条件（バーコードがあり、画像がない）を満たす、選択されたプロダクトのリスト"
 
 #. module: product_barcodelookup
 #. odoo-python
@@ -249,17 +255,10 @@ msgid ""
 "Lookup\" has been deleted. Please contact your administrator to have the "
 "action restored or to reinstall the module \"product_barcodelookup\"."
 msgstr ""
-"スケジュールされたアクション "
-"\"プロダクト画像: Barcode Lookupからプロダクト画像を取得\" "
-"が削除されました。アクションを復元するには、またはモジュール "
-"\"product_barcodelookup\" "
-"を再インストールするには、管理者にお問い合わせ下さい。"
-
-#. module: product_barcodelookup
-#. odoo-python
-#: code:addons/product_barcodelookup/models/ir_cron_trigger.py:0
-msgid "This action is already scheduled. Please try again later."
-msgstr "このアクションはすでにスケジュールされています。後でもう一度試して下さい。"
+"スケジュールされたアクション \"プロダクト画像: Barcode Lookupからプロダクト画"
+"像を取得\" が削除されました。アクションを復元するには、またはモジュール "
+"\"product_barcodelookup\" を再インストールするには、管理者にお問い合わせ下さ"
+"い。"
 
 #. module: product_barcodelookup
 #: model:ir.model,name:product_barcodelookup.model_ir_cron_trigger
@@ -269,7 +268,8 @@ msgstr "トリガーされたアクション"
 #. module: product_barcodelookup
 #: model:ir.model.fields,help:product_barcodelookup.field_product_product__is_image_fetch_pending
 msgid "Whether an image must be fetched for this product. Handled by a cron."
-msgstr "このプロダクトの画像を取得しなければならないかどうか。定期処理(cron)によって"
+msgstr ""
+"このプロダクトの画像を取得しなければならないかどうか。定期処理(cron)によって"
 "処理されます。"
 
 #. module: product_barcodelookup
@@ -336,9 +336,14 @@ msgstr "処理されます。"
 #: model_terms:ir.ui.view,arch_db:product_barcodelookup.product_fetch_image_wizard_view_form
 msgid ""
 "won't be\n"
-"                            processed because they either already have an image or\n"
+"                            processed because they either already have an "
+"image or\n"
 "                            lack a barcode"
 msgstr ""
 "処理されません。\n"
 "                            すでに画像があるか、バーコードが\n"
 "                            ないためです"
+
+#~ msgid "This action is already scheduled. Please try again later."
+#~ msgstr ""
+#~ "このアクションはすでにスケジュールされています。後でもう一度試して下さい。"

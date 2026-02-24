@@ -135,17 +135,17 @@ class TestCodaFile(AccountTestInvoicingCommon):
         imported_statement = self.env['account.bank.statement'].search([('company_id', '=', self.env.company.id)])
 
         self.assertRecordValues(imported_statement.line_ids, [
-            {'amount': -435.00},
-            {'amount': 3044.45},
-            {'amount': -419.92},
-            {'amount': -59.12},
-            {'amount': -419.92},
-            {'amount': -59.12},
-            {'amount': 63.74},
-            {'amount': -1718.48},
-            {'amount': -1077.21},
-            {'amount': -8.00},
-            {'amount': -1.68},
+            {'amount': -435.00, 'payment_ref': 'MEDEDELING'},
+            {'amount': 3044.45, 'payment_ref': '+++240/2838/42818+++'},
+            {'amount': -419.92, 'payment_ref': 'KBC-INVESTERINGSKREDIET 737-6543210-21'},
+            {'amount': -59.12, 'payment_ref': 'KBC-INVESTERINGSKREDIET 737-6543210-21'},
+            {'amount': -419.92, 'payment_ref': 'KBC-INVESTERINGSKREDIET 737-6543210-21'},
+            {'amount': -59.12, 'payment_ref': 'KBC-INVESTERINGSKREDIET 737-6543210-21'},
+            {'amount': 63.74, 'payment_ref': 'TERUGGAVE 37232481 8400083296 .'},
+            {'amount': -1718.48, 'payment_ref': 'Original amount of the transaction'},
+            {'amount': -1077.21, 'payment_ref': 'Original amount of the transaction'},
+            {'amount': -8.00, 'payment_ref': '1983756643.95654 AC123456789123'},
+            {'amount': -1.68, 'payment_ref': 'Method of calculation (VAT, withholding tax on income, commission, etc.)'},
         ])
 
         self.assertRecordValues(imported_statement, [{

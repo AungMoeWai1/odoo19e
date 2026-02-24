@@ -19,13 +19,13 @@ class HrPayslipRun(models.Model):
 
         if structure.code == "CHMONTHLYELM":
             all_contracts = self.env['l10n.ch.occupation'].search([])
-            valid_contracts = all_contracts.filtered(lambda c:
+            valid_contracts_sudo = all_contracts.sudo().filtered(lambda c:
                  c.date_start and
                  c.employee_id.company_id.id == company and
                  c.date_start <= date_end
                  and (not c.date_end or c.date_end >= date_start)
              )
-            return valid_contracts.ids
+            return valid_contracts_sudo.ids
         else:
             return super()._get_valid_version_ids(date_start, date_end, structure_id, company_id, employee_ids, schedule_pay)
 
@@ -63,7 +63,20 @@ class HrPayslipRun(models.Model):
                 }
                 payslips_vals.append(values)
             self.slip_ids |= Payslip.with_context(tracking_disable=True).create(payslips_vals)
+            self.slip_ids._compute_name()
             self.slip_ids.compute_sheet()
             self.state = '01_ready'
 
             return 1
+
+    def action_payment_report(self, export_format='iso20022_ch'):
+        action = super().action_payment_report()
+        if self.company_id.country_code != 'CH':
+            return action
+        action.update({
+            'context': {
+                **action['context'],
+                'default_export_format': export_format,
+            },
+        })
+        return action

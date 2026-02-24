@@ -4,16 +4,19 @@
 #
 # Translators:
 # Martin Trigaux, 2022
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022, 2025, 2026.
 # Jolien De Paepe, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Bren Driesen <brdri@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Odoo Translation Bot <c3p@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-13 21:41+0000\n"
-"PO-Revision-Date: 2025-09-14 11:58+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2025-12-30 18:42+0000\n"
+"PO-Revision-Date: 2026-02-18 14:53+0000\n"
+"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/"
 "stock_barcode/nl/>\n"
 "Language: nl\n"
@@ -21,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: stock_barcode
 #. odoo-javascript
@@ -48,8 +51,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-lg fa-long-arrow-right me-3\" title=\"Scrap "
 "Location\"/>"
 msgstr ""
-"<i class=\"fa fa-fw fa-lg fa-long-arrow-right me-3\" title=\"Afkeurlocatie\""
-"/>"
+"<i class=\"fa fa-fw fa-lg fa-long-arrow-right me-3\" title=\"Afkeurlocatie\"/"
+">"
 
 #. module: stock_barcode
 #: model_terms:ir.ui.view,arch_db:stock_barcode.scrap_product_selector
@@ -189,8 +192,8 @@ msgid ""
 "An error occured during parsing of element_string: AI code %(ai_code)s is "
 "missing for scheme %(scheme_name)s"
 msgstr ""
-"Er is een fout opgetreden tijdens het parseren van element_string: AI-code "
-"%(ai_code)s ontbreekt voor schema %(scheme_name)s"
+"Er is een fout opgetreden tijdens het parseren van element_string: AI-code %"
+"(ai_code)s ontbreekt voor schema %(scheme_name)s"
 
 #. module: stock_barcode
 #. odoo-python
@@ -199,8 +202,8 @@ msgid ""
 "An error occured with field '%(field_name)s': the corresponding AI '%"
 "(ai_code)s' was not found in the element_string"
 msgstr ""
-"Er is een fout opgetreden met veld '%(field_name)s': de overeenkomstige AI "
-"'%(ai_code)s' is niet gevonden in element_string"
+"Er is een fout opgetreden met veld '%(field_name)s': de overeenkomstige AI '%"
+"(ai_code)s' is niet gevonden in element_string"
 
 #. module: stock_barcode
 #. odoo-python
@@ -209,8 +212,8 @@ msgid ""
 "An error occured: value of company_prefix_length (%(company_prefix_length)s) "
 "must be between 6 and 12 inclusive."
 msgstr ""
-"Er is een fout opgetreden: de waarde van company_prefix_length "
-"(%(company_prefix_length)s) moet zich tussen 6 en 12 bevinden."
+"Er is een fout opgetreden: de waarde van company_prefix_length (%"
+"(company_prefix_length)s) moet zich tussen 6 en 12 bevinden."
 
 #. module: stock_barcode
 #. odoo-python
@@ -249,7 +252,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/stock_barcode/static/src/components/confirm_quant_dialog.xml:0
 msgid "Apply Now"
-msgstr ""
+msgstr "Nu toepassen"
 
 #. module: stock_barcode
 #: model_terms:ir.ui.view,arch_db:stock_barcode.stock_barcode_cancel_operation_view
@@ -291,7 +294,7 @@ msgstr "Barcode app"
 #. module: stock_barcode
 #: model:ir.model.fields,field_description:stock_barcode.field_stock_location__barcode_img
 msgid "Barcode Img"
-msgstr ""
+msgstr "Barcode afbeelding"
 
 #. module: stock_barcode
 #: model:ir.actions.client,name:stock_barcode.stock_barcode_inventory_client_action
@@ -415,7 +418,7 @@ msgstr "Bevestigen"
 #. odoo-javascript
 #: code:addons/stock_barcode/static/src/components/confirm_quant_dialog.xml:0
 msgid "Confirm Inventory Adjustment"
-msgstr ""
+msgstr "Voorraadaanpassing bevestigen"
 
 #. module: stock_barcode
 #: model:ir.model,name:stock_barcode.model_res_partner
@@ -478,12 +481,12 @@ msgstr "Verwijderen"
 #. module: stock_barcode
 #: model:ir.model.fields,field_description:stock_barcode.field_res_config_settings__stock_barcode_demo_active
 msgid "Demo Data Active"
-msgstr "Demogegevens actief"
+msgstr "Demodata actief"
 
 #. module: stock_barcode
 #: model_terms:ir.ui.view,arch_db:stock_barcode.stock_move_line_product_selector
 msgid "Destination Container Package"
-msgstr ""
+msgstr "Pakket doelcontainter"
 
 #. module: stock_barcode
 #. odoo-javascript
@@ -540,7 +543,7 @@ msgstr "Negeren"
 #: model:ir.model.fields,field_description:stock_barcode.field_stock_warehouse__display_name
 #: model:ir.model.fields,field_description:stock_barcode.field_uom_uom__display_name
 msgid "Display Name"
-msgstr "Schermnaam"
+msgstr "Weergavenaam"
 
 #. module: stock_barcode
 #: model:ir.model.fields,help:stock_barcode.field_stock_picking_type__show_reserved_sns
@@ -830,7 +833,8 @@ msgstr "Ongeldige word_pad_char '%(word_pad_char)s'. Gebruik '0' of '1'."
 #. odoo-python
 #: code:addons/stock_barcode/models/epc_encoder.py:0
 msgid "Invalid word_pad_side '%(word_pad_side)s'. Use 'left' or 'right'."
-msgstr "Ongeldige word_pad_side '%(word_pad_side)s'. Gebruik 'left' of 'right'."
+msgstr ""
+"Ongeldige word_pad_side '%(word_pad_side)s'. Gebruik 'left' of 'right'."
 
 #. module: stock_barcode
 #: model:ir.model,name:stock_barcode.model_stock_location
@@ -841,7 +845,7 @@ msgstr "Voorraadlocaties"
 #. odoo-javascript
 #: code:addons/stock_barcode/static/src/components/confirm_quant_dialog.xml:0
 msgid "Inventory Reason"
-msgstr ""
+msgstr "Inventarisatiereden"
 
 #. module: stock_barcode
 #: model:ir.model.fields,field_description:stock_barcode.field_stock_picking_type__is_barcode_picking_type
@@ -990,13 +994,13 @@ msgstr "Geen picking of product dat overeenkomt met barcode %(barcode)s"
 #. odoo-python
 #: code:addons/stock_barcode/models/stock_picking.py:0
 msgid "No product found for barcode %s"
-msgstr ""
+msgstr "Geen product gevonden voor barcode %s"
 
 #. module: stock_barcode
 #. odoo-python
 #: code:addons/stock_barcode/models/stock_picking.py:0
 msgid "No product or lot found for barcode %s"
-msgstr ""
+msgstr "Geen product of partij gevonden voor barcode %s"
 
 #. module: stock_barcode
 #. odoo-python
@@ -1008,31 +1012,31 @@ msgstr "Geen product of verpakking gevonden voor streepjescode %s"
 #. odoo-python
 #: code:addons/stock_barcode/models/stock_picking.py:0
 msgid "No product or packaging found for barcode %s"
-msgstr ""
+msgstr "Geen product of verpakking gevonden voor barcode %s"
 
 #. module: stock_barcode
 #. odoo-python
 #: code:addons/stock_barcode/models/stock_picking.py:0
 msgid "No product, lot, or package found for barcode %s"
-msgstr ""
+msgstr "Geen product, partij of pakket gevonden voor barcode %s"
 
 #. module: stock_barcode
 #. odoo-python
 #: code:addons/stock_barcode/models/stock_picking.py:0
 msgid "No product, lot, or packaging found for barcode %s"
-msgstr ""
+msgstr "Geen product, partij of verpakking gevonden voor barcode %s"
 
 #. module: stock_barcode
 #. odoo-python
 #: code:addons/stock_barcode/models/stock_picking.py:0
 msgid "No product, lot, packaging, or package found for barcode %s"
-msgstr ""
+msgstr "Geen product, partij, verpakking of pakket gevonden voor barcode %s"
 
 #. module: stock_barcode
 #. odoo-python
 #: code:addons/stock_barcode/models/stock_picking.py:0
 msgid "No product, package, or packaging found for barcode %s"
-msgstr ""
+msgstr "Geen product, pakket of verpakking gevonden voor barcode %s"
 
 #. module: stock_barcode
 #. odoo-javascript
@@ -1090,7 +1094,7 @@ msgstr "Opties"
 #. module: stock_barcode
 #: model:ir.model.fields,field_description:stock_barcode.field_stock_move_line__outermost_result_package_id
 msgid "Outermost Result Package"
-msgstr ""
+msgstr "Buitenste Resultaat pakket"
 
 #. module: stock_barcode
 #: model_terms:ir.ui.view,arch_db:stock_barcode.stock_move_line_product_selector
@@ -1154,8 +1158,8 @@ msgid ""
 "Partition table %(table_name)s not found, available tables are : %"
 "(table_list)s)"
 msgstr ""
-"Partitiontabel %(table_name)s niet gevonden, beschikbare tabellen zijn: "
-"%(table_list)s"
+"Partitiontabel %(table_name)s niet gevonden, beschikbare tabellen zijn: %"
+"(table_list)s"
 
 #. module: stock_barcode
 #. odoo-javascript
@@ -1234,6 +1238,8 @@ msgid ""
 "Print the %(sheet_s)sdemo data sheet%(sheet_e)s to test, or %"
 "(ops_s)sbarcodes%(ops_e)s for operations."
 msgstr ""
+"Druk het %(sheet_s)sdemo-gegevensblad%(sheet_e)s af om te testen, of %"
+"(ops_s)sbarcodes%(ops_e)s voor bewerkingen."
 
 #. module: stock_barcode
 #. odoo-javascript
@@ -1310,7 +1316,7 @@ msgstr "Aantal gedaan"
 #: model_terms:ir.ui.view,arch_db:stock_barcode.scrap_product_selector
 #: model_terms:ir.ui.view,arch_db:stock_barcode.stock_move_line_product_selector
 msgid "Quantity"
-msgstr "Aantal"
+msgstr "Hoeveelheid"
 
 #. module: stock_barcode
 #: model_terms:ir.ui.view,arch_db:stock_barcode.stock_quant_barcode_kanban
@@ -1320,7 +1326,7 @@ msgstr "Aantal gereed"
 #. module: stock_barcode
 #: model_terms:ir.ui.view,arch_db:stock_barcode.stock_move_line_product_selector
 msgid "Quantity in Stock"
-msgstr ""
+msgstr "Hoeveelheid op voorraad"
 
 #. module: stock_barcode
 #: model:ir.model.fields,help:stock_barcode.field_stock_move_line__packaging_uom_qty
@@ -1368,6 +1374,8 @@ msgid ""
 "Scan a %(bold_s)s transfer%(bold_e)s or a %(bold_s)s product%(bold_e)s to "
 "filter your records"
 msgstr ""
+"Scan een %(bold_s)s overdracht%(bold_e)s of een %(bold_s)s product%(bold_e)s "
+"om je records te filteren"
 
 #. module: stock_barcode
 #. odoo-javascript
@@ -1377,6 +1385,9 @@ msgid ""
 "(bold_s)s lot%(bold_e)s, a %(bold_s)s packaging%(bold_e)s, or a %(bold_s)s "
 "package%(bold_e)s to filter your records"
 msgstr ""
+"Scan een %(bold_s)s overdracht%(bold_e)s, een %(bold_s)s product%(bold_e)s, "
+"een %(bold_s)s partij%(bold_e)s, een %(bold_s)s verpakking%(bold_e)s of een %"
+"(bold_s)s pakket%(bold_e)s om je records te filteren"
 
 #. module: stock_barcode
 #. odoo-javascript
@@ -1386,6 +1397,9 @@ msgid ""
 "(bold_s)s lot%(bold_e)s, or a %(bold_s)s package%(bold_e)s to filter your "
 "records"
 msgstr ""
+"Scan een %(bold_s)s overdracht%(bold_e)s, een %(bold_s)s product%(bold_e)s, "
+"een %(bold_s)s partij%(bold_e)s of een %(bold_s)s pakket%(bold_e)s om je "
+"records te filteren"
 
 #. module: stock_barcode
 #. odoo-javascript
@@ -1395,6 +1409,9 @@ msgid ""
 "(bold_s)s lot%(bold_e)s, or a %(bold_s)s packaging%(bold_e)s to filter your "
 "records"
 msgstr ""
+"Scan een %(bold_s)s overdracht%(bold_e)s, een %(bold_s)s product%(bold_e)s, "
+"een %(bold_s)s partij%(bold_e)s of een %(bold_s)s verpakking%(bold_e)s om je "
+"records te filteren"
 
 #. module: stock_barcode
 #. odoo-javascript
@@ -1404,6 +1421,9 @@ msgid ""
 "(bold_s)s packaging%(bold_e)s, or a %(bold_s)s package%(bold_e)s to filter "
 "your records"
 msgstr ""
+"Scan een %(bold_s)s overdracht%(bold_e)s, een %(bold_s)s product%(bold_e)s, "
+"een %(bold_s)s verpakking%(bold_e)s of een %(bold_s)s pakket%(bold_e)s om je "
+"records te filteren"
 
 #. module: stock_barcode
 #. odoo-javascript
@@ -1412,6 +1432,8 @@ msgid ""
 "Scan a %(bold_s)s transfer%(bold_e)s, a %(bold_s)s product%(bold_e)s, or a %"
 "(bold_s)s lot%(bold_e)s to filter your records"
 msgstr ""
+"Scan een %(bold_s)s overdracht%(bold_e)s, een %(bold_s)s product%(bold_e)s "
+"of een %(bold_s)s partij%(bold_e)s om je records te filteren"
 
 #. module: stock_barcode
 #. odoo-javascript
@@ -1420,6 +1442,8 @@ msgid ""
 "Scan a %(bold_s)s transfer%(bold_e)s, a %(bold_s)s product%(bold_e)s, or a %"
 "(bold_s)s package%(bold_e)s to filter your records"
 msgstr ""
+"Scan een %(bold_s)s overdracht%(bold_e)s, een %(bold_s)s product%(bold_e)s "
+"of een %(bold_s)s pakket%(bold_e)s om je records te filteren"
 
 #. module: stock_barcode
 #. odoo-javascript
@@ -1428,24 +1452,26 @@ msgid ""
 "Scan a %(bold_s)s transfer%(bold_e)s, a %(bold_s)s product%(bold_e)s, or a %"
 "(bold_s)s packaging%(bold_e)s to filter your records"
 msgstr ""
+"Scan een %(bold_s)s overdracht%(bold_e)s, een %(bold_s)s product%(bold_e)s "
+"of een %(bold_s)s verpakking%(bold_e)s om je records te filteren"
 
 #. module: stock_barcode
 #. odoo-javascript
 #: code:addons/stock_barcode/static/src/main_menu/main_menu.js:0
 msgid "Scan a %(bold_s)slocation%(bold_e)s to initiate a transfer"
-msgstr ""
+msgstr "Scan een %(bold_s)slocatie%(bold_e)s om een overdracht te starten"
 
 #. module: stock_barcode
 #. odoo-javascript
 #: code:addons/stock_barcode/static/src/main_menu/main_menu.js:0
 msgid "Scan a %(bold_s)spackage%(bold_e)s to find a transfer"
-msgstr ""
+msgstr "Scan een %(bold_s)spakket%(bold_e)s om een overdracht te vinden"
 
 #. module: stock_barcode
 #. odoo-javascript
 #: code:addons/stock_barcode/static/src/main_menu/main_menu.js:0
 msgid "Scan a %(bold_s)spicking%(bold_e)s to open it"
-msgstr ""
+msgstr "Scan een %(bold_s)spicking%(bold_e)s om het te openen"
 
 #. module: stock_barcode
 #. odoo-javascript
@@ -1454,6 +1480,8 @@ msgid ""
 "Scan a %(bold_s)sproduct%(bold_e)s or its %(bold_s)spackaging%(bold_e)s to "
 "locate it"
 msgstr ""
+"Scan een %(bold_s)sproduct%(bold_e)s of de %(bold_s)sverpakking%(bold_e)s om "
+"het te lokaliseren"
 
 #. module: stock_barcode
 #. odoo-javascript
@@ -1462,12 +1490,15 @@ msgid ""
 "Scan a %(bold_s)stracking number%(bold_e)s or a %(bold_s)spackage%(bold_e)s "
 "to find a transfer"
 msgstr ""
+"Scan een %(bold_s)strackingnummer%(bold_e)s of een %(bold_s)spakket%"
+"(bold_e)s om een overdracht te vinden"
 
 #. module: stock_barcode
 #. odoo-javascript
 #: code:addons/stock_barcode/static/src/main_menu/main_menu.js:0
 msgid "Scan a %(bold_s)stracking number%(bold_e)s to find a transfer"
 msgstr ""
+"Scan een %(bold_s)strackingnummer%(bold_e)s om een overdracht te vinden"
 
 #. module: stock_barcode
 #. odoo-javascript
@@ -1534,7 +1565,7 @@ msgstr "Scan een product van %s"
 #. odoo-python
 #: code:addons/stock_barcode/models/stock_picking.py:0
 msgid "Scan a product or a lot to filter the transfers."
-msgstr ""
+msgstr "Scan een product of een partij om de overdrachten te filteren."
 
 #. module: stock_barcode
 #. odoo-javascript
@@ -1552,7 +1583,7 @@ msgstr "Scan een product of een pakket om de transfers te filteren."
 #. odoo-python
 #: code:addons/stock_barcode/models/stock_picking.py:0
 msgid "Scan a product or a packaging to filter the transfers."
-msgstr ""
+msgstr "Scan een product of verpakking om de overdrachten te filteren."
 
 #. module: stock_barcode
 #. odoo-javascript
@@ -1576,7 +1607,7 @@ msgstr "Scan een product en vervolgens de bestemmingslocatie"
 #. odoo-python
 #: code:addons/stock_barcode/models/stock_picking.py:0
 msgid "Scan a product to filter the transfers."
-msgstr ""
+msgstr "Scan een product om de overdrachten te filteren."
 
 #. module: stock_barcode
 #. odoo-python
@@ -1584,18 +1615,20 @@ msgstr ""
 msgid ""
 "Scan a product, a lot, a packaging, or a package to filter the transfers."
 msgstr ""
+"Scan een product, partij, verpakking of pakket om de overdrachten te "
+"filteren."
 
 #. module: stock_barcode
 #. odoo-python
 #: code:addons/stock_barcode/models/stock_picking.py:0
 msgid "Scan a product, a lot, or a package to filter the transfers."
-msgstr ""
+msgstr "Scan een product, partij of pakket om de overdrachten te filteren."
 
 #. module: stock_barcode
 #. odoo-python
 #: code:addons/stock_barcode/models/stock_picking.py:0
 msgid "Scan a product, a lot, or a packaging to filter the transfers."
-msgstr ""
+msgstr "Scan een product, partij of verpakking om de overdrachten te filteren."
 
 #. module: stock_barcode
 #. odoo-javascript
@@ -1613,7 +1646,7 @@ msgstr "Scan een product, een verpakking of de bestemmingslocatie."
 #. odoo-python
 #: code:addons/stock_barcode/models/stock_picking.py:0
 msgid "Scan a product, a package, or a packaging to filter the transfers."
-msgstr ""
+msgstr "Scan een product, pakket of verpakking om de overdrachten te filteren."
 
 #. module: stock_barcode
 #. odoo-javascript
@@ -1644,7 +1677,7 @@ msgstr "Scan een serienummer en vervolgens de bestemmingslocatie"
 #. odoo-javascript
 #: code:addons/stock_barcode/static/src/main_menu/main_menu.js:0
 msgid "Scan an %(bold_s)soperation type%(bold_e)s to start it"
-msgstr ""
+msgstr "Scan een %(bold_s)sbewerkingstype%(bold_e)s om te starten"
 
 #. module: stock_barcode
 #. odoo-javascript
@@ -1896,6 +1929,16 @@ msgstr "Er is niets om af te drukken op deze pagina."
 #. module: stock_barcode
 #. odoo-javascript
 #: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+msgid ""
+"This package contains extra products and extra products are not allowed on "
+"this operation."
+msgstr ""
+"Dit pakket bevat extra producten en extra producten zijn niet toegestaan bij "
+"deze bewerking."
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
 #: code:addons/stock_barcode/static/src/models/barcode_quant_model.js:0
 msgid "This package is already scanned."
 msgstr "Dit verpakking is al gescand."
@@ -1991,7 +2034,7 @@ msgstr "Eenheid"
 #. odoo-javascript
 #: code:addons/stock_barcode/static/src/components/package_line.xml:0
 msgid "Unpack"
-msgstr ""
+msgstr "Uitpakken"
 
 #. module: stock_barcode
 #: model_terms:ir.ui.view,arch_db:stock_barcode.view_stock_quant_tree
@@ -2032,13 +2075,13 @@ msgstr "De te coderen waarde bevat ongeldige teken(s): %(invalid_chars)s"
 #. odoo-javascript
 #: code:addons/stock_barcode/static/src/widgets/image_preview.xml:0
 msgid "Viewer"
-msgstr "Viewer"
+msgstr "Kijker"
 
 #. module: stock_barcode
 #. odoo-javascript
 #: code:addons/stock_barcode/static/src/components/confirm_quant_dialog.xml:0
 msgid "Wait a Review"
-msgstr ""
+msgstr "Op beoordeling wachten"
 
 #. module: stock_barcode
 #: model:ir.model,name:stock_barcode.model_stock_warehouse
@@ -2065,8 +2108,9 @@ msgid ""
 "(locationName)s but this product isn't reserved in this location.\n"
 "Scan the current location to confirm that."
 msgstr ""
-"Je staat op het punt het product %(productName)s uit locatie %(locationName)"
-"s te nemen, maar dit product is niet gereserveerd in deze locatie. \n"
+"Je staat op het punt het product %(productName)s uit locatie %"
+"(locationName)s te nemen, maar dit product is niet gereserveerd in deze "
+"locatie. \n"
 "Scan de huidige locatie om te bevestigen."
 
 #. module: stock_barcode

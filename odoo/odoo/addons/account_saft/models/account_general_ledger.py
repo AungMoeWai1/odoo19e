@@ -46,9 +46,10 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
         :return: False if no account type needed, otherwise a string with the account type"""
         return False
 
-    def _get_report_values(self, report, options):
+    def _get_report_values(self, report, options, values=None):
         """
-        Get the report values based on lines
+        Get the report values based on lines. While parsing the lines, check for the existence of the
+        undistributed earnings line, which should be added to values['errors'].
         :return dict:    Keys are account_ids pointing to a dict of values
             - account_id:
                 - sum                               {'debit': float, 'credit': float, 'balance': float}
@@ -70,31 +71,40 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
                     'credit': line['columns'][colname_to_idx['credit']]['no_format'],
                     'balance': line['columns'][colname_to_idx['balance']]['no_format'],
                 }
-            if (isinstance(res_id, str) and 'balance_line' in res_id) or (model == 'account.account' and not line['unfoldable']):  # balance_line or unaffected earnings account line
+            elif values and report._get_markup(line['id']) == 'undistributed_profits_losses':
+                balance_index = [c['expression_label'] for c in options['columns']].index('balance')
+                currency_id = self.env.company.currency_id
+                if not currency_id.is_zero(line['columns'][balance_index]['no_format']):
+                    values['errors']['undistributed_earnings'] = {
+                        'message': _('Undistributed profits or losses may cause export rejection.'),
+                        'level': 'info',
+                    }
+            if (isinstance(res_id, str) and 'balance_line' in res_id):
                 report_values[current_account_id]['initial_balance'] = line['columns'][colname_to_idx['balance']]['no_format']
-
         return report_values
 
     @api.model
-    def _saft_fill_report_general_ledger_accounts(self, report, options, values):
-        res = {
-            'account_vals_list': [],
-        }
-        report = self.env['account.report'].browse(options['report_id'])
-        report_values = self._get_report_values(report, options)
-        accounts = self.env['account.account'].browse(report_values.keys())
-
+    def _get_formatted_account_vals_list(self, accounts, report_values):
+        account_vals_list = []
         for account in accounts:
             account_group_value = report_values[account.id]
-            res['account_vals_list'].append({
-                'account': account,
-                'account_type': dict(self.env['account.account']._fields['account_type']._description_selection(self.env))[account.account_type],
-                'saft_account_type': self._saft_get_account_type(account.account_type),
-                'opening_balance': account_group_value.get('initial_balance', 0.0),
-                'closing_balance': account_group_value.get('sum', {}).get('balance', 0.0),
-            })
+            account_vals_list.append(
+                {
+                    'account': account,
+                    'account_type': dict(self.env['account.account']._fields['account_type']._description_selection(self.env))[account.account_type],
+                    'saft_account_type': self._saft_get_account_type(account.account_type),
+                    'opening_balance': account_group_value.get('initial_balance', 0.0),
+                    'closing_balance': account_group_value.get('sum', {}).get('balance', 0.0),
+                }
+            )
 
-        values.update(res)
+        return account_vals_list
+
+    @api.model
+    def _saft_fill_report_general_ledger_accounts(self, report, options, values):
+        report_values = self._get_report_values(report, options, values)
+        accounts = self.env['account.account'].browse(report_values.keys())
+        values['account_vals_list'] = self._get_formatted_account_vals_list(accounts, report_values)
 
     def _saft_fill_report_general_ledger_entries(self, report, options, values):
         res = {
@@ -130,6 +140,7 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
                 account_move_line.price_unit,
                 account_move_line.product_id,
                 account_move_line.product_uom_id,
+                account_move_line.tax_base_amount,
                 account_move.id                             AS move_id,
                 account_move.name                           AS move_name,
                 account_move.move_type                      AS move_type,
@@ -247,10 +258,12 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
                 tax.amount AS tax_amount,
                 tax.create_date AS tax_create_date,
                 SUM(tax_detail.tax_amount) AS amount,
-                SUM(tax_detail.tax_amount) AS amount_currency
+                SUM(tax_detail.tax_amount) AS amount_currency,
+                SUM(tax_detail.base_amount) AS tax_base_amount
             FROM (%(tax_details_query)s) AS tax_detail
             JOIN account_move_line tax_line ON tax_line.id = tax_detail.tax_line_id
             JOIN account_tax tax ON tax.id = tax_detail.tax_id
+            WHERE SIGN(tax_detail.tax_amount) = SIGN(tax_detail.base_amount)
             GROUP BY tax_detail.base_line_id, tax_line.currency_id, tax.id
         ''', tax_name=tax_name, tax_details_query=tax_details_query))
         for tax_vals in self.env.cr.dictfetchall():
@@ -259,6 +272,7 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
                 **tax_vals,
                 'rate': line_vals['rate'],
                 'currency_code': line_vals['currency_code'],
+                'tax_base_amount': tax_vals['tax_base_amount'],
             })
             tax_vals_map.setdefault(tax_vals['tax_id'], {
                 'id': tax_vals['tax_id'],
@@ -278,7 +292,8 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
             'customer_vals_list': [],
             'supplier_vals_list': [],
             'partner_detail_map': defaultdict(lambda: {
-                'type': False,
+                'type': False,  # TODO: remove in master
+                'types': [],
                 'addresses': [],
                 'contacts': [],
             }),
@@ -287,7 +302,9 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
         # Fill 'customer_vals_list' and 'supplier_vals_list'
         query = report._get_report_query(options, 'from_beginning', domain=[
             ('account_id.account_type', 'in', ('asset_receivable', 'liability_payable')),
+            ('partner_id', '!=', False)
         ])
+        alias = query.join(lhs_alias=query.table, lhs_column='account_id', rhs_table='account_account', rhs_column='id', link='account')
         query.groupby = SQL.identifier(query.table, "partner_id")
         query.having = SQL(
             "MIN(date) FILTER (WHERE date >= %(date_from)s AND date <= %(date_to)s) IS NOT NULL",
@@ -296,20 +313,35 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
         )
         balance_result = self.env.execute_query(query.select(
             SQL.identifier(query.table, "partner_id"),
-            SQL("COALESCE(SUM(balance) FILTER (WHERE date < %s), 0) AS opening_balance", options['date']['date_from']),
-            SQL("COALESCE(SUM(balance), 0) AS closing_balance"),
+            SQL("COALESCE(SUM(balance) FILTER (WHERE date < %s AND %s = 'asset_receivable'), 0) AS opening_receivable", options['date']['date_from'], SQL.identifier(alias, "account_type")),
+            SQL("COALESCE(SUM(balance) FILTER (WHERE %s = 'asset_receivable'), 0) AS closing_receivable", SQL.identifier(alias, "account_type")),
+            SQL("COALESCE(SUM(balance) FILTER (WHERE date < %s AND %s = 'liability_payable'), 0) AS opening_payable", options['date']['date_from'], SQL.identifier(alias, "account_type")),
+            SQL("COALESCE(SUM(balance) FILTER (WHERE %s = 'liability_payable'), 0) AS closing_payable", SQL.identifier(alias, "account_type")),
         ))
         all_partners = self.env['res.partner'].browse([partner_id for partner_id, *__ in balance_result])
-        for partner_id, opening_balance, closing_balance in balance_result:
+        for partner_id, opening_receivable, closing_receivable, opening_payable, closing_payable in balance_result:
             partner = self.env['res.partner'].browse(partner_id).with_prefetch(all_partners._prefetch_ids)
-            balance = closing_balance - opening_balance
-            partner_type = 'customer' if balance >= 0.0 else 'supplier'
+
+            # TODO: remove in master: keeping a valid value in type in case the users does not have the updated xml
+            partner_type = 'customer' if partner.customer_rank >= partner.supplier_rank else 'supplier'
             res['partner_detail_map'][partner_id]['type'] = partner_type
-            res[partner_type + '_vals_list'].append({
-                'partner': partner,
-                'opening_balance': opening_balance,
-                'closing_balance': closing_balance,
-            })
+            company_currency = values['company'].currency_id
+
+            if not company_currency.is_zero(opening_payable) or not company_currency.is_zero(closing_payable):
+                res['partner_detail_map'][partner_id]['types'].append('supplier')
+                res['supplier_vals_list'].append({
+                    'partner': partner,
+                    'opening_balance': opening_payable,
+                    'closing_balance': closing_payable,
+                })
+
+            if not company_currency.is_zero(opening_receivable) or not company_currency.is_zero(closing_receivable) or not res['partner_detail_map'][partner_id]['types']:
+                res['partner_detail_map'][partner_id]['types'].append('customer')
+                res['customer_vals_list'].append({
+                    'partner': partner,
+                    'opening_balance': opening_receivable,
+                    'closing_balance': closing_receivable,
+                })
 
         # Fill 'partner_detail_map'.
         all_partners |= values['company'].partner_id

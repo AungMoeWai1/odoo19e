@@ -132,7 +132,7 @@ class L10n_PeStockPleWizard(models.TransientModel):
                 data.append(values)
                 continue
             values.update({
-                'valuation': _get_stock_valuation(product_tmpl.category_id.id),
+                'valuation': _get_stock_valuation(product_tmpl.categ_id.id),
                 'qty_in': move._get_valued_qty() if move.is_in else '0.00',
                 'cost_in': move._get_price_unit() if move.is_in else '0.00',
                 'value_in': move.value if move.is_in else '0.00',
@@ -173,13 +173,13 @@ class L10n_PeStockPleWizard(models.TransientModel):
             'type_of_existence': (move.product_id.product_tmpl_id.l10n_pe_type_of_existence or '99').zfill(2),
             'default_code': (move.product_id.default_code or '').replace('_', '')[:24],
             'catalogue_used': '1',  # Only supported 1 because We use Unspsc
-            'unspsc': move.product_id.product_tmpl_id.unspsc_code.code,
+            'unspsc': move.product_id.product_tmpl_id.unspsc_code_id.code or '',
             'date': self.date_from.strftime('%d/%m/%Y'),
             'document_type': invoice.l10n_latam_document_type_id.code or bill.l10n_latam_document_type_id.code or '00',
             'serie': '0',
             'folio': '0',
             'operation_type': '16',
-            'product': move.product_id.with_lang('en_US').name,
+            'product': move.product_id.with_context(lang='en_US').name,
             'uom': move.product_uom.l10n_pe_edi_measure_unit_code,
         }
         count += 1
@@ -192,7 +192,7 @@ class L10n_PeStockPleWizard(models.TransientModel):
             return values
         unit_cost = move._get_price_unit() or '0.00'
         values.update({
-            'valuation': _get_stock_valuation(move.product_id.category_id.id),
+            'valuation': _get_stock_valuation(move.product_id.categ_id.id),
             'qty_in': quantity if quantity > 0 else '0.00',
             'cost_in': unit_cost,
             'value_in': (quantity * float(unit_cost)) or '0.00',
@@ -259,7 +259,7 @@ class L10n_PeStockPleWizard(models.TransientModel):
                 'serie': '0',
                 'folio': '0',
                 'operation_type': '16',
-                'product': product.with_lang('en_US').name,
+                'product': product.with_context(lang='en_US').name,
                 'uom': product.uom_id.l10n_pe_edi_measure_unit_code,
             }
             count += 1
@@ -273,7 +273,7 @@ class L10n_PeStockPleWizard(models.TransientModel):
                 continue
             unit_cost = product.standard_price if product.standard_price > 0 else '0.00'
             values.update({
-                'valuation': _get_stock_valuation(product.category_id.id),
+                'valuation': _get_stock_valuation(product.categ_id.id),
                 'qty_in': quantity if quantity > 0 else '0.00',
                 'cost_in': unit_cost,
                 'value_in': (quantity * float(unit_cost)) or '0.00',

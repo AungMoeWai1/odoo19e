@@ -3,13 +3,14 @@
 # * account_base_import
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Marta (wacm)" <wacm@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:24+0000\n"
-"PO-Revision-Date: 2025-09-18 02:46+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2025-12-30 18:43+0000\n"
+"PO-Revision-Date: 2025-10-30 09:57+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/"
 "account_base_import/pl/>\n"
 "Language: pl\n"
@@ -149,7 +150,7 @@ msgstr "Importuj"
 #: code:addons/account_base_import/static/src/xml/account_import.xml:0
 #: model:ir.actions.client,name:account_base_import.action_asset_import
 msgid "Import Assets"
-msgstr ""
+msgstr "Importuj aktywa"
 
 #. module: account_base_import
 #. odoo-javascript
@@ -162,7 +163,7 @@ msgstr "Importuj plan kont"
 #. odoo-javascript
 #: code:addons/account_base_import/static/src/xml/account_import.xml:0
 msgid "Import CoA"
-msgstr "Import CoA"
+msgstr "Import planu kont"
 
 #. module: account_base_import
 #. odoo-javascript
@@ -241,6 +242,8 @@ msgstr "Importuj plan kont i salda początkowe za pomocą"
 #: code:addons/account_base_import/static/src/xml/account_import.xml:0
 msgid "Import your fixed assets and their opening depreciation values using a"
 msgstr ""
+"Importuj swoje aktywa trwałe i ich początkowe wartości amortyzacji przy "
+"użyciu"
 
 #. module: account_base_import
 #: model_terms:ir.ui.view,arch_db:account_base_import.account_import_summary_form
@@ -283,7 +286,8 @@ msgstr "Data ostatniej aktualizacji"
 #. odoo-javascript
 #: code:addons/account_base_import/static/src/xml/account_import.xml:0
 msgid ""
-"Most accounting software in Europe support exporting SAF-T file for audit purposes.\n"
+"Most accounting software in Europe support exporting SAF-T file for audit "
+"purposes.\n"
 "                            Use the"
 msgstr ""
 "Większość programów księgowych w Europie obsługuje eksport pliku SAF-T na "
@@ -294,7 +298,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account_base_import/static/src/xml/account_import.xml:0
 msgid ""
-"Most accounting software in France support exporting FEC file for audit purposes.\n"
+"Most accounting software in France support exporting FEC file for audit "
+"purposes.\n"
 "                            Use the"
 msgstr ""
 "Większość programów księgowych we Francji obsługuje eksport pliku FEC dla "
@@ -355,8 +360,10 @@ msgstr "Moduł importu SIE 5"
 #. odoo-javascript
 #: code:addons/account_base_import/static/src/xml/account_import.xml:0
 msgid ""
-"The SIE standard file format is very common in Sweden for several purposes such as auditing, importing and exporting data\n"
-"                            from and to other accounting applications. Odoo support importing data from both type 4 and 5 of SIE."
+"The SIE standard file format is very common in Sweden for several purposes "
+"such as auditing, importing and exporting data\n"
+"                            from and to other accounting applications. Odoo "
+"support importing data from both type 4 and 5 of SIE."
 msgstr ""
 "Standardowy format plików SIE jest bardzo popularny w Szwecji i "
 "wykorzystywany do różnych celów, takich jak audyt, import i eksport danych\n"
@@ -374,8 +381,8 @@ msgstr "W pliku importowym brakuje następujących wymaganych kolumn: %s"
 #. odoo-javascript
 #: code:addons/account_base_import/static/src/xml/account_import.xml:0
 msgid ""
-"Tip: we recommend importing your initial balances using the Chart of Account"
-" import. Only use the Journal Items import for unreconciled entries in your "
+"Tip: we recommend importing your initial balances using the Chart of Account "
+"import. Only use the Journal Items import for unreconciled entries in your "
 "Payable and Receivable Accounts."
 msgstr ""
 "Wskazówka: zalecamy importowanie sald początkowych za pomocą importu planu "
@@ -419,8 +426,9 @@ msgid ""
 "Winbooks is an old school Belgian accounting software acquired by Exact.\n"
 "                            Use the"
 msgstr ""
-"Winbooks to oldschoolowe belgijskie oprogramowanie księgowe przejęte przez "
-"Exact."
+"Winbooks to starsze belgijskie oprogramowanie księgowe przejęte przez "
+"Exact.\n"
+"                            Skorzystaj z"
 
 #. module: account_base_import
 #. odoo-python
@@ -429,8 +437,8 @@ msgid ""
 "You must provide both the `code_mapping_ids/company_id` and the "
 "`code_mapping_ids/code` columns."
 msgstr ""
-"Musisz podać zarówno kolumny`code_mapping_ids/company_id` oraz `"
-"code_mapping_ids/code`."
+"Musisz podać zarówno kolumny`code_mapping_ids/company_id` oraz "
+"`code_mapping_ids/code`."
 
 #. module: account_base_import
 #: model_terms:ir.ui.view,arch_db:account_base_import.account_import_summary_form
@@ -442,8 +450,10 @@ msgstr "zaimportowanych kont"
 #: code:addons/account_base_import/static/src/xml/account_import.xml:0
 msgid ""
 "is required to import the SIE 4 files.\n"
-"                                    By design, it's also backward compatible with previous SIE versions (version 1 up to 3).\n"
-"                                    This import will not validate the correctness of the file."
+"                                    By design, it's also backward compatible "
+"with previous SIE versions (version 1 up to 3).\n"
+"                                    This import will not validate the "
+"correctness of the file."
 msgstr ""
 "jest wymagany do importowania plików SIE 4.\n"
 "Zgodnie z projektem jest on również kompatybilny wstecznie z poprzednimi "
@@ -455,9 +465,13 @@ msgstr ""
 #: code:addons/account_base_import/static/src/xml/account_import.xml:0
 msgid ""
 "is required to import the SIE 5 and SIE 5 entry files.\n"
-"                                    For general SIE 5, we will set up your charts of accounts balances, journals, partners, and the history of journal entries\n"
-"                                    (journals data must be present in the file).\n"
-"                                    For the SIE 5 entry, only entries and partners will be created, the rest must already be present in the system."
+"                                    For general SIE 5, we will set up your "
+"charts of accounts balances, journals, partners, and the history of journal "
+"entries\n"
+"                                    (journals data must be present in the "
+"file).\n"
+"                                    For the SIE 5 entry, only entries and "
+"partners will be created, the rest must already be present in the system."
 msgstr ""
 "jest wymagane do importu plików wejściowych SIE 5 i SIE 5.\n"
 "                                   W przypadku ogólnego SIE 5 skonfigurujemy "
@@ -498,7 +512,7 @@ msgstr "zaimportowane podatki"
 #. odoo-javascript
 #: code:addons/account_base_import/static/src/xml/account_import.xml:0
 msgid "template"
-msgstr ""
+msgstr "szablon"
 
 #. module: account_base_import
 #. odoo-javascript
@@ -510,12 +524,13 @@ msgstr "szablon."
 #. odoo-javascript
 #: code:addons/account_base_import/static/src/xml/account_import.xml:0
 msgid ""
-"to import a Winbooks full back-up (Maintenance > Backup) to get the chart of accounts, contacts, taxes, history of journal entries, and documents.\n"
+"to import a Winbooks full back-up (Maintenance > Backup) to get the chart of "
+"accounts, contacts, taxes, history of journal entries, and documents.\n"
 "                            Support versions: Winbooks Desktop 5.50, 6, 7, 8."
 msgstr ""
-"aby zaimportować pełną kopię zapasową Winbooks (Konserwacja > Kopia zapasowa)"
-", aby uzyskać plan kont, kontakty, podatki, historię zapisów dziennika i "
-"dokumenty.\n"
+"aby zaimportować pełną kopię zapasową Winbooks (Konserwacja > Kopia "
+"zapasowa), aby uzyskać plan kont, kontakty, podatki, historię zapisów "
+"dziennika i dokumenty.\n"
 "Obsługiwane wersje: Winbooks Desktop 5.50, 6, 7, 8."
 
 #. module: account_base_import

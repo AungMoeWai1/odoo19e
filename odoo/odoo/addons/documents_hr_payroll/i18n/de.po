@@ -3,13 +3,14 @@
 # * documents_hr_payroll
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:30+0000\n"
-"PO-Revision-Date: 2025-09-15 21:13+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2025-12-30 18:44+0000\n"
+"PO-Revision-Date: 2026-02-14 10:05+0000\n"
+"Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/"
 "documents_hr_payroll/de/>\n"
 "Language: de\n"
@@ -17,24 +18,33 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: documents_hr_payroll
 #. odoo-python
 #: code:addons/documents_hr_payroll/models/hr_payslip.py:0
 msgid "%s Payslip(s) correctly sent."
-msgstr "%s Gehaltsabrechnung(en) wurden erfolgreich gesendet."
+msgstr "%s Gehaltsabrechnung(en) wurden erfolgreich versendet."
 
 #. module: documents_hr_payroll
 #: model:mail.template,body_html:documents_hr_payroll.mail_template_new_payslip
 msgid ""
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%; margin:0px auto;\"><tbody>\n"
-"        <t t-set=\"document_access_link\" t-value=\"object.document_access_url\"/>\n"
-"        <tr><td valign=\"top\" style=\"text-align: left; font-size: 14px;\">\n"
-"            Dear <t t-out=\"object.employee_id.name\"/>, a new payslip is available for you.<br/><br/>\n"
-"            <t t-if=\"object.employee_id.user_id\">Please find the PDF in your employee portal.<br/><br/></t>\n"
-"            <div t-if=\"document_access_link\" style=\"text-align: center; padding: 16px 0px 16px 0px; font-size: 14px;\">\n"
-"                <a t-attf-href=\"{{ document_access_link }}\" target=\"_blank\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%; "
+"margin:0px auto;\"><tbody>\n"
+"        <t t-set=\"document_access_link\" t-"
+"value=\"object.document_access_url\"/>\n"
+"        <tr><td valign=\"top\" style=\"text-align: left; font-size: 14px;"
+"\">\n"
+"            Dear <t t-out=\"object.employee_id.name\"/>, a new payslip is "
+"available for you.<br/><br/>\n"
+"            <t t-if=\"object.employee_id.user_id\">Please find the PDF in "
+"your employee portal.<br/><br/></t>\n"
+"            <div t-if=\"document_access_link\" style=\"text-align: center; "
+"padding: 16px 0px 16px 0px; font-size: 14px;\">\n"
+"                <a t-attf-href=\"{{ document_access_link }}\" "
+"target=\"_blank\" style=\"background-color: #875A7B; padding: 8px 16px 8px "
+"16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;"
+"\">\n"
 "                    Your Payslip\n"
 "                </a>\n"
 "            </div>\n"
@@ -50,7 +60,7 @@ msgstr ""
 "\"object.document_access_url\"/>\n"
 "        <tr><td valign=\"top\" style=\"text-align: left; font-size: 14px;\">"
 "\n"
-"            Hallo <t t-out=\"object.employee_id.name\"/>, eine neue "
+"            Guten Tag <t t-out=\"object.employee_id.name\"/>, eine neue "
 "Gehaltsabrechnung liegt für Sie bereit.<br/><br/>\n"
 "            <t t-if=\"object.employee_id.user_id\">Die PDF-Datei finden Sie "
 "in Ihrem Mitarbeiterportal.<br/><br/></t>\n"
@@ -71,9 +81,12 @@ msgstr ""
 #. module: documents_hr_payroll
 #: model:mail.template,body_html:documents_hr_payroll.mail_template_new_declaration
 msgid ""
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%; margin:0px auto;\"><tbody>\n"
-"        <tr><td valign=\"top\" style=\"text-align: left; font-size: 14px;\">\n"
-"            Dear <t t-esc=\"object.name\"/>, a new declaration file is available for you.<br/><br/>\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%; "
+"margin:0px auto;\"><tbody>\n"
+"        <tr><td valign=\"top\" style=\"text-align: left; font-size: 14px;"
+"\">\n"
+"            Dear <t t-esc=\"object.name\"/>, a new declaration file is "
+"available for you.<br/><br/>\n"
 "            Please find the PDF in your employee portal.<br/><br/>\n"
 "            Have a nice day,<br/>\n"
 "            The HR Team\n"
@@ -85,7 +98,7 @@ msgstr ""
 "\"width:100%; margin:0px auto;\"><tbody>\n"
 "        <tr><td valign=\"top\" style=\"text-align: left; font-size: 14px;\">"
 "\n"
-"            Hallo <t t-esc=\"object.name\"/>, eine neue Datei für die "
+"            Guten Tag <t t-esc=\"object.name\"/>, eine neue Datei für die "
 "Steuererklärung liegt für Sie bereit.<br/><br/>\n"
 "            Das PDF finden Sie in Ihrem Mitarbeiterportal.<br/><br/>\n"
 "            Einen schönen Tag!<br/>\n"
@@ -99,6 +112,8 @@ msgstr ""
 #: code:addons/documents_hr_payroll/models/hr_payslip.py:0
 msgid "A payslip should be validated or paid to be sent to the employee."
 msgstr ""
+"Eine Gehaltsabrechnung sollte validiert oder ausgezahlt werden, bevor sie an "
+"den Mitarbeiter gesendet wird."
 
 #. module: documents_hr_payroll
 #: model:ir.model,name:documents_hr_payroll.model_res_company
@@ -149,18 +164,24 @@ msgstr "Dokumente HR-Gehaltsabrechnungen Stichwörter"
 #. module: documents_hr_payroll
 #: model:ir.model,name:documents_hr_payroll.model_hr_employee
 msgid "Employee"
-msgstr ""
+msgstr "Mitarbeiter"
 
 #. module: documents_hr_payroll
 #. odoo-python
 #: code:addons/documents_hr_payroll/models/hr_payslip.py:0
 msgid ""
-"Employee's private or work email must be set to use \"Send By Email\" function:\n"
+"Employee's private or work email must be set to use \"Send By Email\" "
+"function:\n"
 "%s"
 msgstr ""
 "Die private oder Arbeits-E-Mail-Adresse des Mitarbeiters muss für die "
 "Verwendung der Funktion „Per E-Mail versenden“ eingestellt sein:\n"
 "%s"
+
+#. module: documents_hr_payroll
+#: model:hr.payroll.dashboard.warning,name:documents_hr_payroll.hr_payroll_dashboard_warning_employee_without_contact
+msgid "Employees Without Contacts"
+msgstr "Mitarbeiter ohne Kontakte"
 
 #. module: documents_hr_payroll
 #: model:ir.model.fields,help:documents_hr_payroll.field_res_company__worker_payroll_folder_id
@@ -203,7 +224,7 @@ msgstr "Gehaltsabrechnung"
 #. odoo-python
 #: code:addons/documents_hr_payroll/models/res_company.py:0
 msgid "Payroll %s"
-msgstr ""
+msgstr "Personalabrechnung %s"
 
 #. module: documents_hr_payroll
 #: model:ir.model,name:documents_hr_payroll.model_hr_payroll_declaration_mixin
@@ -239,7 +260,7 @@ msgstr "Gehaltsabrechnungen (Personalwesen)"
 #. odoo-python
 #: code:addons/documents_hr_payroll/models/hr_employee.py:0
 msgid "Payslips successfully sent to the employee."
-msgstr ""
+msgstr "Die Gehaltsabrechnungen wurden erfolgreich an den Mitarbeiter gesendet."
 
 #. module: documents_hr_payroll
 #: model:ir.model.fields,field_description:documents_hr_payroll.field_hr_payroll_employee_declaration__pdf_to_post
@@ -250,7 +271,7 @@ msgstr "Zu veröffentlichendes PDF"
 #. odoo-javascript
 #: code:addons/documents_hr_payroll/static/src/views/employee_declaration_list/documents_hr_payroll_employee_declaration_list_controller.xml:0
 msgid "Post"
-msgstr "Nachher"
+msgstr "Veröffentlichen"
 
 #. module: documents_hr_payroll
 #. odoo-javascript
@@ -272,12 +293,12 @@ msgstr "PDF-Veröffentlichung in der Warteschlange"
 #. odoo-python
 #: code:addons/documents_hr_payroll/models/hr_employee.py:0
 msgid "Resend All Employee's Payslips"
-msgstr ""
+msgstr "Gehaltsabrechnung aller Mitarbeiter erneut senden"
 
 #. module: documents_hr_payroll
 #: model:ir.actions.server,name:documents_hr_payroll.ir_actions_server_send_payslip_by_employee_by_email
 msgid "Resend All Payslips"
-msgstr ""
+msgstr "Alle Gehaltsabrechnungen erneut senden"
 
 #. module: documents_hr_payroll
 #: model:ir.actions.server,name:documents_hr_payroll.ir_actions_server_send_payslip_by_email
@@ -322,6 +343,8 @@ msgstr "Die Gehaltsabrechnung wurde erneut an den Mitarbeiter gesendet."
 #: code:addons/documents_hr_payroll/models/hr_employee.py:0
 msgid "There is no valid payslip to send to the employee."
 msgstr ""
+"Es liegt keine gültige Gehaltsabrechnung vor, die an den Mitarbeiter "
+"gesendet werden kann."
 
 #. module: documents_hr_payroll
 #: model:ir.model.fields,field_description:documents_hr_payroll.field_res_company__worker_payroll_folder_id

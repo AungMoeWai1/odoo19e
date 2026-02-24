@@ -1,23 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_self_order_iot
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Tony Ng, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-06 09:47+0000\n"
+"POT-Creation-Date: 2026-02-20 18:45+0000\n"
 "PO-Revision-Date: 2025-05-06 11:01+0000\n"
 "Last-Translator: Tony Ng, 2025\n"
-"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/"
+"zh_TW/)\n"
+"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: pos_self_order_iot
@@ -125,6 +126,24 @@ msgstr "螢幕方向已更新。"
 #: model:ir.model.fields,help:pos_self_order_iot.field_iot_box__screen_orientation
 msgid "Select the orientation of the screen for the Kiosk mode"
 msgstr "選擇自助服務機模式的螢幕方向"
+
+#. module: pos_self_order_iot
+#. odoo-javascript
+#: code:addons/pos_self_order_iot/static/src/pages/payment_page/payment_page.js:0
+msgid "Terminal disconnected"
+msgstr ""
+
+#. module: pos_self_order_iot
+#. odoo-javascript
+#: code:addons/pos_self_order_iot/static/src/pages/payment_page/payment_page.js:0
+msgid "Terminal transaction failed "
+msgstr ""
+
+#. module: pos_self_order_iot
+#. odoo-javascript
+#: code:addons/pos_self_order_iot/static/src/pages/payment_page/payment_page.js:0
+msgid "Transaction cancelled"
+msgstr ""
 
 #. module: pos_self_order_iot
 #: model_terms:ir.ui.view,arch_db:pos_self_order_iot.res_config_settings_view_form_menu_iot

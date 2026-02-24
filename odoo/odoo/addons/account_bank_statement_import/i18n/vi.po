@@ -6,13 +6,15 @@
 # Martin Trigaux, 2022
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Thi Huong Nguyen (thng)" <thng@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 16:02+0000\n"
-"PO-Revision-Date: 2025-09-15 23:00+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2025-12-30 18:43+0000\n"
+"PO-Revision-Date: 2025-11-16 05:22+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-19/"
 "account_bank_statement_import/vi/>\n"
 "Language: vi\n"
@@ -40,6 +42,12 @@ msgid "A bank account transactions can be imported only once!"
 msgstr "Mỗi giao dịch tài khoản ngân hàng chỉ có thể được nhập một lần!"
 
 #. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid "All or part of the following file(s) could not be imported:\n"
+msgstr ""
+
+#. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_bank_statement_line
 msgid "Bank Statement Line"
 msgstr "Dòng sao kê ngân hàng"
@@ -52,8 +60,26 @@ msgstr "Thiết lập ngân hàng thủ công"
 #. module: account_bank_statement_import
 #. odoo-python
 #: code:addons/account_bank_statement_import/models/account_journal.py:0
-msgid "Cannot find in which journal import this statement. Please manually select a journal."
-msgstr "Không tìm thấy sổ nhật ký nào để nhập sao kê này. Vui lòng chọn thủ công một sổ nhật ký."
+msgid ""
+"Cannot find in which journal to import the statement for account %s. Please "
+"configure the journal first."
+msgstr ""
+"Không thể tìm thấy sổ nhật ký để nhập sao kê cho tài khoản %s. Vui lòng cấu "
+"hình sổ nhật ký trước."
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid ""
+"Cannot find in which journal to import this statement. Please manually "
+"select a journal."
+msgstr ""
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_bank_statement.py:0
+msgid "Click \"New\" or upload a %s."
+msgstr "Nhấp vào \"Mới\" hoặc tải lên một %s."
 
 #. module: account_bank_statement_import
 #. odoo-python
@@ -66,21 +92,40 @@ msgstr ""
 "Bạn đã cài phân hệ hỗ trợ loại tệp này chưa?"
 
 #. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_line__display_name
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_journal__display_name
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_setup_bank_manual_config__display_name
+msgid "Display Name"
+msgstr "Tên hiển thị"
+
+#. module: account_bank_statement_import
 #. odoo-python
 #: code:addons/account_bank_statement_import/models/account_journal.py:0
 msgid "Go to Apps"
 msgstr "Đi đến Ứng dụng"
 
 #. module: account_bank_statement_import
-#. odoo-python
-#: code:addons/account_bank_statement_import/models/account_journal.py:0
-msgid "If it contains transactions for more than one account, it must be imported on each of them."
-msgstr "If it contains transactions for more than one account, it must be imported on each of them."
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_line__id
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_journal__id
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_setup_bank_manual_config__id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_bank_statement_import
+#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.journal_dashboard_view_inherit
+msgid "Import File"
+msgstr "Nhập tệp"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_line__unique_import_id
 msgid "Import ID"
 msgstr "Nhập ID"
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_bank_statement.py:0
+msgid "Import Template for Bank Statement Lines"
+msgstr ""
 
 #. module: account_bank_statement_import
 #. odoo-javascript
@@ -113,38 +158,59 @@ msgstr "Không tìm thấy loại tiền tệ khớp với '%s'."
 
 #. module: account_bank_statement_import
 #. odoo-python
-#: code:addons/account_bank_statement_import/models/account_journal.py:0
-msgid "The account of this statement (%s) is not the same as the journal (%s)."
-msgstr "Tài khoản của giao dịch này (%s) không giống với tài khoản của sổ nhật ký (%s)."
+#: code:addons/account_bank_statement_import/models/account_bank_statement.py:0
+msgid "No transactions matching your filters were found."
+msgstr "Không tìm thấy giao dịch nào khớp với bộ lọc của bạn."
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_bank_statement.py:0
+msgid "Nothing to do here!"
+msgstr "Không có gì để làm!"
 
 #. module: account_bank_statement_import
 #. odoo-python
 #: code:addons/account_bank_statement_import/models/account_journal.py:0
-msgid "The currency of the bank statement (%s) is not the same as the currency of the journal (%s)."
-msgstr "The currency of the bank statement (%s) is not the same as the currency of the journal (%s)."
-
-#. module: account_bank_statement_import
-#. odoo-python
-#: code:addons/account_bank_statement_import/models/account_journal.py:0
-msgid "The following files could not be imported:\n"
+msgid ""
+"The account of this statement (%(account)s) is not the same as the journal (%"
+"(journal)s)."
 msgstr ""
+"Tài khoản của giao dịch này (%(account)s) không giống với tài khoản của sổ "
+"nhật ký (%(journal)s)."
 
 #. module: account_bank_statement_import
 #. odoo-python
 #: code:addons/account_bank_statement_import/models/account_journal.py:0
-msgid "This file doesn't contain any statement for account %s."
-msgstr "This file doesn't contain any statement for account %s."
+msgid ""
+"The currency of the bank statement (%(code)s) is not the same as the "
+"currency of the journal (%(journal)s)."
+msgstr ""
+"Loại tiền tệ của sao kê này (%(code)s) không giống với loại tiền tệ của sổ "
+"nhật ký (%(journal)s)."
 
 #. module: account_bank_statement_import
 #. odoo-python
 #: code:addons/account_bank_statement_import/models/account_journal.py:0
-msgid "This file doesn't contain any transaction for account %s."
-msgstr "This file doesn't contain any transaction for account %s."
+msgid ""
+"This file doesn't contain any statement for account %s.\n"
+"If it contains transactions for more than one account, it must be imported "
+"on each of them."
+msgstr ""
+"Tệp này không chứa bất kỳ sao kê nào cho tài khoản %s.\n"
+"Nếu tệp chứa các giao dịch cho nhiều tài khoản, thì nó phải được nhập trên "
+"từng tài khoản."
 
 #. module: account_bank_statement_import
-#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.journal_dashboard_view_inherit
-msgid "Transactions"
-msgstr "Giao dịch"
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid ""
+"This file doesn't contain any transaction for account %s.\n"
+"If it contains transactions for more than one account, it must be imported "
+"on each of them."
+msgstr ""
+"Tệp này không chứa bất kỳ giao dịch nào cho tài khoản %s.\n"
+"Nếu tệp chứa các giao dịch cho nhiều tài khoản, thì nó phải được nhập trên "
+"từng tài khoản."
 
 #. module: account_bank_statement_import
 #. odoo-python
@@ -170,7 +236,38 @@ msgstr "Bạn phải thiết lập một Tài khoản mặc định cho sổ nh�
 msgid "You uploaded an invalid or empty file."
 msgstr "Bạn đã tải lên một tệp rỗng hoặc không hợp lệ."
 
-#. module: account_bank_statement_import
-#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.journal_dashboard_view_inherit
-msgid "or"
-msgstr ""
+#~ msgid ""
+#~ "Cannot find in which journal import this statement. Please manually "
+#~ "select a journal."
+#~ msgstr ""
+#~ "Không tìm thấy sổ nhật ký nào để nhập sao kê này. Vui lòng chọn thủ công "
+#~ "một sổ nhật ký."
+
+#~ msgid ""
+#~ "If it contains transactions for more than one account, it must be "
+#~ "imported on each of them."
+#~ msgstr ""
+#~ "If it contains transactions for more than one account, it must be "
+#~ "imported on each of them."
+
+#~ msgid ""
+#~ "The account of this statement (%s) is not the same as the journal (%s)."
+#~ msgstr ""
+#~ "Tài khoản của giao dịch này (%s) không giống với tài khoản của sổ nhật ký "
+#~ "(%s)."
+
+#~ msgid ""
+#~ "The currency of the bank statement (%s) is not the same as the currency "
+#~ "of the journal (%s)."
+#~ msgstr ""
+#~ "The currency of the bank statement (%s) is not the same as the currency "
+#~ "of the journal (%s)."
+
+#~ msgid "This file doesn't contain any statement for account %s."
+#~ msgstr "This file doesn't contain any statement for account %s."
+
+#~ msgid "This file doesn't contain any transaction for account %s."
+#~ msgstr "This file doesn't contain any transaction for account %s."
+
+#~ msgid "Transactions"
+#~ msgstr "Giao dịch"

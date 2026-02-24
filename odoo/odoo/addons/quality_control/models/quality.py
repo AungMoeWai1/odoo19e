@@ -66,6 +66,7 @@ class QualityPoint(models.Model):
     def _compute_standard_deviation_and_average(self):
         # The variance and mean are computed by the Welford’s method and used the Bessel's
         # correction because are working on a sample.
+        self.filtered(lambda point: point.test_type == 'measure').check_ids.fetch(['quality_state', 'measure'])
         for point in self:
             if point.test_type != 'measure':
                 point.average = 0
@@ -74,7 +75,9 @@ class QualityPoint(models.Model):
             mean = 0.0
             s = 0.0
             n = 0
-            for check in point.check_ids.filtered(lambda x: x.quality_state != 'none'):
+            for check in point.check_ids:
+                if check.quality_state == 'none':
+                    continue
                 n += 1
                 delta = check.measure - mean
                 mean += delta / n
@@ -172,6 +175,7 @@ class QualityPoint(models.Model):
                     'measure_on': point.measure_on,
                     'team_id': point.team_id.id,
                     'product_id': product.id,
+                    'company_id': company_id,
                 })
                 quality_points_list.append(point_key)
 
@@ -597,6 +601,23 @@ class QualityCheck(models.Model):
         domain.append(('technical_name', '=', 'passfail'))
         return domain
 
+    def _is_to_do(self, checkable_products, check_picked=False):
+        self.ensure_one()
+        if self.quality_state != 'none':
+            return False
+        if self.measure_on != 'operation':
+            if self.product_id not in checkable_products:
+                return False
+            if self.move_line_id:
+                if not self.move_line_id._is_checkable(check_picked):
+                    return False
+        # Only process qc related to tracked product if its lot is set
+        if self.move_line_id and self.product_id.tracking in ["serial", "lot"]:
+            if self.move_line_id.picking_type_use_create_lots or self.move_line_id.picking_type_use_existing_lots:
+                if not self.move_line_id.lot_id and not self.move_line_id.lot_name:
+                    return False
+        return True
+
 
 class QualityAlert(models.Model):
     _inherit = "quality.alert"
@@ -656,6 +677,7 @@ class ProductTemplate(models.Model):
         action = self.env["ir.actions.actions"]._for_xml_id("quality_control.quality_point_action")
         action['context'] = dict(self.env.context, default_product_ids=self.product_variant_ids.ids)
 
+        action['views'] = [(self.env.ref("quality.quality_point_view_tree").id, 'list'), (False, 'form'), (False, 'kanban')]
         domain_in_products_or_categs = ['|', ('product_ids', 'in', self.product_variant_ids.ids), ('product_category_ids', 'parent_of', self.categ_id.ids)]
         domain_no_products_and_categs = [('product_ids', '=', False), ('product_category_ids', '=', False)]
         action['domain'] = Domain.OR([domain_in_products_or_categs, domain_no_products_and_categs])

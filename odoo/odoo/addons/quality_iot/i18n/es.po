@@ -6,13 +6,15 @@
 # Martin Trigaux, 2022
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 22:21+0000\n"
-"PO-Revision-Date: 2025-09-15 12:00+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-01-30 18:48+0000\n"
+"PO-Revision-Date: 2026-02-02 13:40+0000\n"
+"Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-19/"
 "quality_iot/es/>\n"
 "Language: es\n"
@@ -21,19 +23,19 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
 " ? 1 : 2);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: quality_iot
 #. odoo-javascript
-#: code:addons/quality_iot/static/src/iot_picture/iot_picture.js:0
-msgid "Capture image..."
-msgstr "Capturar imagen"
+#: code:addons/quality_iot/static/src/iot_picture_button.js:0
+msgid "Capturing image..."
+msgstr "Capturando imagen..."
 
 #. module: quality_iot
 #. odoo-javascript
-#: code:addons/quality_iot/static/src/iot_picture/iot_picture.js:0
-msgid "Connection to device failed"
-msgstr "La conexión al dispositivo falló"
+#: code:addons/quality_iot/static/src/iot_measure_button.js:0
+msgid "Could not get measurement from device"
+msgstr "No ha sido posible obtener la medición del dispositivo"
 
 #. module: quality_iot
 #: model:ir.model.fields,field_description:quality_iot.field_quality_point__device_id
@@ -46,9 +48,29 @@ msgid "Device Name: "
 msgstr "Nombre del dispositivo: "
 
 #. module: quality_iot
+#: model:ir.model.fields,field_description:quality_iot.field_iot_device__display_name
+#: model:ir.model.fields,field_description:quality_iot.field_quality_check__display_name
+#: model:ir.model.fields,field_description:quality_iot.field_quality_point__display_name
+msgid "Display Name"
+msgstr "Nombre para mostrar"
+
+#. module: quality_iot
 #: model:ir.model.fields,field_description:quality_iot.field_quality_check__ip
 msgid "Domain Address"
 msgstr "Dirección de dominio"
+
+#. module: quality_iot
+#. odoo-javascript
+#: code:addons/quality_iot/static/src/iot_picture_button.js:0
+msgid "Failed to take a picture using the IoT Camera"
+msgstr "No ha sido posible hacer una foto mediante la cámara IoT"
+
+#. module: quality_iot
+#: model:ir.model.fields,field_description:quality_iot.field_iot_device__id
+#: model:ir.model.fields,field_description:quality_iot.field_quality_check__id
+#: model:ir.model.fields,field_description:quality_iot.field_quality_point__id
+msgid "ID"
+msgstr "ID"
 
 #. module: quality_iot
 #: model:ir.model,name:quality_iot.model_iot_device
@@ -62,9 +84,21 @@ msgstr "Identificador"
 
 #. module: quality_iot
 #. odoo-javascript
-#: code:addons/quality_iot/static/src/iot_picture/iot_picture.js:0
-msgid "Please check if the device is still connected."
-msgstr "Compruebe si el dispositivo todavía está conectado."
+#: code:addons/quality_iot/static/src/iot_picture_button.js:0
+msgid "Image captured successfully"
+msgstr "Imagen capturada correctamente"
+
+#. module: quality_iot
+#: model:ir.model.fields,field_description:quality_iot.field_quality_check__iot_box_id
+msgid "IoT Box"
+msgstr "Caja IoT"
+
+#. module: quality_iot
+#. odoo-javascript
+#: code:addons/quality_iot/static/src/iot_measure_button.js:0
+msgid "No IoT device configured for this quality check."
+msgstr ""
+"No se ha configurado ningún dispositivo IoT para este control de calidad."
 
 #. module: quality_iot
 #: model:ir.model.fields,field_description:quality_iot.field_iot_device__qcp_test_type
@@ -90,3 +124,44 @@ msgstr "Puntos de control de calidad"
 #: model:ir.model.fields,field_description:quality_iot.field_iot_device__quality_point_ids
 msgid "Quality Point"
 msgstr "Punto de calidad"
+
+#~ msgid "Close"
+#~ msgstr "Cerrar"
+
+#~ msgid "Please check if the device is still connected."
+#~ msgstr "Compruebe si el dispositivo todavía está conectado."
+
+#~ msgid "Preview"
+#~ msgstr "Vista previa"
+
+#~ msgid "Viewer"
+#~ msgstr "Visor"
+
+#~ msgid "Camera configuration error"
+#~ msgstr "Error de configuración de la cámara"
+
+#~ msgid "Connection to device failed"
+#~ msgstr "La conexión al dispositivo falló"
+
+#~ msgid "Get Measurement"
+#~ msgstr "Realizar la medición"
+
+#~ msgid "Getting measurement..."
+#~ msgstr "Realizando la medición..."
+
+#~ msgid "Measurement device configuration error"
+#~ msgstr "Error de configuración del dispositivo de medición"
+
+#~ msgid "Please link the corresponding Quality Control Point to the camera."
+#~ msgstr ""
+#~ "Vincule el punto de control de calidad correspondiente con la cámara."
+
+#~ msgid ""
+#~ "Please link the corresponding Quality Control Point to the measurement "
+#~ "device."
+#~ msgstr ""
+#~ "Vincule el punto de control de calidad correspondiente con el dispositivo "
+#~ "de medición."
+
+#~ msgid "Capture image..."
+#~ msgstr "Capturar imagen"

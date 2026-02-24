@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-03 12:21+0000\n"
+"POT-Creation-Date: 2026-01-22 18:41+0000\n"
 "PO-Revision-Date: 2025-09-16 13:41+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/"
@@ -80,8 +80,14 @@ msgstr "اسم العرض"
 #. module: pos_pricer
 #. odoo-python
 #: code:addons/pos_pricer/models/pricer_store.py:0
-msgid "Error: %(status_code)s - %(message)s"
-msgstr "خطأ: %(status_code)s - %(message)s"
+msgid "Error"
+msgstr ""
+
+#. module: pos_pricer
+#. odoo-python
+#: code:addons/pos_pricer/models/pricer_store.py:0
+msgid "Error: %(code)s - %(reason)s"
+msgstr ""
 
 #. module: pos_pricer
 #. odoo-python
@@ -92,10 +98,16 @@ msgstr "خطأ: تحقق من بيانات اعتماد Pricer"
 #. module: pos_pricer
 #. odoo-python
 #: code:addons/pos_pricer/models/pricer_store.py:0
+msgid "Everything is already up to date with Pricer. No update needed."
+msgstr ""
+
+#. module: pos_pricer
+#. odoo-python
+#: code:addons/pos_pricer/models/pricer_store.py:0
 msgid "Failed to unlink Pricer tag %(pricer_tag)s at API url %(api_url)s"
 msgstr ""
-"تعذر إلغاء ربط بطاقة سعر Pricer %(pricer_tag)s في رابط الواجهة البرمجية "
-"%(api_url)s"
+"تعذر إلغاء ربط بطاقة سعر Pricer %(pricer_tag)s في رابط الواجهة البرمجية %"
+"(api_url)s"
 
 #. module: pos_pricer
 #: model:ir.model.fields,field_description:pos_pricer.field_pos_config__id
@@ -395,8 +407,8 @@ msgstr ""
 #: model:ir.model.fields,help:pos_pricer.field_pricer_tag__pricer_store_id
 #: model:ir.model.fields,help:pos_pricer.field_product_product__pricer_store_id
 msgid ""
-"This product will be linked to and displayed on the Pricer tags of the store"
-" selected here"
+"This product will be linked to and displayed on the Pricer tags of the store "
+"selected here"
 msgstr ""
 "سيكون هذا المنتج مرتبطاً ببطاقات أسعار Pricer ومعروضاً عليها للمتجر المحدد هنا"
 
@@ -408,11 +420,6 @@ msgid ""
 msgstr ""
 "سيكون هذا المنتج مرتبطاً ببطاقات أسعار Pricer ومعروضاً عليها للمعرّفات المدرجة "
 "هنا. نوصي باستخدام ماسح الباركود"
-
-#. module: pos_pricer
-#: model_terms:ir.ui.view,arch_db:pos_pricer.pricer_pricer_store_view_list
-msgid "Update all tags"
-msgstr "تحديث كافة بطاقات الأسعار"
 
 #. module: pos_pricer
 #. odoo-python
@@ -429,3 +436,9 @@ msgstr "تحديث بطاقات الأسعار"
 #: model:ir.model.fields,help:pos_pricer.field_pricer_store__pricer_tenant_name
 msgid "Your company identifier at Pricer"
 msgstr "معرّف شركتك في Pricer"
+
+#~ msgid "Error: %(status_code)s - %(message)s"
+#~ msgstr "خطأ: %(status_code)s - %(message)s"
+
+#~ msgid "Update all tags"
+#~ msgstr "تحديث كافة بطاقات الأسعار"

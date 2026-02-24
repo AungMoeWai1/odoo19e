@@ -40,7 +40,7 @@ class L10nCHSwissdecTransmitter(models.AbstractModel):
         ('11', 'November'),
         ('12', 'December'),
     ], required=True, default=lambda self: str((fields.Date.today()).month))
-    company_id = fields.Many2one('res.company', default=lambda self: self.env.company, domain=lambda self: [('country_id', '=', self.env.ref('base.ch'))])
+    company_id = fields.Many2one('res.company', default=lambda self: self.env.company, domain="[('partner_id.country_id.code', '=', 'CH')]")
 
     l10n_ch_declare_salary_data = fields.Json()
     actionable_warnings = fields.Json(compute="_compute_actionable_warnings", store=True)
@@ -75,7 +75,7 @@ class L10nCHSwissdecTransmitter(models.AbstractModel):
                 res_field = missing_dict.get("res_field")
                 employee_id = missing_dict.get("employee_id")
                 if res_model and res_id:
-                    field_description = self.env[res_model]._fields[res_field].string
+                    field_description = self.env[res_model]._fields[res_field].get_description(self.env, ["string"])["string"]
 
                     if res_model == 'hr.version' and employee_id:
                         record = self.env['hr.employee'].browse(employee_id)

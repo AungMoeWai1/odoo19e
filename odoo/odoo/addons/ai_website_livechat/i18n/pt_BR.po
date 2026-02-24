@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:27+0000\n"
-"PO-Revision-Date: 2025-10-07 02:41+0000\n"
+"POT-Creation-Date: 2025-12-30 18:43+0000\n"
+"PO-Revision-Date: 2025-11-14 11:44+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
 "odoo-19/ai_website_livechat/pt_BR/>\n"
@@ -18,6 +18,11 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
 "X-Generator: Weblate 5.12.2\n"
+
+#. module: ai_website_livechat
+#: model_terms:ir.ui.view,arch_db:ai_website_livechat.s_ai_livechat
+msgid "<span class=\"text-muted flex-grow-1\">Ask AI</span>"
+msgstr "<span class=\"text-muted flex-grow-1\">Perguntar à IA</span>"
 
 #. module: ai_website_livechat
 #: model_terms:ir.ui.view,arch_db:ai_website_livechat.snippets
@@ -105,8 +110,8 @@ msgstr "Carregando…"
 
 #. module: ai_website_livechat
 #: model_terms:ir.ui.view,arch_db:ai_website_livechat.s_ai_livechat
-msgid "Need help?"
-msgstr "Precisa de ajuda?"
+msgid "Need help?<br/>"
+msgstr "Precisa de ajuda?<br/>"
 
 #. module: ai_website_livechat
 #. odoo-javascript
@@ -134,6 +139,12 @@ msgstr "Espaço reservado para prompt"
 
 #. module: ai_website_livechat
 #. odoo-javascript
+#: code:addons/ai_website_livechat/static/src/website/components/ai_livechat_component/ai_livechat.xml:0
+msgid "Submit"
+msgstr "Enviar"
+
+#. module: ai_website_livechat
+#. odoo-javascript
 #: code:addons/ai_website_livechat/static/src/website/plugins/ai_livechat_option.xml:0
 msgid "Text"
 msgstr "Texto"
@@ -153,7 +164,7 @@ msgstr "URL"
 #. module: ai_website_livechat
 #: model:ir.model.fields,field_description:ai_website_livechat.field_ai_agent__used_on_website_snippet
 msgid "Used On Website Snippet"
-msgstr ""
+msgstr "Usado no Snippet do site"
 
 #. module: ai_website_livechat
 #. odoo-python
@@ -185,3 +196,6 @@ msgstr "ex.: Entre em contato conosco"
 #: code:addons/ai_website_livechat/static/src/website/interactions/edit/ai_livechat.edit.xml:0
 msgid "or"
 msgstr "ou"
+
+#~ msgid "Need help?"
+#~ msgstr "Precisa de ajuda?"

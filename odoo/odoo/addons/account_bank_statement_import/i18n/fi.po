@@ -13,13 +13,15 @@
 # Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2022
 # Konsta Aavaranta, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Saara Hakanen <sahak@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 16:02+0000\n"
-"PO-Revision-Date: 2025-09-16 15:18+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2025-12-30 18:43+0000\n"
+"PO-Revision-Date: 2026-01-13 21:57+0000\n"
+"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
 "account_bank_statement_import/fi/>\n"
 "Language: fi\n"
@@ -27,24 +29,30 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: account_bank_statement_import
 #. odoo-python
 #: code:addons/account_bank_statement_import/models/account_journal.py:0
 msgid "%d transactions had already been imported and were ignored."
-msgstr "%d tapatumia oli tuotu jo aiemmin, joten ne ohitettiin."
+msgstr "%d tapatumia oli jo tuotu ja ne ohitettiin."
 
 #. module: account_bank_statement_import
 #. odoo-python
 #: code:addons/account_bank_statement_import/models/account_journal.py:0
 msgid "1 transaction had already been imported and was ignored."
-msgstr "1 tapahtuma on aiemmin tuotu ja se ohitettiin."
+msgstr "1 tapahtuma oli jo tuotu ja se ohitettiin."
 
 #. module: account_bank_statement_import
 #: model:ir.model.constraint,message:account_bank_statement_import.constraint_account_bank_statement_line_unique_import_id
 msgid "A bank account transactions can be imported only once!"
-msgstr "Pankkitilitapahtumia voidaan tuoda vain kerran!"
+msgstr "Pankkitilitapahtumat voi tuoda vain kerran!"
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid "All or part of the following file(s) could not be imported:\n"
+msgstr "Kaikkia tai osaa seuraavista tiedostoista ei voitu tuoda:\n"
 
 #. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_bank_statement_line
@@ -54,13 +62,33 @@ msgstr "Tiliotteen rivi"
 #. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_setup_bank_manual_config
 msgid "Bank setup manual config"
-msgstr "Pankin asennus ja manuaalinen määritys"
+msgstr "Pankkiasetusten manuaalinen määritys"
 
 #. module: account_bank_statement_import
 #. odoo-python
 #: code:addons/account_bank_statement_import/models/account_journal.py:0
-msgid "Cannot find in which journal import this statement. Please manually select a journal."
-msgstr "Odoo ei pysty päättelemään päiväkirjaa, mihin tapahtuma luetaan. Ole hyvä ja valitse päiväkirja."
+msgid ""
+"Cannot find in which journal to import the statement for account %s. Please "
+"configure the journal first."
+msgstr ""
+"Päiväkirjaa, johon tilin %s tiliote tulisi tuoda, ei lödy. Määritä ensin "
+"päiväkirja."
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid ""
+"Cannot find in which journal to import this statement. Please manually "
+"select a journal."
+msgstr ""
+"Päiväkirjaa, johon tämä tiliote pitäisi tuoda, ei löydy. Valitse päiväkirja "
+"manuaalisesti."
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_bank_statement.py:0
+msgid "Click \"New\" or upload a %s."
+msgstr "Klikkaa \"Uusi\" tai lataa %s."
 
 #. module: account_bank_statement_import
 #. odoo-python
@@ -70,7 +98,14 @@ msgid ""
 "Did you install the module to support this type of file?"
 msgstr ""
 "Annetusta tiedostosta ei saatu selvää.\n"
-"Oletko asentanut moduulin, joka tukee tämäntyyppistä tiedostoa?"
+"Oletko asentanut tätä tiedostotyyppiä tukevan moduulin?"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_line__display_name
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_journal__display_name
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_setup_bank_manual_config__display_name
+msgid "Display Name"
+msgstr "Näyttönimi"
 
 #. module: account_bank_statement_import
 #. odoo-python
@@ -79,21 +114,33 @@ msgid "Go to Apps"
 msgstr "Siirry sovelluksiin"
 
 #. module: account_bank_statement_import
-#. odoo-python
-#: code:addons/account_bank_statement_import/models/account_journal.py:0
-msgid "If it contains transactions for more than one account, it must be imported on each of them."
-msgstr "Jos se sisältää tapahtumia useammalle kuin yhdelle tilille, se on tuotava jokaiselle tilille."
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_line__id
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_journal__id
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_setup_bank_manual_config__id
+msgid "ID"
+msgstr "Tunnus"
+
+#. module: account_bank_statement_import
+#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.journal_dashboard_view_inherit
+msgid "Import File"
+msgstr "Tuo tiedosto"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_line__unique_import_id
 msgid "Import ID"
-msgstr "Tuonnin tunnus"
+msgstr "Tuo tunnus"
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_bank_statement.py:0
+msgid "Import Template for Bank Statement Lines"
+msgstr "Tilioterivien tuontipohja"
 
 #. module: account_bank_statement_import
 #. odoo-javascript
 #: code:addons/account_bank_statement_import/static/src/account_bank_statement_import_model.js:0
 msgid "Import Template for Bank Statements"
-msgstr "Tiliotteiden tuontimalli"
+msgstr "Tiliotteiden tuontipohja"
 
 #. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_journal
@@ -104,60 +151,80 @@ msgstr "Päiväkirja"
 #. odoo-python
 #: code:addons/account_bank_statement_import/models/account_journal.py:0
 msgid "Manual (or import %(import_formats)s)"
-msgstr "Manuaalinen (tai tuonti %(import_formats)s)"
+msgstr "Manuaalinen (tai tuo %(import_formats)s)"
 
 #. module: account_bank_statement_import
 #. odoo-python
 #: code:addons/account_bank_statement_import/models/account_journal.py:0
 msgid "No attachment was provided"
-msgstr "Liitettä ei annettu"
+msgstr "Ei annettua liitettä"
 
 #. module: account_bank_statement_import
 #. odoo-python
 #: code:addons/account_bank_statement_import/models/account_journal.py:0
 msgid "No currency found matching '%s'."
-msgstr "Ei löydetty valuuttaa, joka vastaisi  '%s'."
+msgstr "'%s' vastaavaa valuuttaa ei löytynyt."
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_bank_statement.py:0
+msgid "No transactions matching your filters were found."
+msgstr "Suodattimiasi vastaavia tapahtumia ei löytynyt."
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_bank_statement.py:0
+msgid "Nothing to do here!"
+msgstr "Ei tehtävää!"
 
 #. module: account_bank_statement_import
 #. odoo-python
 #: code:addons/account_bank_statement_import/models/account_journal.py:0
-msgid "The account of this statement (%s) is not the same as the journal (%s)."
-msgstr "Tiiotteen tili  (%s) ei vastaa päiväkirjaa (%s)."
-
-#. module: account_bank_statement_import
-#. odoo-python
-#: code:addons/account_bank_statement_import/models/account_journal.py:0
-msgid "The currency of the bank statement (%s) is not the same as the currency of the journal (%s)."
-msgstr "Tiliotteen (%s) valuutta on eri kuin päiväkirjan (%s) valuutta."
-
-#. module: account_bank_statement_import
-#. odoo-python
-#: code:addons/account_bank_statement_import/models/account_journal.py:0
-msgid "The following files could not be imported:\n"
+msgid ""
+"The account of this statement (%(account)s) is not the same as the journal (%"
+"(journal)s)."
 msgstr ""
+"Tiliotteen tili (%(account)s) ei ole sama, kuin päiväkirjan (%(journal)s)."
 
 #. module: account_bank_statement_import
 #. odoo-python
 #: code:addons/account_bank_statement_import/models/account_journal.py:0
-msgid "This file doesn't contain any statement for account %s."
-msgstr "Tämä tiedosto ei sisällä yhtään tiliotettta tilille %s."
-
-#. module: account_bank_statement_import
-#. odoo-python
-#: code:addons/account_bank_statement_import/models/account_journal.py:0
-msgid "This file doesn't contain any transaction for account %s."
-msgstr "Tämä tiedosto ei sisällä mitään tapahtumia tilille %s."
-
-#. module: account_bank_statement_import
-#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.journal_dashboard_view_inherit
-msgid "Transactions"
+msgid ""
+"The currency of the bank statement (%(code)s) is not the same as the "
+"currency of the journal (%(journal)s)."
 msgstr ""
+"Tiliotteen (%(code)s) valuutta ei ole sama, kuin päiväkirjan valuutta "
+"(%(journal)s)."
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid ""
+"This file doesn't contain any statement for account %s.\n"
+"If it contains transactions for more than one account, it must be imported "
+"on each of them."
+msgstr ""
+"Tiedosto ei sisällä tiliotteita tilille %s.\n"
+"Jos se sisältää tapahtumia useammalle kuin yhdelle tilille, se on tuotava "
+"kullekin erikseen."
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid ""
+"This file doesn't contain any transaction for account %s.\n"
+"If it contains transactions for more than one account, it must be imported "
+"on each of them."
+msgstr ""
+"Tiedosto ei sisällä tapahtumia tilille %s.\n"
+"Jos se sisältää tapahtumia useammalle kuin yhdelle tilille, se on tuotava "
+"kullekin erikseen."
 
 #. module: account_bank_statement_import
 #. odoo-python
 #: code:addons/account_bank_statement_import/models/account_journal.py:0
 msgid "View successfully imported statements"
-msgstr "Näytä onnistuneesti tuodut tiliotteet"
+msgstr "Katso onnistuneesti tuodut tiliotteet"
 
 #. module: account_bank_statement_import
 #. odoo-python
@@ -169,7 +236,7 @@ msgstr "Olet jo tuonut tämän tiedoston."
 #. odoo-python
 #: code:addons/account_bank_statement_import/models/account_journal.py:0
 msgid "You have to set a Default Account for the journal: %s"
-msgstr "Olet asettanut oletustilin päiväkirjalle: %s"
+msgstr "Sinun on määritettävä oletustili päiväkirjalle: %s"
 
 #. module: account_bank_statement_import
 #. odoo-python
@@ -177,7 +244,31 @@ msgstr "Olet asettanut oletustilin päiväkirjalle: %s"
 msgid "You uploaded an invalid or empty file."
 msgstr "Latasit virheellisen tai tyhjän tiedoston."
 
-#. module: account_bank_statement_import
-#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.journal_dashboard_view_inherit
-msgid "or"
-msgstr ""
+#~ msgid ""
+#~ "Cannot find in which journal import this statement. Please manually "
+#~ "select a journal."
+#~ msgstr ""
+#~ "Odoo ei pysty päättelemään päiväkirjaa, mihin tapahtuma luetaan. Ole hyvä "
+#~ "ja valitse päiväkirja."
+
+#~ msgid ""
+#~ "If it contains transactions for more than one account, it must be "
+#~ "imported on each of them."
+#~ msgstr ""
+#~ "Jos se sisältää tapahtumia useammalle kuin yhdelle tilille, se on tuotava "
+#~ "jokaiselle tilille."
+
+#~ msgid ""
+#~ "The account of this statement (%s) is not the same as the journal (%s)."
+#~ msgstr "Tiiotteen tili  (%s) ei vastaa päiväkirjaa (%s)."
+
+#~ msgid ""
+#~ "The currency of the bank statement (%s) is not the same as the currency "
+#~ "of the journal (%s)."
+#~ msgstr "Tiliotteen (%s) valuutta on eri kuin päiväkirjan (%s) valuutta."
+
+#~ msgid "This file doesn't contain any statement for account %s."
+#~ msgstr "Tämä tiedosto ei sisällä yhtään tiliotettta tilille %s."
+
+#~ msgid "This file doesn't contain any transaction for account %s."
+#~ msgstr "Tämä tiedosto ei sisällä mitään tapahtumia tilille %s."

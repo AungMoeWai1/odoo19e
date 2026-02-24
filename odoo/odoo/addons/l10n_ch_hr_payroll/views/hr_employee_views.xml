@@ -159,7 +159,7 @@
                 </group>
             </group>
             <group name="hr_education_group" position="after">
-                <group string="Statistics" groups="hr.group_hr_user" invisible="country_code != 'CH'">
+                <group string="Statistics" groups="hr_payroll.group_hr_payroll_user" invisible="country_code != 'CH'">
                     <label for="l10n_ch_yearly_holidays"/>
                     <div class="o_row mw-50 o_hr_narrow_field" name="l10n_ch_yearly_holidays">
                         <field name="l10n_ch_yearly_holidays" string="Holidays" nolabel="1" help="Number of holidays per year at 100% Occupation Rate"/>
@@ -187,7 +187,7 @@
                                 class="btn btn-link col-4 p-0 w-max text-end"/>
                             <div class="w-100 border-top border-1 border-secondary mt-0 mb-3"></div>
                         </div>
-    <field name="l10n_ch_location_unit_id" string="Workplace"/>
+    <field name="l10n_ch_location_unit_id" string="Workplace" options="{'no_quick_create': True}"/>
     <field name="registration_number" string="Employee Reference"/>
     <field name="lang" string="Payslip Language" placeholder="User Language"/>
     <label for="contract_date_start" string="Contract"/>
@@ -198,7 +198,7 @@
             <widget name="button_new_contract"/>
         </div>
                             <field name="contract_type_id" string="Contract Type" placeholder="Contract Type"/>
-                            <field name="structure_type_id" string="Pay Category" placeholder="Pay Category"
+                            <field name="structure_type_id" string="Pay Category" placeholder="Employee will be excluded from Pay Runs"
                                     domain="['|', ('country_id', '=', False), ('country_id', '=', company_country_id)]"/>
     <separator string="Schedule"/>
     <field name="resource_calendar_id"
@@ -267,7 +267,7 @@
                         </field>
                     </group>
                 </page>
-                <page string="Insurances" invisible="country_code != 'CH'" groups="hr.group_hr_user">
+                <page string="Insurances" invisible="country_code != 'CH'" groups="hr_payroll.group_hr_payroll_user">
                     <group>
                         <group string="Social Insurance">
                             <field name="l10n_ch_social_insurance_id" options="{'no_create': True, 'no_open': True}"/>

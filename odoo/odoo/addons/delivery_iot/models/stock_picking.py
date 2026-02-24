@@ -1,9 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-from random import sample
-
 from odoo import fields, models
+from odoo.addons.web.controllers.utils import clean_action
 
 
 class StockPickingType(models.Model):
@@ -26,25 +23,20 @@ class StockPickingType(models.Model):
 class StockPicking(models.Model):
     _inherit = "stock.picking"
 
-    def message_post(self, **kwargs):
-        message = super(StockPicking, self).message_post(**kwargs)
-        report = self.env['ir.actions.report']
+    def _get_autoprint_report_actions(self):
+        report_actions = []
+        shipping_labels_to_print = self.filtered(lambda p: p.picking_type_id.auto_print_carrier_labels)
+        if shipping_labels_to_print:
+            action = self.env.ref("delivery_iot.action_report_shipping_labels").report_action(shipping_labels_to_print.ids, config=False)
+            clean_action(action, self.env)
+            report_actions.append(action)
+        shipping_documents_to_print = self.filtered(lambda p: p.picking_type_id.auto_print_export_documents)
+        if shipping_documents_to_print:
+            action = self.env.ref("delivery_iot.action_report_shipping_docs").report_action(shipping_documents_to_print.ids, config=False)
+            clean_action(action, self.env)
+            report_actions.append(action)
+        return report_actions + super()._get_autoprint_report_actions()
 
-        for attachment in message.attachment_ids:
-            if self.picking_type_id.auto_print_carrier_labels and 'Label' in attachment.name:
-                print_report = report._get_report_from_name('delivery_iot.report_shipping_labels')
-            elif self.picking_type_id.auto_print_export_documents and 'ShippingDoc' in attachment.name:
-                print_report = report._get_report_from_name('delivery_iot.report_shipping_docs')
-            else:
-                continue
-            self.print_attachment(print_report, attachment)
-        return message
-
-    def print_attachment(self, report, attachments):
-        if report.device_ids:
-            self.env['iot.channel'].send_message({
-                'iot_identifiers': [report.device_ids[0].iot_id.identifier],
-                'device_identifiers': [report.device_ids[0].identifier],
-                'print_id': 0,
-                'document': attachments.datas,
-            })
+    def print_attachment(self, attachments):
+        """Unused method, kept to avoid breaking the API."""
+        pass

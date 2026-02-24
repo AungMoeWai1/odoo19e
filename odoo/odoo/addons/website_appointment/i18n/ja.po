@@ -7,13 +7,14 @@
 # Ryoko Tsuda <ryoko@quartile.co>, 2023
 # Andy Yiu, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-13 21:50+0000\n"
-"PO-Revision-Date: 2025-09-15 12:01+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2025-12-30 18:49+0000\n"
+"PO-Revision-Date: 2025-11-20 08:14+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
 "website_appointment/ja/>\n"
 "Language: ja\n"
@@ -60,6 +61,8 @@ msgid ""
 "<small class=\"text-muted\">Easily reserve tennis courts for your next "
 "match, anytime and anywhere.</small>"
 msgstr ""
+"<small class=\"text-muted\">いつでもどこでも、次の試合のためにテニスコートを"
+"簡単に予約できます。</small>"
 
 #. module: website_appointment
 #: model_terms:ir.ui.view,arch_db:website_appointment.s_appointments_list_preview_data
@@ -67,6 +70,8 @@ msgid ""
 "<small class=\"text-muted\">Explore online cooking lessons and learn new "
 "recipes at your pace.</small>"
 msgstr ""
+"<small class=\"text-muted\">オンライン料理レッスンを体験して、自分のペースで"
+"新しいレシピを学びましょう。</small>"
 
 #. module: website_appointment
 #: model_terms:ir.ui.view,arch_db:website_appointment.s_appointments_list_preview_data
@@ -74,6 +79,8 @@ msgid ""
 "<small class=\"text-muted\">Schedule your visit today and experience expert "
 "dental care brought right to your doorstep.</small>"
 msgstr ""
+"<small class=\"text-muted\">今すぐご予約いただき、ご自宅で専門的な歯科ケアを"
+"ご体験ください。</small>"
 
 #. module: website_appointment
 #: model_terms:ir.ui.view,arch_db:website_appointment.dynamic_filter_template_appointment_type_picture
@@ -83,8 +90,8 @@ msgid ""
 "role=\"presentation\"/>"
 msgstr ""
 "<span class=\"o_not_editable\">オンライン</span>\n"
-"                                        <i class=\"fa fa-video-camera\" role="
-"\"presentation\"/>"
+"                                        <i class=\"fa fa-video-camera\" "
+"role=\"presentation\"/>"
 
 #. module: website_appointment
 #: model_terms:ir.ui.view,arch_db:website_appointment.dynamic_filter_template_appointment_type_picture
@@ -121,12 +128,15 @@ msgid ""
 "<span><i class=\"fa fa-map-marker\" role=\"presentation\"/> Doctor's Office</"
 "span>"
 msgstr ""
+"<span><i class=\"fa fa-map-marker\" role=\"presentation\"/> 医師の診療所</"
+"span>"
 
 #. module: website_appointment
 #: model_terms:ir.ui.view,arch_db:website_appointment.s_appointments_list_preview_data
 msgid ""
 "<span><i class=\"fa fa-map-marker\" role=\"presentation\"/> Online</span>"
 msgstr ""
+"<span><i class=\"fa fa-map-marker\" role=\"presentation\"/>オンライン</span>"
 
 #. module: website_appointment
 #: model_terms:ir.ui.view,arch_db:website_appointment.s_appointments_list_preview_data
@@ -134,6 +144,8 @@ msgid ""
 "<span><i class=\"fa fa-map-marker\" role=\"presentation\"/> Tennis Court</"
 "span>"
 msgstr ""
+"<span><i class=\"fa fa-map-marker\" role=\"presentation\"/>テニスコート</"
+"span>"
 
 #. module: website_appointment
 #: model_terms:ir.ui.view,arch_db:website_appointment.s_appointments_picture_preview_data
@@ -141,11 +153,13 @@ msgid ""
 "<span>Doctor's Office <i class=\"fa fa-marker\" role=\"presentation\"/></"
 "span>"
 msgstr ""
+"<span>医師の診療所<i class=\"fa fa-marker\" role=\"presentation\"/></span>"
 
 #. module: website_appointment
 #: model_terms:ir.ui.view,arch_db:website_appointment.s_appointments_picture_preview_data
 msgid "<span>Online <i class=\"fa fa-marker\" role=\"presentation\"/></span>"
 msgstr ""
+"<span>オンライン<i class=\"fa fa-marker\" role=\"presentation\"/></span>"
 
 #. module: website_appointment
 #: model_terms:ir.ui.view,arch_db:website_appointment.appointment_select_operator
@@ -158,6 +172,7 @@ msgstr "<span>全ての空き状況を表示<i class=\"fa fa-long-arrow-right\"/
 msgid ""
 "<span>Tennis Club <i class=\"fa fa-marker\" role=\"presentation\"/></span>"
 msgstr ""
+"<span>テニスクラブ<i class=\"fa fa-marker\" role=\"presentation\"/></span>"
 
 #. module: website_appointment
 #: model_terms:ir.ui.view,arch_db:website_appointment.s_appointments_preview_data
@@ -342,7 +357,7 @@ msgstr "ユーザを選択..."
 #. module: website_appointment
 #: model_terms:ir.ui.view,arch_db:website_appointment.appointment_select_operator
 msgid "Choose what you would like to book"
-msgstr ""
+msgstr "ご希望の予約内容をお選びください"
 
 #. module: website_appointment
 #: model_terms:ir.ui.view,arch_db:website_appointment.appointment_select_operator
@@ -389,7 +404,8 @@ msgstr "異なるウェブサイトメッセージ"
 msgid ""
 "Discover the secrets kept in high-end kitchens with one of our starred "
 "chefs, from the comfort of your own home."
-msgstr "ご自宅にいながら、星付きシェフとともに高級レストランの厨房に隠された秘密を体"
+msgstr ""
+"ご自宅にいながら、星付きシェフとともに高級レストランの厨房に隠された秘密を体"
 "験しましょう。"
 
 #. module: website_appointment
@@ -499,8 +515,9 @@ msgstr "公開済"
 msgid ""
 "Reserve your table at our bistro and enjoy a delightful dining experience at "
 "your convenience."
-msgstr "当店のビストロでテーブルをご予約下さい。至福のダイニング体験をお好きな時間に"
-"。"
+msgstr ""
+"当店のビストロでテーブルをご予約下さい。至福のダイニング体験をお好きな時間"
+"に。"
 
 #. module: website_appointment
 #. odoo-javascript
@@ -537,7 +554,8 @@ msgstr "予約をする"
 msgid ""
 "Schedule your visit today and experience expert dental care brought right to "
 "your doorstep."
-msgstr "今すぐご来院の予約をお取りいただき、ご自宅近くで受けられる高度な歯科治療をご"
+msgstr ""
+"今すぐご来院の予約をお取りいただき、ご自宅近くで受けられる高度な歯科治療をご"
 "利用下さい。"
 
 #. module: website_appointment
@@ -623,8 +641,9 @@ msgstr "テニスコート"
 msgid ""
 "The following appointment type(s) are not compatible with the website "
 "chosen: %(appointments)s"
-msgstr "次のアポイントメントタイプは、選択したウェブサイトと互換性がありません: "
-"%(appointments)s"
+msgstr ""
+"次のアポイントメントタイプは、選択したウェブサイトと互換性がありません: %"
+"(appointments)s"
 
 #. module: website_appointment
 #: model:ir.model.fields,help:website_appointment.field_appointment_invite__website_absolute_url
@@ -647,7 +666,8 @@ msgstr "現在利用可能な予約はありません"
 #: model_terms:ir.ui.view,arch_db:website_appointment.appointments_cards
 #: model_terms:ir.ui.view,arch_db:website_appointment.appointments_list_layout
 msgid "Use the top button '<b>+ New</b>' to create an appointment type."
-msgstr "上の「<b>+ 新規</b>」ボタンで、アポイントメントタイプを作成してください。"
+msgstr ""
+"上の「<b>+ 新規</b>」ボタンで、アポイントメントタイプを作成してください。"
 
 #. module: website_appointment
 #. odoo-javascript

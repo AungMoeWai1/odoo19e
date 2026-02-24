@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields, api
+from odoo import _, models, fields, api
+from odoo.exceptions import AccessError
 
 
 class ApprovalApprover(models.Model):
@@ -37,6 +38,14 @@ class ApprovalApprover(models.Model):
     category_approver = fields.Boolean(compute='_compute_category_approver')
     can_edit = fields.Boolean(compute='_compute_can_edit')
     can_edit_user_id = fields.Boolean(compute='_compute_can_edit', help="Simple users should not be able to remove themselves as approvers because they will lose access to the record if they misclick.")
+
+    def write(self, vals):
+        if 'request_id' in vals:
+            request = self.env['approval.request'].browse(vals['request_id'])
+            request.check_access('write')
+            if self.request_id and self.request_id != request:
+                raise AccessError(_("You cannot change approval request."))
+        return super().write(vals)
 
     def action_approve(self):
         self.request_id.action_approve(self)

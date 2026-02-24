@@ -246,6 +246,8 @@ export class Thread extends Record {
     /** @type {String|undefined} */
     primary_email_field;
     hasLoadingFailed = false;
+    /** @type {Error} */
+    hasLoadingFailedError;
     canPostOnReadonly;
     /** @type {Boolean} */
     is_editable;
@@ -313,6 +315,10 @@ export class Thread extends Record {
         );
     }
 
+    get canPostMessage() {
+        return this.hasWriteAccess || (this.hasReadAccess && this.canPostOnReadonly);
+    }
+
     /**
      * Return the name of the given persona to display in the context of this
      * thread.
@@ -321,7 +327,7 @@ export class Thread extends Record {
      * @returns {string}
      */
     getPersonaName(persona) {
-        return persona.displayName || persona.name;
+        return persona?.displayName || persona?.name;
     }
 
     get hasAttachmentPanel() {
@@ -461,9 +467,11 @@ export class Thread extends Record {
         let res;
         try {
             res = await this.fetchMessagesData({ after, around, before });
+            this.hasLoadingFailedError = undefined;
             this.hasLoadingFailed = false;
         } catch (e) {
             this.hasLoadingFailed = true;
+            this.hasLoadingFailedError = e;
             this.isLoaded = true;
             this.status = "ready";
             throw e;

@@ -102,7 +102,7 @@ class L10n_BePartnerVatHandler(models.AbstractModel):
         trl_49 = self.env['account.tax.repartition.line'].search([('tag_ids', 'in', tag_49_ids), ('document_type', '=', 'refund')])
         tag_47_ids = self.env.ref('l10n_be.tax_report_line_47').expression_ids._get_matching_tags().ids
         trl_47 = self.env['account.tax.repartition.line'].search([('tag_ids', 'in', tag_47_ids), ('document_type', '=', 'invoice')])
-        return trl_47.tax_id & trl_49.tax_id
+        return trl_47.tax_id & trl_49.tax_id | self.env['account.tax'].search([('ubl_cii_tax_category_code', '=', 'E')])
 
     def _get_query_fun_params(self, report, options, remove_forced_domain=False):
         # Remove the forced_domain possibly used in the options to force the value of the groupby being unfolded/horizontal group. Indeed, we want
@@ -531,7 +531,7 @@ class L10n_BePartnerVatHandler(models.AbstractModel):
         if addr.get('invoice', False):
             addr_partner = self.env['res.partner'].browse([addr['invoice']])
             phone = addr_partner.phone and _raw_phonenumber(addr_partner.phone) or address.phone and _raw_phonenumber(address.phone)
-            email = addr_partner.email or ''
+            email = addr_partner.email or address.email
             city = addr_partner.city or ''
             zip_code = addr_partner.zip or ''
 
@@ -547,6 +547,8 @@ class L10n_BePartnerVatHandler(models.AbstractModel):
         # Turnover and Farmer tags are not included
         options['date']['date_from'] = options['date']['date_from'][0:4] + '-01-01'
         options['date']['date_to'] = options['date']['date_to'][0:4] + '-12-31'
+        # Set export_mode to 'file' to bypass load_more_limit and get all partners
+        options['export_mode'] = 'file'
         lines = report._get_lines(options)
         partner_lines = filter(lambda line: report._get_model_info_from_id(line['id'])[0] == 'res.partner', lines)
 

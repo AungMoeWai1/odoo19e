@@ -3,14 +3,16 @@ import { BankRecQuickCreate } from "./quick_create/quick_create";
 import { BankRecKanbanController } from "./kanban_controller";
 import { BankRecStatementLine } from "./statement_line/statement_line";
 import { BankRecStatementSummary } from "./statement_summary/statement_summary";
+import { browser } from "@web/core/browser/browser";
 import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
 import { kanbanView } from "@web/views/kanban/kanban_view";
 import { _t } from "@web/core/l10n/translation";
 import { formatMonetary } from "@web/views/fields/formatters";
-import { onWillStart, useState, onWillDestroy } from "@odoo/owl";
+import { useState, onWillStart, onWillDestroy } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { useBankReconciliation } from "./bank_reconciliation_service";
+import { BankRecKanbanControlPanel } from "./control_action/control_action";
 
 export class BankRecKanbanRenderer extends KanbanRenderer {
     static template = "account_accountant.BankRecKanbanRenderer";
@@ -40,24 +42,50 @@ export class BankRecKanbanRenderer extends KanbanRenderer {
                 this.env.model.config.context.active_id,
             totalJournalAmount: "",
         });
+
+        this.env.model.hooks.onRootLoaded = async (newRoot) => {
+            await this.prepareInitialState(newRoot.records);
+        }
+
         this.env.bus.addEventListener("createRecordQuickCreate", () => {
             this.globalState.quickCreate.isVisible = true;
         });
 
         onWillStart(async () => {
-            this.getJournalTotalAmount();
-            await this.bankReconciliation.computeReconcileLineCountPerPartnerId(
-                this.env.model.root.records
-            );
-            await this.bankReconciliation.computeAvailableReconcileModels(
-                this.env.model.root.records
-            );
+            await this.prepareInitialState(this.env.model.root.records);
         });
 
         onWillDestroy(() => {
-            this.bankReconciliation.chatterState.visible = false;
+            browser.sessionStorage.setItem(
+                "isBankReconciliationWidgetChatterOpened",
+                this.bankReconciliation.chatterState.visible
+            );
+            browser.sessionStorage.setItem(
+                "bankReconciliationStatementLineId",
+                this.bankReconciliation.chatterState.statementLine?.data.id
+            );
             this.bankReconciliation.chatterState.statementLine = null;
         });
+    }
+
+    /**
+     * Prepare the initial bank reconciliation widget info on load or when records changes
+     *
+     * @param {Array<Object>} records - Bank statement line records
+     * @returns {Promise<void>} Resolves when all computations are done
+     */
+    async prepareInitialState(records){
+        await Promise.all([
+            this.getJournalTotalAmount(),
+            this.bankReconciliation.computeReconcileLineCountPerPartnerId(records),
+            this.bankReconciliation.computeAvailableReconcileModels(records),
+        ]);
+        const statementLineId =
+            parseInt(browser.sessionStorage.getItem("bankReconciliationStatementLineId")) ||
+            records[0]?.data.id;
+        const statementLine =
+            records.find((record) => record.data.id === statementLineId) ?? records[0];
+        this.bankReconciliation.selectStatementLine(statementLine);
     }
 
     /**
@@ -89,6 +117,8 @@ export class BankRecKanbanRenderer extends KanbanRenderer {
             this.globalState.journalId,
         ]);
         this.globalState.totalJournalAmount = value.balance_amount;
+        this.globalState.totalIsInvalid = value.has_invalid_statements;
+        return value;
     }
 
     // -----------------------------------------------------------------------------
@@ -98,7 +128,10 @@ export class BankRecKanbanRenderer extends KanbanRenderer {
         const actionData = await this.orm.call(
             "account.journal",
             "action_open_bank_balance_in_gl",
-            [this.env.model.config.context.active_id]
+            [
+                this.env.model.config.context.default_journal_id ||
+                    this.env.model.config.context.active_id,
+            ],
         );
         this.action.doAction(actionData);
     }
@@ -125,12 +158,12 @@ export class BankRecKanbanRenderer extends KanbanRenderer {
     get quickCreateContext() {
         return {
             ...this.globalState.context,
-            auto_statement_processing: true,
         };
     }
 
+    // TODO: remove in master
     get hideCurrentBalance() {
-        return this.env.searchModel.context?.hide_current_balance;
+        return false;
     }
 
     get hasStatementLine() {
@@ -139,6 +172,11 @@ export class BankRecKanbanRenderer extends KanbanRenderer {
 
     get totalJournalLabel() {
         return _t("Current Balance");
+    }
+
+    // hide no content helper if quick create is visible and there is no data either isGrouped or not
+    get showNoContentHelper() {
+        return !this.isQuickCreateVisible && !this.props.list.model.hasData();
     }
 
     /**
@@ -185,6 +223,7 @@ export class BankRecKanbanRenderer extends KanbanRenderer {
 
 export const BankRecKanbanView = {
     ...kanbanView,
+    ControlPanel: BankRecKanbanControlPanel,
     Controller: BankRecKanbanController,
     Renderer: BankRecKanbanRenderer,
     searchMenuTypes: ["filter", "favorite"],

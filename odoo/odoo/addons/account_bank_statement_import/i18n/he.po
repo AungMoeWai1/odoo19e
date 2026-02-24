@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 16:02+0000\n"
-"PO-Revision-Date: 2025-09-29 02:40+0000\n"
+"POT-Creation-Date: 2025-12-30 18:43+0000\n"
+"PO-Revision-Date: 2025-10-13 14:59+0000\n"
 "Last-Translator: or balmas <or@laylinetech.com>\n"
 "Language-Team: Hebrew <https://translate.odoo.com/projects/odoo-19/"
 "account_bank_statement_import/he/>\n"
@@ -40,7 +40,13 @@ msgstr "עסקה אחת כבר יובאה ולכן הושמטה."
 #. module: account_bank_statement_import
 #: model:ir.model.constraint,message:account_bank_statement_import.constraint_account_bank_statement_line_unique_import_id
 msgid "A bank account transactions can be imported only once!"
-msgstr ""
+msgstr "ניתן לייבא את תנועות חשבון הבנק פעם אחת בלבד!"
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid "All or part of the following file(s) could not be imported:\n"
+msgstr "לא ניתן היה לייבא את כל הקובץ או חלק מהקבצים הבאים:\n"
 
 #. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_bank_statement_line
@@ -55,10 +61,26 @@ msgstr "הגדרת תצורת בנק ידנית"
 #. module: account_bank_statement_import
 #. odoo-python
 #: code:addons/account_bank_statement_import/models/account_journal.py:0
-msgid "Cannot find in which journal import this statement. Please manually select a journal."
+msgid ""
+"Cannot find in which journal to import the statement for account %s. Please "
+"configure the journal first."
 msgstr ""
-"לא ניתן למצוא לאיזה יומן לייבא תדפיס זה. \n"
-"אנא בחר יומן ידנית."
+"לא ניתן למצוא באיזה יומן לייבא את הדוח עבור חשבון %s. יש להגדיר את היומן "
+"קודם."
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid ""
+"Cannot find in which journal to import this statement. Please manually "
+"select a journal."
+msgstr "לא ניתן למצוא באיזה יומן לייבא את הדוח הזה. יש לבחור יומן באופן ידני."
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_bank_statement.py:0
+msgid "Click \"New\" or upload a %s."
+msgstr "לחץ על \"חדש\" או העלה %s."
 
 #. module: account_bank_statement_import
 #. odoo-python
@@ -67,18 +89,33 @@ msgid ""
 "Could not make sense of the given file.\n"
 "Did you install the module to support this type of file?"
 msgstr ""
+"לא ניתן היה להבין את הקובץ שניתן.\n"
+"האם התקנת את המודול התומך בסוג קובץ זה?"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_line__display_name
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_journal__display_name
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_setup_bank_manual_config__display_name
+msgid "Display Name"
+msgstr "שם לתצוגה"
 
 #. module: account_bank_statement_import
 #. odoo-python
 #: code:addons/account_bank_statement_import/models/account_journal.py:0
 msgid "Go to Apps"
-msgstr ""
+msgstr "עבור ליישומים"
 
 #. module: account_bank_statement_import
-#. odoo-python
-#: code:addons/account_bank_statement_import/models/account_journal.py:0
-msgid "If it contains transactions for more than one account, it must be imported on each of them."
-msgstr "אם הוא מכיל עסקאות עבור יותר מחשבון אחד, יש לייבא אותו על כל אחד מהם."
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_line__id
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_journal__id
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_setup_bank_manual_config__id
+msgid "ID"
+msgstr "מזהה"
+
+#. module: account_bank_statement_import
+#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.journal_dashboard_view_inherit
+msgid "Import File"
+msgstr "ייבא קובץ"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_line__unique_import_id
@@ -86,10 +123,16 @@ msgid "Import ID"
 msgstr "מזהה ייבוא"
 
 #. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_bank_statement.py:0
+msgid "Import Template for Bank Statement Lines"
+msgstr "תבנית ייבוא לשורות דפי בנק"
+
+#. module: account_bank_statement_import
 #. odoo-javascript
 #: code:addons/account_bank_statement_import/static/src/account_bank_statement_import_model.js:0
 msgid "Import Template for Bank Statements"
-msgstr ""
+msgstr "תבנית ייבוא לדפי בנק"
 
 #. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_journal
@@ -100,7 +143,7 @@ msgstr "יומן"
 #. odoo-python
 #: code:addons/account_bank_statement_import/models/account_journal.py:0
 msgid "Manual (or import %(import_formats)s)"
-msgstr ""
+msgstr "ידנית( או ייבא %(import_formats)s)"
 
 #. module: account_bank_statement_import
 #. odoo-python
@@ -116,44 +159,59 @@ msgstr "לא נמצא מטבע המתאים ל '%s'."
 
 #. module: account_bank_statement_import
 #. odoo-python
-#: code:addons/account_bank_statement_import/models/account_journal.py:0
-msgid "The account of this statement (%s) is not the same as the journal (%s)."
-msgstr "חשבון תדפיס בנק זה (%s) אינו זהה ליומן (%s)."
+#: code:addons/account_bank_statement_import/models/account_bank_statement.py:0
+msgid "No transactions matching your filters were found."
+msgstr "לא נמצאו עסקאות התואמות את המסננים שלך."
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_bank_statement.py:0
+msgid "Nothing to do here!"
+msgstr "אין מה לבצע כאן!"
 
 #. module: account_bank_statement_import
 #. odoo-python
 #: code:addons/account_bank_statement_import/models/account_journal.py:0
-msgid "The currency of the bank statement (%s) is not the same as the currency of the journal (%s)."
-msgstr "המטבע ביומן דפי הבנק (%s) אינו זהה למטבע ביומן (%s)."
+msgid ""
+"The account of this statement (%(account)s) is not the same as the journal (%"
+"(journal)s)."
+msgstr "חשבון תדפיס בנק זה (%(account)s) אינו זהה ליומן (%(journal)s)."
 
 #. module: account_bank_statement_import
 #. odoo-python
 #: code:addons/account_bank_statement_import/models/account_journal.py:0
-msgid "The following files could not be imported:\n"
+msgid ""
+"The currency of the bank statement (%(code)s) is not the same as the "
+"currency of the journal (%(journal)s)."
+msgstr "המטבע ביומן דפי הבנק (%(code)s) אינו זהה למטבע ביומן (%(journal)s)."
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid ""
+"This file doesn't contain any statement for account %s.\n"
+"If it contains transactions for more than one account, it must be imported "
+"on each of them."
 msgstr ""
+"קובץ זה אינו מכיל אף דף חשבון עבור החשבון%s.\n"
+"אם הוא מכיל תנועות עבור יותר מחשבון אחד, יש לייבא אותן לכל אחד מהם בנפרד."
 
 #. module: account_bank_statement_import
 #. odoo-python
 #: code:addons/account_bank_statement_import/models/account_journal.py:0
-msgid "This file doesn't contain any statement for account %s."
-msgstr "קובץ זה אינו מכיל תדפיס כלשהו לחשבון %s."
-
-#. module: account_bank_statement_import
-#. odoo-python
-#: code:addons/account_bank_statement_import/models/account_journal.py:0
-msgid "This file doesn't contain any transaction for account %s."
-msgstr "קובץ זה אינו מכיל שום עסקה לחשבון %s."
-
-#. module: account_bank_statement_import
-#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.journal_dashboard_view_inherit
-msgid "Transactions"
+msgid ""
+"This file doesn't contain any transaction for account %s.\n"
+"If it contains transactions for more than one account, it must be imported "
+"on each of them."
 msgstr ""
+"קובץ זה אינו מכיל אף תנועה עבור החשבון %s .\n"
+"אם הוא מכיל תנועות עבור יותר מחשבון אחד, יש לייבא אותן לכל אחד מהם בנפרד."
 
 #. module: account_bank_statement_import
 #. odoo-python
 #: code:addons/account_bank_statement_import/models/account_journal.py:0
 msgid "View successfully imported statements"
-msgstr ""
+msgstr "צפה בשורות שיובאו בהצלחה"
 
 #. module: account_bank_statement_import
 #. odoo-python
@@ -165,15 +223,38 @@ msgstr "כבר ייבאת את הקובץ הזה."
 #. odoo-python
 #: code:addons/account_bank_statement_import/models/account_journal.py:0
 msgid "You have to set a Default Account for the journal: %s"
-msgstr "צריך להגדיר חשבון ברירת-מחזל ליומן: %s"
+msgstr "צריך להגדיר חשבון ברירת-מחדל ליומן: %s"
 
 #. module: account_bank_statement_import
 #. odoo-python
 #: code:addons/account_bank_statement_import/models/account_journal.py:0
 msgid "You uploaded an invalid or empty file."
-msgstr ""
+msgstr "העלית קובץ לא תקין או ריק."
 
-#. module: account_bank_statement_import
-#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.journal_dashboard_view_inherit
-msgid "or"
-msgstr ""
+#~ msgid ""
+#~ "Cannot find in which journal import this statement. Please manually "
+#~ "select a journal."
+#~ msgstr ""
+#~ "לא ניתן למצוא לאיזה יומן לייבא תדפיס זה. \n"
+#~ "אנא בחר יומן ידנית."
+
+#~ msgid ""
+#~ "If it contains transactions for more than one account, it must be "
+#~ "imported on each of them."
+#~ msgstr ""
+#~ "אם הוא מכיל עסקאות עבור יותר מחשבון אחד, יש לייבא אותו על כל אחד מהם."
+
+#~ msgid ""
+#~ "The account of this statement (%s) is not the same as the journal (%s)."
+#~ msgstr "חשבון תדפיס בנק זה (%s) אינו זהה ליומן (%s)."
+
+#~ msgid ""
+#~ "The currency of the bank statement (%s) is not the same as the currency "
+#~ "of the journal (%s)."
+#~ msgstr "המטבע ביומן דפי הבנק (%s) אינו זהה למטבע ביומן (%s)."
+
+#~ msgid "This file doesn't contain any statement for account %s."
+#~ msgstr "קובץ זה אינו מכיל תדפיס כלשהו לחשבון %s."
+
+#~ msgid "This file doesn't contain any transaction for account %s."
+#~ msgstr "קובץ זה אינו מכיל שום עסקה לחשבון %s."

@@ -123,3 +123,79 @@ class TestPOSCustomerAccountReconciliation(TestPoSCommon):
         session1.close_session_from_ui()
         self.assertFalse(self._get_unreconciled_moves(self.partner_a))
         self.assertFalse(self._get_unreconciled_moves(self.partner_b))
+
+    def test_different_customer_invoices_settlement_same_session_reconciled_separately(self):
+        self.partner_a.property_account_receivable_id = self.partner_b.property_account_receivable_id
+        invoice_a = self._create_invoice_one_line(partner_id=self.partner_a, price_unit=1000)
+        invoice_b = self._create_invoice_one_line(partner_id=self.partner_b, price_unit=2000)
+        (invoice_a + invoice_b).action_post()
+        session1 = self.open_new_session()
+        order_data = [
+            {
+                "pos_order_lines_ui_args": [{
+                    'product': self.config.settle_invoice_product_id,
+                    'quantity': 1,
+                    'settled_order_id': False,
+                    'settled_invoice_id': invoice_a.id,
+                    "qty": 0.0,
+                    "price_unit": 1000,
+                    "price_subtotal": 0.0,
+                    "price_subtotal_incl": 0.0,
+                    "price_type": "manual",
+                    "discount": 0.0,
+                    "refunded_qty": 0.0,
+                    "price_extra": 0.0,
+                }],
+                "payments": [(self.bank_pm1, 500)],
+                "customer": self.partner_a,
+                "is_invoiced": True,
+            },
+            {
+                "pos_order_lines_ui_args": [{
+                    'product': self.config.settle_invoice_product_id,
+                    'quantity': 1,
+                    'settled_order_id': False,
+                    'settled_invoice_id': invoice_b.id,
+                    "qty": 0.0,
+                    "price_unit": 2000,
+                    "price_subtotal": 0.0,
+                    "price_subtotal_incl": 0.0,
+                    "price_type": "manual",
+                    "discount": 0.0,
+                    "refunded_qty": 0.0,
+                    "price_extra": 0.0
+                }],
+                "payments": [(self.bank_pm1, 1000)],
+                "customer": self.partner_b,
+                "is_invoiced": True,
+            },
+        ]
+        order_data = [self.create_ui_order_data(**params) for params in order_data]
+        order_data[0].update({
+            'state': 'paid',
+            'amount_total': '500',
+        })
+        order_data[1].update({
+            'state': 'paid',
+            'amount_total': '1000',
+        })
+        self.env['pos.order'].sync_from_ui(order_data)
+        session1.close_session_from_ui()
+        invoice_lines_matching = self.env['account.move.line'].search([('matching_number', '=', invoice_a.line_ids[-1].matching_number)])
+        self.assertEqual(len(invoice_lines_matching.partner_id), 1, "Only aml from same partner should be reconciled together")
+
+    def test_settlement_invoiced_later(self):
+        session = self.open_new_session()
+        order_dict = self._create_orders([{
+            "pos_order_lines_ui_args": [(self.product_a, 1)],
+            "payments": [(self.pay_later_pm, 1150)],
+            "customer": self.partner_a,
+            "is_invoiced": False,
+        }])
+        order = next(iter(order_dict.values()))
+        order.action_pos_order_paid()
+        self._create_settle_order(order, False)
+        session.close_session_from_ui()
+        order._generate_pos_order_invoice()
+        self.assertEqual(order.state, 'done')
+        self.assertEqual(order.account_move.payment_state, 'paid')

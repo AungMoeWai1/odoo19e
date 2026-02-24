@@ -3,13 +3,14 @@
 # * hr_payroll_expense
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Abe Manyo (abem)" <abem@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:34+0000\n"
-"PO-Revision-Date: 2025-09-15 23:06+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2025-12-30 18:43+0000\n"
+"PO-Revision-Date: 2025-11-14 07:46+0000\n"
+"Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-19/"
 "hr_payroll_expense/id/>\n"
 "Language: id\n"
@@ -23,7 +24,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_payroll_expense.view_account_payment_register_form_inherit_hr_payroll_expense
 msgid ""
 "<span class=\"fw-bold\">\n"
-"                            The expenses will already be reimbursed in a payslip. Make sure this payment is intended.\n"
+"                            The expenses will already be reimbursed in a "
+"payslip. Make sure this payment is intended.\n"
 "                        </span>"
 msgstr ""
 "<span class=\"fw-bold\">\n"
@@ -66,8 +68,10 @@ msgstr "Pengeluaran (\"%(name)s\") akan ditambahkan ke payslip berikutnya."
 #. odoo-python
 #: code:addons/hr_payroll_expense/models/hr_expense.py:0
 msgid ""
-"Expense reimbursement rule needs to be configured to add expenses to payslips.\n"
-"Please create one salary rule with the \"%(code)s\" code on the relevant salary structures."
+"Expense reimbursement rule needs to be configured to add expenses to "
+"payslips.\n"
+"Please create one salary rule with the \"%(code)s\" code on the relevant "
+"salary structures."
 msgstr ""
 "Peraturan reimbursement pengeluaran harus dikonfigurasi untuk menambahkan "
 "pengeluaran ke payslip.\n"
@@ -78,7 +82,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_payroll_expense/models/hr_payslip.py:0
 msgid "Expense rules"
-msgstr ""
+msgstr "Peraturan pengeluaran"
 
 #. module: hr_payroll_expense
 #: model:hr.payslip.input.type,name:hr_payroll_expense.expense_other_input
@@ -131,25 +135,25 @@ msgstr "Entri Jurnal"
 #. odoo-python
 #: code:addons/hr_payroll_expense/models/hr_payslip.py:0
 msgid "No debit account for EXPENSES rules"
-msgstr ""
+msgstr "Tidak ada akun debit untuk peraturan PENGELUARAN"
 
 #. module: hr_payroll_expense
 #. odoo-python
 #: code:addons/hr_payroll_expense/models/hr_payroll_structure.py:0
 msgid ""
 "No debit account found in the '%(rule_name)s' payslip salary rule. Please "
-"add a payable debit account to be able to create an accounting entry for the"
-" expenses linked to this payslip."
+"add a payable debit account to be able to create an accounting entry for the "
+"expenses linked to this payslip."
 msgstr ""
-"Tidak ada akun debit yang ditemukan di peraturan gaji payslip '%(rule_name)"
-"s'. Silakan tambahkan akun debit hutang untuk dapat membuat entri akuntansi "
-"untuk pengeluaran yang terhubung ke payslip ini."
+"Tidak ada akun debit yang ditemukan di peraturan gaji payslip '%"
+"(rule_name)s'. Silakan tambahkan akun debit hutang untuk dapat membuat entri "
+"akuntansi untuk pengeluaran yang terhubung ke payslip ini."
 
 #. module: hr_payroll_expense
 #. odoo-python
 #: code:addons/hr_payroll_expense/models/hr_payslip.py:0
 msgid "No rule to handle expenses"
-msgstr ""
+msgstr "Tidak ada peraturan untuk menangani pengeluaran"
 
 #. module: hr_payroll_expense
 #. odoo-python
@@ -204,7 +208,7 @@ msgstr "Laporkan di Payslip Berikutnya"
 #. odoo-python
 #: code:addons/hr_payroll_expense/models/hr_payslip.py:0
 msgid "Rules"
-msgstr ""
+msgstr "Peraturan-Peraturan"
 
 #. module: hr_payroll_expense
 #: model:ir.model,name:hr_payroll_expense.model_hr_payroll_structure
@@ -231,7 +235,8 @@ msgstr "Tidak ada pengeluaran valid yang terpilih."
 #. odoo-python
 #: code:addons/hr_payroll_expense/models/hr_expense.py:0
 msgid ""
-"You cannot remove an expense from a payslip that has already been validated.\n"
+"You cannot remove an expense from a payslip that has already been "
+"validated.\n"
 "Expenses can only be removed from draft or canceled payslips."
 msgstr ""
 "Anda tidak dapat menghapus pengeluaran dari payslip yang sudah divalidasi.\n"

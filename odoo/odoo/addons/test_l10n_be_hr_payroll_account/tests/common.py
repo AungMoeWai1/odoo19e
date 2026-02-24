@@ -142,9 +142,16 @@ class TestPayrollAccountCommon(odoo.tests.HttpCase):
             }
         ])
 
+        cls.extra_days_time_off_type = cls.env['hr.leave.type'].create({
+            'name': 'Extra Time Off',
+            'requires_allocation': 'yes',
+        })
+
         cls.company_id = cls.env['res.company'].create({
             'name': 'My Belgian Company - TEST',
             'country_id': cls.env.ref('base.be').id,
+            'hr_contract_timeoff_auto_allocation': True,
+            'hr_contract_timeoff_auto_allocation_type_id': cls.extra_days_time_off_type.id,
         })
         partner_id = cls.env['res.partner'].create({
             'name': 'Laurie Poiret',
@@ -235,12 +242,14 @@ class TestPayrollAccountCommon(odoo.tests.HttpCase):
             'name': 'Debtors - (test)',
             'reconcile': True,
             'account_type': 'asset_receivable',
+            'company_ids': cls.company_id.ids,
         })
         a_pay = cls.env['account.account'].create({
             'code': 'X1111',
             'name': 'Creditors - (test)',
             'account_type': 'liability_payable',
             'reconcile': True,
+            'company_ids': cls.company_id.ids,
         })
         cls.env['ir.default'].set(
             'res.partner',
@@ -260,6 +269,7 @@ class TestPayrollAccountCommon(odoo.tests.HttpCase):
 
         cls.env.ref('base.user_admin').write({
             'company_ids': [(4, cls.company_id.id)],
+            'company_id': cls.company_id.id,
             'name': 'Mitchell Admin',
             'sign_signature': img_content,
         })
@@ -273,7 +283,7 @@ class TestPayrollAccountCommon(odoo.tests.HttpCase):
             'state_id': cls.env.ref('base.state_us_39').id,
             'phone': '+1 555-555-5555',
             'tz': 'Europe/Brussels',
-            'company_id': cls.env.company.id,
+            'company_id': cls.company_id.id,
         })
         demo.write({
             'partner_id': partner_id,

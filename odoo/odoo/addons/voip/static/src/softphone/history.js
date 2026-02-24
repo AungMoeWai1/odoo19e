@@ -1,7 +1,7 @@
 import { Component, onMounted, useState } from "@odoo/owl";
 
 import { tabComponents } from "@voip/softphone/tab";
-import { isSubstring } from "@voip/utils/utils";
+import { isSubstring, matchPhoneNumber } from "@voip/utils/utils";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -23,8 +23,11 @@ export class History extends Component {
         this.ui = useService("ui");
         this.softphone = useState(this.voip.softphone);
         this.state = useState(this.voip.softphone.history);
-        onMounted(() => this.voip.fetchRecentCalls());
-        this.onInputSearch = useDebounced(() => this.voip.fetchRecentCalls(), 300);
+        onMounted(() => this.voip.fetchRecentCalls(this.state.searchInputValue));
+        this.onInputSearch = useDebounced(
+            () => this.voip.fetchRecentCalls(this.state.searchInputValue),
+            300
+        );
     }
 
     get callsByDate() {
@@ -57,7 +60,7 @@ export class History extends Component {
             if (call.partner_id && isSubstring(call.partner_id.name, searchTerms)) {
                 return true;
             }
-            return isSubstring(call.phone_number, searchTerms);
+            return matchPhoneNumber(call.phone_number, searchTerms);
         });
     }
 
@@ -69,11 +72,11 @@ export class History extends Component {
                 return "text-danger";
             case "calling":
             case "ongoing":
-                return call.id === pendingCall?.id ? "text-muted" : "text-danger";
+                return call.id === pendingCall?.id ? "" : "text-danger";
             case "aborted":
             case "terminated":
             default:
-                return "text-muted";
+                return "";
         }
     }
 
@@ -205,7 +208,12 @@ export class History extends Component {
             name: _t("Recent Calls"),
             res_model: "voip.call",
             target: this.ui.isSmall ? "new" : "current",
-            views: [[false, "list"], [false, "graph"], [false, "pivot"], [false, "form"]],
+            views: [
+                [false, "list"],
+                [false, "graph"],
+                [false, "pivot"],
+                [false, "form"],
+            ],
             context: {
                 search_default_my_calls: 1,
             },

@@ -7,13 +7,14 @@
 # Larissa Manderfeld, 2023
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 16:01+0000\n"
-"PO-Revision-Date: 2025-09-15 21:09+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-01-09 18:44+0000\n"
+"PO-Revision-Date: 2026-02-14 10:01+0000\n"
+"Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/"
 "mrp_workorder_iot/de/>\n"
 "Language: de\n"
@@ -21,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: mrp_workorder_iot
 #: model:ir.model.fields,field_description:mrp_workorder_iot.field_iot_trigger__action
@@ -34,17 +35,29 @@ msgid "Boxes"
 msgstr "Boxen"
 
 #. module: mrp_workorder_iot
-#: model:ir.model.fields.selection,name:mrp_workorder_iot.selection__iot_trigger__action__cancel
+#: model:ir.model.fields.selection,name:mrp_workorder_iot.selection__iot_trigger__action__canc
 msgid "Cancel"
 msgstr "Abbrechen"
 
 #. module: mrp_workorder_iot
-#: model:ir.model.fields.selection,name:mrp_workorder_iot.selection__iot_trigger__action__clomo
+#. odoo-javascript
+#: code:addons/mrp_workorder_iot/static/src/mrp_display/quality_check.js:0
+msgid "Capturing image..."
+msgstr "Bild wird aufgenommen ..."
+
+#. module: mrp_workorder_iot
+#. odoo-javascript
+#: code:addons/mrp_workorder_iot/static/src/mrp_display/picture_preview_dialog.xml:0
+msgid "Close"
+msgstr "Schließen"
+
+#. module: mrp_workorder_iot
+#: model:ir.model.fields.selection,name:mrp_workorder_iot.selection__iot_trigger__action__clmo
 msgid "Close MO"
 msgstr "Fertigungsauftrag schließen"
 
 #. module: mrp_workorder_iot
-#: model:ir.model.fields.selection,name:mrp_workorder_iot.selection__iot_trigger__action__clowo
+#: model:ir.model.fields.selection,name:mrp_workorder_iot.selection__iot_trigger__action__clwo
 msgid "Close WO"
 msgstr "Arbeitsauftrag schließen"
 
@@ -64,17 +77,23 @@ msgid "Device"
 msgstr "Gerät"
 
 #. module: mrp_workorder_iot
+#: model:ir.model.fields,field_description:mrp_workorder_iot.field_iot_device__display_name
 #: model:ir.model.fields,field_description:mrp_workorder_iot.field_iot_trigger__display_name
+#: model:ir.model.fields,field_description:mrp_workorder_iot.field_mrp_workcenter__display_name
+#: model:ir.model.fields,field_description:mrp_workorder_iot.field_quality_check__display_name
 msgid "Display Name"
 msgstr "Anzeigename"
 
 #. module: mrp_workorder_iot
-#: model:ir.model.fields.selection,name:mrp_workorder_iot.selection__iot_trigger__action__finish
+#: model:ir.model.fields.selection,name:mrp_workorder_iot.selection__iot_trigger__action__fini
 msgid "Finish"
 msgstr "Beenden"
 
 #. module: mrp_workorder_iot
+#: model:ir.model.fields,field_description:mrp_workorder_iot.field_iot_device__id
 #: model:ir.model.fields,field_description:mrp_workorder_iot.field_iot_trigger__id
+#: model:ir.model.fields,field_description:mrp_workorder_iot.field_mrp_workcenter__id
+#: model:ir.model.fields,field_description:mrp_workorder_iot.field_quality_check__id
 msgid "ID"
 msgstr "ID"
 
@@ -87,6 +106,12 @@ msgstr "IOT-Gerät"
 #: model:ir.model,name:mrp_workorder_iot.model_iot_trigger
 msgid "IOT Trigger"
 msgstr "IoT-Auslöser"
+
+#. module: mrp_workorder_iot
+#. odoo-javascript
+#: code:addons/mrp_workorder_iot/static/src/mrp_display/quality_check.js:0
+msgid "Image captured successfully"
+msgstr "Bild erfolgreich aufgenommen"
 
 #. module: mrp_workorder_iot
 #: model_terms:ir.ui.view,arch_db:mrp_workorder_iot.iot_device_view_form
@@ -120,15 +145,27 @@ msgid "Pack"
 msgstr "Paket"
 
 #. module: mrp_workorder_iot
-#: model:ir.model.fields.selection,name:mrp_workorder_iot.selection__iot_trigger__action__pause
+#: model:ir.model.fields.selection,name:mrp_workorder_iot.selection__iot_trigger__action__paus
 msgid "Pause"
 msgstr "Pause"
 
 #. module: mrp_workorder_iot
 #. odoo-javascript
-#: code:addons/mrp_workorder_iot/static/src/pedal_status_button/pedal_status_button.xml:0
+#: code:addons/mrp_workorder_iot/static/src/mrp_display/pedal_status_button.xml:0
 msgid "Pedal Status"
 msgstr "Pedal-Status"
+
+#. module: mrp_workorder_iot
+#. odoo-javascript
+#: code:addons/mrp_workorder_iot/static/src/mrp_display/quality_check.js:0
+msgid "Please check if the device is still connected."
+msgstr "Bitte überprüfen Sie, ob das Gerät noch angeschlossen ist."
+
+#. module: mrp_workorder_iot
+#. odoo-javascript
+#: code:addons/mrp_workorder_iot/static/src/mrp_display/picture_preview_dialog.xml:0
+msgid "Preview"
+msgstr "Vorschau"
 
 #. module: mrp_workorder_iot
 #: model:ir.model.fields.selection,name:mrp_workorder_iot.selection__iot_trigger__action__prev
@@ -136,17 +173,17 @@ msgid "Previous"
 msgstr "Zurück"
 
 #. module: mrp_workorder_iot
-#: model:ir.model.fields.selection,name:mrp_workorder_iot.selection__iot_trigger__action__print-slip
+#: model:ir.model.fields.selection,name:mrp_workorder_iot.selection__iot_trigger__action__prsl
 msgid "Print Delivery Slip"
 msgstr "Lieferschein drucken"
 
 #. module: mrp_workorder_iot
-#: model:ir.model.fields.selection,name:mrp_workorder_iot.selection__iot_trigger__action__print
+#: model:ir.model.fields.selection,name:mrp_workorder_iot.selection__iot_trigger__action__prnt
 msgid "Print Labels"
 msgstr "Etiketten drucken"
 
 #. module: mrp_workorder_iot
-#: model:ir.model.fields.selection,name:mrp_workorder_iot.selection__iot_trigger__action__print-op
+#: model:ir.model.fields.selection,name:mrp_workorder_iot.selection__iot_trigger__action__prop
 msgid "Print Operation"
 msgstr "Vorgang drucken"
 
@@ -156,12 +193,12 @@ msgid "Quality Check"
 msgstr "Qualitätsprüfung"
 
 #. module: mrp_workorder_iot
-#: model:ir.model.fields.selection,name:mrp_workorder_iot.selection__iot_trigger__action__record
+#: model:ir.model.fields.selection,name:mrp_workorder_iot.selection__iot_trigger__action__reco
 msgid "Record Production"
 msgstr "Produktion aufzeichnen"
 
 #. module: mrp_workorder_iot
-#: model:ir.model.fields.selection,name:mrp_workorder_iot.selection__iot_trigger__action__scrap
+#: model:ir.model.fields.selection,name:mrp_workorder_iot.selection__iot_trigger__action__scra
 msgid "Scrap"
 msgstr "Ausschuss melden"
 
@@ -191,9 +228,15 @@ msgid "Triggers"
 msgstr "Auslöser"
 
 #. module: mrp_workorder_iot
-#: model:ir.model.fields.selection,name:mrp_workorder_iot.selection__iot_trigger__action__validate
+#: model:ir.model.fields.selection,name:mrp_workorder_iot.selection__iot_trigger__action__vali
 msgid "Validate"
 msgstr "Validieren"
+
+#. module: mrp_workorder_iot
+#. odoo-javascript
+#: code:addons/mrp_workorder_iot/static/src/mrp_display/picture_preview_dialog.xml:0
+msgid "Viewer"
+msgstr "Betrachter"
 
 #. module: mrp_workorder_iot
 #: model:ir.model,name:mrp_workorder_iot.model_mrp_workcenter

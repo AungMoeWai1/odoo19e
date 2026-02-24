@@ -109,13 +109,18 @@ class DocumentsDocument(models.Model):
             return journal_id.create_document_from_attachment(attachment_ids=self.attachment_id.ids)
 
         for document in self:
+            partner = partner_id or document.partner_id
             if document.res_model == 'account.move' and document.res_id:
                 move = self.env['account.move'].browse(document.res_id)
             else:
+                creation_context = {'default_move_type': move_type}
+                if move_type in ('in_invoice', 'in_refund') and partner and 'property_purchase_currency_id' in partner:
+                    supplier_currency = partner.with_company(document.company_id).property_purchase_currency_id
+                    if supplier_currency:
+                        creation_context['default_currency_id'] = supplier_currency.id
                 move = journal_id\
-                    .with_context(default_move_type=move_type)\
+                    .with_context(**creation_context)\
                     ._create_document_from_attachment(attachment_ids=document.attachment_id.id)
-            partner = partner_id or document.partner_id
             if partner:
                 move.partner_id = partner
             if move.statement_line_id:
@@ -155,11 +160,18 @@ class DocumentsDocument(models.Model):
         return action
 
     def account_create_account_bank_statement(self, journal_id=None):
-        # only the journal type is checked as journal will be retrieved from
-        # the bank account later on. Also it is not possible to link the doc
+        # It is not possible to link the doc
         # to the newly created entry as they can be more than one. But importing
         # many times the same bank statement is later checked.
-        default_journal = journal_id or self.env['account.journal'].search([('type', '=', 'bank')], limit=1)
+        default_journal = journal_id or self.env['account.journal'].search([
+            *self.env['account.journal']._check_company_domain(self.env.company),
+            ('type', '=', 'bank'),
+        ], limit=1)
+
+        if not default_journal:
+            error_msg = self.env['account.journal']._build_no_journal_error_msg(self.env.company.display_name, ['bank'])
+            raise UserError(error_msg)
+
         return default_journal.create_document_from_attachment(attachment_ids=self.attachment_id.ids)
 
     @api.model

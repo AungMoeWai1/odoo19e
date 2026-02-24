@@ -28,6 +28,7 @@ export class CallPreview extends Component {
 
     setup() {
         this.dialog = useService("dialog");
+        this.notification = useService("notification");
         this.rtc = useService("discuss.rtc");
         this.store = useService("mail.store");
         this.state = useState({ audioStream: null, blurManager: null, videoStream: null });
@@ -270,7 +271,7 @@ export class CallPreview extends Component {
     }
 
     async enableBlur() {
-        this.store.settings.useBlur = true;
+        this.store.settings.setUseBlur(true);
         if (!this.videoRef.el) {
             return;
         }
@@ -284,7 +285,7 @@ export class CallPreview extends Component {
     }
 
     disableBlur() {
-        this.store.settings.useBlur = false;
+        this.store.settings.setUseBlur(false);
         if (this.videoRef.el) {
             this.videoRef.el.srcObject = this.state.videoStream;
         }

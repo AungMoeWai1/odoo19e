@@ -3,13 +3,15 @@
 # * sale_commission
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:41+0000\n"
-"PO-Revision-Date: 2025-09-15 12:03+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-01-30 18:49+0000\n"
+"PO-Revision-Date: 2026-02-02 13:40+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
 "sale_commission/ja/>\n"
 "Language: ja\n"
@@ -17,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: sale_commission
 #. odoo-python
@@ -58,12 +60,13 @@ msgstr "アーカイブ済率"
 #. module: sale_commission
 #: model:ir.model.fields,help:sale_commission.field_sale_commission_achievement_report__commission_rate
 msgid "Achieved over the commission target amount"
-msgstr ""
+msgstr "コミッションの目標額を超えて達成"
 
 #. module: sale_commission
 #: model:ir.model.fields,help:sale_commission.field_sale_commission_achievement_report__target_rate
 msgid "Achieved over the target of that period, meaningless in group by"
 msgstr ""
+"その期間の目標を超えて達成されていますが、グループ化では意味を持ちません"
 
 #. module: sale_commission
 #: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan__achievement_ids
@@ -97,12 +100,12 @@ msgstr "要アクション"
 #. module: sale_commission
 #: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan__active
 msgid "Active"
-msgstr "アクティブ"
+msgstr "有効"
 
 #. module: sale_commission
 #: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_report_view_search
 msgid "Active Plans"
-msgstr "アクティブな計画"
+msgstr "有効な計画"
 
 #. module: sale_commission
 #: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_plan_user_wizard
@@ -308,7 +311,7 @@ msgstr "コミッション計画"
 #. module: sale_commission
 #: model:ir.model.fields,field_description:sale_commission.field_sale_commission_achievement_report__commission_rate
 msgid "Commission Rate"
-msgstr ""
+msgstr "手数料率"
 
 #. module: sale_commission
 #: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_report_view_search
@@ -318,12 +321,12 @@ msgstr "コミッションレポート"
 #. module: sale_commission
 #: model_terms:ir.ui.view,arch_db:sale_commission.sale_achievement_report_view_list
 msgid "Commission Target"
-msgstr ""
+msgstr "コミッション目標"
 
 #. module: sale_commission
 #: model:ir.model.fields,field_description:sale_commission.field_sale_commission_achievement_report__commission_target_amount
 msgid "Commission Target Amount"
-msgstr ""
+msgstr "コミッション目標額"
 
 #. module: sale_commission
 #: model:ir.model.fields,field_description:sale_commission.field_res_users__commission_plan_users_ids
@@ -371,7 +374,7 @@ msgstr "販売担当者の実績と目標額に基づいて販売コミッショ
 #. module: sale_commission
 #: model:ir.model,name:sale_commission.model_res_config_settings
 msgid "Config Settings"
-msgstr "詳細設定"
+msgstr "構成設定"
 
 #. module: sale_commission
 #: model_terms:ir.actions.act_window,help:sale_commission.sale_commission_action_plan
@@ -439,7 +442,7 @@ msgstr "期間を作成"
 #. module: sale_commission
 #: model:ir.model.fields,field_description:sale_commission.field_sale_commission_achievement_report__partner_id
 msgid "Customer"
-msgstr ""
+msgstr "顧客"
 
 #. module: sale_commission
 #: model:ir.model.fields,field_description:sale_commission.field_sale_commission_achievement__date
@@ -520,7 +523,8 @@ msgstr "終了日"
 msgid ""
 "Ensure you are assigned to a commission plan and have made sales that "
 "qualify for commissions"
-msgstr "コミッション計画に割当てられ、コミッションの対象となる販売実績を上げているこ"
+msgstr ""
+"コミッション計画に割当てられ、コミッションの対象となる販売実績を上げているこ"
 "とを確認して下さい。"
 
 #. module: sale_commission
@@ -600,7 +604,7 @@ msgstr "チェックした場合は、新しいメッセージに注意が必要
 #: model:ir.model.fields,help:sale_commission.field_sale_commission_plan__message_has_error
 #: model:ir.model.fields,help:sale_commission.field_sale_commission_plan__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "チェックした場合は、一部のメッセージに配信エラーが発生されました。"
+msgstr "有効にすると、一部のメッセージに配信エラーが発生します。"
 
 #. module: sale_commission
 #: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan__message_is_follower
@@ -641,7 +645,8 @@ msgstr "昨年"
 msgid ""
 "Main user sales team. Used notably for pipeline, or to set sales team in "
 "invoicing or subscription."
-msgstr "販売チームのメインユーザー。特にパイプラインや、請求書発行やサブスクリプショ"
+msgstr ""
+"販売チームのメインユーザー。特にパイプラインや、請求書発行やサブスクリプショ"
 "ンで販売チームを設定するために使用します。"
 
 #. module: sale_commission
@@ -701,7 +706,7 @@ msgstr "メモ"
 #: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_target_forecast__notes
 #: model:ir.model.fields,field_description:sale_commission.field_sale_commission_report__notes
 msgid "Notes"
-msgstr ""
+msgstr "ノート"
 
 #. module: sale_commission
 #: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan__message_needaction_counter
@@ -716,7 +721,7 @@ msgstr "エラー数"
 #. module: sale_commission
 #: model:ir.model.fields,help:sale_commission.field_sale_commission_plan__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr "アクションを必要とするメッセージの数"
+msgstr "対応が必要なメッセージ数"
 
 #. module: sale_commission
 #: model:ir.model.fields,help:sale_commission.field_sale_commission_plan__message_has_error_counter
@@ -754,9 +759,18 @@ msgid "Other plans"
 msgstr "他の計画"
 
 #. module: sale_commission
+#. odoo-python
+#: code:addons/sale_commission/model/commission_plan_target.py:0
+msgid ""
+"Overlapping periods detected for plan '%(plan)s':\n"
+"- %(c_name)s [%(c_from)s → %(c_to)s]\n"
+"- %(n_name)s [%(n_from)s → %(n_to)s]"
+msgstr ""
+
+#. module: sale_commission
 #: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_target__payment_amount
 msgid "Payment Amount"
-msgstr ""
+msgstr "支払金額"
 
 #. module: sale_commission
 #: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_target__payment_date
@@ -863,7 +877,7 @@ msgstr "ドラフトにリセット"
 #. module: sale_commission
 #: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr "SMS配信エラー"
+msgstr "SMS送信エラー"
 
 #. module: sale_commission
 #: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan__team_id
@@ -888,6 +902,7 @@ msgstr "販売担当者"
 #. module: sale_commission
 #: model:ir.model.fields,field_description:sale_commission.field_sale_commission_achievement_report__user_id
 #: model:ir.model.fields,field_description:sale_commission.field_sale_commission_report__user_id
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_plan_view_search
 msgid "Sales Person"
 msgstr "営業担当者"
 
@@ -917,7 +932,7 @@ msgstr "関連実績を見る"
 #. module: sale_commission
 #: model_terms:ir.ui.view,arch_db:sale_commission.sale_achievement_report_view_list
 msgid "Source"
-msgstr "情報源"
+msgstr "参照元"
 
 #. module: sale_commission
 #: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_plan_view_list
@@ -937,12 +952,12 @@ msgstr "提出"
 #. module: sale_commission
 #: model:ir.model.fields,help:sale_commission.field_sale_commission_plan_target__payment_amount
 msgid "Sum of amounts paid on the same payment date"
-msgstr ""
+msgstr "同一支払日に支払われた金額の合計"
 
 #. module: sale_commission
 #: model:ir.model.fields,help:sale_commission.field_sale_commission_achievement_report__commission_target_amount
 msgid "Sum of target amount per plan paid on the same date"
-msgstr ""
+msgstr "同一日付に支払われた各プランの目標金額の合計"
 
 #. module: sale_commission
 #: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan__target_ids
@@ -987,8 +1002,7 @@ msgstr "目標"
 #. module: sale_commission
 #. odoo-python
 #: code:addons/sale_commission/model/commission_plan.py:0
-msgid ""
-"The plan should have at least one target with an achievement rate of 0%"
+msgid "The plan should have at least one target with an achievement rate of 0%"
 msgstr "プランには、達成率が0%の目標が少なくとも1つは含まれているべきです。"
 
 #. module: sale_commission
@@ -996,6 +1010,14 @@ msgstr "プランには、達成率が0%の目標が少なくとも1つは含ま
 #: code:addons/sale_commission/model/commission_plan.py:0
 msgid "The start date must be before the end date."
 msgstr "開始日は終了日の前でなければなりません。"
+
+#. module: sale_commission
+#. odoo-python
+#: code:addons/sale_commission/model/commission_plan_target.py:0
+msgid ""
+"The start date must be before the end date.\n"
+"Period: %s"
+msgstr ""
 
 #. module: sale_commission
 #. odoo-python

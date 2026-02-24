@@ -3,13 +3,14 @@
 # * quality_control
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Abe Manyo (abem)" <abem@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:40+0000\n"
-"PO-Revision-Date: 2025-09-15 23:05+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-02-13 18:40+0000\n"
+"PO-Revision-Date: 2026-01-05 18:41+0000\n"
+"Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-19/"
 "quality_control/id/>\n"
 "Language: id\n"
@@ -17,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: quality_control
 #: model_terms:ir.ui.view,arch_db:quality_control.quality_point_view_form_inherit_quality_control
@@ -28,7 +29,7 @@ msgstr "% dari total waktu"
 #. odoo-python
 #: code:addons/quality_control/models/quality.py:0
 msgid "%(product_name)s is not in Picking %(picking_name)s"
-msgstr ""
+msgstr "%(product_name)s tidak di Picking %(picking_name)s"
 
 #. module: quality_control
 #: model:ir.actions.report,print_report_name:quality_control.quality_check_report
@@ -52,8 +53,8 @@ msgid ""
 "<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Domain alias\" "
 "title=\"Domain alias\"/>&amp;nbsp;"
 msgstr ""
-"<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Domain alias\" title="
-"\"Domain alias\"/>&amp;nbsp;"
+"<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Domain alias\" "
+"title=\"Domain alias\"/>&amp;nbsp;"
 
 #. module: quality_control
 #: model_terms:ir.ui.view,arch_db:quality_control.quality_point_view_form_inherit_quality_control
@@ -61,8 +62,8 @@ msgid ""
 "<span class=\"fa fa-2x\" data-icon=\"∑\" style=\"padding-left: 10px;\" "
 "role=\"img\" aria-label=\"Statistics\" title=\"Statistics\"/>"
 msgstr ""
-"<span class=\"fa fa-2x\" data-icon=\"∑\" style=\"padding-left: 10px;"
-"\" role=\"img\" aria-label=\"Statistics\" title=\"Statistik\"/>"
+"<span class=\"fa fa-2x\" data-icon=\"∑\" style=\"padding-left: 10px;\" "
+"role=\"img\" aria-label=\"Statistics\" title=\"Statistik\"/>"
 
 #. module: quality_control
 #: model_terms:ir.ui.view,arch_db:quality_control.stock_picking_view_form_inherit_quality
@@ -399,7 +400,8 @@ msgstr "Satuan unit default yang digunakan untuk semua operasi stok."
 #: model_terms:ir.actions.act_window,help:quality_control.quality_check_action_team
 msgid ""
 "Define Quality Control Points in order to automatically generate\n"
-"              quality checks at the right logistic operation: transfers, manufacturing orders."
+"              quality checks at the right logistic operation: transfers, "
+"manufacturing orders."
 msgstr ""
 "Definisikan Kualitas Control Points untuk secara otomatis membuat\n"
 "              pemeriksaan kualitas pada operasi logistik yang tepat: "
@@ -536,17 +538,17 @@ msgstr "Kegiatan - Kegiatan Mendatang"
 #. module: quality_control
 #: model:ir.model.fields,field_description:quality_control.field_quality_check__hide_picking_id
 msgid "Hide Picking"
-msgstr ""
+msgstr "Sembunyikkan Picking"
 
 #. module: quality_control
 #: model:ir.model.fields,field_description:quality_control.field_quality_check__hide_production_id
 msgid "Hide Production"
-msgstr ""
+msgstr "Sembunyikkan Produksi"
 
 #. module: quality_control
 #: model:ir.model.fields,field_description:quality_control.field_quality_check__hide_repair_id
 msgid "Hide Repair"
-msgstr ""
+msgstr "Sembunyikkan Perbaikan"
 
 #. module: quality_control
 #: model:ir.model.fields,field_description:quality_control.field_product_product__id
@@ -799,6 +801,11 @@ msgid "Notes"
 msgstr "Catatan"
 
 #. module: quality_control
+#: model_terms:ir.ui.view,arch_db:quality_control.quality_check_wizard_form_failure
+msgid "OK"
+msgstr ""
+
+#. module: quality_control
 #: model:ir.model.fields.selection,name:quality_control.selection__quality_point__measure_frequency_type__on_demand
 msgid "On-demand"
 msgstr "Sesuai-Permintaan"
@@ -821,7 +828,8 @@ msgstr "Operasi"
 msgid ""
 "Operation = One quality check is requested at the operation level.\n"
 "                  Product = A quality check is requested per product.\n"
-"                 Quantity = A quality check is requested for each new product quantity registered, with partial quantity checks also possible."
+"                 Quantity = A quality check is requested for each new "
+"product quantity registered, with partial quantity checks also possible."
 msgstr ""
 "Operasi = Satu pemeriksaan kualitas diminta pada level operasi.\n"
 "                  Produk = Pemeriksaan kualitas diminta per produk.\n"
@@ -860,7 +868,7 @@ msgstr "Lulus - Gagal"
 #: model_terms:ir.ui.view,arch_db:quality_control.quality_check_view_search
 #: model_terms:ir.ui.view,arch_db:quality_control.worksheet_page
 msgid "Passed"
-msgstr "Lolo"
+msgstr "Lolos"
 
 #. module: quality_control
 #: model:ir.model.fields,field_description:quality_control.field_stock_picking__quality_check_todo
@@ -1329,7 +1337,7 @@ msgstr "Status"
 #. module: quality_control
 #: model:ir.model,name:quality_control.model_stock_move
 msgid "Stock Move"
-msgstr "Pergerakan Stok"
+msgstr "Pergerakkan Stok"
 
 #. module: quality_control
 #: model:ir.model.fields,field_description:quality_control.field_quality_check__move_line_id
@@ -1402,8 +1410,8 @@ msgid ""
 "specified, the first sheet is selected by default."
 msgstr ""
 "Pemeriksaan sukses bila nilai cell sukses adalah TRUE. Bila terdapat "
-"beberapa sheet, spesifikasi yang mana Anda ingin gunakan (contoh, Sheet2!C4)"
-". bila tidak ditentukan, sheet pertama dipilih secara default."
+"beberapa sheet, spesifikasi yang mana Anda ingin gunakan (contoh, Sheet2!"
+"C4). bila tidak ditentukan, sheet pertama dipilih secara default."
 
 #. module: quality_control
 #: model:ir.model.fields,help:quality_control.field_quality_point__measure_frequency_value
@@ -1472,6 +1480,12 @@ msgid "Unit of Measure"
 msgstr "Satuan Ukuran"
 
 #. module: quality_control
+#. odoo-python
+#: code:addons/quality_control/models/quality_spreadsheet_template.py:0
+msgid "Untitled spreadsheet"
+msgstr ""
+
+#. module: quality_control
 #: model_terms:ir.ui.view,arch_db:quality_control.view_quality_check_wizard
 msgid "Validate"
 msgstr "Validasi"
@@ -1526,11 +1540,11 @@ msgstr "Tulis catatan pemeriksaan kualitas..."
 #. odoo-python
 #: code:addons/quality_control/models/quality.py:0
 msgid ""
-"You measured %(measure).2f %(unit)s and it should be between "
-"%(tolerance_min).2f and %(tolerance_max).2f %(unit)s."
+"You measured %(measure).2f %(unit)s and it should be between %"
+"(tolerance_min).2f and %(tolerance_max).2f %(unit)s."
 msgstr ""
-"Anda mengukur %(measure).2f %(unit)s dan seharusnya di antara "
-"%(tolerance_min).2f and %(tolerance_max).2f %(unit)s."
+"Anda mengukur %(measure).2f %(unit)s dan seharusnya di antara %"
+"(tolerance_min).2f and %(tolerance_max).2f %(unit)s."
 
 #. module: quality_control
 #. odoo-python

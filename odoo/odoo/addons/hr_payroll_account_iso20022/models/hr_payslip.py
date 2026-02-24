@@ -27,6 +27,8 @@ class HrPayslip(models.Model):
         allocations = self.compute_salary_allocations()
         for ba in self.employee_id.bank_account_ids:
             amount = allocations[str(ba.id)]
+            if not amount:
+                continue
             payment = {
                 'id': self.id,
                 'name': str(self.id),
@@ -42,7 +44,7 @@ class HrPayslip(models.Model):
                 # The "High" priority level is a payment attribute that we should specify for salary payments :
                 # https://www.febelfin.be/sites/default/files/2019-04/standard-credit_transfer-xml-v32-en_0.pdf
                 # section 2.6
-                'iso20022_priority': 'HIGH',
+                'iso20022_priority': 'HIGH' if journal_id.company_id.account_fiscal_country_id.code == "BE" else 'NORM',
             }
             if iso20022_uetr:
                 payment['iso20022_uetr'] = iso20022_uetr
@@ -50,16 +52,13 @@ class HrPayslip(models.Model):
         return payments
 
     def action_payslip_payment_report(self, export_format='sepa'):
-        self.ensure_one()
-        return {
-            'type': 'ir.actions.act_window',
-            'res_model': 'hr.payroll.payment.report.wizard',
-            'view_mode': 'form',
-            'views': [(False, 'form')],
-            'target': 'new',
+        action = super().action_payslip_payment_report()
+        if self.company_id.currency_id.name != 'EUR':
+            return action
+        action.update({
             'context': {
-                'default_payslip_ids': self.ids,
-                'default_payslip_run_id': self.payslip_run_id.id,
+                **action['context'],
                 'default_export_format': export_format,
             },
-        }
+        })
+        return action

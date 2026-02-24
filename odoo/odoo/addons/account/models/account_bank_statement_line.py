@@ -475,6 +475,12 @@ class AccountBankStatementLine(models.Model):
     # HELPERS
     # -------------------------------------------------------------------------
 
+    @api.ondelete(at_uninstall=False)
+    def _check_allow_unlink(self):
+        if self.statement_id.filtered(lambda stmt: stmt.is_valid and stmt.is_complete):
+            raise UserError(_("You can not delete a transaction from a valid statement.\n"
+                              "If you want to delete it, please remove the statement first."))
+
     def _find_or_create_bank_account(self):
         self.ensure_one()
 
@@ -487,7 +493,21 @@ class AccountBankStatementLine(models.Model):
             ('acc_number', '=', self.account_number),
             ('partner_id', '=', self.partner_id.id),
         ])
-        if not bank_account and not str2bool(
+
+        if bank_account:
+            return bank_account.filtered(lambda x: x.company_id.id in (False, self.company_id.id)).sudo(False)
+
+        # Avoid creating a bank account during reconciliation if it already exists on another active partner
+        bank_account_on_other_partner = self.env['res.partner.bank'].sudo().search([
+            ('acc_number', '=', self.account_number),
+            ('partner_id', '!=', self.partner_id.id),
+            ('partner_id.active', '=', True),
+        ], limit=1)
+
+        if bank_account_on_other_partner:
+            return self.env['res.partner.bank']
+
+        if not str2bool(
                 self.env['ir.config_parameter'].sudo().get_param("account.skip_create_bank_account_on_reconcile")
         ):
             bank_account = self.env['res.partner.bank'].create({
@@ -495,11 +515,12 @@ class AccountBankStatementLine(models.Model):
                 'partner_id': self.partner_id.id,
                 'journal_id': None,
             })
-        return bank_account.filtered(lambda x: x.company_id.id in (False, self.company_id.id))
+
+        return bank_account
 
     def _get_default_amls_matching_domain(self, allow_draft=False):
         self.ensure_one()
-        all_reconcilable_account_ids = self.env['account.account'].search([
+        all_reconcilable_account_ids = self.env['account.account'].sudo().search([
             ("company_ids", "child_of", self.company_id.root_id.id),
             ('reconcile', '=', True),
         ]).ids

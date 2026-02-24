@@ -7,6 +7,7 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { expect, describe, test } from "@odoo/hoot";
+import { runAllTimers } from "@odoo/hoot-mock";
 import { setupVoipTests } from "@voip/../tests/voip_test_helpers";
 import { onRpc } from "@web/../tests/web_test_helpers";
 
@@ -44,7 +45,9 @@ test("Typing in the search bar fetches and displays the matching contacts", asyn
 test("Scrolling to bottom loads more contacts", async () => {
     const pyEnv = await startServer();
     let rpcCount = 0;
-    onRpc("res.partner", "get_contacts", () => { ++rpcCount; });
+    onRpc("res.partner", "get_contacts", () => {
+        ++rpcCount;
+    });
     await start();
     for (let i = 0; i < 10; ++i) {
         pyEnv["res.partner"].create({ name: `Contact ${i}`, phone: `09225 982 ext. ${i}` });
@@ -73,10 +76,34 @@ test("Contacts with are listed under the their corresponding section", async () 
     await click(".o_menu_systray button[title='Show Softphone']");
     await click("button span:contains('Contacts')");
     await contains(".o-voip-TabEntry", { count: 3 });
-    await contains(".o-voip-TabEntry span", { text: "Alice", parent: ["section", { contains: [["h2", { text: "A" }]] }] });
+    await contains(".o-voip-TabEntry span", {
+        text: "Alice",
+        parent: ["section", { contains: [["h2", { text: "A" }]] }],
+    });
     await contains(".o-voip-TabEntry span", {
         text: "",
         count: 2,
-        parent: ["section", { contains: [["h2", { text: "#" }]] }]
+        parent: ["section", { contains: [["h2", { text: "#" }]] }],
     });
+});
+
+test("Contact search term should be taken into account", async () => {
+    const searchTerm = "Bob";
+    onRpc("res.partner", "get_contacts", (args) => {
+        if (args.kwargs.search_terms === searchTerm) {
+            expect.step("get_contacts called with search term");
+        }
+    });
+    await start();
+    await click(".o_menu_systray button[title='Show Softphone']");
+    await click("button span:contains('Contacts')");
+    await runAllTimers();
+    await insertText("input[id='o-voip-Tab-searchInput']", searchTerm);
+    await runAllTimers();
+    expect.verifySteps(["get_contacts called with search term"]);
+    await click("button span:contains('Recent')");
+    await contains("button.active span:contains('Recent')");
+    await click("button span:contains('Contacts')");
+    await runAllTimers();
+    expect.verifySteps(["get_contacts called with search term"]);
 });
