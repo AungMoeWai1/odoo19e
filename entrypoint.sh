@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # Default values if not provided
-: "${DB_HOST:=db}"
+: "${DB_HOST:=odoo_db}"
 : "${PORT:=5432}"
 : "${USER:=odoo19}"
 : "${PASSWORD:=odoo19}"
-: "${DB_NAME:=db}"
+: "${DB_NAME:=odoo_db}"
 
 exec python3 /opt/odoo/odoo-bin \
     -c /etc/odoo.conf \
@@ -17,4 +17,4 @@ exec python3 /opt/odoo/odoo-bin \
     # -u all \
     # --stop-after-init \
     --log-level=debug
-    -i base
+    # -i base

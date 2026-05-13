@@ -1,13 +1,15 @@
 services:
-  db:
-    image: postgres
+  odoo_db:
+    image: pgvector/pgvector:pg17
+    container_name: postgres17_pgvector
     env_file: myenvfile.env
-    volumes:
-      - db_data:/var/lib/postgresql/data
     ports:
       - "5435:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
     networks:
       - odoo-net
+    restart: unless-stopped
 
   odoo:
     image: aungmoewai/odoo19e:latest
@@ -15,7 +17,7 @@ services:
     tty: true
     env_file: myenvfile.env
     depends_on:
-      - db
+      - odoo_db
     ports:
       - "8069:8069"
     volumes:
@@ -36,7 +38,7 @@ services:
     volumes:
       - pgadmin_data:/var/lib/pgadmin
     depends_on:
-      - db
+      - odoo_db
     networks:
       - odoo-net
 
