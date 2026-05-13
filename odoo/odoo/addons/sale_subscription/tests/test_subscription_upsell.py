@@ -129,7 +129,9 @@ class TestSubscriptionUpsell(TestSubscriptionCommon):
                 'product_uom_qty': 1,
                 'price_unit': self.product3.list_price,
             })]
+            self.assertEqual(upsell_so.type_name, "Quotation")
             upsell_so.action_confirm()
+            self.assertEqual(upsell_so.type_name, "Sales Order")
             self.subscription._create_recurring_invoice()
             self.subscription.invoice_ids.filtered(lambda am: am.state == 'draft')._post()
             discounts = [round(v, 2) for v in upsell_so.order_line.sorted('discount').mapped('discount')]

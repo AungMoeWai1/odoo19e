@@ -231,6 +231,25 @@ test("Can autofill positional row headers vertically", async () => {
     expect(tooltipContent).toEqual([{ value: "April 2016" }, { value: "" }]);
 });
 
+test("Can autofill positional row headers horizontally", async () => {
+    const { model } = await createSpreadsheetWithPivot({
+        arch: /*xml*/ `
+                <pivot>
+                    <field name="date" interval="month" type="col"/>
+                    <field name="product_id"  type="row"/>
+                    <field name="probability" type="measure"/>
+                </pivot>`,
+    });
+    setCellContent(model, "A3", `=PIVOT.HEADER(1,"#product_id",1)`);
+    expect(getPivotAutofillValue(model, "A3", { direction: "right", steps: 1 })).toBe(
+        `=PIVOT.VALUE(1,"probability:avg","date:month",DATE(2016,4,1))`
+    );
+    selectCell(model, "A3");
+    model.dispatch("AUTOFILL_SELECT", { col: 1, row: 3 });
+    const tooltipContent = model.getters.getAutofillTooltip().props.content;
+    expect(tooltipContent).toEqual([{ value: "xpad" }]);
+});
+
 test("Can autofill positional col horizontally", async () => {
     const { model } = await createSpreadsheetWithPivot({
         arch: /*xml*/ `

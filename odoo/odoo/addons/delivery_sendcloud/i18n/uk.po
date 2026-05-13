@@ -3,13 +3,15 @@
 # * delivery_sendcloud
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Vlad Patenko <vlad.patenko@gmail.com>, 2026.
+# Lohushchenko <nadiia.lohushchenko@self-erp.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-30 18:42+0000\n"
-"PO-Revision-Date: 2025-11-10 13:20+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-05-08 17:41+0000\n"
+"PO-Revision-Date: 2026-04-18 11:20+0000\n"
+"Last-Translator: Lohushchenko <nadiia.lohushchenko@self-erp.com>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-19/"
 "delivery_sendcloud/uk/>\n"
 "Language: uk\n"
@@ -18,7 +20,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: delivery_sendcloud
 #. odoo-python
@@ -51,6 +53,14 @@ msgstr ""
 "\n"
 "Спробуйте розподілити товари по упаковках так, щоб вони важили менше ніж %"
 "(max_weight)s %(unit)s або виберіть іншого перевізника."
+
+#. module: delivery_sendcloud
+#. odoo-python
+#: code:addons/delivery_sendcloud/models/sendcloud_service.py:0
+msgid ""
+" Please make sure there is an address with the same name under \"Address "
+"Name (optional)\" in your Sendcloud Address configuration."
+msgstr ""
 
 #. module: delivery_sendcloud
 #. odoo-python
@@ -373,6 +383,14 @@ msgstr ""
 #: code:addons/delivery_sendcloud/models/delivery_carrier.py:0
 msgid ""
 "Note that this price is for %s packages since the order weight is more than "
+"the maximum packaging weight."
+msgstr ""
+
+#. module: delivery_sendcloud
+#. odoo-python
+#: code:addons/delivery_sendcloud/models/delivery_carrier.py:0
+msgid ""
+"Note that this price is for %s packages since the order weight is more than "
 "the maximum weight allowed by the shipping method."
 msgstr ""
 "Занотуйте, що ціна для %s упаковок з часу, як вага перевищує максимально "
@@ -420,7 +438,7 @@ msgstr "Повернути товар"
 #. module: delivery_sendcloud
 #: model:ir.model.fields,field_description:delivery_sendcloud.field_sendcloud_shipping_wizard__return_products
 msgid "Return Products"
-msgstr "Повернути  товари"
+msgstr "Повернути товари"
 
 #. module: delivery_sendcloud
 #: model:ir.model.fields,help:delivery_sendcloud.field_delivery_carrier__country_id
@@ -771,3 +789,9 @@ msgid ""
 msgstr ""
 "створено у Sendcloud. <br/>\n"
 "            <b>Номери відстеження:</b>"
+
+#. module: delivery_sendcloud
+#. odoo-javascript
+#: code:addons/delivery_sendcloud/static/src/views/sendcloud_product_selection_widget.xml:0
+msgid "g"
+msgstr "г"

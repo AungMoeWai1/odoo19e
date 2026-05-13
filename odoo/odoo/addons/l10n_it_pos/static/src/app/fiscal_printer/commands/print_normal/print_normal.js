@@ -28,6 +28,10 @@ export class PrintNormal extends Component {
     get data() {
         const { data, alignment } = this.props;
 
+        if (data.length >= MAX_CHARS) {
+            return data;
+        }
+
         let paddingLeft = 0;
         if (alignment === Alignment.CENTER) {
             paddingLeft = Math.floor((MAX_CHARS - data.length) / 2);

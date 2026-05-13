@@ -183,6 +183,7 @@ test("Freeze&Share a spreadsheet with an odoo list", async function () {
         data: model.exportData(),
         revisions: [],
     }));
+    onRpc("/spreadsheet/log", () => ({}));
     await makeDocumentsSpreadsheetMockEnv({
         serverData,
         mockRPC: async function (route, args) {
@@ -499,6 +500,12 @@ test("Cannot download spreadsheets", async () => {
             id: 4,
             name: "Spreadsheet",
         },
+        {
+            folder_id: 1,
+            type: "url",
+            id: 5,
+            name: "Hurle",
+        },
     ]);
     const serverData = {
         models: Object.fromEntries(
@@ -540,6 +547,10 @@ test("Cannot download spreadsheets", async () => {
     // Button should remain even if some records are not downloadable
     await contains(`.o_kanban_record:contains('Spreadsheet')`).click({ ctrlKey: true });
     await waitFor(".o_control_panel_actions:contains('Download')");
+    // Spreadsheet with url should not be downloadable
+    await contains(`.o_kanban_record:contains('Spreadsheet')`).click();
+    await contains(`.o_kanban_record:contains('Hurle')`).click({ ctrlKey: true });
+    await waitForNone(".o_control_panel_actions:contains('Download')");
 });
 
 test("Share button is hidden for spreadsheet in Trash", async () => {

@@ -44,6 +44,7 @@ MAP_CURRENCIES = {
     'Chinese Yuan - Offshore': 'CNH',
     'Chinese Yuan': 'CNY',
     'Colombian Peso': 'COP',
+    'Cuban Peso': 'CUP',
     'Czech Koruna': 'CZK',
     'Danish Krone': 'DKK',
     'Algerian Dinar': 'DZD',
@@ -151,8 +152,10 @@ CURRENCY_PROVIDER_SELECTION = [
     (['CH'], 'fta', '[CH] Federal Tax Administration of Switzerland'),
     (['CL'], 'mindicador', '[CL] Central Bank of Chile via mindicador.cl'),
     (['CO'], 'banrepco', '[CO] Bank of the Republic'),
+    (['CU'], 'cu', '[CU] Central Bank of Cuba'),
     (['CZ'], 'cnb', '[CZ] Czech National Bank'),
     (['EG'], 'cbegy', '[EG] Central Bank of Egypt'),
+    (['GE'], 'nbg', '[GE] National Bank of Georgia'),
     (['GT'], 'banguat', '[GT] Bank of Guatemala'),
     (['HU'], 'mnb', '[HU] Magyar Nemzeti Bank'),
     (['ID'], 'bi', '[ID] Bank Indonesia'),
@@ -169,6 +172,7 @@ CURRENCY_PROVIDER_SELECTION = [
     (['TR'], 'tcmb', '[TR] Central Bank of the Republic of Türkiye'),
     (['UK'], 'hmrc', '[UK] HM Revenue & Customs'),
     (['UY'], 'bcu', '[UY] Uruguayan Central Bank'),
+    (['UZ'], 'cbu', '[UZ] Central Bank of Uzbekistan'),
 ]
 
 
@@ -447,6 +451,37 @@ class ResCompany(models.Model):
 
         if 'EGP' in available_currency_names:
             rslt['EGP'] = (1.0, date_rate)
+        return rslt
+
+    def _parse_nbg_data(self, available_currencies):
+        """This method is used to update the currencies by using the National Bank of Georgia service provider.
+            Exchange rates are expressed as 'quantity' units of the available currencies converted into GEL.
+        """
+
+        rslt = {}
+        request_url = "https://nbg.gov.ge/gw/api/ct/monetarypolicy/currencies/en/json/"
+        response = requests.get(request_url, headers={"Accept": "application/json"}, timeout=10)
+        response.raise_for_status()
+        data = response.json()
+
+        response_date = data[0].get('date')
+        date_rate = datetime.datetime.strptime(response_date, "%Y-%m-%dT%H:%M:%S.%fZ").date()
+        currencies = data[0].get('currencies', [])
+        available_currency_names = set(available_currencies.mapped('name'))
+        for currency in currencies:
+            code = currency.get('code')
+            rate = currency.get('rate')
+            quantity = currency.get('quantity')
+
+            if code in available_currency_names:
+                # NBG rates are expressed for a specific quantity of the available
+                # currency (e.g., 1 USD, 10 DKK, 100 JPY).
+                # We normalize this to find the value of 1 GEL in the available currency.
+                # Formula: quantity / rate
+                rslt[code] = (quantity / float(rate), date_rate)
+
+        if 'GEL' in available_currency_names:
+            rslt['GEL'] = (1.0, date_rate)
         return rslt
 
     def _parse_banguat_data(self, available_currencies):
@@ -848,6 +883,7 @@ class ResCompany(models.Model):
             "UF": "uf",
             "UTM": "utm",
         }
+        timeout = int(icp.get_param('mindicador_api_timeout', 30))
         available_currency_names = available_currencies.mapped('name')
         logger.debug('mindicador: available currency names: %s', available_currency_names)
         today_date = fields.Date.context_today(self.with_context(tz='America/Santiago'))
@@ -860,7 +896,7 @@ class ResCompany(models.Model):
                 logger.debug('Index %s not in available currency name', index)
                 continue
             url = server_url + '/%s/%s' % (currency, request_date)
-            res = requests.get(url, timeout=30)
+            res = requests.get(url, timeout=timeout)
             res.raise_for_status()
             if 'html' in res.text:
                 raise ValueError('Should be json')
@@ -1088,7 +1124,7 @@ class ResCompany(models.Model):
         # Skip the first ROW node that does not contain currency information
         for row in islice(rowset.iterfind('.//ROW'), 1, None):
             code = row.findtext('CODE')
-            rate = row.findtext('REVERSERATE')
+            rate = row.findtext('RATE')
             curr_date = datetime.datetime.strptime(row.findtext('CURR_DATE'), '%d.%m.%Y').date()
 
             if code in available_currency_names and rate:
@@ -1328,6 +1364,70 @@ class ResCompany(models.Model):
             rates_dict['KZT'] = (1.0, fields.Date.today())
 
         return rates_dict
+
+    @api.model
+    def _parse_cu_data(self, available_currencies):
+        """ This method is used to update the currencies by using CU service provider.
+        They can be manually verified at: https://www.bc.gob.cu/tasas-de-cambio
+        """
+        url = "https://api.bc.gob.cu/v1/tasas-de-cambio/activas"
+        result = {}
+
+        response = requests.get(url, headers={"Accept": "application/json"}, timeout=30)
+        response.raise_for_status()
+
+        curr_iso_codes = available_currencies.mapped("name")
+        curr_list = response.json()["tasas"]
+        last_date = datetime.datetime.now()
+
+        rate_type = self.env['ir.config_parameter'].sudo().get_param('currency_rate_live.l10n_cu_currency_rate_type', 'tasaOficial')
+
+        for curr in curr_list:
+            code = curr["codigoMoneda"]
+            status = curr["estado"]
+
+            # Skip currencies not requested or not active
+            if code not in curr_iso_codes or status != "ACTIVA":
+                continue
+
+            last_date = fields.Date.to_date(curr["fechaDia"])
+            result[curr["codigoMoneda"]] = (float(1 / curr[rate_type]), last_date)
+
+        result['CUP'] = (1.0, last_date)
+        return result
+
+    @api.model
+    def _parse_cbu_data(self, available_currencies):
+        """
+        This method is used to update the currencies by using CBU (Central Bank of Uzbekistan) service API.
+        The bank's latest rates are accessible using the API: cbu.uz/en/arkhiv-kursov-valyut/json
+
+        Source: https://cbu.uz/en/arkhiv-kursov-valyut/json
+
+        If a currency has no rate, it will be skipped.
+        """
+        result = {}
+        available_currency_names = set(available_currencies.mapped('name'))
+        request_url = "https://cbu.uz/en/arkhiv-kursov-valyut/json"
+        try:
+            # 5 second connection timeout and 15 seconds read timeout
+            response = requests.get(request_url, timeout=(5, 15))
+            response.raise_for_status()
+            new_rates = response.json()
+        except (requests.RequestException, ValueError):
+            _logger.exception("Failed to fetch UZ currency rates from %s", request_url)
+            return result
+
+        for rate in new_rates:
+            code = rate.get('Ccy')
+            if code in available_currency_names:
+                rate_value, date = rate.get('Rate'), rate.get('Date')
+                if rate_value:
+                    result[code] = (1.0 / float(rate_value), datetime.datetime.strptime(date, '%d.%m.%Y').date())
+
+        if result and 'UZS' in available_currency_names:
+            result['UZS'] = (1.0, fields.Date.today())
+        return result
 
     @api.model
     def run_update_currency(self):

@@ -195,11 +195,25 @@ class GoogleReserveController(Controller):
         booking_response = False
         if appointment_type_su.schedule_based_on == 'resources' and slot and 'available_resource_ids' in slot:
             resources = slot['available_resource_ids']
-            booking_lines = [{
-                'appointment_resource_id': resource.id,
-                'capacity_reserved': party_size,
-                'capacity_used': party_size if resource.shareable and appointment_type_su.manage_capacity else resource.capacity
-            } for resource in resources]
+            resources_remaining_capacity = appointment_type_su._get_resources_remaining_capacity(
+                resources,
+                start_slot,
+                stop_slot,
+                with_linked_resources=False
+            )
+
+            booking_lines = []
+            capacity_to_assign = party_size
+            for resource in resources:
+                resource_remaining_capacity = resources_remaining_capacity.get(resource)
+                new_capacity_reserved = min(resource_remaining_capacity, capacity_to_assign, resource.capacity)
+                capacity_to_assign -= new_capacity_reserved
+                booking_lines.append({
+                    'appointment_resource_id': resource.id,
+                    'capacity_reserved': new_capacity_reserved,
+                    'capacity_used': new_capacity_reserved if resource.shareable and appointment_type_su.manage_capacity else
+                        resource.capacity if appointment_type_su.manage_capacity else 1,
+                })
         elif appointment_type_su.schedule_based_on == 'users' and slot and ('available_staff_users' in slot or 'staff_user_id' in slot):
             staff_user = slot.get('available_staff_users', [False])[0] or slot['staff_user_id']
 

@@ -310,6 +310,7 @@ class L10n_BePartnerVatHandler(models.AbstractModel):
                 SELECT res_partner.id as id, res_partner.country_id as country_id, res_partner.vat as vat
                 FROM %(turnover_from)s
                 WHERE %(turnover_where)s
+                AND COALESCE(res_partner.vat, '') != '/'
                 GROUP BY res_partner.id
                 HAVING SUM(account_move_line.credit - account_move_line.debit) > 250
 
@@ -318,6 +319,7 @@ class L10n_BePartnerVatHandler(models.AbstractModel):
                 SELECT res_partner.id as id, res_partner.country_id as country_id, res_partner.vat as vat
                 FROM %(refund_base_from)s
                 WHERE %(refund_base_where)s
+                AND COALESCE(res_partner.vat, '') != '/'
                 GROUP BY res_partner.id
                 HAVING SUM(account_move_line.balance) > 0
 
@@ -326,6 +328,7 @@ class L10n_BePartnerVatHandler(models.AbstractModel):
                 SELECT res_partner.id as id, res_partner.country_id as country_id, res_partner.vat as vat
                 FROM %(vat_amounts_from)s
                 WHERE %(vat_amounts_where)s
+                AND COALESCE(res_partner.vat, '') != '/'
                 GROUP BY res_partner.id
                 HAVING SUM(account_move_line.debit) > 0
             ) as partner_ids

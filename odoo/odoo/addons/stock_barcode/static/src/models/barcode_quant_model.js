@@ -327,6 +327,7 @@ export default class BarcodeQuantModel extends BarcodeModel {
             default_inventory_quantity: 1,
             default_user_id: this.userId,
             inventory_mode: true,
+            barcode_view: true,
             display_default_code: false,
             hide_qty_to_count: !this.showQuantityCount,
         };
@@ -601,7 +602,8 @@ export default class BarcodeQuantModel extends BarcodeModel {
         // For each quants, creates or increments a barcode line.
         for (const quant of quants) {
             const product = this.cache.getRecord("product.product", quant.product_id);
-            const searchLineParams = Object.assign({}, barcodeData, { product });
+            const quantPackage = this.cache.getRecord("stock.package", quant.package_id);
+            const searchLineParams = Object.assign({}, barcodeData, { product, quantPackage });
             const currentLine = this._findLine(searchLineParams);
             if (currentLine) {
                 // Updates an existing line.
@@ -609,7 +611,7 @@ export default class BarcodeQuantModel extends BarcodeModel {
                     quantity: quant.quantity,
                     lotName: barcodeData.lotName,
                     lot: barcodeData.lot,
-                    package: recPackage,
+                    package: quant.package_id,
                     owner: barcodeData.owner,
                 });
                 await this.updateLine(currentLine, fieldsParams);

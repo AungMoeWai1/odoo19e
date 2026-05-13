@@ -816,6 +816,14 @@ class PosOrder(models.Model):
             on_failure,
             on_success,
         )
+        if (
+            origin
+            and (new_doc := orders[0].l10n_mx_edi_invoice_document_ids.sorted()[0])
+            and new_doc.state == 'ginvoice_sent'
+            and (original_doc := new_doc._get_original_document())
+            and original_doc.state == 'ginvoice_sent'
+        ):
+            original_doc.invoice_ids._l10n_mx_edi_cfdi_global_invoice_try_cancel(original_doc, '01')
 
     def _l10n_mx_edi_cfdi_global_invoice_try_cancel(self, document, cancel_reason):
         """ Create a CFDI global invoice for multiple pos orders.

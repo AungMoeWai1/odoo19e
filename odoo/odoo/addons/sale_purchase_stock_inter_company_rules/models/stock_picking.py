@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import api, Command, models
+from odoo import api, models
 
 
 class StockPicking(models.Model):
@@ -7,6 +7,8 @@ class StockPicking(models.Model):
 
     def button_validate(self):
         res = super().button_validate()
+        move_line_ids_to_delete = []
+        move_line_vals_to_create = []
         for picking in self:
             if not picking.sale_id or picking.picking_type_code not in ('outgoing', 'dropship'):
                 continue
@@ -24,12 +26,13 @@ class StockPicking(models.Model):
                         continue
                     receipt_move = self._find_corresponding_move(move, receipts)
                     if receipt_move:
-                        receipt_move.write({
-                            'move_line_ids': [
-                                *[Command.delete(ml.id) for ml in receipt_move.move_line_ids],
-                                *[Command.create(ml_vals) for ml_vals in self._prepare_move_lines(move, receipt_move)],
-                            ]})
-                        receipt_move.move_line_ids._apply_putaway_strategy()
+                        move_line_ids_to_delete.extend(receipt_move.move_line_ids.ids)
+                        move_line_vals_to_create.extend(self._prepare_move_lines(move, receipt_move))
+        move_lines_to_delete = self.env['stock.move.line'].browse(move_line_ids_to_delete)
+        move_lines_to_delete.sudo().unlink()
+        if move_line_vals_to_create:
+            new_lines = self.env['stock.move.line'].sudo().create(move_line_vals_to_create)
+            new_lines._apply_putaway_strategy()
         return res
 
     @api.model

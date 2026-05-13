@@ -11,6 +11,7 @@ import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
 import { registry } from "@web/core/registry";
 import * as OfflineUtil from "@point_of_sale/../tests/generic_helpers/offline_util";
 import * as ProductConfiguratorPopup from "@point_of_sale/../tests/pos/tours/utils/product_configurator_util";
+import { refresh } from "@point_of_sale/../tests/generic_helpers/utils";
 
 registry.category("web_tour.tours").add("TicketScreenTour", {
     steps: () =>
@@ -18,8 +19,10 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             OfflineUtil.setOfflineMode(),
-            Chrome.clickOrders(),
+            // ensure that even after refreshing the page while being offline all data is correctly reloaded
+            refresh(),
             Dialog.confirm("Continue with limited functionality"),
+            Chrome.clickOrders(),
             OfflineUtil.setOnlineMode(),
             Chrome.createFloatingOrder(),
             ProductScreen.addOrderline("Desk Pad", "1", "3"),
@@ -320,6 +323,16 @@ registry.category("web_tour.tours").add("test_pay_unpaid_order_from_kiosk", {
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
             ReceiptScreen.isShown(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_no_orders_from_other_config", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            Chrome.clickOrders(),
+            TicketScreen.noOrderIsThere(),
         ].flat(),
 });
 
@@ -629,5 +642,23 @@ registry.category("web_tour.tours").add("test_refund_line_keep_attributes", {
                 productName: "Donut",
                 attributeLine: "Sugar",
             }),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_not_available_pricelist_not_set_on_order", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            Chrome.clickOrders(),
+            TicketScreen.selectFilter("Paid"),
+            Chrome.createFloatingOrder(),
+            ProductScreen.addOrderline("Desk Pad", "2", "3"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("AA Customer"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
         ].flat(),
 });

@@ -1191,36 +1191,14 @@
                                         <field name="name">Retained earnings</field>
                                         <field name="name@fr">Report à nouveau</field>
                                         <field name="code">REPORT_NOUVEAU</field>
+                                        <field name="foldable" eval="True"/>
                                         <field name="expression_ids">
-                                            <record id="account_financial_report_line_02_0_6_fr_bilan_passif_past_pnl" model="account.report.expression">
-                                                <field name="label">past_pnl</field>
-                                                <field name="engine">aggregation</field>
-                                                <field name="subformula">cross_report(l10n_fr_reports.account_financial_report_l10n_fr_cdr)</field>
-                                                <field name="formula">total_all.balance</field>
-                                                <field name="date_scope">to_beginning_of_fiscalyear</field>
-                                            </record>
-                                            <record id="account_financial_report_line_02_0_6_fr_bilan_passif_deprecated_income" model="account.report.expression">
-                                                <field name="label">deprecated_income</field>
-                                                <field name="engine">account_codes</field>
-                                                <field name="formula">-771 - 774 - 775 - 777 - 791 - 796 - 797</field>
-                                                <field name="date_scope">to_beginning_of_fiscalyear</field>
-                                            </record>
-                                            <record id="account_financial_report_line_02_0_6_fr_bilan_passif_deprecated_expense" model="account.report.expression">
-                                                <field name="label">deprecated_expense</field>
-                                                <field name="engine">account_codes</field>
-                                                <field name="formula">671 + 674 + 675 + 6812</field>
-                                                <field name="date_scope">to_beginning_of_fiscalyear</field>
-                                            </record>
-                                            <record id="account_financial_report_line_02_0_6_fr_bilan_passif_accounts" model="account.report.expression">
-                                                <field name="label">accounts</field>
-                                                <field name="engine">domain</field>
-                                                <field name="formula">['|', '|', ('account_id.code','=like','11%'), ('account_id.code','=like','12%'), ('account_id.account_type','=','equity_unaffected')]</field>
-                                                <field name="subformula">-sum</field>
-                                            </record>
                                             <record id="account_financial_report_line_02_0_6_fr_bilan_passif_net" model="account.report.expression">
                                                 <field name="label">net</field>
-                                                <field name="engine">aggregation</field>
-                                                <field name="formula">REPORT_NOUVEAU.past_pnl + REPORT_NOUVEAU.deprecated_income - REPORT_NOUVEAU.deprecated_expense + REPORT_NOUVEAU.accounts</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.account_type', 'in', ['income', 'income_other', 'expense_direct_cost', 'expense', 'expense_depreciation', 'expense_other', 'equity_unaffected'])]"/>
+                                                <field name="subformula">-sum</field>
+                                                <field name="date_scope">to_beginning_of_fiscalyear</field>
                                             </record>
                                         </field>
                                     </record>
@@ -1228,12 +1206,13 @@
                                         <field name="name">Result for the year</field>
                                         <field name="name@fr">Résultat de l'exercice</field>
                                         <field name="code">RESULT_LEXERCICE</field>
+                                        <field name="foldable" eval="True"/>
                                         <field name="expression_ids">
                                             <record id="account_financial_report_line_02_0_7_fr_bilan_passif_net" model="account.report.expression">
                                                 <field name="label">net</field>
-                                                <field name="engine">aggregation</field>
-                                                <field name="formula">total_all.balance</field>
-                                                <field name="subformula">cross_report(l10n_fr_reports.account_financial_report_l10n_fr_cdr)</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.account_type', 'in', ['income', 'income_other', 'expense_direct_cost', 'expense', 'expense_depreciation', 'expense_other', 'equity_unaffected'])]"/>
+                                                <field name="subformula">-sum</field>
                                                 <field name="date_scope">from_fiscalyear</field>
                                             </record>
                                         </field>

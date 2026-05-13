@@ -9,7 +9,6 @@ patch(PaymentPage.prototype, {
     setup() {
         super.setup(...arguments);
         this.hardwareProxy = useService("hardware_proxy");
-        this.iotHttp = useService("iot_http");
 
         const devices = this.selfOrder.models["iot.device"].getAll();
         const paymentTerminals = devices.filter((device) => device.type === "payment");
@@ -58,7 +57,7 @@ patch(PaymentPage.prototype, {
         this._keepListening(order, paymentMethod);
         if (data.Error || data.Stage === "Cancel" || data.Disconnected) {
             await rpc("/pos-self-order/iot-payment-cancelled", {
-                access_token: this.selfOrder.config.access_token,
+                access_token: this.selfOrder.access_token,
                 order_id: order.id,
             });
             let errorMessage = _t("Terminal transaction failed ");
@@ -74,7 +73,7 @@ patch(PaymentPage.prototype, {
             this.transactionInProgress = false;
         } else if (data.Response === "Approved") {
             await rpc("/pos-self-order/iot-payment-success", {
-                access_token: this.selfOrder.config.access_token,
+                access_token: this.selfOrder.access_token,
                 order_id: order.id,
                 payment_method_id: paymentMethod.id,
                 payment_info: data,
@@ -103,7 +102,7 @@ patch(PaymentPage.prototype, {
 
             this.transactionInProgress = true;
             const { iot_id, identifier } = paymentMethod.iot_device_id;
-            this.iotHttp.action(
+            this.selfOrder.iotHttpService.action(
                 iot_id?.id,
                 identifier,
                 this.getPaymentData(order, paymentMethod),
@@ -129,7 +128,7 @@ patch(PaymentPage.prototype, {
     _keepListening(order, paymentMethod) {
         if (this.transactionInProgress) {
             const { iot_id, identifier } = paymentMethod.iot_device_id;
-            this.iotHttp.onMessage(
+            this.selfOrder.iotHttpService.onMessage(
                 iot_id?.id,
                 identifier,
                 (e) => this.onTerminalMessageReceived(e.result, order, paymentMethod),

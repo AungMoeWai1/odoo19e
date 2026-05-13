@@ -615,6 +615,13 @@ class Envia:
             base_code = str(partner.city_id.l10n_co_edi_code)
             return base_code
 
+        if partner.country_id == partner.env.ref("base.co") and partner.zip:
+            country_code = quote(partner.country_id.code)
+            zipcode = quote(partner.zip)
+            geolocate_data = self._make_api_request(f'zipcode/{country_code}/{zipcode}', geolocate=True)
+            if isinstance(geolocate_data, list) and geolocate_data:
+                return geolocate_data[0].get('info', {}).get('stat_8digit') or partner.zip
+
         if not (partner.zip or partner.city_id.zipcode):
             zipcode = self._geolocate_zip(partner)
             if not zipcode:
@@ -712,8 +719,12 @@ class Envia:
             raise ValidationError(partner.env._('Missing Fields:\n%s', msg))
 
         if partner.country_id == partner.env.ref('base.co'):
-            # Colombia requires their city field to be the postal code not the city name.
-            zipcode = address_dict['postalCode'].rjust(5, '0').ljust(8, '0')
+            # Colombia requires their city field to be the municipality code,
+            # not the city name. Keep the l10n_co_edi path as-is, otherwise rely
+            # on Envia geocodes to avoid fabricating codes from the raw ZIP.
+            zipcode = address_dict['postalCode']
+            if len(zipcode) == 5:
+                zipcode = zipcode.ljust(8, '0')
             address_dict['city'] = address_dict['postalCode'] = zipcode
 
         return address_dict

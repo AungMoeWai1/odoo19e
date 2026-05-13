@@ -145,7 +145,7 @@ class L10n_Be281_10(models.Model):
     @api.model
     def _get_atn_nature(self, payslips):
         result = ''
-        if any(payslip.vehicle_id or payslip.version_id.car_id for payslip in payslips):
+        if payslips._get_line_values(['ATN.CAR'], compute_sum=True)['ATN.CAR']['sum']['total']:
             result += 'F'
         if any(payslip.version_id.has_laptop for payslip in payslips):
             result += 'H'

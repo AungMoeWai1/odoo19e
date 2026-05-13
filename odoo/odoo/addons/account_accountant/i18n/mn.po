@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 18:41+0000\n"
+"POT-Creation-Date: 2026-04-24 17:42+0000\n"
 "PO-Revision-Date: 2025-12-10 10:26+0000\n"
 "Last-Translator: Bayarkhuu Bataa <bbayarkhuu@gmail.com>\n"
 "Language-Team: Mongolian <https://translate.odoo.com/projects/odoo-19/"
@@ -256,6 +256,8 @@ msgid ""
 msgstr ""
 
 #. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/button_list/button_list.js:0
 #: model:ir.model,name:account_accountant.model_account_account
 #: model:ir.model.fields,field_description:account_accountant.field_account_reconcile_wizard__account_id
 #: model_terms:ir.ui.view,arch_db:account_accountant.view_account_list_bank_rec_widget
@@ -345,6 +347,13 @@ msgstr "Шинэ пайз нэмэх"
 msgid ""
 "After the data extraction, check and validate the bill. If no vendor has "
 "been found, add one before validating."
+msgstr ""
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.res_config_settings_view_form
+msgid ""
+"All entries created by Invoicing before that date will be ignored in "
+"Accounting."
 msgstr ""
 
 #. module: account_accountant
@@ -1312,6 +1321,11 @@ msgid "Invoice Date"
 msgstr "Нэхэмжлэлийн огноо"
 
 #. module: account_accountant
+#: model:res.groups,name:account_accountant.group_account_basic
+msgid "Invoicing & Banks"
+msgstr ""
+
+#. module: account_accountant
 #: model:ir.model.fields,field_description:account_accountant.field_res_company__invoicing_switch_threshold
 #: model:ir.model.fields,field_description:account_accountant.field_res_config_settings__invoicing_switch_threshold
 msgid "Invoicing Switch Threshold"
@@ -1860,6 +1874,8 @@ msgid "Outstanding debits"
 msgstr "Биелээгүй дебет"
 
 #. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/button_list/button_list.js:0
 #: model:ir.model.fields,field_description:account_accountant.field_account_reconcile_wizard__to_partner_id
 #: model_terms:ir.ui.view,arch_db:account_accountant.view_account_move_line_reconcile_search
 #: model_terms:ir.ui.view,arch_db:account_accountant.view_bank_statement_line_quick_create_form_bank_rec_widget
@@ -2266,6 +2282,12 @@ msgid "Subscription 12 months"
 msgstr ""
 
 #. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/button_list/button_list.xml:0
+msgid "Suggestions"
+msgstr "Санал болголт"
+
+#. module: account_accountant
 #: model:ir.model,name:account_accountant.model_account_tax
 #: model:ir.model.fields,field_description:account_accountant.field_account_reconcile_wizard__tax_id
 msgid "Tax"
@@ -2317,13 +2339,6 @@ msgstr ""
 #: code:addons/account_accountant/models/account_fiscal_year.py:0
 msgid "The ending date must not be prior to the starting date."
 msgstr "Дуусах огноо нь эхлэх огнооноос эрт байж болохгүй."
-
-#. module: account_accountant
-#: model_terms:ir.ui.view,arch_db:account_accountant.res_config_settings_view_form
-msgid ""
-"The invoices before this date will not be taken into account as accounting "
-"entries"
-msgstr ""
 
 #. module: account_accountant
 #: model:ir.model.fields,help:account_accountant.field_account_bank_statement_line__deferred_original_move_ids
@@ -2683,6 +2698,11 @@ msgid "You need to select who the exception applies to."
 msgstr ""
 
 #. module: account_accountant
+#: model:res.groups,comment:account_accountant.group_account_basic
+msgid "adds the accounting dashboard, bank management and follow-up reports."
+msgstr ""
+
+#. module: account_accountant
 #: model:ir.model.fields.selection,name:account_accountant.selection__account_change_lock_date__exception_duration__1h
 msgid "for 1 hour"
 msgstr ""
@@ -2869,9 +2889,6 @@ msgstr "тулгах"
 
 #~ msgid "State"
 #~ msgstr "Төлөв"
-
-#~ msgid "Suggestions"
-#~ msgstr "Санал болголт"
 
 #~ msgid "Tax Lock Date"
 #~ msgstr "Татварыг түгжих огноо"

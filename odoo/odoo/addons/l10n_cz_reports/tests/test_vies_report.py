@@ -54,6 +54,13 @@ class CzechVIESReportTest(CzechReportsCommon):
             'invoice_date': '2019-11-12',
             'taxable_supply_date': '2019-11-12',
             'move_type': 'in_invoice',
+            'partner_id': self.partner_eu_4.id,
+            'invoice_line_ids': [Command.create({'quantity': 3, 'price_unit': 20, 'l10n_cz_transaction_code': '2'})],
+        }).action_post()
+        self.env['account.move'].create({
+            'invoice_date': '2019-11-12',
+            'taxable_supply_date': '2019-11-12',
+            'move_type': 'in_invoice',
             'partner_id': self.partner_non_eu.id,
             'invoice_line_ids': [Command.create(line_data) for line_data in [
                 {'quantity': 3, 'price_unit': 20, 'l10n_cz_transaction_code': '0'},
@@ -77,7 +84,7 @@ class CzechVIESReportTest(CzechReportsCommon):
             # Name                   county code        vat number          transaction code         supplies number                total
             [0,                          1,                 2,                      3,                     4,                        5],
             [
-                ('B. SECTION',          '',                '',                      '',                    8,                        890),
+                ('B. SECTION',          '',                '',                      '',                    9,                        950),
                 ('Partner EU 1',        'FR',              'FR23334175221',         '',                    5,                        510),
                 ('0 Goods',             'FR',              'FR23334175221',         '0',                   1,                        130),
                 ('1 Business asset',    'FR',              'FR23334175221',         '1',                   2,                        240),
@@ -88,6 +95,8 @@ class CzechVIESReportTest(CzechReportsCommon):
                 ('3 Service',           'DE',              'DE123456788',           '3',                   1,                        80),
                 ('Partner EU 3',        'BE',              'BE0477472701',          '',                    1,                        60),
                 ('2 Triangular',        'BE',              'BE0477472701',          '2',                   1,                        60),
+                ('Partner EU 4',        'BE',              '0477472701',            '',                    1,                        60),
+                ('2 Triangular',        'BE',              '0477472701',            '2',                   1,                        60),
             ],
             options,
         )
@@ -114,13 +123,14 @@ class CzechVIESReportTest(CzechReportsCommon):
             <DPHSHV verzePis="02.01">
                 <VetaD shvies_forma="N" dokument="SHV" k_uladis="DPH" mesic="11" rok="2019"/>
                 <VetaP typ_ds="P" zkrobchjm="company_1_data" c_pracufo="2001" c_ufo="451" dic="12345679" email="info@company.czexample.com"/>
-                <VetaR k_stat="FR" c_vat="FR23334175221" k_pln_eu="0" pln_pocet="2" pln_hodnota="260"/>
-                <VetaR k_stat="FR" c_vat="FR23334175221" k_pln_eu="1" pln_pocet="3" pln_hodnota="300"/>
-                <VetaR k_stat="FR" c_vat="FR23334175221" k_pln_eu="2" pln_pocet="1" pln_hodnota="60"/>
-                <VetaR k_stat="FR" c_vat="FR23334175221" k_pln_eu="3" pln_pocet="1" pln_hodnota="80"/>
-                <VetaR k_stat="DE" c_vat="DE123456788"   k_pln_eu="1" pln_pocet="1" pln_hodnota="240"/>
-                <VetaR k_stat="DE" c_vat="DE123456788"   k_pln_eu="3" pln_pocet="1" pln_hodnota="80"/>
-                <VetaR k_stat="BE" c_vat="BE0477472701"  k_pln_eu="2" pln_pocet="1" pln_hodnota="60"/>
+                <VetaR k_stat="FR" c_vat="23334175221" k_pln_eu="0" pln_pocet="2" pln_hodnota="260"/>
+                <VetaR k_stat="FR" c_vat="23334175221" k_pln_eu="1" pln_pocet="3" pln_hodnota="300"/>
+                <VetaR k_stat="FR" c_vat="23334175221" k_pln_eu="2" pln_pocet="1" pln_hodnota="60"/>
+                <VetaR k_stat="FR" c_vat="23334175221" k_pln_eu="3" pln_pocet="1" pln_hodnota="80"/>
+                <VetaR k_stat="DE" c_vat="123456788"   k_pln_eu="1" pln_pocet="1" pln_hodnota="240"/>
+                <VetaR k_stat="DE" c_vat="123456788"   k_pln_eu="3" pln_pocet="1" pln_hodnota="80"/>
+                <VetaR k_stat="BE" c_vat="0477472701"  k_pln_eu="2" pln_pocet="1" pln_hodnota="60"/>
+                <VetaR k_stat="BE" c_vat="0477472701"  k_pln_eu="2" pln_pocet="1" pln_hodnota="60"/>
             </DPHSHV>
             </Pisemnost>
         """

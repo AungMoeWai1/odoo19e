@@ -1405,6 +1405,29 @@ class DocumentsDocument(models.Model):
     def _get_access_update_domain(self):
         return Domain.TRUE if self.env.su else Domain('user_permission', '=', 'edit')
 
+    def get_formview_action(self, access_uid=None):
+        """Return the `document_action_preference` action as the default view for M2O fields."""
+        if not self.has_access("read"):
+            return {
+                "type": "ir.actions.client",
+                "tag": "display_notification",
+                "params": {
+                    "message": self.env._("Document not found or inaccessible."),
+                    "type": "danger",
+                },
+            }
+
+        action = self.env["ir.actions.actions"]._for_xml_id("documents.document_action_preference")
+        action["context"] = {
+            **self.env.context,
+            "documents_show_default_breadcrumb": True,
+            "no_documents_unique_folder_id": True,
+            "searchpanel_default_user_folder_id": str(self.id) if self.type == "folder" else self.user_folder_id,
+            "documents_init_document_id": self.id if self.type != "folder" else False,
+        }
+
+        return action
+
     @api.model
     def get_documents_actions(self, folder_id):
         """Return the available actions and a key to know if the action is embedded on the folder."""
@@ -1613,10 +1636,10 @@ class DocumentsDocument(models.Model):
     def _get_is_multipage(self):
         """Whether the document can be considered multipage, if able to determine.
 
-        :return: `None` if mimetype not handled, `False` if single page or error occurred, `True` otherwise.
+        :return: `None` if mimetype not handled or url-type attachment, `False` if single page or error occurred, `True` otherwise.
         :rtype: bool | None
         """
-        if self.mimetype not in ('application/pdf', 'application/pdf;base64'):
+        if self.mimetype not in ('application/pdf', 'application/pdf;base64') or self.attachment_type == 'url':
             return None
         decoded = base64.b64decode(self.datas)
         # Avoid warning in tests due to IrActionsReport._pre_render_qweb_pdf rendering pdf as html
@@ -1652,7 +1675,7 @@ class DocumentsDocument(models.Model):
                 document.user_can_move = (
                     document.user_permission == 'edit'
                     and (not document.folder_id or document.folder_id.user_permission == 'edit')
-                    and (is_manager or document.user_folder_id != 'COMPANY')
+                    and (is_manager or document.user_folder_id != 'COMPANY' or document.type != 'folder')
                 )
 
     @api.depends('favorited_ids')
@@ -2305,7 +2328,9 @@ class DocumentsDocument(models.Model):
         documents_per_initial_active = {}
 
         if (owner_id := vals.get('owner_id')) is not None:
-            if not is_manager and any(d.owner_id != self.env.user for d in self):
+            can_change_owner = is_manager or all(
+                (not d.owner_id and d.user_can_move) or d.owner_id == self.env.user for d in self)
+            if not can_change_owner:
                 raise AccessError(_("You cannot change the owner of documents you do not own."))
             if not isinstance(owner_id, int | bool | None):
                 owner_id = owner_id.id

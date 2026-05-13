@@ -17,6 +17,7 @@ export const DocumentsControllerMixin = (component) =>
             });
 
             this.documentService = useService("document.document");
+            this.ui = useService("ui");
             this.firstLoadSelectId = this.documentService.initData?.documentId;
         }
 

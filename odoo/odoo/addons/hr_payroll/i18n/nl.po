@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 18:41+0000\n"
-"PO-Revision-Date: 2026-02-18 14:52+0000\n"
+"POT-Creation-Date: 2026-04-10 18:45+0000\n"
+"PO-Revision-Date: 2026-05-04 09:55+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/hr_payroll/"
 "nl/>\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_employee__work_entry_source
@@ -42,15 +42,14 @@ msgid ""
 "planning. (requires Planning app)\n"
 "    "
 msgstr ""
-"\n"
 "        Bepaalt de bron voor het genereren van werkboekingen\n"
 "\n"
 "        Werkschema: Werkboekingen worden gegenereerd voor onderstaande "
 "werkuren.\n"
 "        Aanwezigheden: Werkboekingen worden gegenereerd op basis van de "
-"aanwezigheden van werknemers (Aanwezigheden-app vereist)\n"
+"aanwezigheden van werknemers (Aanwezigheid-app vereist)\n"
 "        Planning: Werkboekingen worden gegenereerd op basis van de planning "
-"van werknemers planning (Planning-app vereist)\n"
+"van werknemers (Planning-app vereist)\n"
 "    "
 
 #. module: hr_payroll
@@ -179,11 +178,6 @@ msgstr ""
 "'Bevestigd'.\n"
 "\n"
 "* Wanneer de gebruiker een loonstrook annuleert, is de status 'Geannuleerd'."
-
-#. module: hr_payroll
-#: model_terms:ir.ui.view,arch_db:hr_payroll.contribution_register
-msgid "100"
-msgstr "100"
 
 #. module: hr_payroll
 #: model:hr.payroll.structure,name:hr_payroll.structure_003
@@ -522,7 +516,7 @@ msgstr "<strong class=\"me-2\">E-mail:</strong>"
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
 msgid "<strong class=\"me-2\">Entry Date:</strong>"
-msgstr ""
+msgstr "<strong class=\"me-2\">Indiensttreding:</strong>"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
@@ -1078,7 +1072,7 @@ msgstr "Basis salaris"
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__basic_wage
 msgid "Basic Wage"
-msgstr "Basis inkomen"
+msgstr "Basisloon"
 
 #. module: hr_payroll
 #. odoo-python
@@ -2225,7 +2219,7 @@ msgstr "Functie werknemer"
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
 msgid "Employee Information"
-msgstr "Werknemers informatie"
+msgstr "Werknemersinformatie"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_payslip_new
@@ -2580,8 +2574,6 @@ msgid "General"
 msgstr "Algemeen"
 
 #. module: hr_payroll
-#. odoo-javascript
-#: code:addons/hr_payroll/static/src/views/employee_declaration_list/hr_payroll_employee_declaration_list_controller.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_payroll_payment_report_view_form
 msgid "Generate"
 msgstr "Genereren"
@@ -2611,6 +2603,12 @@ msgstr "Betaalronde genereren"
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_view_kanban
 msgid "Generate Payslips"
 msgstr "Genereer loonstroken"
+
+#. module: hr_payroll
+#. odoo-javascript
+#: code:addons/hr_payroll/static/src/views/employee_declaration_list/hr_payroll_employee_declaration_list_controller.xml:0
+msgid "Generate Reports ("
+msgstr "Rapporten genereren ("
 
 #. module: hr_payroll
 #. odoo-python
@@ -3872,12 +3870,6 @@ msgstr ""
 "Het genereren van de PDF is gestart. Deze zal binnenkort beschikbaar zijn."
 
 #. module: hr_payroll
-#. odoo-javascript
-#: code:addons/hr_payroll/static/src/views/employee_declaration_list/hr_payroll_employee_declaration_list_controller.xml:0
-msgid "PDFs"
-msgstr "Pdf's"
-
-#. module: hr_payroll
 #: model:ir.model.fields.selection,name:hr_payroll.selection__hr_payslip__state__paid
 #: model:ir.model.fields.selection,name:hr_payroll.selection__hr_payslip__state_display__paid
 #: model:ir.model.fields.selection,name:hr_payroll.selection__hr_payslip_run__state__03_paid
@@ -4175,7 +4167,7 @@ msgstr "Loonadministratie: gegevens bijwerken"
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Payslip"
-msgstr "Loonstrookje"
+msgstr "Loonstrook"
 
 #. module: hr_payroll
 #. odoo-python
@@ -4196,7 +4188,7 @@ msgstr "Bedrag loonstrook"
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_attachment__monthly_amount_display
 msgid "Payslip Amount Display"
-msgstr "Weergave van het bedrag op loonstrookje"
+msgstr "Weergave van het bedrag op loonstrook"
 
 #. module: hr_payroll
 #. odoo-python
@@ -5338,8 +5330,8 @@ msgid ""
 "                        It computes the Net salary according to the Salary "
 "Rules you've defined in the configuration."
 msgstr ""
-"De salarisstrook is de berekening van het salaris op basis van een periode "
-"voor een werknemer.\n"
+"De loonstrook is de berekening van het loon op basis van een periode voor "
+"een werknemer.\n"
 "                        Het berekent het nettoloon volgens de salarisregels "
 "die je in de configuratie hebt gedefinieerd."
 
@@ -5582,7 +5574,7 @@ msgid ""
 "available in all payslip."
 msgstr ""
 "Deze invoer is alleen beschikbaar in die structuur. Indien leeg, staat deze "
-"op alle loonstrookjes."
+"op alle loonstroken."
 
 #. module: hr_payroll
 #. odoo-python
@@ -6001,8 +5993,8 @@ msgstr ""
 "Vul de ontbrekende werkboekingen aan van %(employee_name)s:%"
 "(time_intervals_str)s \n"
 "\n"
-"Ontbrekende werkboekingen zijn als de Bermudadriehoek voor loonstrookjes. "
-"Laten we voorkomen dat de verdiensten van je collega's in het nietd "
+"Ontbrekende werkboekingen zijn als de Bermudadriehoek voor loonstroken. "
+"Laten we voorkomen dat de verdiensten van je collega's in het niets "
 "verdwijnen!"
 
 #. module: hr_payroll
@@ -6607,6 +6599,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_payroll_note_demo_content
 msgid "👆See the Menu there, on the top?"
 msgstr "👆 Zie je het menu hierboven?"
+
+#~ msgid "100"
+#~ msgstr "100"
+
+#~ msgid "PDFs"
+#~ msgstr "Pdf's"
 
 #~ msgid "<strong class=\"me-2\">Contract Start Date:</strong>"
 #~ msgstr "<strong class=\"me-2\">Startdatum van het contract:</strong>"

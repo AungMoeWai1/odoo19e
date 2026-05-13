@@ -141,3 +141,20 @@ export class SelectAddDocumentCreateDialog extends SelectCreateDialog {
         });
     }
 }
+
+export function getAddDocumentDialogProps() {
+    return {
+        resModel: "documents.document",
+        title: _t("Search: Documents"),
+        noCreate: true,
+        domain: [
+            ["type", "=", "binary"],
+            ["shortcut_document_id", "=", false],
+        ],
+        context: {
+            list_view_ref: "documents.documents_view_list_add_documents_attachment",
+            documents_search_panel_no_trash: true,
+            documents_view_secondary: true,
+        },
+    };
+}

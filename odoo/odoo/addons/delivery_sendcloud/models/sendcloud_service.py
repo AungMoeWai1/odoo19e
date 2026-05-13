@@ -72,6 +72,13 @@ class SendCloud:
         total_weight = int(carrier.sendcloud_convert_weight(total_weight, grams=True))
         if total_weight < carrier.sendcloud_shipping_id.min_weight and order:
             raise UserError(_('Order below minimum weight of carrier'))
+
+        packages_no = 1
+        if order:
+            default_package = carrier.sendcloud_default_package_type_id
+            target_weight = int(carrier.sendcloud_convert_weight(default_package.max_weight, grams=True)) if default_package else False
+            packages_no, total_weight = self._split_shipping(carrier.sendcloud_shipping_id, total_weight, target_weight)
+
         if parcel:
             shipping_methods = [{
                 'id': parcel.get('shipment', {}).get('id'),
@@ -79,19 +86,17 @@ class SendCloud:
             }]
         else:
             shipping_methods = self._get_shipping_methods(carrier, from_country, to_country, total_weight=total_weight, from_postal_code=from_postal_code, to_postal_code=to_postal_code)
-
         if not shipping_methods or (len(shipping_methods) == 1 and not shipping_methods[0]):
             raise UserError(_('There is no shipping method available for this order with the selected carrier'))
 
-        packages_no = 1
-        if order:
-            default_package = carrier.sendcloud_default_package_type_id
-            target_weight = default_package.max_weight if default_package else False
-            target_weight = int(carrier.sendcloud_convert_weight(target_weight, grams=True)) if target_weight else False
-            packages_no, total_weight = self._split_shipping(carrier.sendcloud_shipping_id, total_weight, target_weight)
         if packages_no > 1:
             # We're forcefully calling this method from a sale order, as we only want an estimation of the rating, take the 'heaviest' methods
-            shipping_methods = [m for m in shipping_methods if m['properties']['max_weight'] == carrier.sendcloud_shipping_id.max_weight]  # We're sure here there's at least one matching method as max_weight was updated in _get_shipping_methods
+            shipping_methods = [
+                m for m in shipping_methods
+                if
+                    (m['properties']['max_weight'] >= total_weight and m['properties']['min_weight'] <= total_weight) or
+                    m['properties']['max_weight'] == carrier.sendcloud_shipping_id.max_weight
+            ]  # We're sure here there's at least one matching method as max_weight was updated in _get_shipping_methods
         shipping_prices = self._get_shipping_prices(shipping_methods, to_country, from_country, total_weight, from_postal_code, to_postal_code)
 
         if not shipping_prices:
@@ -164,8 +169,9 @@ class SendCloud:
         shipping_count = 1
         shipping_weight = total_weight
         # max weight from sendcloud is 1 gram extra (eg. if max allowed weight = 3000g, sendcloud_shipping_id.max_weight = 3001g)
-        max_weight = target_weight if target_weight else shipping_product_id.max_weight - 1
-        if target_weight or total_weight > max_weight:
+        shipping_max_weight = shipping_product_id.max_weight - 1
+        max_weight = min(target_weight, shipping_max_weight) if target_weight else shipping_max_weight
+        if total_weight > max_weight:
             shipping_count = math.ceil(total_weight / max_weight)
             shipping_weight = max_weight
         return shipping_count, shipping_weight
@@ -187,9 +193,11 @@ class SendCloud:
             if not weight:
                 params['weight'] = shipping_method['properties']['max_weight'] - 1  # the weight of a shipping_method is always in gram
             # the API response is an Array of 1 dict with price and currency (usually EUR)
-            res = self._send_request('shipping-price', params=params)[0]
-            if res.get('price'):
-                shipping_prices[shipping_id] = res
+            res = self._send_request('shipping-price', params=params)
+            if not res:
+                continue
+            if res[0].get('price'):
+                shipping_prices[shipping_id] = res[0]
             elif shipping_id == 8:  # Sendcloud Unstamped Letter
                 # shipping id 8 is a test shipping and does not provide a price, but we still need the flow to continue
                 # the check is done after the request since in the future if price is actually returned it will be passed correctly
@@ -279,11 +287,12 @@ class SendCloud:
     def _send_request(self, endpoint, method='get', data=None, params=None, route=BASE_URL):
 
         url = url_join(route, endpoint)
-        self.logger(f'{url}\n{method}\n{data}\n{params}', f'sendcloud request {endpoint}')
+        headers = {'Sendcloud-Partner-Id': '280b92c9-afae-4b9f-a66e-957bf5eb2f95'}
+        self.logger(f'{url}\n{headers}\n{method}\n{data}\n{params}', f'sendcloud request {endpoint}')
         if method not in ['get', 'post']:
             raise Exception(f'Unhandled request method {method}')
         try:
-            res = self.session.request(method=method, url=url, json=data, params=params, timeout=60)
+            res = self.session.request(method=method, url=url, headers=headers, json=data, params=params, timeout=60)
             self.logger(f'{res.status_code} {res.text}', f'sendcloud response {endpoint}')
             res = res.json()
         except Exception as err:
@@ -318,7 +327,7 @@ class SendCloud:
                 parcel_items[key] = {
                     'description': commodity.product_id.name,
                     'quantity': commodity.qty,
-                    'weight': float_repr(carrier.sendcloud_convert_weight(commodity.product_id.weight), 3),
+                    'weight': float_repr(max(0.001, carrier.sendcloud_convert_weight(commodity.product_id.weight)), 3),
                     'value': round(value, 2),
                     'hs_code': hs_code[:12],
                     'origin_country': commodity.country_of_origin or '',
@@ -653,5 +662,7 @@ class SendCloud:
                 res_id = addr['id']
                 break
         if not res_id:
-            raise UserError(_('No address found with contact name %s on your sendcloud account.', picking.location_id.warehouse_id.name))
+            error_message = _('No address found with contact name %s on your sendcloud account.', picking.location_id.warehouse_id.name)
+            error_message += _(' Please make sure there is an address with the same name under "Address Name (optional)" in your Sendcloud Address configuration.')
+            raise UserError(error_message)
         return res_id

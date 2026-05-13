@@ -78,7 +78,7 @@
                             tabindex="-1"
                             class="btn btn_annotation"
                             t-on-click="openChatter"
-                            t-if="this.props.line.chatter and !this.ui.isSmall"
+                            t-if="this.props.line.chatter"
                             t-att-class="{
                                 'o_account_report_chatter_selected': isChatterSelected,
                                 'o_account_report_chatter_annoted': isChatterAnnotated,

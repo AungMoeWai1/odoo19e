@@ -426,3 +426,46 @@ class TestExpenseExtractProcess(TestExpenseCommon, TestExtractMixin):
 
         self.assertEqual(self.expense.total_amount_currency, 50.0)
         self.assertAlmostEqual(self.expense.total_amount, 150.0)
+
+    def test_skip_extract_for_stripe_expense(self):
+        """ Test OCR should not be triggered for expense created from stripe payment. """
+        if 'hr_expense_stripe' not in self.env['ir.module.module']._installed():
+            self.skipTest("hr_expense_stripe module is not installed.")
+
+        self.company.stripe_id = 'acct_1234567890'
+        card = self.env['hr.expense.stripe.card'].with_user(self.expense_user_manager).create([{  # noqa: OLS03001
+            'employee_id': self.expense_employee.id,
+            'name': 'Test Card',
+            'company_id': self.company.id,
+        }])
+        expense_vals = {
+            'card_id': card.id,
+            'employee_id': self.expense_employee.id,
+            'product_id': self.product_c.id,
+            'total_amount_currency': 200.0,
+        }
+
+        # test skip ocr for auto ocr
+        self.company.expense_extract_show_ocr_option_selection = 'auto_send'
+        expense_1 = self.env['hr.expense'].create(expense_vals)
+        self.assertTrue(expense_1.is_card_expense)
+        with self._mock_iap_extract(extract_response=self.parse_success_response()):
+            expense_1.message_post(attachment_ids=[self.attachment.id])
+        with self._mock_iap_extract(extract_response=self.get_result_success_response()):
+            expense_1.check_all_status()
+        self.assertRecordValues(expense_1, [
+            {'total_amount_currency': 200.0, 'state': 'draft', 'extract_state': 'done'},
+        ])
+
+        # test skip ocr for ocr on demand
+        self.company.expense_extract_show_ocr_option_selection = 'manual_send'
+        expense_2 = self.env['hr.expense'].create(expense_vals)
+        self.assertTrue(expense_2.is_card_expense)
+        expense_2.message_post(attachment_ids=[self.attachment.id])
+        with self._mock_iap_extract(extract_response=self.parse_success_response()):
+            expense_2.action_send_batch_for_digitization()
+        with self._mock_iap_extract(extract_response=self.get_result_success_response()):
+            expense_2.check_all_status()
+        self.assertRecordValues(expense_2, [
+            {'total_amount_currency': 200.0, 'state': 'draft', 'extract_state': 'done'},
+        ])

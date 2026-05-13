@@ -204,6 +204,27 @@ class TestFsmFlowSale(TestFsmFlowSaleCommon):
         so_form.save()
         self.assertEqual(sol.qty_to_invoice, 0.0, "Anglo Saxon Accounting should be disable")
 
+    def test_qty_to_invoice_with_service_policy(self):
+        """
+        Check that free service products with prepaid invoice policies are added to invoices, even
+        when Anglo-Saxon Accounting is not enabled
+        """
+        self.task.partner_id = self.partner_1.id
+        self.env.company.anglo_saxon_accounting = False
+        self.service_product_delivered.list_price = 0.0
+        # Case 1: Service product is not invoiced while not on 'Prepaid' service_policy
+        self.service_product_delivered.service_policy = 'delivered_timesheet'
+        self.service_product_delivered.with_user(self.project_user).with_context({'fsm_task_id': self.task.id}).fsm_add_quantity()
+        so = self.task.sale_order_id
+        sol = so.order_line[0]
+        if so.state == 'draft':
+            so.action_confirm()  # needed if stock is not installed
+        self.assertEqual(sol.qty_to_invoice, 0.0, "Qty to invoice should not be set for non-prepaid, free services (non-anglo-saxon)")
+        # Case 2: Service product is invoiced on 'Prepaid' service_policy
+        self.service_product_delivered.service_policy = 'ordered_prepaid'
+        self.service_product_delivered.with_user(self.project_user).with_context({'fsm_task_id': self.task.id}).fsm_add_quantity()
+        self.assertEqual(sol.qty_to_invoice, 2.0, "Qty to invoice should be set for prepaid, free services, even if Anglo-Saxon Accounting is disabled")
+
     def test_uom_conversion_fsm_task_to_so(self):
         """Checks that the hours recorded on Timesheets are converted to the correct UOM on the Sales Order"""
 
@@ -323,6 +344,11 @@ class TestFsmFlowSale(TestFsmFlowSaleCommon):
             'name': 'Original Task for Copy Test',
             'project_id': normal_project.id,
             'partner_id': self.partner_1.id,
+            'timesheet_ids': [Command.create({
+                'employee_id': self.employee_user2.id,
+                'name': '/',
+                'unit_amount': 1,
+            })],
         })
         
         fsm_product = self.env['product.product'].create({
@@ -440,3 +466,85 @@ class TestFsmFlowSale(TestFsmFlowSaleCommon):
             'no',
             "Invoice status should be 'no' when the task's company has Anglo-Saxon accounting disabled and the price is zero."
         )
+
+    def test_sale_order_unlink_on_sale_item_removal(self):
+        """
+        When a sales order line is unlinked from a task, the sales order should also
+        be unlinked, unless the task is related to FSM.
+        """
+        fsm_product = self.env['product.product'].create(
+            {
+                'name': "Fsm Product",
+                'type': 'service',
+                'service_policy': 'ordered_prepaid',
+                'project_id': self.fsm_project.id,
+                'service_tracking': 'task_global_project',
+            }
+        )
+        self.service_timesheet.service_tracking = "task_in_project"
+        sale_order, fsm_order = self.env['sale.order'].create([
+            {
+                'partner_id': self.partner_1.id,
+                'order_line': [Command.create({'product_id': self.service_timesheet.id})]
+            },
+            {
+                'partner_id': self.partner_1.id,
+                'order_line': [Command.create({'product_id': fsm_product.id})]
+            }
+        ])
+        (sale_order | fsm_order).action_confirm()
+        self.assertEqual(len(sale_order.tasks_ids), 1)
+        self.assertEqual(len(fsm_order.tasks_ids), 1)
+
+        task = sale_order.tasks_ids
+        fsm_task = fsm_order.tasks_ids
+        (task | fsm_task).sale_line_id = False
+        self.assertFalse(task.sale_order_id.id)
+        self.assertTrue(fsm_task.sale_order_id.id)
+
+    def test_create_fsm_project_from_sale_order(self):
+        """
+        Test: Create an FSM project from a sale order and link it to the sale order.
+
+        Steps:
+            1. Create an FSM project template.
+            2. Create a sale order with a service product.
+            3. Confirm the sale order.
+            4. Create a project from the sale order.
+            5. Select the fsm project template to the project.
+            6. Create project.
+        """
+
+        fsm_project_template = self.env['project.project'].create({
+            'name': 'FSM Project template',
+            'is_template': True,
+            'is_fsm': True,
+            'company_id': self.company_data_2['company'].id,
+        })
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_1.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_delivery_timesheet1.id,
+                    'product_uom_qty': 10,
+                }),
+            ],
+        })
+        sale_order.action_confirm()
+
+        action = sale_order.action_create_project()
+        view_id = self.env.ref('sale_project.sale_project_view_form_simplified_template').id
+
+        with Form(self.env[action['res_model']].with_context(action['context']), view=view_id) as wizard:
+            wizard.template_id = fsm_project_template
+            task_action = wizard.save().action_create_project_from_so()
+            project = self.env['project.project'].browse(task_action['context'].get('default_project_id'))
+            self.assertFalse(
+                project.sale_order_id,
+                "FSM project should not be linked to any sale order."
+            )
+            self.assertFalse(
+                sale_order.project_id,
+                "Sale order should not be linked to any FSM project."
+            )

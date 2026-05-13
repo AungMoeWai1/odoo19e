@@ -135,8 +135,9 @@ class TestTRNilveraMockedRequests(TestUBLTRCommon):
     @patch_nilvera_request
     def setUpClass(cls):
         super().setUpClass()
-        cls.einvoice_partner._check_nilvera_customer()
-        cls.earchive_partner._check_nilvera_customer()
+        with patch.object(cls.env.cr, 'commit', autospec=True):
+            cls.einvoice_partner._check_nilvera_customer()
+            cls.earchive_partner._check_nilvera_customer()
         cls.env['account.journal'].create({
             'name': 'TR Journal',
             'code': 'TRJ',
@@ -149,7 +150,9 @@ class TestTRNilveraMockedRequests(TestUBLTRCommon):
         _, invoice = self._generate_invoice_xml(self.einvoice_partner, include_invoice=True)
 
         invoices_data = {
-            invoice: {**invoice.read()[0], 'extra_edis': {'tr_nilvera'}},
+            invoice: {
+                **self.env['account.move.send']._get_default_sending_settings(invoice),
+            }
         }
 
         with patch('odoo.addons.l10n_tr_nilvera_einvoice.models.account_move.AccountMove._l10n_tr_nilvera_submit_einvoice') as mock_submit_einvoice, \
@@ -239,6 +242,7 @@ class TestTRNilveraMockedRequests(TestUBLTRCommon):
     @freeze_time('2026-02-02T12:00:00')
     @patch_nilvera_request
     def test_fetching_einvoices(self, mocked_request):
+        # EndDate is adjusted to match Europe/Istanbul timezone(UTC+3)
         with patch.object(self.env.cr, 'commit', autospec=True):
             self.env['account.move']._l10n_tr_nilvera_get_documents()
             self.env['account.move']._l10n_tr_nilvera_get_documents()
@@ -250,7 +254,7 @@ class TestTRNilveraMockedRequests(TestUBLTRCommon):
                     params={
                         'StatusCode': ['succeed'],
                         'StartDate': '2026-01-02',
-                        'EndDate': '2026-02-02T12:00:00',
+                        'EndDate': '2026-02-02T15:00:00',
                         'DateFilterType': 'CreatedDate',
                         'SortColumn': 'CreationDateTime',
                         'SortType': 'ASC',
@@ -265,7 +269,7 @@ class TestTRNilveraMockedRequests(TestUBLTRCommon):
                     params={
                         'StatusCode': ['succeed'],
                         'StartDate': '2026-02-02',
-                        'EndDate': '2026-02-02T12:00:00',
+                        'EndDate': '2026-02-02T15:00:00',
                         'DateFilterType': 'CreatedDate',
                         'SortColumn': 'CreationDateTime',
                         'SortType': 'ASC',
@@ -276,4 +280,7 @@ class TestTRNilveraMockedRequests(TestUBLTRCommon):
 
             invoice = self.env['account.move'].search([('l10n_tr_nilvera_uuid', '=', 'invoice_uuid')])
             self.assertEqual(len(invoice), 1)
-            self.assertListEqual(sorted(invoice.attachment_ids.mapped('mimetype')), ['application/pdf', 'application/xml'])
+            self.assertListEqual(
+                [invoice.attachment_ids.mimetype, invoice.ubl_cii_xml_id.mimetype],
+                ['application/pdf', 'application/xml']
+            )

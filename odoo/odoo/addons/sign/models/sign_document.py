@@ -1,6 +1,7 @@
 import base64
 import io
 from collections import defaultdict
+import textwrap
 
 from odoo import models, fields, api
 from odoo.exceptions import UserError, ValidationError
@@ -330,10 +331,22 @@ CRM, eCommerce, accounting, inventory, point of sale,\nproject management, etc.
                 elif item.type_id.item_type in ["textarea", "stamp"]:
                     font_size = height * normalFontSize * 0.8
                     can.setFont(font, font_size)
-                    lines = value.split('\n')
+                    # Normalize line endings to handle various formats (Windows \r\n, Unix \n, Mac \r)
+                    normalized_value = value.replace('\r\n', '\n').replace('\r', '\n')
+                    # Wrap long lines that exceed field width
+                    wrapped_lines = []
+                    field_width = width * item.width
+                    for line in normalized_value.splitlines():
+                        if not line:
+                            wrapped_lines.append("")
+                        else:
+                            # Calculate an approximate character limit based on average width
+                            avg_char_width = can.stringWidth(line, font, font_size) / len(line)
+                            max_chars = int(field_width / avg_char_width)
+                            wrapped_lines.extend(textwrap.wrap(line, width=max_chars, replace_whitespace=False))
                     y = (1 - item.posY)
-                    for line in lines:
-                        empty_space = width * item.width - can.stringWidth(line, font, font_size)
+                    for line in wrapped_lines:
+                        empty_space = field_width - can.stringWidth(line, font, font_size)
                         x_shift = 0
                         if item.alignment == 'center':
                             x_shift = empty_space / 2

@@ -431,6 +431,9 @@ def interpret_error_code(response):
         459: _lt("Your account balance isn't zero, please use any remaining funds or contact support to close your account."),
         460: _lt("The creation rate limit for this type of cards has been reached. Please try again later."),  # Rate limit reached for creating cards
         461: _lt("Only licenses databases can use Odoo Stripe Issuing services."),
+        463: _lt("There was an error when sending the SMS, please try again later. If the problem persists, please contact the support."),
+        464: _lt("The country of the phone number is not supported for SMS."),
+        465: _lt("There was an error when sending the email, please try again later. If the problem persists, please contact the support."),
         500: _lt("There was an unexpected error on Odoo IAP proxy server"),
         503: _lt("We received the following error from Odoo IAP proxy server:\n- Missing account secret"),
         504: _lt("We received the following error from Odoo IAP proxy server:\n- Missing account webhook"),

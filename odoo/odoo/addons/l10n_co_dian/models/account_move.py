@@ -6,10 +6,9 @@ from datetime import datetime, timedelta
 import re
 
 from odoo import api, fields, models, modules
-from odoo.exceptions import UserError, ValidationError, AccessError, RedirectWarning
 from odoo.addons.l10n_co_dian import xml_utils
 from odoo.addons.l10n_co_dian.models.l10n_co_dian_document import COMMERCIAL_STATE_SELECTION, EVENT_FILE_SEQUENCE_CODE
-
+from odoo.exceptions import UserError, ValidationError, AccessError, RedirectWarning
 
 DESCRIPTION_CREDIT_CODE = [
     ("1", "Devolución parcial de los bienes y/o no aceptación parcial del servicio"),
@@ -133,14 +132,13 @@ class AccountMove(models.Model):
     @api.depends('l10n_co_dian_document_ids', 'l10n_co_dian_document_ids.state', 'l10n_co_dian_document_ids.commercial_state')
     def _compute_l10n_co_dian_states(self):
         for move in self:
+            if accepted_doc := move._l10n_co_dian_get_last_accepted_document():
+                move.l10n_co_dian_state = accepted_doc.state
+                move.l10n_co_dian_commercial_state = accepted_doc.commercial_state
+                continue
             move.l10n_co_dian_commercial_state = False
-            move.l10n_co_dian_state = False
-            documents = move.l10n_co_dian_document_ids.sorted()
-            for document in documents:
-                if not move.l10n_co_dian_state:
-                    move.l10n_co_dian_state = document.state
-                if not move.l10n_co_dian_commercial_state and document.state == 'invoice_accepted':
-                    move.l10n_co_dian_commercial_state = document.commercial_state
+            doc = move.l10n_co_dian_document_ids.sorted()[:1]
+            move.l10n_co_dian_state = doc.state if doc else False
 
     @api.depends('l10n_co_dian_document_ids', 'l10n_co_dian_document_ids.state')
     def _compute_l10n_co_dian_attachment_id(self):
@@ -239,6 +237,7 @@ class AccountMove(models.Model):
         # EXTENDS 'account'
         if (
             file_data['xml_tree'] is not None
+            and etree.QName(file_data['xml_tree']).localname != 'AttachedDocument'
             and (ubl_profile := file_data['xml_tree'].findtext('{*}ProfileID'))
             and ubl_profile.startswith('DIAN 2.1:')
         ):
@@ -274,7 +273,7 @@ class AccountMove(models.Model):
 
             # unlink duplicate documents and only keep the most recent ones
             # for this process we exclude the original document containing the invoice data
-            documents = self.l10n_co_dian_document_ids.sorted()[:-1]
+            documents = move.l10n_co_dian_document_ids.sorted()[:-1]
             grouped_documents = documents.grouped(key='commercial_state')
             for commercial_state, duplicate_documents in grouped_documents.items():
                 duplicate_documents.sorted()[1:].unlink()
@@ -383,42 +382,7 @@ class AccountMove(models.Model):
         Otherwise, see section 11.7 ('Anexo-Tecnico-[...]-1-9.pdf').
         """
         self.ensure_one()
-        root = etree.fromstring(self.l10n_co_dian_attachment_id.raw)
-        nsmap = {k: v for k, v in root.nsmap.items() if k}  # empty namespace prefix is not supported for XPaths
-        supplier_company_id = root.findtext('./cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme/cbc:CompanyID', namespaces=nsmap)
-        customer_company_id = root.findtext('./cac:AccountingCustomerParty/cac:Party/cac:PartyTaxScheme/cbc:CompanyID', namespaces=nsmap)
-        line_extension_amount = root.findtext('./cac:LegalMonetaryTotal/cbc:LineExtensionAmount', namespaces=nsmap)
-        tax_amount_01 = sum(float(x) for x in root.xpath('./cac:TaxTotal[.//cbc:ID/text()="01"]/cbc:TaxAmount/text()', namespaces=nsmap))
-        payable_amount = root.findtext('./cac:LegalMonetaryTotal/cbc:PayableAmount', namespaces=nsmap)
-        identifier = root.findtext('./cbc:UUID', namespaces=nsmap)
-        qr_code = root.findtext('./ext:UBLExtensions/ext:UBLExtension/ext:ExtensionContent/sts:DianExtensions/sts:QRCode', namespaces=nsmap)
-        vals = {
-            'NumDS': root.findtext('./cbc:ID', namespaces=nsmap),
-            'FecFD': root.findtext('./cbc:IssueDate', namespaces=nsmap),
-            'HorDS': root.findtext('./cbc:IssueTime', namespaces=nsmap),
-        }
-        if self.l10n_co_edi_is_support_document:
-            vals.update({
-                'NumSNO': supplier_company_id,
-                'DocABS': customer_company_id,
-                'ValDS': line_extension_amount,
-                'ValIva': tax_amount_01,
-                'ValTolDS': payable_amount,
-                'CUDS': identifier,
-                'QRCode': qr_code,
-            })
-        else:
-            vals.update({
-                'NitFac': supplier_company_id,
-                'DocAdq': customer_company_id,
-                'ValFac': line_extension_amount,
-                'ValIva': tax_amount_01,
-                'ValOtroIm': sum(float(x) for x in root.xpath('./cac:TaxTotal[.//cbc:ID/text()!="01"]/cbc:TaxAmount/text()', namespaces=nsmap)),
-                'ValTolFac': payable_amount,
-                'CUFE': identifier,
-                'QRCode': qr_code,
-            })
-        return "\n".join(f"{k}: {v}" for k, v in vals.items())
+        return xml_utils._get_qr_code_value(etree.fromstring(self.l10n_co_dian_attachment_id.raw), self.currency_id, self.l10n_co_edi_is_support_document)
 
     def _l10n_co_dian_get_extra_invoice_report_values(self):
         """ Get the values used to render the PDF """

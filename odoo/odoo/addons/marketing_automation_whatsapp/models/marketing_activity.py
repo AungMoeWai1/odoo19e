@@ -132,7 +132,7 @@ class MarketingActivity(models.Model):
             composer = self.env['whatsapp.composer'].with_context(active_model=self.model_name).create(composer_vals)
             messages = composer._create_whatsapp_messages(force_create=True)
             message_by_res_id = {r.mail_message_id.res_id: r for r in messages}
-            for trace in self.trace_ids:
+            for trace in traces:
                 res_id = trace.res_id
                 message = message_by_res_id.get(res_id, self.env['whatsapp.message'])
                 if message:

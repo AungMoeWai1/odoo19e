@@ -887,3 +887,105 @@ class TestPartnerLedgerReport(TestAccountReportsCommon):
             ],
             options,
         )
+
+    def test_partner_ledger_amount_currency(self):
+        """
+        Ensure the partner ledger (and its variants) correctly display the amount currency for the partner line
+        in the case where all journal items of this partner share the same foreign currency per column group.
+        Also ensure that initial balance moves aren't taken into consideration in the calculation of the amount currency.
+        """
+        bernard = self.env['res.partner'].create({'name': 'Bernard Gagnant'})
+
+        eur_currency = self.env.ref('base.EUR')
+        eur_currency.active = True
+
+        self.env['res.currency.rate'].create({
+            'name': '2026-12-01',
+            'rate': 1.0 / 2.0,
+            'currency_id': eur_currency.id,
+            'company_id': self.env.company.id,
+        })
+
+        usd_invoice = self.init_invoice('out_invoice', partner=bernard, invoice_date='2025-12-31', amounts=[1000.0], taxes=[])
+        eur_invoice = self.init_invoice('out_invoice', partner=bernard, invoice_date='2026-01-01', amounts=[1000.0], taxes=[], currency=eur_currency)
+
+        (usd_invoice + eur_invoice).action_post()
+
+        # USD invoice from previous period; shouldn't affect amount_currency (displayed since it's the only foreign currency in this period).
+        options = self._generate_options(self.report, '2026-01-01', '2026-01-31', default_options={'partner_ids': bernard.ids})
+
+        self.assertLinesValues(
+            self.report._get_lines(options),
+            #   Name                                Debit          Credit       Amount Currency       Balance
+            [   0,                                      6,              7,                    8,            9],
+            [
+                ('Bernard Gagnant',                2000.0,            0.0,               1000.0,       3000.0),
+                ('Total',                          2000.0,            0.0,                   '',       3000.0),
+            ],
+            options,
+            currency_map={8: {'currency': eur_currency}},
+        )
+
+        # Test that if multiple currencies are used during the evaluated period, the amount currency shouldn't be displayed
+        gbp_currency = self.env.ref('base.GBP')
+        gbp_currency.active = True
+
+        self.env['res.currency.rate'].create({
+            'name': '2026-12-01',
+            'rate': 1.0 / 2.0,
+            'currency_id': gbp_currency.id,
+            'company_id': self.env.company.id,
+        })
+
+        self.init_invoice('out_invoice', partner=bernard, invoice_date='2026-01-01', amounts=[1000.0], taxes=[], currency=gbp_currency, post=True)
+
+        self.assertLinesValues(
+            self.report._get_lines(options),
+            #   Name                                Debit          Credit       Amount Currency       Balance
+            [   0,                                      6,              7,                    8,            9],
+            [
+                ('Bernard Gagnant',                4000.0,            0.0,                   '',       5000.0),
+                ('Total',                          4000.0,            0.0,                   '',       5000.0),
+            ],
+            options,
+        )
+
+        # Test that if multiple currencies are used, but a horizontal groupby is applied so that only a single foreign
+        # currency is used per column group, then the report should display the amount currency correctly
+
+        horizontal_group = self.env['account.report.horizontal.group'].create({
+            'name': 'Horizontal Group Currencies',
+            'report_ids': [self.report.id],
+            'rule_ids': [
+                Command.create({
+                    'field_name': 'currency_id',
+                    'domain': f"[('id', 'in', {(eur_currency + gbp_currency + self.env.company.currency_id).ids})]",
+                }),
+            ],
+        })
+
+        self.init_invoice('out_invoice', partner=bernard, invoice_date='2026-01-01', amounts=[1000.0], taxes=[], post=True)
+
+        options = self._generate_options(
+            self.report, '2026-01-01', '2026-01-31',
+            default_options={
+                'partner_ids': bernard.ids,
+                'selected_horizontal_group_id': horizontal_group.id,
+            }
+        )
+
+        self.assertLinesValues(
+            self.report._get_lines(options),
+            #                             [            EUR             ] [            GBP             ] [            USD             ]
+            #   Name                      Amount Currency     Balance     Amount Currency     Balance    Amount Currency     Balance
+            [   0,                               8,              9,              17,             18,          26,             27],
+            [
+                ('Bernard Gagnant',         1000.0,         2000.0,          1000.0,         2000.0,          '',         2000.0),
+                ('Total',                       '',         2000.0,              '',         2000.0,          '',         2000.0),
+            ],
+            options,
+            currency_map={
+                8:  {'currency': eur_currency},
+                17: {'currency': gbp_currency},
+            },
+        )

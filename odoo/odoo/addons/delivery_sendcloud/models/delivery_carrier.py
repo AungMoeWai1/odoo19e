@@ -124,7 +124,10 @@ class DeliveryCarrier(models.Model):
             }
         messages = []
         if packages_no > 1:
-            messages.append(_("Note that this price is for %s packages since the order weight is more than the maximum weight allowed by the shipping method.", packages_no))
+            if self.sendcloud_convert_weight(order_weight, grams=True) >= self.sendcloud_shipping_id.max_weight:
+                messages.append(_("Note that this price is for %s packages since the order weight is more than the maximum weight allowed by the shipping method.", packages_no))
+            else:
+                messages.append(_("Note that this price is for %s packages since the order weight is more than the maximum packaging weight.", packages_no))
 
         # Check if the products individually fit in the delivery method
         max_weight_user_uom = self.sendcloud_convert_weight(self.sendcloud_shipping_id.max_weight - 1, grams=True, reverse=True)

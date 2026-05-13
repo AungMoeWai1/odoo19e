@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 18:41+0000\n"
+"POT-Creation-Date: 2026-04-24 17:42+0000\n"
 "PO-Revision-Date: 2026-01-05 18:38+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
@@ -279,6 +279,8 @@ msgstr ""
 "서를 미제출 상태로 재설정할 수 있습니다."
 
 #. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/button_list/button_list.js:0
 #: model:ir.model,name:account_accountant.model_account_account
 #: model:ir.model.fields,field_description:account_accountant.field_account_reconcile_wizard__account_id
 #: model_terms:ir.ui.view,arch_db:account_accountant.view_account_list_bank_rec_widget
@@ -371,6 +373,13 @@ msgid ""
 msgstr ""
 "데이터 추출 후, 업체 청구서를 확인 및 승인하세요. 업체를 검색할 수 없는 경우"
 "에는 승인 전에 먼저 추가하세요."
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.res_config_settings_view_form
+msgid ""
+"All entries created by Invoicing before that date will be ignored in "
+"Accounting."
+msgstr ""
 
 #. module: account_accountant
 #: model:ir.model.fields,field_description:account_accountant.field_account_reconcile_wizard__reco_model_autocomplete_ids
@@ -1331,6 +1340,11 @@ msgid "Invoice Date"
 msgstr "청구 날짜"
 
 #. module: account_accountant
+#: model:res.groups,name:account_accountant.group_account_basic
+msgid "Invoicing & Banks"
+msgstr ""
+
+#. module: account_accountant
 #: model:ir.model.fields,field_description:account_accountant.field_res_company__invoicing_switch_threshold
 #: model:ir.model.fields,field_description:account_accountant.field_res_config_settings__invoicing_switch_threshold
 msgid "Invoicing Switch Threshold"
@@ -1878,6 +1892,8 @@ msgid "Outstanding debits"
 msgstr "미결제 차변액"
 
 #. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/button_list/button_list.js:0
 #: model:ir.model.fields,field_description:account_accountant.field_account_reconcile_wizard__to_partner_id
 #: model_terms:ir.ui.view,arch_db:account_accountant.view_account_move_line_reconcile_search
 #: model_terms:ir.ui.view,arch_db:account_accountant.view_bank_statement_line_quick_create_form_bank_rec_widget
@@ -2283,6 +2299,12 @@ msgid "Subscription 12 months"
 msgstr "구독 12개월"
 
 #. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/button_list/button_list.xml:0
+msgid "Suggestions"
+msgstr "제안"
+
+#. module: account_accountant
 #: model:ir.model,name:account_accountant.model_account_tax
 #: model:ir.model.fields,field_description:account_accountant.field_account_reconcile_wizard__tax_id
 msgid "Tax"
@@ -2336,13 +2358,6 @@ msgstr "이 청구서에서 생성된 이연 항목"
 #: code:addons/account_accountant/models/account_fiscal_year.py:0
 msgid "The ending date must not be prior to the starting date."
 msgstr "종료일은 시작일보다 이전 날짜일 수 없습니다."
-
-#. module: account_accountant
-#: model_terms:ir.ui.view,arch_db:account_accountant.res_config_settings_view_form
-msgid ""
-"The invoices before this date will not be taken into account as accounting "
-"entries"
-msgstr "청구서는 해당 날짜 전에는 회계 처리되지 않습니다."
 
 #. module: account_accountant
 #: model:ir.model.fields,help:account_accountant.field_account_bank_statement_line__deferred_original_move_ids
@@ -2720,6 +2735,11 @@ msgid "You need to select who the exception applies to."
 msgstr "예외 적용 대상을 선택해야 합니다."
 
 #. module: account_accountant
+#: model:res.groups,comment:account_accountant.group_account_basic
+msgid "adds the accounting dashboard, bank management and follow-up reports."
+msgstr ""
+
+#. module: account_accountant
 #: model:ir.model.fields.selection,name:account_accountant.selection__account_change_lock_date__exception_duration__1h
 msgid "for 1 hour"
 msgstr "1시간 동안"
@@ -2776,6 +2796,11 @@ msgstr "보조 통화"
 #: model_terms:ir.ui.view,arch_db:account_accountant.account_journal_dashboard_kanban_view
 msgid "to reconcile"
 msgstr "조정하기"
+
+#~ msgid ""
+#~ "The invoices before this date will not be taken into account as "
+#~ "accounting entries"
+#~ msgstr "청구서는 해당 날짜 전에는 회계 처리되지 않습니다."
 
 #~ msgid "Reconciliation model %s applied"
 #~ msgstr "조정 모델 %s 적용 완료"
@@ -3129,9 +3154,6 @@ msgstr "조정하기"
 
 #~ msgid "State"
 #~ msgstr "시/도"
-
-#~ msgid "Suggestions"
-#~ msgstr "제안"
 
 #~ msgid "Tax Base Amount Currency"
 #~ msgstr "과세 기준 통화 금액"

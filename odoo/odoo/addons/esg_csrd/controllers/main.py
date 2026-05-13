@@ -61,7 +61,6 @@ class EsgCsrdReportController(KnowledgeAuditReportController):
                       JOIN account_move am ON move_payement_rel.invoice_id = am.id
                       JOIN account_payment ap ON move_payement_rel.payment_id = ap.id
                      WHERE ap.id IN %(ids)s
-                       AND am.active = TRUE
                      ORDER BY am.id, ap.date DESC
                 ) AS latest_payments
                 """,
@@ -78,7 +77,6 @@ class EsgCsrdReportController(KnowledgeAuditReportController):
                  WHERE ap.id IN %(ids)s
                    AND am.invoice_date_due IS NOT NULL
                    AND ap.date <= am.invoice_date_due
-                   AND am.active = TRUE
                 """,
                 ids=tuple(reconciled_payments.ids),
             ))
@@ -95,7 +93,8 @@ class EsgCsrdReportController(KnowledgeAuditReportController):
         # Base Year
         base_year_start_date = 0
         base_year_end_date = 0
-        if esg_report.base_year:
+        has_base_year = esg_report._has_valid_base_year()
+        if has_base_year:
             base_year_date = esg_report.company_id.sudo().compute_fiscalyear_dates(date(esg_report.base_year, 1, 1))
             base_year_start_date = base_year_date['date_from']
             base_year_end_date = base_year_date['date_to']
@@ -108,7 +107,7 @@ class EsgCsrdReportController(KnowledgeAuditReportController):
         # Base year
         avg_days_payment_base = 0
         pct_payment_on_terms_base = 0
-        if esg_report.base_year:
+        if has_base_year:
             payment_terms_data_base = self._get_payment_terms_data(base_year_start_date, base_year_end_date)
             avg_days_payment_base = payment_terms_data_base['avg_days_payment']
             pct_payment_on_terms_base = payment_terms_data_base['pct_payment_on_terms']
@@ -120,8 +119,8 @@ class EsgCsrdReportController(KnowledgeAuditReportController):
             '{{ date_end }}': format_date(request.env, esg_report.end_date),
             '{{ avg_days_payment_reporting }}': str(round(avg_days_payment_reporting, 2)),
             '{{ pct_payment_on_terms_reporting }}': str(round(pct_payment_on_terms_reporting, 2)),
-            '{{ avg_days_payment_base }}': str(round(avg_days_payment_base, 2)) if esg_report.base_year else '',
-            '{{ pct_payment_on_terms_base }}': str(round(pct_payment_on_terms_base, 2)) if esg_report.base_year else '',
+            '{{ avg_days_payment_base }}': str(round(avg_days_payment_base, 2)) if has_base_year else '',
+            '{{ pct_payment_on_terms_base }}': str(round(pct_payment_on_terms_base, 2)) if has_base_year else '',
         }
 
         if esg_report.report_type != 'csrd':

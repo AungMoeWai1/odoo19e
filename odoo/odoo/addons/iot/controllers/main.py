@@ -60,11 +60,12 @@ class IoTController(http.Controller):
             )
 
         # '_L.py' files for Linux and '_W.py' for Windows
-        incompatible_filename = "_L.py" if box.version[0] == 'W' else "_W.py"
+        is_windows = box.version[0] == "W"
+        incompatible_filename = "_L.py" if is_windows else "_W.py"
         module_ids = request.env['ir.module.module'].sudo().search([('state', '=', 'installed')])
         modules = module_ids.mapped('name') + ["iot_drivers", "pos_blackbox_be"]  # add pos_blackbox_be to detect blackbox devices without the module installed
 
-        if re.search(r"\d{4}\.\d{2}\.\d{2}", box.version):
+        if not is_windows and re.search(r"\d{4}\.\d{2}\.\d{2}", box.version):
             # New IoT Boxes get drivers from git repository, not from installed modules
             # for partners/clients that want to download custom drivers from the db, we only download
             # custom drivers, to avoid overwriting the git ones

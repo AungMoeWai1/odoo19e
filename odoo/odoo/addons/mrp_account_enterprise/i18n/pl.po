@@ -18,12 +18,13 @@
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Marta (wacm)" <wacm@odoo.com>, 2026.
+# Mateusz Lorczak <mateusz@lorczak.pl>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-30 18:46+0000\n"
-"PO-Revision-Date: 2026-02-16 10:59+0000\n"
+"PO-Revision-Date: 2026-02-28 09:36+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/"
 "mrp_account_enterprise/pl/>\n"
@@ -150,7 +151,7 @@ msgstr "Id"
 #: model:ir.model.fields,field_description:mrp_account_enterprise.field_mrp_report__production_id
 #: model_terms:ir.ui.view,arch_db:mrp_account_enterprise.mrp_report_search_view
 msgid "Manufacturing Order"
-msgstr "Zamówienie produkcji"
+msgstr "Zlecenie produkcyjne"
 
 #. module: mrp_account_enterprise
 #: model:ir.model,name:mrp_account_enterprise.model_mrp_report
@@ -267,12 +268,12 @@ msgstr "Całkowity czas trwania (w minutach) operacji dla zamówienia produkcji"
 #. module: mrp_account_enterprise
 #: model:ir.model.fields,help:mrp_account_enterprise.field_mrp_report__qty_demanded
 msgid "Total quantity demanded in product's UoM"
-msgstr "Całkowita ilość popytu w jednostkach miary produktu"
+msgstr "Całkowita ilość zapotrzebowania w jednostkach miary produktu"
 
 #. module: mrp_account_enterprise
 #: model:ir.model.fields,help:mrp_account_enterprise.field_mrp_report__qty_produced
 msgid "Total quantity produced in product's UoM"
-msgstr "Całkowita ilość wyprodukowana w JM produktu."
+msgstr "Całkowita ilość wyprodukowana w JM produktu"
 
 #. module: mrp_account_enterprise
 #: model:ir.model.fields,field_description:mrp_account_enterprise.field_mrp_report__yield_rate

@@ -74,11 +74,13 @@ export class BankRecKanbanRenderer extends KanbanRenderer {
      * @param {Array<Object>} records - Bank statement line records
      * @returns {Promise<void>} Resolves when all computations are done
      */
-    async prepareInitialState(records){
+    async prepareInitialState(records) {
         await Promise.all([
             this.getJournalTotalAmount(),
             this.bankReconciliation.computeReconcileLineCountPerPartnerId(records),
             this.bankReconciliation.computeAvailableReconcileModels(records),
+            this.bankReconciliation.computeAvailableReconcileLines(records),
+            this.bankReconciliation.computeAvailableAnalyticAccounts(records),
         ]);
         const statementLineId =
             parseInt(browser.sessionStorage.getItem("bankReconciliationStatementLineId")) ||
@@ -131,7 +133,7 @@ export class BankRecKanbanRenderer extends KanbanRenderer {
             [
                 this.env.model.config.context.default_journal_id ||
                     this.env.model.config.context.active_id,
-            ],
+            ]
         );
         this.action.doAction(actionData);
     }

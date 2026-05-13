@@ -947,3 +947,39 @@ class TestSingleTouchPayroll(L10nPayrollAccountCommon):
 
         seq_2 = stp_sequence.next_by_id()
         self.assertNotEqual(seq_2, seq_1, "The sequence should be unique")
+
+    @mock_skip_stp_api_calls()
+    def test_missed_reporting(self):
+        # Payrun for January
+        with freeze_time("2024-01-31"):
+            self.env.cr._now = datetime.now()
+            batch = self._prepare_payslip_run(employee_ids=self.employee_1 + self.employee_2, start_date="2024-01-01", end_date="2024-01-31")
+            stp = self.env["l10n_au.stp"].search([("payslip_batch_id", "=", batch.id)])
+            self.assertEqual(stp.payevent_type, "submit", "The STP record should be an Submit type")
+            self._submit_stp(stp)
+
+        # Payrun for March without submitting the STP for February (Payment date set in the next pay period)
+        with freeze_time("2024-03-31"):
+            self.env.cr._now = datetime.now()
+            batch = self._prepare_payslip_run(employee_ids=self.employee_1 + self.employee_2, start_date="2024-03-01", end_date="2024-03-31")
+            stp = self.env["l10n_au.stp"].search([("payslip_batch_id", "=", batch.id)])
+            self.assertEqual(stp.payevent_type, "submit", "The STP record should be an Submit type")
+            stp.submit_date = date(2024, 4, 1)
+            self._submit_stp(stp)
+
+        # Payslip for February, created at a later time. This should create an update STP
+        with freeze_time("2024-04-01"):
+            self.env.cr._now = datetime.now()
+            batch = self._prepare_payslip_run(employee_ids=self.employee_1 + self.employee_2, start_date="2024-02-01", end_date="2024-02-29")
+            self.assertTrue(all(slip._is_past_period() for slip in batch.slip_ids))
+            stp = batch.slip_ids._get_payslip_stp()[batch.slip_ids[0].id]
+            self.assertEqual(stp.payevent_type, "update", "The STP record should be an update type")
+            self._submit_stp(stp)
+
+        # Overlaping payment date on STP should not create an update action for April
+        with freeze_time("2024-04-30"):
+            self.env.cr._now = datetime.now()
+            batch = self._prepare_payslip_run(employee_ids=self.employee_1 + self.employee_2, start_date="2024-04-01", end_date="2024-04-30")
+            stp = batch.slip_ids._get_payslip_stp()[batch.slip_ids[0].id]
+            self.assertEqual(stp.payevent_type, "submit", "The STP record should be an Submit type")
+            self._submit_stp(stp)

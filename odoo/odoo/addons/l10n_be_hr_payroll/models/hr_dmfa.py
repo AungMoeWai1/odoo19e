@@ -609,7 +609,11 @@ class DMFAOccupation(DMFANode):
             days_per_week = 5.0
             mean_working_hours = 38.0
         else:
-            days_per_week = 5 * contract.resource_calendar_id.work_time_rate / 100
+            if contract.resource_calendar_id.work_time_rate == 100:
+                days_per_week = contract.resource_calendar_id._get_days_per_week()
+            else:
+                reference_days_per_week = contract.company_id.resource_calendar_id._get_days_per_week() if contract.company_id.resource_calendar_id else 5
+                days_per_week = reference_days_per_week * contract.resource_calendar_id.work_time_rate / 100
             mean_working_hours = contract.resource_calendar_id.hours_per_week
 
         self.days_per_week = format_amount(days_per_week, width=3)
@@ -637,6 +641,8 @@ class DMFAOccupation(DMFANode):
             if wd.work_entry_type_id.dmfa_code != '-1' and wd.work_entry_type_id.code not in ['OUT', 'LEAVE300', 'LEAVE510', 'MEDIC01']:
                 services_by_dmfa_code[wd.work_entry_type_id.dmfa_code] |= wd
         skip_remun = all(dmfa_code in ['30', '50', '52'] for dmfa_code in services_by_dmfa_code.keys())
+        # Do not skip remun if there is some remunerations not linked to worked days (PFA, etc)
+        skip_remun = skip_remun and not any(p.basic_wage and p.struct_id.code in ['CP200TERM', 'CP200HOLN', 'CP200HOLN1', 'CP200THIRTEEN'] for p in self.payslips)
         return (DMFAService.init_multi([(wds,) for wds in services_by_dmfa_code.values()]), skip_remun)
 
     def _prepare_remunerations(self):
@@ -933,6 +939,10 @@ class L10n_BeDmfa(models.Model):
             onss_expeditor_number = dmfa.company_id.onss_expeditor_number
             if not onss_expeditor_number:
                 raise UserError(_('There is no defined expeditor number for the company.'))
+            if onss_expeditor_number.startswith('self_service_chaman_'):
+                expeditor = onss_expeditor_number.split('_')[3]
+            else:
+                expeditor = onss_expeditor_number
             # Declaration File
             if not dmfa._origin.dmfa_xml_filename:
                 num_suite = 0
@@ -942,7 +952,7 @@ class L10n_BeDmfa(models.Model):
             num_suite = str(num_suite).zfill(5)
             file_type = dmfa.file_type
 
-            filename_common = '.DMFA.%s.%s.%s.%s.1' % (onss_expeditor_number, now.strftime('%Y%m%d'), num_suite, file_type)
+            filename_common = '.DMFA.%s.%s.%s.%s.1' % (expeditor, now.strftime('%Y%m%d'), num_suite, file_type)
 
             filename = 'FI' + filename_common + '.1'
             dmfa.dmfa_xml_filename = filename
@@ -961,6 +971,11 @@ class L10n_BeDmfa(models.Model):
             onss_expeditor_number = dmfa.company_id.onss_expeditor_number
             if not onss_expeditor_number:
                 raise UserError(_('There is no defined expeditor number for the company.'))
+            if onss_expeditor_number.startswith('self_service_chaman_'):
+                expeditor = onss_expeditor_number.split('_')[3]
+            else:
+                expeditor = onss_expeditor_number
+
             if not dmfa._origin.dmfa_pdf_filename:
                 num_suite = 0
             else:
@@ -969,7 +984,7 @@ class L10n_BeDmfa(models.Model):
             num_suite = str(num_suite).zfill(5)
             file_type = dmfa.file_type
 
-            filename = 'FI.DMFA.%s.%s.%s.%s.1.1.pdf' % (onss_expeditor_number, now.strftime('%Y%m%d'), num_suite, file_type)
+            filename = 'FI.DMFA.%s.%s.%s.%s.1.1.pdf' % (expeditor, now.strftime('%Y%m%d'), num_suite, file_type)
             dmfa.dmfa_pdf_filename = filename
 
     @api.depends('year', 'quarter')

@@ -3,6 +3,7 @@
 from collections import defaultdict
 
 from odoo import api, Command, fields, models, _
+from odoo.fields import Domain
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import groupby, format_list
 
@@ -16,7 +17,7 @@ class HrPayslip(models.Model):
         ("ready", "Ready"),
         ("sent", "Submitted"),
         ("error", "Error"),
-    ], string="STP Status", compute="_compute_stp_status")
+    ], string="STP Status", compute="_compute_stp_status", search="_search_stp_status")
     l10n_au_stp_count = fields.Integer(compute='_compute_stp_count')
     l10n_au_finalised = fields.Boolean("Finalised", default=False, readonly=True, copy=False)
     net_wage = fields.Monetary(tracking=True)
@@ -135,6 +136,41 @@ class HrPayslip(models.Model):
                 totals[income_stream_type]["input_lines"][input_line.res_id]["amount"] += input_line.ytd_amount
             payslip.payslip_ytd_totals = totals
 
+    def _search_stp_status(self, operator, value):
+        """
+            draft -> payslip.state not in ('validated', 'paid')
+            ready -> payslip.state in ('validated', 'paid') and no related stp record in 'sent' state
+            sent -> payslip.state in ('validated', 'paid') and at least one related stp record in 'sent' state
+        """
+        if operator not in ('=', '!='):
+            raise UserError(_("Unsupported operator %s for searching on STP status", operator))
+
+        if value == 'draft':
+            op = 'not in' if operator == '=' else 'in'
+            domain = Domain('state', op, ('validated', 'paid'))
+        else:
+            op = 'in' if value == 'sent' else 'not in'
+            # Reverse the operator for !=
+            if operator == '!=':
+                op = 'not in' if op == 'in' else 'in'
+
+            sent_stps = self.env['l10n_au.stp'].search(
+                domain=Domain([
+                    ('company_id', 'in', self.env.companies.ids),
+                    ('state', '=', 'sent')
+                ]),
+                order='',
+            )
+            domain = Domain.AND([
+                Domain('state', 'in', ('validated', 'paid')),
+                Domain('id', op, sent_stps.payslip_ids.ids),
+            ])
+            # For '!=' operator, we also need to include payslips that are draft
+            if operator == '!=':
+                domain = Domain.OR([domain, Domain('state', 'not in', ('validated', 'paid'))])
+
+        return domain
+
     def action_payslip_done(self):
         """
             Generate the superstream record for all australian payslips with
@@ -252,46 +288,78 @@ class HrPayslip(models.Model):
         return self._get_superstreams()._get_records_action()
 
     def _is_past_period(self, get_employees=False):
-        """ Check if there is an existing STP record for the employee in the future.
-            returns: Bool if get_employees is False else list of employees.
+        """Check if there is an existing STP payrun for the employee in the future.
+        :return: Bool if get_employees is False else hr.employee recordset.
         """
-        # if the payslip period is before an already submitted submit event.
-        stp = self.env["l10n_au.stp"].search(
-            [
-                # Necessary to only filter on stp created before the payslip, else it will return True in the future.
-                ("create_date", "<", self[-1].create_date),
-                ("state", "=", "sent"),
-                ("payevent_type", "=", "submit"),
-                ("submit_date", ">=", self[-1].date_from),
-                ("payslip_ids.employee_id", "in", self.employee_id.ids),
-                ("company_id", "=", self.company_id.id),
+        if not self:
+            return self.env["hr.employee"] if get_employees else False
+
+        self_emp_dates = {
+            employee: min(slips.mapped("date_from"))
+            for employee, slips in self.grouped("employee_id").items()
+        }
+
+        submitted_data = self.env["hr.payslip"]._read_group(
+            domain=[
+                ("create_date", "<", max(self.mapped("create_date"))),
+                ("l10n_au_stp_status", "=", "sent"),
+                ("state", "in", ("validated", "paid")),
+                ("employee_id", "in", self.employee_id.ids),
             ],
-            order="create_date desc",
-            limit=1,
+            groupby=["employee_id"],
+            aggregates=["date_to:max"],
         )
-        return stp.payslip_ids.employee_id if get_employees else bool(stp)
+
+        employee_ids = set()
+        for employee, max_date_to in submitted_data:
+            current_min_date = self_emp_dates.get(employee)
+            if current_min_date and max_date_to > current_min_date:
+                if not get_employees:
+                    return True
+                employee_ids.add(employee.id)
+
+        if not get_employees:
+            return False
+
+        return self.env["hr.employee"].browse(employee_ids)
 
     def _get_payslip_stp(self):
-        stp_ids = self.env['l10n_au.stp'].search([
+        submit_domain = [
+            ('payevent_type', '=', 'submit'),
             ('payslip_ids', 'in', self.ids),
-            ('state', '!=', 'cancel'),
-        ])
+        ]
+        update_domain = [
+            ('payevent_type', '=', 'update'),
+            ('l10n_au_stp_emp.employee_id', 'in', self.employee_id.ids),
+            ('create_date', ">=", min(self.mapped("create_date"))),
+            ('is_finalisation', '=', False),
+            ('is_unfinalisation', '=', False),
+            ('is_zeroing', '=', False),
+        ]
+        stp_ids = self.env['l10n_au.stp'].search(
+            Domain.AND([
+                Domain.OR([
+                    submit_domain,
+                    update_domain,
+                ]),
+                [('state', '!=', 'cancel')]
+            ])
+        )
+        submit_stps = stp_ids.filtered(lambda r: r.payevent_type == 'submit')
+        update_stps = stp_ids - submit_stps
+
         slip_stps = defaultdict(lambda x: self.env['l10n_au.stp'])
         for slip in self:
             # For submit events
-            if submit_stp := stp_ids.filtered_domain([
-                ("payevent_type", "=", "submit"),
+            if submit_stp := submit_stps.filtered_domain([
                 ('payslip_ids', '=', slip.id),
             ]):
                 slip_stps[slip.id] = submit_stp
             else:
                 # For update events
-                slip_stps[slip.id] = stp_ids.filtered_domain([
-                        ('payevent_type', '=', 'update'),
-                        ('l10n_au_stp_emp.employee_id', '=', slip.employee_id.id),
-                        ('is_finalisation', '=', False),
-                        ('is_unfinalisation', '=', False),
-                        ('is_zeroing', '=', False),
+                slip_stps[slip.id] = update_stps.filtered_domain([
+                    ('create_date', ">=", slip.create_date),
+                    ('l10n_au_stp_emp.employee_id', '=', slip.employee_id.id),
                 ])
         return slip_stps
 

@@ -175,7 +175,7 @@
     <menuitem
         id="menu_point_kitchen_display_root"
         name="Kitchen Display"
-        groups="point_of_sale.group_pos_manager"
+        groups="point_of_sale.group_pos_user"
         web_icon="pos_enterprise,static/description/icon.png"
         sequence="51"
         active="False"

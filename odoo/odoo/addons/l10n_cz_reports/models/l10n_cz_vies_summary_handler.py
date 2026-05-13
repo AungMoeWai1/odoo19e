@@ -43,6 +43,8 @@ class CzechVIESSummaryReportCustomHandler(models.AbstractModel):
             line = {}
             for col in report_line['columns']:
                 line[col['expression_label']] = col['no_format']
+            if line.get('vat_number') and line['vat_number'][0].isalpha():
+                line['vat_number'] = self.env['res.partner']._split_vat(line['vat_number'])[1]
             lines.append(line)
 
         data = {

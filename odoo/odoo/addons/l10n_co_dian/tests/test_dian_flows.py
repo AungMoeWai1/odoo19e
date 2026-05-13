@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 from unittest.mock import patch
 from markupsafe import Markup
+import contextlib
 
 from odoo import fields
 from odoo.exceptions import UserError
@@ -225,7 +226,7 @@ class TestDianFlows(TestCoDianCommon):
         }])
 
         # 2nd attempt (success without errors or warnings)
-        with patch(f'{self.document_path}._parse_errors', return_value=[]):
+        with self.patched_document('_parse_errors', []):
             self._mock_send_and_print(move=self.invoice, response_file='SendBillSync_warnings.xml')
 
         self.assertEqual(len(self.invoice.l10n_co_dian_document_ids), 1)  # no need to keep the rejected documents
@@ -234,6 +235,26 @@ class TestDianFlows(TestCoDianCommon):
             'zip_key': False,
             'state': 'invoice_accepted',
             'message': "<p>Procesado Correctamente.</p>",
+        }])
+
+    def test_send_bill_sync_get_status_error(self):
+        """
+        The attempt SendBillSync is accepted, but getStatus got a non 200 status code
+        => status of the invoice should still be invoice_accepted
+        """
+        with (
+            self.patched_document('_get_status', self._mocked_response('GetStatus_invoice.xml', 503)),
+            self._mock_build_and_send_request('SendBillSync_warnings.xml'),
+            self._disable_get_acquirer_call(),
+            self.assertRaisesRegex(UserError, "Error\\(s\\) when generating the Attached Document"),
+        ):
+            self.env['account.move.send.wizard'].with_context(
+                active_model=self.invoice._name,
+                active_ids=self.invoice.ids
+            ).create({}).action_send_and_print()
+
+        self.assertRecordValues(self.invoice.l10n_co_dian_document_ids, [{
+            'state': 'invoice_accepted',
         }])
 
     def test_send_bill_sync_unknown_error(self):
@@ -287,10 +308,29 @@ class TestDianFlows(TestCoDianCommon):
         with patch(f'{self.utils_path}._build_and_send_request', return_value=self._mocked_response('GetAcquirer_partner.xml', 200)):
             partner.button_l10n_co_dian_refresh_data()
 
-        self.assertRecordValues(partner, [{
+        self.assertTrue(partner.child_ids)
+        self.assertRecordValues(partner.child_ids[0], [{
             'name': 'Real Company Name',
             'email': 'company@mail.com',
         }])
+
+    def test_get_aquirer_constraints(self):
+        """Refresh is rejected on a child contact and on a partner that already has an invoicing child."""
+        partner = self._create_partner(
+            country_id=self.env.ref('base.co').id,
+            vat='213123432-1',
+            email='test@mail.com',
+        )
+
+        self.env['res.partner'].create({
+            'name': 'Child Contact',
+            'parent_id': partner.id,
+            'type': 'invoice',
+            'email': 'existing@mail.com',
+        })
+        with patch(f'{self.utils_path}._build_and_send_request', return_value=self._mocked_response('GetAcquirer_partner.xml', 200)):
+            with self.assertRaisesRegex(UserError, "This contact has already been updated with DIAN information"):
+                partner.button_l10n_co_dian_refresh_data()
 
     def test_invoice_date_constraints_dian(self):
         """Test that invoices date older than 6 days or more than 6 days ahead trigger the constraint."""
@@ -302,6 +342,43 @@ class TestDianFlows(TestCoDianCommon):
         invalid_invoice = self._create_move(invoice_date=now - timedelta(days=7))
         with self.assertRaisesRegex(UserError, "The issue date can not be older than 6 days or more than 6 days in the future."):
             self._mock_send_and_print(move=invalid_invoice, response_file='SendBillSync_warnings.xml')
+
+    def test_dian_state_machine(self):
+        """
+        Test how move.l10n_co_dian_state and move.l10n_co_dian_commercial_state change when
+        communicating with DIAN.
+        Communication with DIAN is always represented by a l10n_co_dian.document, which in turn
+        could alter the states of the account.move.
+        The tested sequence is as follows:
+        1. sending failure because of a 500 response
+        2. invoice rejected by dian
+        3. invoice accepted by dian
+        4. status updated with a response GetStatusEvent_no_events
+        """
+        # we are not testing for the UseError in this scope, so we ignore it.
+        with contextlib.suppress(UserError):
+            self._mock_send_and_print(self.invoice, 'unknown_error.xml', response_code=500)
+        self.assertEqual(self.invoice.l10n_co_dian_state, 'invoice_sending_failed')
+        self.assertFalse(self.invoice.l10n_co_dian_commercial_state)
+
+        # we are not testing for the UseError in this scope, so we ignore it.
+        with contextlib.suppress(UserError):
+            self._mock_send_and_print(self.invoice, 'SendBillSync_errors.xml')
+        self.assertEqual(self.invoice.l10n_co_dian_state, 'invoice_rejected')
+        self.assertFalse(self.invoice.l10n_co_dian_commercial_state)
+
+        self._mock_send_and_print(self.invoice, 'SendBillSync_warnings.xml')
+        self.assertEqual(self.invoice.l10n_co_dian_state, 'invoice_accepted')
+        self.assertEqual(self.invoice.l10n_co_dian_commercial_state, 'pending')
+
+        track_id = self.invoice.l10n_co_edi_cufe_cude_ref
+        with self._mock_build_and_send_request('GetStatusEvent_no_events.xml'):
+            self.env['l10n_co_dian.document']._send_get_status_event(self.invoice, track_id)
+
+        docs = self.invoice.l10n_co_dian_document_ids.sorted()
+        self.assertEqual(docs[0].state, 'invoice_rejected')
+        self.assertEqual(docs[1].state, 'invoice_accepted')
+        self.assertEqual(self.invoice.l10n_co_dian_state, 'invoice_accepted')
 
 
 @freeze_time('2024-01-30')

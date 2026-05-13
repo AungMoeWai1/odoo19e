@@ -45,6 +45,7 @@ export class MrpDisplay extends Component {
     };
 
     setup() {
+        this.env.config.disableSearchBarAutofocus = true;
         this.homeMenu = useService("home_menu");
         this.viewService = useService("view");
         this.actionService = useService("action");

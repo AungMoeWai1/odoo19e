@@ -17,7 +17,7 @@
         <field name="code">LPPSALARY</field>
         <field name="sequence">340</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = version.l10n_ch_lpp_insurance_id and version.l10n_ch_lpp_in_percentage</field>
+        <field name="condition_python">result = version.l10n_ch_lpp_insurance_id and version.l10n_ch_lpp_in_percentage and not version.l10n_ch_lpp_not_insured</field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
 minimum_salary = version.l10n_ch_lpp_insurance_id._get_minimum_lpp_salary(payslip.date_from)

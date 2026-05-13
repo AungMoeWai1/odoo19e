@@ -309,7 +309,7 @@ class QualityAlert(models.Model):
             team_id = self.env['quality.alert.team'].browse(self.env.context.get('active_id')).exists().id
         domain = Domain('team_ids', '=', False)
         if team_id:
-            domain &= Domain('team_ids', 'in', team_id)
+            domain |= Domain('team_ids', 'in', team_id)
         return self.env['quality.alert.stage'].search(domain, limit=1).id
 
     def _get_default_team_id(self):

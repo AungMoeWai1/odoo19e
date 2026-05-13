@@ -98,7 +98,7 @@
                  <t t-call-assets="account_reports.assets_pdf_export" t-js="False" t-autoprefix="true"/>
              </head>
             <body t-att-dir="env['res.lang']._get_data(code=lang or env.user.lang).direction or 'ltr'">
-                <div t-att-class="options['css_custom_class']">
+                <div t-att-class="'o_content ' + options['css_custom_class']">
                     <header>
                         <div class="row align-items-center">
                             <div class="col-4 o_header_font">

@@ -825,16 +825,17 @@ class TestPoSBasicConfig(TestPoSCommon):
         order_data = self.create_ui_order_data([(self.product3, 1)])
         amount_paid = order_data['amount_paid']
         with (
-            self.assertLogs('odoo.addons.point_of_sale.models.pos_order', level='DEBUG') as cm,
+            self.assertLogs('odoo.addons.point_of_sale.models.pos_order') as cm,
             unittest.mock.patch('odoo.addons.point_of_sale.models.pos_order.randrange', return_value=1996)
         ):
+            self.env['ir.config_parameter'].sudo().set_param('point_of_sale.log_order_data', 'True')
             res = self.env['pos.order'].sync_from_ui([order_data])
             # Basic check for logs on order synchronization
             order_log_str = self.env['pos.order']._get_order_log_representation(order_data)
             odoo_order_id = res['pos.order'][0]['id']
             self.assertEqual(len(cm.output), 4)
             self.assertEqual(cm.output[0], f"INFO:odoo.addons.point_of_sale.models.pos_order:PoS synchronisation #1996 started for PoS orders references: [{order_log_str}]")
-            self.assertTrue(cm.output[1].startswith(f'DEBUG:odoo.addons.point_of_sale.models.pos_order:PoS synchronisation #1996 processing order {order_log_str} order full data: '))
+            self.assertTrue(cm.output[1].startswith(f'INFO:odoo.addons.point_of_sale.models.pos_order:PoS synchronisation #1996 processing order {order_log_str} order full data:'))
             self.assertEqual(cm.output[2], f'INFO:odoo.addons.point_of_sale.models.pos_order:PoS synchronisation #1996 order {order_log_str} created pos.order #{odoo_order_id}')
             self.assertEqual(cm.output[3], 'INFO:odoo.addons.point_of_sale.models.pos_order:PoS synchronisation #1996 finished')
             
@@ -928,6 +929,19 @@ class TestPoSBasicConfig(TestPoSCommon):
 
         # calling load_data should not raise an error
         self.pos_session.load_data([])
+
+    def test_load_data_picks_the_company_website_domain(self):
+        if self.env['ir.module.module']._get('website').state != 'installed':
+            self.skipTest("website module is required for this test")
+
+        company_website = self.config.company_id.website_id
+
+        if company_website:
+            company_website.write({'domain': 'https://custom.test.domain.com'})
+            self.open_new_session()
+            response = self.pos_session.load_data([])
+
+            self.assertEqual(response['pos.config'][0]['_base_url'], company_website.domain)
 
     def test_invoice_past_refund(self):
         """ Test invoicing a past refund

@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-06 18:42+0000\n"
+"POT-Creation-Date: 2026-05-01 17:41+0000\n"
 "PO-Revision-Date: 2025-10-08 18:44+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -23,13 +23,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-#. module: hr_expense_stripe
-#. odoo-javascript
-#: code:addons/hr_expense_stripe/static/src/components/private_card_view_action.js:0
-#, fuzzy
-msgid "(Fetching...)"
-msgstr "(Yuklanmoqda...)"
 
 #. module: hr_expense_stripe
 #: model_terms:ir.ui.view,arch_db:hr_expense_stripe.res_config_settings_view_form
@@ -814,6 +807,11 @@ msgid "Advertising Services"
 msgstr "Reklama xizmatlari."
 
 #. module: hr_expense_stripe
+#: model:product.mcc.stripe.tag,name:hr_expense_stripe.agricultural_cooperative
+msgid "Agricultural Cooperative"
+msgstr ""
+
+#. module: hr_expense_stripe
 #: model_terms:ir.ui.view,arch_db:hr_expense_stripe.view_product_mcc_stripe_tag_search
 #, fuzzy
 msgid "Agricultural services"
@@ -821,6 +819,7 @@ msgstr "Qishloq xo‘jaligi xizmatlari."
 
 #. module: hr_expense_stripe
 #: model:product.mcc.stripe.tag,name:hr_expense_stripe.airlines_air_carriers
+#: model:product.mcc.stripe.tag,name:hr_expense_stripe.airlines_air_carriers_specific
 #, fuzzy
 msgid "Airlines Air Carriers"
 msgstr "Aviakompaniyalar va aviatashuvchilar."
@@ -956,6 +955,11 @@ msgid "Auto Paint Shops"
 msgstr "Avtomobil bo‘yash do‘konlari."
 
 #. module: hr_expense_stripe
+#: model:product.mcc.stripe.tag,name:hr_expense_stripe.car_rental_agencies_specific
+msgid "Auto Rental Agency"
+msgstr ""
+
+#. module: hr_expense_stripe
 #: model:product.mcc.stripe.tag,name:hr_expense_stripe.auto_service_shops
 #, fuzzy
 msgid "Auto Service Shops"
@@ -966,6 +970,11 @@ msgstr "Avtoservis ustaxonalari."
 #, fuzzy
 msgid "Auto and Home Supply Stores"
 msgstr "Avtomobil va uy-ro‘zg‘or mollari do‘konlari."
+
+#. module: hr_expense_stripe
+#: model:product.mcc.stripe.tag,name:hr_expense_stripe.automated_cash_disburse
+msgid "Automated Cash Disburse"
+msgstr ""
 
 #. module: hr_expense_stripe
 #: model:product.mcc.stripe.tag,name:hr_expense_stripe.automated_fuel_dispensers
@@ -1182,6 +1191,16 @@ msgstr "Bekor qilish sababi"
 #, fuzzy
 msgid "Candy Nut and Confectionery Stores"
 msgstr "Konfet, yong‘oq va shirinliklar do‘konlari"
+
+#. module: hr_expense_stripe
+#: model:product.mcc.stripe.tag,name:hr_expense_stripe.car_rental_agencies
+msgid "Car Rental Agencies"
+msgstr ""
+
+#. module: hr_expense_stripe
+#: model:product.mcc.stripe.tag,name:hr_expense_stripe.car_washes
+msgid "Car Washes"
+msgstr ""
 
 #. module: hr_expense_stripe
 #: model:product.mcc.stripe.tag,name:hr_expense_stripe.car_and_truck_dealers_new_used
@@ -1656,17 +1675,16 @@ msgid "Country"
 msgstr "Mamlakat"
 
 #. module: hr_expense_stripe
+#. odoo-python
+#: code:addons/hr_expense_stripe/models/hr_expense_stripe_card.py:0
+msgid "Country %(country_name)s not allowed"
+msgstr ""
+
+#. module: hr_expense_stripe
 #: model:product.mcc.stripe.tag,name:hr_expense_stripe.country_clubs
 #, fuzzy
 msgid "Country Clubs"
 msgstr "Mamlakat klublari"
-
-#. module: hr_expense_stripe
-#. odoo-python
-#: code:addons/hr_expense_stripe/models/hr_expense_stripe_card.py:0
-#, fuzzy
-msgid "Country not allowed"
-msgstr "Mamlakatga ruxsat berilmagan"
 
 #. module: hr_expense_stripe
 #: model:product.mcc.stripe.tag,name:hr_expense_stripe.courier_services
@@ -1759,6 +1777,11 @@ msgstr "Sut mahsulotlari do‘konlari"
 #, fuzzy
 msgid "Dance Hall Studios Schools"
 msgstr "Raqs zallari va maktablari"
+
+#. module: hr_expense_stripe
+#: model:product.mcc.stripe.tag,name:hr_expense_stripe.dating_escort_services
+msgid "Dating/Escort Services"
+msgstr ""
 
 #. module: hr_expense_stripe
 #: model:ir.model.fields.selection,name:hr_expense_stripe.selection__hr_expense_stripe_card__spending_policy_interval__daily
@@ -2092,10 +2115,22 @@ msgstr "Vaqtinchalik bandlik agentliklari"
 
 #. module: hr_expense_stripe
 #. odoo-javascript
-#: code:addons/hr_expense_stripe/static/src/components/private_card_view_action.xml:0
-#, fuzzy
-msgid "Enter the code we sent to the cardholder's phone number ending in"
-msgstr "Karta egasining telefon raqamiga yuborilgan kodni kiriting"
+#: code:addons/hr_expense_stripe/static/src/components/private_card_view_action.js:0
+msgid "Enter the code we sent to the cardholder's email %(email)s."
+msgstr ""
+
+#. module: hr_expense_stripe
+#. odoo-javascript
+#: code:addons/hr_expense_stripe/static/src/components/private_card_view_action.js:0
+msgid ""
+"Enter the code we sent to the cardholder's phone number ending in %(phone)s."
+msgstr ""
+
+#. module: hr_expense_stripe
+#. odoo-javascript
+#: code:addons/hr_expense_stripe/static/src/components/private_card_view_action.js:0
+msgid "Enter the code we sent to the cardholder's phone or email: Fetching ..."
+msgstr ""
 
 #. module: hr_expense_stripe
 #: model:product.mcc.stripe.tag,name:hr_expense_stripe.equipment_rental
@@ -2529,6 +2564,7 @@ msgstr "Kasalxonalar"
 
 #. module: hr_expense_stripe
 #: model:product.mcc.stripe.tag,name:hr_expense_stripe.hotels_motels_and_resorts
+#: model:product.mcc.stripe.tag,name:hr_expense_stripe.hotels_motels_and_resorts_specific
 #, fuzzy
 msgid "Hotels Motels and Resorts"
 msgstr "Mehmonxonalar, motellar va dam olish maskanlari"
@@ -2658,6 +2694,11 @@ msgstr "Sanoat mollari"
 #, fuzzy
 msgid "Information Retrieval Services"
 msgstr "Ma'lumot izlash xizmatlari"
+
+#. module: hr_expense_stripe
+#: model:product.mcc.stripe.tag,name:hr_expense_stripe.insurance_default
+msgid "Insurance - Default"
+msgstr ""
 
 #. module: hr_expense_stripe
 #: model:product.mcc.stripe.tag,name:hr_expense_stripe.insurance_underwriting_premiums
@@ -2873,15 +2914,19 @@ msgstr "MCC"
 #. module: hr_expense_stripe
 #. odoo-python
 #: code:addons/hr_expense_stripe/models/hr_expense_stripe_card.py:0
-#, fuzzy
-msgid "MCC not allowed"
-msgstr "Ruxsat etilmagan MCC"
+msgid "MCC %(mcc_code)s %(mcc_name)s not allowed"
+msgstr ""
 
 #. module: hr_expense_stripe
 #: model_terms:ir.ui.view,arch_db:hr_expense_stripe.view_product_mcc_stripe_tag_search
 #, fuzzy
 msgid "MCCs"
 msgstr "MCC kodlari"
+
+#. module: hr_expense_stripe
+#: model:product.mcc.stripe.tag,name:hr_expense_stripe.manual_cash_disburse
+msgid "Manual Cash Disburse"
+msgstr ""
 
 #. module: hr_expense_stripe
 #: model:product.mcc.stripe.tag,name:hr_expense_stripe.marinas_service_and_supplies
@@ -3048,6 +3093,11 @@ msgstr "Turli nashriyot va matbaa xizmatlari"
 #, fuzzy
 msgid "Miscellaneous Recreation Services"
 msgstr "Turli dam olish xizmatlari"
+
+#. module: hr_expense_stripe
+#: model:product.mcc.stripe.tag,name:hr_expense_stripe.miscellaneous_repair_shops
+msgid "Miscellaneous Repair Shops"
+msgstr ""
 
 #. module: hr_expense_stripe
 #: model:product.mcc.stripe.tag,name:hr_expense_stripe.miscellaneous_specialty_retail
@@ -3307,22 +3357,26 @@ msgstr "Ofis va tijorat mebellari"
 #. module: hr_expense_stripe
 #. odoo-python
 #: code:addons/hr_expense_stripe/wizard/hr_expense_stripe_topup_wizard.py:0
-#, fuzzy
 msgid ""
-"Only IBAN is supported for Stripe Issuing funding instructions right now"
+"Only BACS is supported for Stripe Issuing funding instructions in the UK "
+"right now"
 msgstr ""
-"Hozirda Stripe Issuing moliyalashtirish ko‘rsatmalari uchun faqat IBAN "
-"qo‘llab-quvvatlanadi"
 
 #. module: hr_expense_stripe
 #. odoo-python
 #: code:addons/hr_expense_stripe/wizard/hr_expense_stripe_topup_wizard.py:0
-#, fuzzy
 msgid ""
-"Only SEPA is supported for Stripe Issuing funding instructions right now"
+"Only IBAN or BACS are supported for Stripe Issuing funding instructions "
+"right now"
 msgstr ""
-"Hozirda Stripe Issuing moliyalashtirish ko‘rsatmalari uchun faqat SEPA "
-"qo‘llab-quvvatlanadi"
+
+#. module: hr_expense_stripe
+#. odoo-python
+#: code:addons/hr_expense_stripe/wizard/hr_expense_stripe_topup_wizard.py:0
+msgid ""
+"Only SEPA is supported for Stripe Issuing funding instructions in the EU "
+"right now"
+msgstr ""
 
 #. module: hr_expense_stripe
 #. odoo-python
@@ -3938,6 +3992,11 @@ msgid "State"
 msgstr "Viloyat"
 
 #. module: hr_expense_stripe
+#: model:product.mcc.stripe.tag,name:hr_expense_stripe.stationary_office_supplies_printing_and_writing_paper
+msgid "Stationary Office Supplies Printing and Writing Paper"
+msgstr ""
+
+#. module: hr_expense_stripe
 #: model:product.mcc.stripe.tag,name:hr_expense_stripe.stationery_stores_office_and_school_supply_stores
 #, fuzzy
 msgid "Stationery Stores Office and School Supply Stores"
@@ -4117,6 +4176,14 @@ msgid ""
 msgstr ""
 "Stripe chiqarish konfiguratsiyasi noto‘g‘ri, uni sozlamalarda \"jonli\" yoki "
 "\"sinov\" qilib o‘rnating"
+
+#. module: hr_expense_stripe
+#. odoo-python
+#: code:addons/hr_expense_stripe/wizard/hr_expense_stripe_topup_wizard.py:0
+msgid ""
+"Stripe Issuing funding instructions with USD currency aren't supported right "
+"now"
+msgstr ""
 
 #. module: hr_expense_stripe
 #. odoo-python
@@ -4335,6 +4402,14 @@ msgstr "Karta egasi muvaffaqiyatli yangilandi"
 
 #. module: hr_expense_stripe
 #. odoo-python
+#: code:addons/hr_expense_stripe/models/product_mcc_stripe_tag.py:0
+msgid ""
+"The MCC code '%(code)s' is not valid. It must be either a 4-digit code or a "
+"range in the format 'XXXX-XXXX'."
+msgstr ""
+
+#. module: hr_expense_stripe
+#. odoo-python
 #: code:addons/hr_expense_stripe/utils.py:0
 #, fuzzy
 msgid ""
@@ -4520,6 +4595,12 @@ msgstr "Odoo xarajat kartangizga kirish kodi: %(code)s"
 #. module: hr_expense_stripe
 #. odoo-python
 #: code:addons/hr_expense_stripe/utils.py:0
+msgid "The country of the phone number is not supported for SMS."
+msgstr ""
+
+#. module: hr_expense_stripe
+#. odoo-python
+#: code:addons/hr_expense_stripe/utils.py:0
 #, fuzzy
 msgid ""
 "The creation rate limit for this type of cards has been reached. Please try "
@@ -4527,6 +4608,13 @@ msgid ""
 msgstr ""
 "Bu turdagi kartalar uchun yaratish chegarasiga yetildi. Iltimos, keyinroq "
 "qayta urinib ko‘ring"
+
+#. module: hr_expense_stripe
+#. odoo-python
+#: code:addons/hr_expense_stripe/models/hr_expense_stripe_card.py:0
+msgid ""
+"The delivery address must be in the European Union or in the United Kingdom."
+msgstr ""
 
 #. module: hr_expense_stripe
 #. odoo-python
@@ -4694,6 +4782,22 @@ msgstr ""
 #. module: hr_expense_stripe
 #. odoo-python
 #: code:addons/hr_expense_stripe/utils.py:0
+msgid ""
+"There was an error when sending the SMS, please try again later. If the "
+"problem persists, please contact the support."
+msgstr ""
+
+#. module: hr_expense_stripe
+#. odoo-python
+#: code:addons/hr_expense_stripe/utils.py:0
+msgid ""
+"There was an error when sending the email, please try again later. If the "
+"problem persists, please contact the support."
+msgstr ""
+
+#. module: hr_expense_stripe
+#. odoo-python
+#: code:addons/hr_expense_stripe/utils.py:0
 #, fuzzy
 msgid "There was an unexpected error on Odoo IAP proxy server"
 msgstr "Odoo IAP proksi serverida kutilmagan xatolik yuz berdi"
@@ -4820,24 +4924,22 @@ msgstr "Tranzaksiya qabul qilindi"
 
 #. module: hr_expense_stripe
 #. odoo-python
-#: code:addons/hr_expense_stripe/utils.py:0
-msgid ""
-"Transaction amount exceeded the card daily/transaction hard limit of 50.000 €"
+#: code:addons/hr_expense_stripe/models/hr_expense_stripe_card.py:0
+msgid "Transaction amount (%(amount)s) exceeds the maximum allowed"
 msgstr ""
 
 #. module: hr_expense_stripe
 #. odoo-python
 #: code:addons/hr_expense_stripe/models/hr_expense_stripe_card.py:0
-#, fuzzy
-msgid "Transaction amount exceeds the interval limit"
-msgstr "Tranzaksiya miqdori interval chegarasidan oshib ketdi"
+msgid "Transaction amount (%(total_spent)s) exceeds the interval limit"
+msgstr ""
 
 #. module: hr_expense_stripe
 #. odoo-python
-#: code:addons/hr_expense_stripe/models/hr_expense_stripe_card.py:0
-#, fuzzy
-msgid "Transaction amount exceeds the maximum allowed"
-msgstr "Tranzaksiya summasi ruxsat etilgan maksimal miqdordan oshib ketdi"
+#: code:addons/hr_expense_stripe/utils.py:0
+msgid ""
+"Transaction amount exceeded the card daily/transaction hard limit of 50.000 €"
+msgstr ""
 
 #. module: hr_expense_stripe
 #. odoo-python
@@ -5497,3 +5599,41 @@ msgstr "id"
 #, fuzzy
 msgid "terms and conditions"
 msgstr "shartlar va qoidalar"
+
+#, fuzzy
+#~ msgid "(Fetching...)"
+#~ msgstr "(Yuklanmoqda...)"
+
+#, fuzzy
+#~ msgid "Enter the code we sent to the cardholder's phone number ending in"
+#~ msgstr "Karta egasining telefon raqamiga yuborilgan kodni kiriting"
+
+#, fuzzy
+#~ msgid "Country not allowed"
+#~ msgstr "Mamlakatga ruxsat berilmagan"
+
+#, fuzzy
+#~ msgid "MCC not allowed"
+#~ msgstr "Ruxsat etilmagan MCC"
+
+#, fuzzy
+#~ msgid ""
+#~ "Only IBAN is supported for Stripe Issuing funding instructions right now"
+#~ msgstr ""
+#~ "Hozirda Stripe Issuing moliyalashtirish ko‘rsatmalari uchun faqat IBAN "
+#~ "qo‘llab-quvvatlanadi"
+
+#, fuzzy
+#~ msgid ""
+#~ "Only SEPA is supported for Stripe Issuing funding instructions right now"
+#~ msgstr ""
+#~ "Hozirda Stripe Issuing moliyalashtirish ko‘rsatmalari uchun faqat SEPA "
+#~ "qo‘llab-quvvatlanadi"
+
+#, fuzzy
+#~ msgid "Transaction amount exceeds the interval limit"
+#~ msgstr "Tranzaksiya miqdori interval chegarasidan oshib ketdi"
+
+#, fuzzy
+#~ msgid "Transaction amount exceeds the maximum allowed"
+#~ msgstr "Tranzaksiya summasi ruxsat etilgan maksimal miqdordan oshib ketdi"

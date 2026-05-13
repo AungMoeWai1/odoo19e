@@ -2,6 +2,7 @@ import copy
 import json
 import logging
 import re
+from contextlib import contextmanager
 from difflib import SequenceMatcher
 from stdnum.eu.vat import guess_country
 from psycopg2.errors import UniqueViolation
@@ -51,7 +52,7 @@ class AccountMove(models.Model):
     extract_partner_name = fields.Char("Extract Detected Partner Name", readonly=True)
 
     def action_reload_ai_data(self):
-        self = self.with_context(skip_is_manually_modified=True)  # noqa: PLW0642
+        self = self.with_context(skip_is_manually_modified=True, from_ocr=True)  # noqa: PLW0642
         try:
             with self._get_edi_creation() as move_form:
                 # The OCR doesn't overwrite the fields, so it's necessary to reset them
@@ -632,7 +633,7 @@ class AccountMove(models.Model):
         return vals
 
     def _fill_document_with_results(self, ocr_results):
-        self = self.with_context(skip_is_manually_modified=True)  # noqa: PLW0642
+        self = self.with_context(skip_is_manually_modified=True, from_ocr=True)  # noqa: PLW0642
         if self.state != 'draft' or ocr_results is None:
             return
 
@@ -679,7 +680,7 @@ class AccountMove(models.Model):
 
     def _save_form(self, ocr_results):
         # Avoid marking is_manually_modified as True when posting an invoice
-        self = self.with_context(skip_is_manually_modified=True)  # noqa: PLW0642
+        self = self.with_context(skip_is_manually_modified=True, from_ocr=True)  # noqa: PLW0642
 
         date_ocr = self._get_ocr_selected_value(ocr_results, 'date', "")
         due_date_ocr = self._get_ocr_selected_value(ocr_results, 'due_date', "")
@@ -702,17 +703,12 @@ class AccountMove(models.Model):
                 if partner_id:
                     move_form.partner_id = partner_id
                     if created and iban_ocr and not move_form.partner_bank_id and self.is_purchase_document(include_receipts=True):
-                        bank_account = self.env['res.partner.bank'].search([
-                            *self.env['res.partner.bank']._check_company_domain(self.company_id),
-                            ('acc_number', '=ilike', iban_ocr),
-                        ])
-                        if bank_account:
-                            if bank_account.partner_id == move_form.partner_id.id:
-                                move_form.partner_bank_id = bank_account
-                        else:
-                            bank_vals = self._get_bank_account_vals(iban_ocr, SWIFT_code_ocr)
-                            bank_vals['partner_id'] = move_form.partner_id.id
-                            move_form.partner_bank_id = self.with_context(clean_context(self.env.context)).env['res.partner.bank'].create(bank_vals)
+                        move_form.partner_bank_id = self.env['res.partner.bank']._find_or_create_bank_account(
+                            account_number=iban_ocr,
+                            partner=move_form.partner_id,
+                            company=self.company_id,
+                            extra_create_vals=self._get_bank_account_vals(iban_ocr, SWIFT_code_ocr),
+                        )
 
             if qr_bill_ocr:
                 qr_content_list = qr_bill_ocr.splitlines()
@@ -744,13 +740,16 @@ class AccountMove(models.Model):
 
                     if self.is_purchase_document(include_receipts=True):
                         iban = qr_content_list[3]
-                        if iban and not self.env['res.partner.bank'].search_count([('acc_number', '=ilike', iban)], limit=1):
-                            move_form.partner_bank_id = self.with_context(clean_context(self.env.context)).env['res.partner.bank'].create({
-                                'acc_number': iban,
-                                'company_id': move_form.company_id.id,
-                                'currency_id': move_form.currency_id.id,
-                                'partner_id': move_form.partner_id.id,
-                            })
+                        if iban:
+                            move_form.partner_bank_id = self.env['res.partner.bank']._find_or_create_bank_account(
+                                account_number=iban,
+                                partner=move_form.partner_id,
+                                company=move_form.company_id,
+                                extra_create_vals={
+                                    'company_id': move_form.company_id.id,
+                                    'currency_id': move_form.currency_id.id,
+                                },
+                            )
 
             due_date_move_form = move_form.invoice_date_due  # remember the due_date, as it could be modified by the onchange() of invoice_date
             context_create_date = fields.Date.context_today(self, self.create_date)
@@ -859,7 +858,7 @@ class AccountMove(models.Model):
         if not invoice._needs_auto_extract(new):
             return invoice.env._("Automatic OCR does not apply to this document.")
 
-        with invoice._get_edi_creation() as invoice:
+        with invoice.with_context(from_ocr=True)._get_edi_creation() as invoice:
             invoice._message_set_main_attachment_id(file_data['attachment'], force=True, filter_xml=False)
             invoice._send_batch_for_digitization()
 
@@ -872,6 +871,14 @@ class AccountMove(models.Model):
             return 'png'
 
         return super()._get_import_file_type(file_data)
+
+    @contextmanager
+    def _disable_discount_precision(self):
+        if self.env.context.get('from_ocr', False):  # Don't disable discount precision if OCR is used
+            yield
+        else:
+            with super()._disable_discount_precision():
+                yield
 
     def _get_edi_decoder(self, file_data, new=False):
         # EXTENDS 'account'

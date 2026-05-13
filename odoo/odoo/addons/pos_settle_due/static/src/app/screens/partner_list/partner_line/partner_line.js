@@ -30,8 +30,9 @@ patch(PartnerLine.prototype, {
             ).id,
             domain: [
                 ["commercial_partner_id", "=", commercialPartnerId],
-                ["customer_due_total", "!=", 0],
+                ["customer_due_total", "!=", false],
                 ["id", "not in", settleDueLinesIds],
+                ["amount_total", "!=", 0], // avoid showing settled order
             ],
             onSelected: async (orderIds) => {
                 this.pos.onClickSettleDue(orderIds, partnerId, commercialPartnerId);

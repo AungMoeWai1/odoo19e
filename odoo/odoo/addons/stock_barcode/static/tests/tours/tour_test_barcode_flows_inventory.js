@@ -824,12 +824,42 @@ registry.category("web_tour.tours").add("test_inventory_nomenclature", {
 registry.category("web_tour.tours").add("test_inventory_package", {
     steps: () => [
         {
-            trigger: ".o_button_inventory",
+            trigger: ".o_button_inventory .rounded-circle:contains(3)",
             run: "click",
         },
         {
-            trigger: ".o_barcode_client_action",
-            run: "scan PACK001",
+            trigger: ".o_barcode_line",
+            run: function () {
+                helper.assertLinesCount(3);
+                helper.assertLineProduct(0, "product1");
+                helper.assertLinePackage(0, "SUPERPACK > PACK001");
+                helper.assertLineQty(0, "?/7");
+                helper.assertLineProduct(1, "product2");
+                helper.assertLinePackage(1, "SUPERPACK > PACK001");
+                helper.assertLineQty(1, "?/3");
+                helper.assertLineProduct(2, "product1");
+                helper.assertLinePackage(2, "SUPERPACK > PACK002");
+                helper.assertLineQty(2, "?/3");
+            },
+        },
+        {
+            trigger: ".o_barcode_line",
+            run: "scan SUPERPACK",
+        },
+        {
+            trigger: ".o_barcode_line.o_line_completed",
+            run: function () {
+                helper.assertLinesCount(3);
+                helper.assertLineProduct(0, "product1");
+                helper.assertLinePackage(0, "SUPERPACK > PACK001");
+                helper.assertLineQty(0, "7/7");
+                helper.assertLineProduct(1, "product2");
+                helper.assertLinePackage(1, "SUPERPACK > PACK001");
+                helper.assertLineQty(1, "3/3");
+                helper.assertLineProduct(2, "product1");
+                helper.assertLinePackage(2, "SUPERPACK > PACK002");
+                helper.assertLineQty(2, "3/3");
+            },
         },
         {
             trigger: '.o_barcode_line:contains("product2") .o_edit',
@@ -843,10 +873,10 @@ registry.category("web_tour.tours").add("test_inventory_package", {
             trigger: ".o_save",
             run: "click",
         },
-        ...stepUtils.validateBarcodeOperation(),
-        {
-            trigger: ".o_notification:has(.bg-success):text(The inventory count has been updated)",
-        },
+        ...stepUtils.validateBarcodeOperation(
+            ".o_barcode_client_action .o_barcode_lines",
+            ".o_notification:has(.bg-success):text(The inventory count has been updated)"
+        ),
     ],
 });
 

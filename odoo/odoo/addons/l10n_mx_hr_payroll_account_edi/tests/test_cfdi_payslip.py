@@ -66,8 +66,8 @@ class TestMxEdiHrPayrollCommon(TestMxEdiCommon):
         payslip = self.env['hr.payslip'].create({
             'employee_id': self.employee.id,
             'name': 'Payslip',
-            'date_from': '2024-05-09',
-            'date_to': '2024-05-24',
+            'date_from': '2024-05-01',
+            'date_to': '2024-05-15',
             'struct_id': self.env.ref('l10n_mx_hr_payroll.l10n_mx_regular_pay').id,
         })
         # We can add other inputs to trigger some rules needed for some testing files

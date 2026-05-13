@@ -52,6 +52,13 @@
         <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll.hr_payroll_structure_ch_elm'))]"/>
     </record>
 
+    <record id="l10n_ch_elm_input_WT_hours_200" model="hr.payslip.input.type">
+        <field name="name">Paid Overtime Hours (200%)</field>
+        <field name="code">WT_Overtime_200</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
     <record id="l10n_ch_elm_input_WT_1000" model="hr.payslip.input.type">
         <field name="name">(1000) Monthly Salary</field>
         <field name="code">WT_1000</field>
@@ -284,7 +291,13 @@
         <field name="country_id" ref="base.ch"/>
         <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll.hr_payroll_structure_ch_elm'))]"/>
     </record>
-
+    
+    <record id="l10n_ch_elm_input_WT_1068" model="hr.payslip.input.type">
+        <field name="name">(1068) Overtime 200%</field>
+        <field name="code">WT_1068</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll.hr_payroll_structure_ch_elm'))]"/>
+    </record>
 
     <record id="l10n_ch_elm_input_WT_1076" model="hr.payslip.input.type">
         <field name="name">(1076) Night work allowance</field>

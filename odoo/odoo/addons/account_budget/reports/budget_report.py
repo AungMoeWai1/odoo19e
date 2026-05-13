@@ -59,13 +59,19 @@ class BudgetReport(models.Model):
     def _get_aal_query(self, plan_fnames):
         budget_line_ids = self.env.context.get('budget_report_budget_line_ids')
 
-        company_conditions = [
-            SQL('aal.company_id = bl.company_id'),
-            SQL('bl.company_id IS NULL'),
+        # For performance reasons, we split the query into 3 parts and then UNION ALL the results
+        # (faster than doing a single query with an OR on the left join condition):
+        # Q1 - analytic lines with no matching budget line at all.
+        # Q2 - analytic lines matched to a null-company budget line.
+        # Q3 - analytic lines matched to a company-specific budget line.
+        company_budget_conditions = [
+            (SQL(''), SQL('AND bl.id IS NULL')),
+            (SQL('bl.company_id IS NULL AND'), SQL('AND bl.id IS NOT NULL')),
+            (SQL('aal.company_id = bl.company_id AND'), SQL('AND bl.id IS NOT NULL')),
         ]
 
         queries = []
-        for company_condition in company_conditions:
+        for company_condition, budget_line_condition in company_budget_conditions:
             queries.append(SQL(
                 """
             SELECT CONCAT('aal', aal.id::TEXT) AS id,
@@ -86,7 +92,7 @@ class BudgetReport(models.Model):
                    %(analytic_fields)s
               FROM account_analytic_line aal
          LEFT JOIN budget_line bl ON %(company_condition)s
-                                 AND aal.date >= bl.date_from
+                                 aal.date >= bl.date_from
                                  AND aal.date <= bl.date_to
                                  AND %(condition)s
          LEFT JOIN account_account aa ON aa.id = aal.general_account_id
@@ -94,6 +100,7 @@ class BudgetReport(models.Model):
              WHERE CASE
                        WHEN ba.budget_type = 'expense' THEN (
                            SPLIT_PART(aa.account_type, '_', 1) = 'expense'
+                           OR aa.account_type IN ('asset_current', 'asset_non_current', 'asset_fixed')
                            OR (aa.account_type IS NULL AND aal.category NOT IN ('invoice', 'other'))
                            OR (aa.account_type IS NULL AND aal.category = 'other' AND aal.amount < 0)
                        )
@@ -103,7 +110,12 @@ class BudgetReport(models.Model):
                        )
                        ELSE TRUE
                    END
-                   AND (SPLIT_PART(aa.account_type, '_', 1) IN ('income', 'expense') OR aa.account_type IS NULL)
+                   AND (
+                       SPLIT_PART(aa.account_type, '_', 1) IN ('income', 'expense')
+                       OR aa.account_type IN ('asset_current', 'asset_non_current', 'asset_fixed')
+                       OR aa.account_type IS NULL
+                   )
+                   %(budget_line_condition)s
                    %(budget_line_ids_condition)s
                 """,
                 company_condition=company_condition,
@@ -113,6 +125,7 @@ class BudgetReport(models.Model):
                     bl=self.env['budget.line']._field_to_sql('bl', fname),
                     aal=self.env['budget.line']._field_to_sql('aal', fname),
                 ) for fname in plan_fnames),
+                budget_line_condition=budget_line_condition,
                 budget_line_ids_condition=SQL('AND bl.id = ANY(%(budget_line_ids)s)', budget_line_ids=budget_line_ids) if budget_line_ids else SQL(''),
             ))
 

@@ -332,7 +332,9 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
                 original_values_by_group = defaultdict(float)
                 for line in m.invoice_line_ids:
                     line_taxes = line.tax_ids.compute_all(line.amount_currency, line.currency_id, partner=line.partner_id, handle_price_include=False)
-                    tax_amounts = {tax_data['id']: tax_data['amount'] for tax_data in line_taxes['taxes']}
+                    tax_amounts = defaultdict(float)
+                    for tax_data in line_taxes['taxes']:
+                        tax_amounts[tax_data['id']] += tax_data['amount']
                     for tax_id in tax_amounts:
                         tax = self.env['account.tax'].browse(tax_id)
                         original_values_by_group[tax.tax_group_id] += tax_amounts[tax.id]
@@ -405,9 +407,12 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
                     aml_taxes = aml.tax_ids.compute_all(aml.amount_currency, aml.currency_id, partner=aml.partner_id, handle_price_include=False)
                     line_amount_currency = aml_taxes['total_included']
                 # convert line_amount in company currency
-                if aml.currency_id != aml.company_id.currency_id and not aml.currency_id.is_zero(line_amount_currency):
-                    rate = m._get_product_base_line_currency_rate(aml)
-                    line_amount = line_amount_currency / rate
+                if aml.currency_id != aml.company_id.currency_id:
+                    if not aml.currency_id.is_zero(line_amount_currency):
+                        rate = m._get_product_base_line_currency_rate(aml)
+                        line_amount = line_amount_currency / rate
+                    else:
+                        line_amount = aml.balance
                 else:
                     line_amount = line_amount_currency
 

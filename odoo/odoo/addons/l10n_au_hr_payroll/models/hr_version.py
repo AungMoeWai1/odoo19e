@@ -538,7 +538,7 @@ class HrVersion(models.Model):
     def _compute_wage(self):
         Payslip = self.env['hr.payslip']
         for version in self:
-            if version.country_code != "AU" or version.wage_type != "hourly":
+            if version.country_code != "AU" or version.wage_type != "hourly" or not version.schedule_pay:
                 continue
             daily_wage = version.hourly_wage * version.resource_calendar_id.hours_per_day
             version.wage = Payslip._l10n_au_convert_amount(daily_wage, "daily", version.schedule_pay)
@@ -547,9 +547,12 @@ class HrVersion(models.Model):
     def _compute_hourly_wage(self):
         Payslip = self.env['hr.payslip']
         for version in self:
-            if version.country_code != "AU" or version.wage_type == "hourly":
+            if version.country_code != "AU" or version.wage_type == "hourly" or not version.schedule_pay:
                 continue
             hours_per_day = version.resource_calendar_id.hours_per_day
+            if not hours_per_day:
+                version.hourly_wage = 0.0
+                continue
             daily_wage = Payslip._l10n_au_convert_amount(version.wage, version.schedule_pay, "daily")
             version.hourly_wage = daily_wage / hours_per_day
 
@@ -557,7 +560,7 @@ class HrVersion(models.Model):
     def _compute_yearly_wage(self):
         Payslip = self.env['hr.payslip']
         for version in self:
-            if version.country_code != "AU":
+            if version.country_code != "AU" or not version.schedule_pay:
                 continue
             hours_per_day = version.resource_calendar_id.hours_per_day
             if version.wage_type == "hourly":
@@ -570,6 +573,9 @@ class HrVersion(models.Model):
             return
         hours_per_day = self.resource_calendar_id.hours_per_day
         self.wage = self.env['hr.payslip']._l10n_au_convert_amount(self.l10n_au_yearly_wage, "annually", self.schedule_pay)
+        if not hours_per_day:
+            self.hourly_wage = 0.0
+            return
         self.hourly_wage = self.env['hr.payslip']._l10n_au_convert_amount(self.l10n_au_yearly_wage, "annually", "daily") / hours_per_day
 
     def get_hourly_wages(self):

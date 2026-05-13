@@ -84,9 +84,9 @@ class AccountMoveLine(models.Model):
 
     def copy_data(self, default=None):
         data_list = super().copy_data(default=default)
-        # Needs to be recomputed
-        for line, values in zip(self, data_list):
-            if line.move_id.intrastat_country_id:
-                values.pop('intrastat_transaction_id', None)
+        if 'move_reverse_cancel' in self.env.context:
+            # Needs to be recomputed
+            for line, values in zip(self, data_list):
+                if line.move_id.intrastat_country_id:
+                    values.pop('intrastat_transaction_id', None)
         return data_list
-

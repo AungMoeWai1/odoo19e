@@ -41,7 +41,7 @@ class L10nCHInsuranceReport(models.Model):
                                         "default_year": declaration.year,
                                         "default_income_to_split": avs_salary
                                     }),
-                                    'blocking': "all",
+                                    'level': "warning",
                                     "action_text": _("Split AVS Salary"),
                                 }
                                 i += 1

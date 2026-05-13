@@ -3,13 +3,13 @@
 # * account_base_import
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025.
+# "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-30 18:43+0000\n"
-"PO-Revision-Date: 2025-10-08 02:40+0000\n"
+"PO-Revision-Date: 2026-05-02 09:47+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-19/account_base_import/es_419/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: account_base_import
 #: model_terms:ir.ui.view,arch_db:account_base_import.res_config_settings_import_view_form
@@ -300,9 +300,9 @@ msgid ""
 "purposes.\n"
 "                            Use the"
 msgstr ""
-"La mayoría de los software de contabilidad en Francia son compatibles con la "
-"exportación de archivos FEC con propósitos de auditoría.\n"
-"                            Utilice"
+"La mayoría de los programas de contabilidad en Francia son compatibles con "
+"la exportación de archivos FEC con fines de auditoría.\n"
+"                            Usa el"
 
 #. module: account_base_import
 #: model_terms:ir.ui.view,arch_db:account_base_import.account_import_summary_form
@@ -473,12 +473,12 @@ msgid ""
 "partners will be created, the rest must already be present in the system."
 msgstr ""
 "es necesario para importar el SIE 5 y los archivos correspondientes.\n"
-"                            Por lo general, para el SIE 5 configuraremos "
-"varias cosas como su balance del plan de cuentas, diarios, contactos y el "
-"historial de asientos contables\n"
+"                            Para el SIE 5 general, configuraremos tus "
+"balances del plan de cuentas, diarios, contactos y el historial de asientos "
+"contables\n"
 "(los datos de los diarios deben estar presentes en el archivo).\n"
-"                            Para la entrada SIE 5, solo se crearán los "
-"asientos y los contactos, lo demás ya debe estar presente en el sistema."
+"                            Para la entrada del SIE 5, solo se crearán "
+"asientos y contactos; lo demás ya debe existir en el sistema."
 
 #. module: account_base_import
 #: model_terms:ir.ui.view,arch_db:account_base_import.account_import_summary_form

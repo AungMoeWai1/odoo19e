@@ -11,13 +11,6 @@ from odoo.addons.stock_barcode.tests.test_barcode_client_action import TestBarco
 
 @tagged('post_install', '-at_install')
 class TestPickingBarcodeClientAction(TestBarcodeClientAction):
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        cls.env.ref('base.user_admin').write({
-            'email': 'mitchell.admin@example.com',
-        })
-
     def test_internal_picking_from_scratch(self):
         """ Opens an empty internal picking and creates following move through the form view:
           - move 2 `self.product1` from shelf1 to shelf2
@@ -2302,6 +2295,7 @@ class TestPickingBarcodeClientAction(TestBarcodeClientAction):
                 Command.link(self.env.ref('stock.group_tracking_lot').id),
             ],
         })
+        self.picking_type_in.barcode_validation_after_dest_location = True
         # Creates a product without barcode to check it will count even if not
         # scanned but processed through the button.
         product_without_barcode = self.env['product.product'].create({
@@ -3697,6 +3691,7 @@ class TestPickingBarcodeClientAction(TestBarcodeClientAction):
 
         self.env['stock.quant']._update_available_quantity(self.product1, self.stock_location, 10, package_id=package)
         self.env['stock.quant']._update_available_quantity(self.product1, self.shelf1, 5)
+        self.product2.is_storable = False
 
         delivery_picking = self.env['stock.picking'].create({
             'name': "Delivery with Stock Move",
@@ -3716,14 +3711,24 @@ class TestPickingBarcodeClientAction(TestBarcodeClientAction):
 
         url = self._get_client_action_url(delivery_picking.id)
         self.start_tour(url, 'test_confirmation_location_delivery_picking', login='admin', timeout=180)
-        self.assertRecordValues(delivery_picking.move_ids.move_line_ids, [{
-            'product_id': self.product1.id,
-            'qty_done': 1,
-            'location_id': self.shelf2.id,
-            'lot_id': False,
-            'package_id': package.id,
-            'state': 'done'
-        }])
+        self.assertRecordValues(delivery_picking.move_ids.move_line_ids.sorted(lambda sml: sml.product_id.id), [
+            {
+                'product_id': self.product1.id,
+                'qty_done': 1,
+                'location_id': self.shelf2.id,
+                'lot_id': False,
+                'package_id': package.id,
+                'state': 'done'
+            },
+            {
+                'product_id': self.product2.id,
+                'qty_done': 1,
+                'location_id': self.stock_location.id,
+                'lot_id': False,
+                'package_id': False,
+                'state': 'done'
+            },
+        ])
 
     def test_barcode_lazy_cache_scan_two_lots(self):
         """ Checks that you can scan 2 lots without the OWL error 'quantsByLocation is not iterable' """
@@ -3861,8 +3866,17 @@ class TestPickingBarcodeClientAction(TestBarcodeClientAction):
 
         receipt 3: - 10 units
                    - 1 pack of 6
+
+        receipt 4: - 8 units
+                   - 12 units expected to be packed in pack of 6
+
+        receipt 5: - 1 pack of 6 with lot12345
+                   - 2 Dozens with lot54321
         """
-        self.env.user.write({'group_ids': [Command.link(self.ref('uom.group_uom'))]})
+        self.env.user.write({'group_ids': [
+            Command.link(self.ref('uom.group_uom')),
+            Command.link(self.env.ref('stock.group_production_lot').id)
+            ]})
         self.uom_dozen.action_unarchive()
         unit, pack_of_6 = self.ref('uom.product_uom_unit'), self.ref('uom.product_uom_pack_6')
         lovely_product = self.env['product.product'].create({
@@ -3881,7 +3895,17 @@ class TestPickingBarcodeClientAction(TestBarcodeClientAction):
                     'barcode': '12love',
             })]
         })
-        receipt_1, receipt_2, receipt_3 = self.env['stock.picking'].create([
+        self.productlot1.product_uom_ids = [
+            Command.create({
+                'uom_id': pack_of_6,
+                'barcode': '6lotprod',
+            }),
+            Command.create({
+                'uom_id': self.uom_dozen.id,
+                'barcode': '12lotprod',
+            }),
+        ]
+        receipt_1, receipt_2, receipt_3, receipt_4 = self.env['stock.picking'].create([
             {
                 'name': "SPOPWMU1",
                 'location_id': self.supplier_location.id,
@@ -3931,9 +3955,31 @@ class TestPickingBarcodeClientAction(TestBarcodeClientAction):
                     }),
                 ],
             },
+            {
+                'name': "SPOPWMU4",
+                'location_id': self.supplier_location.id,
+                'location_dest_id': self.stock_location.id,
+                'picking_type_id': self.picking_type_in.id,
+                'move_ids': [
+                    Command.create({
+                        'location_id': self.supplier_location.id,
+                        'location_dest_id': self.stock_location.id,
+                        'product_id': lovely_product.id,
+                        'product_uom_qty': 8,
+                    }),
+                    Command.create({
+                        'location_id': self.supplier_location.id,
+                        'location_dest_id': self.stock_location.id,
+                        'product_id': lovely_product.id,
+                        'product_uom_qty': 12,
+                        'price_unit': 100000000000,  # Avoid merging
+                    }),
+                ],
+            },
         ])
         receipt_2.move_ids.packaging_uom_id = pack_of_6
-        (receipt_1 | receipt_2 | receipt_3).action_confirm()
+        receipt_4.move_ids[-1].packaging_uom_id = pack_of_6
+        (receipt_1 | receipt_2 | receipt_3 | receipt_4).action_confirm()
         self.assertRecordValues(receipt_1.move_ids, [
             {'product_uom_qty': 2.0, 'quantity': 2.0, 'picked': False, 'product_uom': pack_of_6}
         ])
@@ -3943,6 +3989,10 @@ class TestPickingBarcodeClientAction(TestBarcodeClientAction):
         self.assertRecordValues(receipt_3.move_ids, [
             {'product_uom_qty': 10.0, 'quantity': 10.0, 'product_uom': unit, 'picked': False},
             {'product_uom_qty': 1.0, 'quantity': 1.0, 'product_uom': pack_of_6, 'picked': False},
+        ])
+        self.assertRecordValues(receipt_4.move_ids, [
+            {'product_uom_qty': 8.0, 'quantity': 8.0, 'product_uom': unit, 'packaging_uom_id': unit},
+            {'product_uom_qty': 12.0, 'quantity': 12.0, 'product_uom': unit, 'packaging_uom_id': pack_of_6},
         ])
 
         action = self.env.ref('stock_barcode.stock_barcode_action_main_menu')
@@ -3957,6 +4007,21 @@ class TestPickingBarcodeClientAction(TestBarcodeClientAction):
         self.assertRecordValues(receipt_3.move_ids, [
             {'product_uom_qty': 10.0, 'quantity': 10.0, 'product_uom': unit, 'state': 'done'},
             {'product_uom_qty': 1.0, 'quantity': 3.5, 'product_uom': pack_of_6, 'state': 'done'},
+        ])
+        self.assertRecordValues(receipt_4.move_ids, [
+            {'product_uom_qty': 8.0, 'quantity': 8.0, 'product_uom': unit, 'packaging_uom_id': unit, 'picked': True},
+            {'product_uom_qty': 12.0, 'quantity': 12.0, 'product_uom': unit, 'packaging_uom_id': pack_of_6, 'picked': True},
+        ])
+        receipt_5 = self.env['stock.move.line'].search([
+            ('product_id', '=', self.productlot1.id),
+            ('product_uom_id', '=', self.productlot1.product_uom_ids[1].uom_id.id),
+        ]).picking_id
+        self.assertRecordValues(receipt_5.move_ids, [
+            {'product_uom_qty': 0.0, 'quantity': 5.0, 'product_uom': pack_of_6, 'state': 'done'},
+        ])
+        self.assertRecordValues(receipt_5.move_line_ids, [
+            {'quantity': 1.0, 'product_uom_id': pack_of_6, 'state': 'done'},
+            {'quantity': 2.0, 'product_uom_id': self.uom_dozen.id, 'state': 'done'},
         ])
 
     def test_remove_sublines_and_scan_serial_again(self):
@@ -4267,6 +4332,39 @@ class TestPickingBarcodeClientAction(TestBarcodeClientAction):
             self.assertEqual(move_line.quantity, 8)
             self.assertTrue(move_line.picked)
 
+    def test_gs1_receipt_multiple_extra_items(self):
+        """
+        This test ensures that when multiple extra items are added during the processing
+        of a picking, all the selected items are correctly added to the picking.
+        """
+        self.product1.barcode = '12345678900005'
+        self.product2.barcode = '12345678900012'
+        self.productserial1.barcode = '12345678900029'
+        self.productlot1.barcode = '12345678900036'
+
+        group_lot = self.env.ref('stock.group_production_lot')
+        group_uom = self.env.ref('uom.group_uom')
+        self.env.user.write({'group_ids': [Command.link(group_lot.id), Command.link(group_uom.id)]})
+        self.env.company.nomenclature_id = self.env.ref('barcodes_gs1_nomenclature.default_gs1_nomenclature')
+
+        receipt_with_move = self.env['stock.picking'].create({
+            'name': "In Picking for multiple extra items",
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'picking_type_id': self.picking_type_in.id,
+            'move_ids': [Command.create({
+                'location_id': self.supplier_location.id,
+                'location_dest_id': self.stock_location.id,
+                'product_id': self.product1.id,
+                'product_uom': self.uom_unit.id,
+                'product_uom_qty': 2
+            })],
+        })
+        receipt_with_move.action_confirm()
+
+        url = self._get_client_action_url(receipt_with_move.id)
+        self.start_tour(url, 'test_gs1_receipt_multiple_extra_items', login='admin')
+
     def test_gs1_receipt_quantity_with_uom(self):
         """ Creates a new receipt and scans barcodes with different combinaisons
         of product and quantity expressed with different UoM and checks the
@@ -4430,6 +4528,23 @@ class TestPickingBarcodeClientAction(TestBarcodeClientAction):
             {'quantity': 1, 'lot_id': lot.id, 'location_id': self.stock_location.id, 'location_dest_id': self.customer_location.id},
         ])
 
+    def test_gs1_multi_company_setup(self):
+        """
+        Check that the nomenclature used on the barcode main menu is the nomenclature
+        of the contextually selected company rather than the user company.
+        """
+        self.env.user.group_ids += self.env.ref('stock.group_stock_multi_locations')
+        company = self.env['res.company'].create({
+            'name': 'Lovely Company',
+            'nomenclature_id': self.ref('barcodes_gs1_nomenclature.default_gs1_nomenclature'),
+        })
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', company.id)])
+        warehouse.reception_steps = 'two_steps'
+        warehouse.wh_input_stock_loc_id.barcode = '3033710074365'
+        self.product1.barcode = '36939282410106'
+        self.env['stock.quant'].with_company(company.id)._update_available_quantity(self.product1, warehouse.lot_stock_id, 3.0)
+        self.start_tour('/odoo', 'test_gs1_multi_company_setup', login='admin')
+
     def test_serial_product_packaging(self):
         """ This test ensures that correct packaging lines generated
         for serial product in operations.
@@ -4485,6 +4600,28 @@ class TestPickingBarcodeClientAction(TestBarcodeClientAction):
         self.assertEqual(len(pack1.quant_ids), 1)
         self.assertEqual(len(pack2.quant_ids), 1)
         self.assertEqual(len(delivery_with_move.move_line_ids), 2)
+
+    def test_scan_package_with_decimal(self):
+        """ Ensure there is no rounding issue on javascript when scanning a
+        package that has more quantity than the required quantity on line."""
+        grp_pack_id = self.ref('stock.group_tracking_lot')
+        self.env.user.write({'group_ids': [Command.link(grp_pack_id)]})
+        self.product1.uom_id = self.env.ref('uom.product_uom_kgm')
+        self.picking_type_out.restrict_scan_source_location = 'no'
+        self.env['stock.quant']._update_available_quantity(self.product1, self.stock_location, 275.84, package_id=self.package)
+        delivery_form = Form(self.env['stock.picking'])
+        delivery_form.picking_type_id = self.picking_type_out
+        with delivery_form.move_ids.new() as move:
+            move.product_id = self.product1
+            move.product_uom_qty = 3.6
+        delivery_picking = delivery_form.save()
+        delivery_picking.action_confirm()
+        url = self._get_client_action_url(delivery_picking.id)
+        self.start_tour(url, 'test_scan_package_with_decimal', login='admin')
+        self.assertRecordValues(delivery_picking.move_line_ids, [
+            {"product_id": self.product1.id, "quantity": 3.6, "location_dest_id": delivery_picking.location_dest_id.id, "picked": True},
+            {"product_id": self.product1.id, "quantity": 272.24, "location_dest_id": delivery_picking.location_dest_id.id, "picked": True}
+        ])
 
     def test_barcode_signature_flow(self):
         """
@@ -4734,3 +4871,83 @@ class TestPickingBarcodeClientAction(TestBarcodeClientAction):
 
         quant = self.env['stock.quant'].search([('product_id', '=', self.product2.id), ('location_id', '=', self.shelf1.id)], limit=1)
         self.assertEqual(quant.quantity, 1)
+
+    def test_quantity_updates_on_exit_spam(self):
+        """
+        Test that spamming the barcode back button multiple times
+        triggers the related updates only once.
+        """
+        delivery = self.env['stock.picking'].create({
+            'name': 'Lovely Delivery',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'picking_type_id': self.picking_type_out.id,
+        })
+        self.start_tour('/odoo/barcode', 'test_quantity_updates_on_exit_spam', login='admin')
+        self.assertRecordValues(delivery.move_line_ids, [{
+            'product_id': self.product1.id, 'quantity': 1.0,
+        }])
+
+    def test_confirm_picking_with_archived_product(self):
+        """
+        Test that a delivery picking can be confirmed even if a product involved
+        in the stock move has been archived (set as inactive).
+
+        This ensures that archived products do not block the confirmation process
+        in product selector.
+        """
+        self.env.user.group_ids += self.env.ref('stock.group_stock_multi_locations')
+        self.env['stock.quant']._update_available_quantity(self.product1, self.stock_location, 10)
+        delivery_picking = self.env['stock.picking'].create({
+            'name': 'Delivery with Stock Move',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'picking_type_id': self.picking_type_out.id,
+            'move_ids': [
+                Command.create({
+                    'location_id': self.stock_location.id,
+                    'location_dest_id': self.customer_location.id,
+                    'product_id': self.product1.id,
+                    'product_uom_qty': 1,
+                }),
+            ],
+        })
+        delivery_picking.action_confirm()
+        self.product1.active = False
+        url = self._get_client_action_url(delivery_picking.id)
+        self.start_tour(url, 'test_confirm_picking_with_archived_product', login='admin')
+
+    def test_barcode_sync_on_exit(self):
+        """
+        This tests that when exiting barcode after scanning a new serial number that it waits
+        for the backend network call to finish, preventing stale data from appearing on the
+        picking.
+        """
+        grp_lot = self.env.ref('stock.group_production_lot')
+        grp_pack = self.env.ref('stock.group_tracking_lot')
+        self.env.user.write({'group_ids': [Command.link(grp_lot.id), Command.link(grp_pack.id)]})
+        serial_1 = self.env['stock.lot'].create({'name': 'serial 1', 'product_id': self.productserial1.id, 'company_id': self.env.company.id})
+        serial_2 = self.env['stock.lot'].create({'name': 'serial 2', 'product_id': self.productserial1.id, 'company_id': self.env.company.id})
+        package = self.env['stock.package'].create({'name': 'package001'})
+        self.env['stock.quant']._update_available_quantity(self.productserial1, self.stock_location, 1, lot_id=serial_1, package_id=package)
+        self.env['stock.quant']._update_available_quantity(self.productserial1, self.stock_location, 1, lot_id=serial_2)
+
+        delivery_picking = self.env['stock.picking'].create({
+            'name': 'Delivery with Stock Move',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'picking_type_id': self.picking_type_out.id,
+            'move_ids': [
+                Command.create({
+                    'location_id': self.stock_location.id,
+                    'location_dest_id': self.customer_location.id,
+                    'product_id': self.productserial1.id,
+                    'product_uom_qty': 1,
+                    'lot_ids': serial_1.ids,
+                }),
+            ],
+        })
+        delivery_picking.action_confirm()
+
+        url = f'/odoo/action-stock.action_picking_tree_incoming/{delivery_picking.id}'
+        self.start_tour(url, 'test_barcode_sync_on_exit', login='admin')

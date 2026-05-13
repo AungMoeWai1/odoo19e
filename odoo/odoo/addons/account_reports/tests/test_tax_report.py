@@ -2654,3 +2654,89 @@ class TestTaxReport(TestAccountReportsCommon):
             ],
             options
         )
+
+    def test_previous_return_period_date_scope(self):
+        self.init_invoice('in_invoice', invoice_date='2024-09-30', post=True, amounts=[60])
+        self.init_invoice('in_invoice', invoice_date='2024-12-31', post=True, amounts=[42])
+        self.init_invoice('in_invoice', invoice_date='2025-01-01', post=True, amounts=[100])
+
+        report = self.env['account.report'].create({
+            'name': 'Test report',
+            'column_ids': [Command.create({'name': 'Balance', 'sequence': 1, 'expression_label': 'balance'})],
+            'line_ids': [
+                Command.create({
+                    'name': "test",
+                    'expression_ids': [
+                        Command.create({
+                            'label': 'balance',
+                            'engine': 'domain',
+                            'formula': [('account_id.account_type', '=', 'expense')],
+                            'subformula': 'sum',
+                            'date_scope': 'previous_return_period',
+                        })
+                    ],
+                }),
+            ],
+        })
+
+        self.env['account.return.type'].create({
+            'name': "TestReturn",
+            'report_id': report.id,
+            'deadline_periodicity': 'trimester',
+            'deadline_start_date': '2020-01-01',
+        })
+
+        options = self._generate_options(report, '2025-01-01', '2025-03-31')
+        self.assertLinesValues(
+            report._get_lines(options),
+            #   Name                                    Balance
+            [   0,                                      1],
+            [
+                ("test",                             42.0),
+            ],
+            options,
+        )
+
+        options = self._generate_options(report, '2025-01-01', '2025-01-31')
+        self.assertLinesValues(
+            report._get_lines(options),
+            #   Name                                    Balance
+            [   0,                                      1],
+            [
+                ("test",                             42.0),
+            ],
+            options,
+        )
+
+        options = self._generate_options(report, '2025-02-01', '2025-02-28')
+        self.assertLinesValues(
+            report._get_lines(options),
+            #   Name                                    Balance
+            [   0,                                      1],
+            [
+                ("test",                             42.0),
+            ],
+            options,
+        )
+
+        options = self._generate_options(report, '2025-03-01', '2025-03-31')
+        self.assertLinesValues(
+            report._get_lines(options),
+            #   Name                                    Balance
+            [   0,                                      1],
+            [
+                ("test",                             42.0),
+            ],
+            options,
+        )
+
+        options = self._generate_options(report, '2025-04-01', '2025-04-01')
+        self.assertLinesValues(
+            report._get_lines(options),
+            #   Name                                    Balance
+            [   0,                                      1],
+            [
+                ("test",                            100.0),
+            ],
+            options,
+        )

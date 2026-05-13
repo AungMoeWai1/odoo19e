@@ -39,13 +39,34 @@ class HrExpense(models.Model):
         endpoint = self.env['ir.config_parameter'].sudo().get_param('iap_extract_endpoint', 'https://extract.api.odoo.com')
         return iap_tools.iap_jsonrpc(endpoint + '/api/extract/expense/2/' + pathinfo, params=params)
 
+    def _filter_preprocess_skipped_ocr(self):
+        """ If the hr_expense_stripe module is installed we want to skip the OCR """
+        if 'is_card_expense' not in self._fields:
+            return self
+
+        stripe_expenses = self.filtered('is_card_expense')
+        stripe_expenses.write({'extract_state': 'done'})
+        for expense in stripe_expenses:
+            expense.message_post(body=self.env._("Receipt not digitized: the expense already includes Stripe data."))
+
+        return self - stripe_expenses
+
+    def _upload_to_extract(self):
+        to_extract = self._filter_preprocess_skipped_ocr()
+        if to_extract:
+            super(HrExpense, to_extract)._upload_to_extract()
+
     def _autosend_for_digitization(self):
-        if self.env.company.expense_extract_show_ocr_option_selection == 'auto_send':
-            self.filtered('extract_can_show_send_button')._send_batch_for_digitization()
+        to_extract = self.filtered(lambda e:
+            e.company_id.expense_extract_show_ocr_option_selection == 'auto_send'
+            and e.extract_can_show_send_button
+        )._filter_preprocess_skipped_ocr()
+        if to_extract:
+            to_extract._send_batch_for_digitization()
 
     def _message_set_main_attachment_id(self, attachments, force=False, filter_xml=True):
         super()._message_set_main_attachment_id(attachments, force=force, filter_xml=filter_xml)
-        if not self.sample:
+        if not self.sample and attachments:
             self._autosend_for_digitization()
 
     def _get_validation(self, field):

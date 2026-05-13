@@ -1,10 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests.common import tagged, TransactionCase
+from freezegun import freeze_time
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install', 'swissdec_payroll')
 class TestGenericAVSDeductions(TransactionCase):
+    @freeze_time("2026-02-28")
     def setUp(self):
         super().setUp()
         self.company_ch = self.env['res.company'].create({'name': 'Swiss Comp.', 'country_id': self.env.ref('base.ch').id})
@@ -24,6 +26,7 @@ class TestGenericAVSDeductions(TransactionCase):
             'l10n_ch_has_monthly': True,
         })
 
+    @freeze_time("2026-02-28")
     def _create_test_payslip(self):
         return self.env['hr.payslip'].create({
             'name': "Payslip Test",
@@ -33,6 +36,7 @@ class TestGenericAVSDeductions(TransactionCase):
             'date_to': '2026-02-28',
         })
 
+    @freeze_time("2026-02-28")
     def test_generic_avs_deductions(self):
         input_codes = ['5400', '5401', '5402', '5403', '5404', '5405', '5406', '5407', '5408', '7400', '7401', '7402', '7403', '7404', '7405', '7406', '7407', '7408']
         payslip = self._create_test_payslip()

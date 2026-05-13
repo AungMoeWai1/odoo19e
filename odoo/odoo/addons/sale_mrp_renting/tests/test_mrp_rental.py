@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import timedelta
-from odoo.fields import Datetime
+from odoo.fields import Command, Datetime
 from odoo.tests import Form
 from odoo.addons.sale_stock_renting.tests.test_rental_common import TestRentalCommon
 
@@ -202,3 +202,59 @@ class TestRentalKits(TestRentalCommon):
         pickup_wizard._get_wizard_lines()
         pickup_wizard.apply()
         self.assertEqual(rental.order_line.qty_delivered, 1)
+
+    def test_kit_multipick_flow(self):
+        """
+        Test that confirming a rental order with a kit product whose components
+        use two different pack locations does not crash when assigning a return_id.
+        Two pick operations are generated (one per pack location).
+        """
+        self.warehouse_id.delivery_steps = 'pick_pack_ship'
+
+        # Locations
+        customer_location = self.env.ref('stock.stock_location_customers')
+        output_location = self.env.ref('stock.stock_location_output')
+        pack_location_copy = self.env.ref('stock.location_pack_zone').copy()
+
+        # Create a new pick operation
+        pick_operation_copy = self.warehouse_id.pick_type_id.copy({'default_location_dest_id': pack_location_copy.id})
+
+        # Create a new route to use the new pick operation
+        custom_route = self.env['stock.route'].create({
+            'name': 'Test',
+            'rule_ids': [
+                Command.create({
+                    'name': 'test 1',
+                    'action': 'pull',
+                    'picking_type_id': pick_operation_copy.id,
+                    'location_src_id': self.warehouse_id.lot_stock_id.id,
+                    'location_dest_id': customer_location.id,
+                }),
+                Command.create({
+                    'name': 'test 2',
+                    'action': 'push',
+                    'picking_type_id': self.warehouse_id.pack_type_id.id,
+                    'location_src_id': pack_location_copy.id,
+                    'location_dest_id': output_location.id,
+                }),
+                Command.create({
+                    'name': 'test 3',
+                    'action': 'push',
+                    'picking_type_id': self.warehouse_id.out_type_id.id,
+                    'location_src_id': output_location.id,
+                    'location_dest_id': customer_location.id,
+                }),
+            ],
+        })
+
+        # Add the route to a component product
+        self.component_1.route_ids = [Command.link(custom_route.id)]
+
+        # create a rental with the kit product
+        rental = self.sale_order_id.copy()
+        rental.order_line.write({'product_uom_qty': 1, 'is_rental': True})
+        self.assertEqual(rental.order_line.product_id.is_kits, True)
+        rental.action_confirm()
+
+        picks = rental.picking_ids.filtered(lambda pick: pick.picking_type_id in (pick_operation_copy, self.warehouse_id.pick_type_id))
+        self.assertEqual(len(picks), 2)

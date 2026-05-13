@@ -74,10 +74,10 @@ class ResCompany(models.Model):
             company_country = company.account_fiscal_country_id
             if 'EU' in (company_country.country_group_codes or []):
                 company_currency_code = STRIPE_VALID_JOURNAL_CURRENCIES['EU']
-            elif company_country.code == 'gb':
+            elif company_country.code == 'GB':
                 company_currency_code = STRIPE_VALID_JOURNAL_CURRENCIES['UK']
             else:
-                company_currency_code = STRIPE_VALID_JOURNAL_CURRENCIES.get(company_country.code) or 'USD'
+                company_currency_code = STRIPE_VALID_JOURNAL_CURRENCIES.get(company_country.code) or 'EUR'
             currency = self.env['res.currency'].search([('name', '=ilike', company_currency_code)], limit=1)
             company.stripe_currency_id = currency and currency.id
 
@@ -120,7 +120,7 @@ class ResCompany(models.Model):
         available_to_all_companies = self.browse()  # Empty value means all companies
         for company in self:
             for mcc_ref, product_ref in mcc_ref_to_product_ref.items():
-                mcc = ref_to_mcc.get(mcc_ref).with_company(company)
+                mcc = ref_to_mcc.get(mcc_ref, self.env['product.mcc.stripe.tag']).with_company(company)
                 product = ref_to_product.get(product_ref)
                 if mcc and not mcc.product_id and product and product.company_id in {available_to_all_companies, company}:
                     mcc.product_id = product.id

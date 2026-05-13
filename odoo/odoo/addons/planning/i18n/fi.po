@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-09 18:43+0000\n"
-"PO-Revision-Date: 2026-02-17 10:04+0000\n"
+"POT-Creation-Date: 2026-02-27 18:44+0000\n"
+"PO-Revision-Date: 2026-04-13 09:42+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/planning/"
 "fi/>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: planning
 #. odoo-python
@@ -738,12 +738,12 @@ msgstr ""
 "out=\"ctx['employee'].name or ''\">Anita Oliver</t>,</p>\n"
 "                    <p t-else=\"\">Hei,</p>\n"
 "                    <br/>\n"
-"                    <p t-if=\"ctx.get('start_datetime') and "
-"ctx.get('end_datetime')\">\n"
-"                        Tulevat työvuorosi, joka alkaa <t t-"
-"out=\"format_date(ctx['start_datetime'])\">05-05-2021</t>\n"
-"                        ja päättyy <t t-"
-"out=\"format_date(ctx['end_datetime'])\">05-11-2021</t>, on julkaistu.\n"
+"                    <p t-if=\"ctx.get('start_datetime') and ctx.get"
+"('end_datetime')\">\n"
+"                        Tulevat työvuorosi <t t-out=\"format_date"
+"(ctx['start_datetime'])\">05.05.2021</t>\n"
+"                        ja <t t-out=\"format_date(ctx['end_datetime'])\">"
+"11.05.2021</t> välillä on julkaistu.\n"
 "                    </p>\n"
 "                    <div style=\"display: flex; margin: 15px;\">\n"
 "                        <div t-if=\"ctx.get('planning_url')\" style=\"margin-"
@@ -751,8 +751,8 @@ msgstr ""
 "                            <a t-att-href=\"ctx['planning_url']\" "
 "target=\"_blank\" class=\"planning_mail_template_button\" t-attf-"
 "style=\"color: {{object.company_id.email_primary_color or '#FFFFFF'}}; "
-"background-color: {{object.company_id.email_secondary_color or '#875A7B'}};"
-"\">Näytä suunnitelmasi</a>\n"
+"background-color: {{object.company_id.email_secondary_color or '#875A7B'}}"
+";\">Näytä suunnitelmasi</a>\n"
 "                        </div>\n"
 "                        <div t-if=\"ctx.get('planning_url_ics')\">\n"
 "                            <a t-att-href=\"ctx['planning_url_ics']\" "
@@ -766,19 +766,19 @@ msgstr ""
 "(object.allow_self_unassign and object.self_unassign_days_before)\">\n"
 "                        <t t-if=\"ctx.get('slot_unassigned')\">\n"
 "                            Haluamme myös muistuttaa, että joitakin vapaita "
-"työvuoroja on vielä täyttämättä, joten jos olet kiinnostunut ja "
-"käytettävissä, harkitsethan näiden vuoroijen tekemistä.\n"
+"työvuoroja on vielä täyttämättä. Jos olet kiinnostunut ja käytettävissä, "
+"harkitsethan näiden vuoroijen tekemistä.\n"
 "                        </t>\n"
 "                        <t t-if=\"object.allow_self_unassign and "
 "object.self_unassign_days_before\">\n"
 "                            Jos et pysty tekemään sinulle osoitettua vuoroa, "
-"poista vuoron kohdistus itseltäsi <t t-"
+"poista vuoro itseltäsi viimeistään <t t-"
 "out=\"object.self_unassign_days_before or ''\">5</t> päivää ennen vuoron "
 "alkua.\n"
 "                        </t>\n"
 "                    </p>\n"
-"                    <p t-if=\"ctx.get('message')\" t-out=\"ctx['message']\"/"
-">\n"
+"                    <p t-if=\"ctx.get('message')\" t-out=\"ctx['message']\"/>"
+"\n"
 "                    <p t-if=\"object.allow_self_unassign\">Jos nykyinen "
 "aikataulusi ei sovi sinulle, kehotamme sinua ottamaan yhteyttä kollegoihisi "
 "ja pyytämään vuoronvaihtoa. He saattavat olla kiinnostuneita vaihtamaan "
@@ -1197,10 +1197,9 @@ msgid ""
 "Create open shifts based on the roles needed for a mission, then assign "
 "those shifts to available resources."
 msgstr ""
-"Määritä suoritettavat roolit resursseillesi "
-"(esim. kokki, baarimikko, tarjoilija). Luo avoimia vuoroja tehtävän "
-"vaatimien roolien perusteella ja jaa ne sitten käytettävissä oleville "
-"resursseille."
+"Määritä suoritettavat roolit resursseillesi (esim. kokki, baarimikko, "
+"tarjoilija). Luo avoimia vuoroja tehtävän vaatimien roolien perusteella ja "
+"jaa ne sitten käytettävissä oleville resursseille."
 
 #. module: planning
 #. odoo-javascript
@@ -1246,6 +1245,7 @@ msgstr "Hylkää"
 #: model:ir.model.fields,field_description:planning.field_hr_departure_wizard__display_name
 #: model:ir.model.fields,field_description:planning.field_hr_employee__display_name
 #: model:ir.model.fields,field_description:planning.field_hr_employee_public__display_name
+#: model:ir.model.fields,field_description:planning.field_ir_actions_report__display_name
 #: model:ir.model.fields,field_description:planning.field_planning_analysis_report__display_name
 #: model:ir.model.fields,field_description:planning.field_planning_calendar_resource__display_name
 #: model:ir.model.fields,field_description:planning.field_planning_planning__display_name
@@ -1509,6 +1509,7 @@ msgstr "En ole käytettävissä"
 #: model:ir.model.fields,field_description:planning.field_hr_departure_wizard__id
 #: model:ir.model.fields,field_description:planning.field_hr_employee__id
 #: model:ir.model.fields,field_description:planning.field_hr_employee_public__id
+#: model:ir.model.fields,field_description:planning.field_ir_actions_report__id
 #: model:ir.model.fields,field_description:planning.field_planning_analysis_report__id
 #: model:ir.model.fields,field_description:planning.field_planning_calendar_resource__id
 #: model:ir.model.fields,field_description:planning.field_planning_planning__id
@@ -2246,6 +2247,11 @@ msgid "Repetitions"
 msgstr "Toistot"
 
 #. module: planning
+#: model:ir.model,name:planning.model_ir_actions_report
+msgid "Report Action"
+msgstr "Raporttitoiminto"
+
+#. module: planning
 #: model:ir.ui.menu,name:planning.planning_menu_reporting
 msgid "Reporting"
 msgstr "Raportointi"
@@ -2615,7 +2621,7 @@ msgstr "Aloitus- ja lopetustunnit"
 #: model:ir.model.fields,field_description:planning.field_planning_slot__start_datetime
 #: model_terms:ir.ui.view,arch_db:planning.planning_view_search_base
 msgid "Start Date"
-msgstr "Alkupäivä"
+msgstr "Aloituspäivä"
 
 #. module: planning
 #: model:ir.model.fields,field_description:planning.field_planning_analysis_report__state
@@ -2633,6 +2639,26 @@ msgstr "Lopetuspäivä"
 #: model:ir.model.fields.selection,name:planning.selection__res_company__planning_employee_unavailabilities__switch
 msgid "Switch shifts with other employees"
 msgstr "Vaihda vuoroja muiden työntekijöiden kanssa"
+
+#. module: planning
+#. odoo-python
+#: code:addons/planning/models/ir_actions_report.py:0
+msgid ""
+"The Planning report cannot be added to the print menu. Please use the Print "
+"action available in the Planning calendar and Gantt views."
+msgstr ""
+"Suunnitteluraporttia ei voi lisätä tulostusvalikkoon. Käytä "
+"suunnittelukalenterin ja Gantt-näkymien Tulosta-toimintoa."
+
+#. module: planning
+#. odoo-python
+#: code:addons/planning/models/ir_actions_report.py:0
+msgid ""
+"The Planning report cannot be printed from here. Please use the Print action "
+"available in the Planning calendar and Gantt views."
+msgstr ""
+"Suunnitteluraporttia ei voi tulostaa täältä. Käytä tulostustoimintoa, joka "
+"on käytettävissä suunnittelukalenterissa ja Gantt-näkymissä."
 
 #. module: planning
 #: model:ir.model.constraint,message:planning.constraint_res_company_planning_self_unassign_days_before_positive

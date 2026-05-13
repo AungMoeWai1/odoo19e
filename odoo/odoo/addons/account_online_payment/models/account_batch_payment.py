@@ -1,4 +1,5 @@
 from odoo import api, fields, models, SUPERUSER_ID, _
+from odoo.exceptions import UserError
 from odoo.addons.account.tools.structured_reference import is_valid_structured_reference_for_country
 
 STATUSES = [
@@ -84,6 +85,9 @@ class AccountBatchPayment(models.Model):
         statuses = {}
         for batch in self:
             account_online_account = batch.journal_id.account_online_account_id
+            if not account_online_account:
+                raise UserError(self.env._("This journal needs to be connected to a bank to check its status."))
+
             data = {
                 "payment_identifier": batch.payment_identifier,
                 "account_id": account_online_account.online_identifier,

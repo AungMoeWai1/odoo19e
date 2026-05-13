@@ -91,7 +91,31 @@ export class BankRecKanbanController extends KanbanController {
                 supplier_rank: makeActiveField(),
             },
         };
-
+        params.config.activeFields.currency_id = makeActiveField();
+        params.config.activeFields.currency_id.related = {
+            fields: {
+                id: { name: "id", type: "int" },
+                display_name: { name: "display_name", type: "char" },
+                decimal_places: { name: "decimal_places", type: "int" },
+            },
+            activeFields: {
+                id: makeActiveField(),
+                display_name: makeActiveField(),
+                decimal_places: makeActiveField(),
+            },
+        };
+        params.config.activeFields.foreign_currency_id.related = {
+            fields: {
+                id: { name: "id", type: "int" },
+                display_name: { name: "display_name", type: "char" },
+                decimal_places: { name: "decimal_places", type: "int" },
+            },
+            activeFields: {
+                id: makeActiveField(),
+                display_name: makeActiveField(),
+                decimal_places: makeActiveField(),
+            },
+        };
         params.config.activeFields.line_ids = makeActiveField();
         params.config.activeFields.line_ids.related = {
             fields: {
@@ -117,6 +141,7 @@ export class BankRecKanbanController extends KanbanController {
                 matched_credit_ids: { name: "matched_credit_ids", type: "one2many" },
                 reconcile_model_id: { name: "reconcile_model_id", type: "many2one" },
                 has_invalid_analytics: { name: "has_invalid_analytics", type: "boolean" },
+                analytic_distribution: { name: "analytic_distribution", type: "jsonb" },
                 tax_line_id: { name: "tax_line_id", type: "many2one" },
                 tax_ids: { name: "tax_ids", type: "many2many" },
             },
@@ -140,6 +165,7 @@ export class BankRecKanbanController extends KanbanController {
                 matched_credit_ids: makeActiveField(),
                 reconcile_model_id: makeActiveField(),
                 has_invalid_analytics: makeActiveField(),
+                analytic_distribution: makeActiveField(),
                 tax_line_id: makeActiveField(),
                 tax_ids: makeActiveField(),
             },
@@ -306,11 +332,13 @@ export class BankRecKanbanController extends KanbanController {
                 id: { name: "id", type: "int" },
                 display_name: { name: "display_name", type: "char" },
                 account_type: { name: "account_type", type: "char" },
+                reconcile: { name: "reconcile", type: "boolean" },
             },
             activeFields: {
                 id: makeActiveField(),
                 display_name: makeActiveField(),
                 account_type: makeActiveField(),
+                reconcile: makeActiveField(),
             },
         };
         params.config.activeFields.journal_id = makeActiveField();

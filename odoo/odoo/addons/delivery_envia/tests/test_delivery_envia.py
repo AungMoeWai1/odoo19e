@@ -8,6 +8,7 @@ import requests
 from odoo import Command
 from odoo.exceptions import ValidationError
 from odoo.tests import TransactionCase, tagged
+from odoo.addons.delivery_envia.models.envia_request import Envia
 
 
 @contextmanager
@@ -43,6 +44,15 @@ def _mock_envia_call():
                         {'fieldId': 'state', 'fieldName': 'state', 'rules': {'required': True, 'min': '2', 'max': '3', 'validationType': 'select'}},
                         {'fieldId': 'reference', 'fieldName': 'reference', 'rules': {'required': False, 'max': '50'}}
                     ],
+                'zipcode/CO/730001': [{
+                    'zip_code': '730001',
+                    'country': {'name': 'Colombia', 'code': 'CO'},
+                    'state': {'name': 'Tolima', 'code': {'1digit': None, '2digit': 'TO', '3digit': 'TOL'}},
+                    'locality': 'San Antonio',
+                    'suburbs': ['73675000'],
+                    'info': {'stat': '73001', 'stat_8digit': '73001000'},
+                    'regions': {'region_1': 'Tolima', 'region_2': 'Ibagué', 'region_3': 'Ibagué'},
+                }],
                 'uploads/ups': ['WyJtb2NrTGFiZWw9PT09Il0=']
             },
             'POST': {
@@ -123,7 +133,17 @@ class TestDeliveryEnvia(TransactionCase):
             'email': 'azure.Interior24@example.com',
             'phone': '(870)-931-0505',
         })
-
+        cls.co_partner = cls.env['res.partner'].create({
+            'name': 'Colombia Partner',
+            'street': 'Crr 14 no. 149 - 75 int 10 Apto 402',
+            'street2': 'Conjunto Monterrey, el salado',
+            'city': 'Ibagué',
+            'zip': '730001',
+            'country_id': cls.env.ref('base.co').id,
+            'state_id': cls.env.ref('base.state_co_14').id,
+            'email': 'colombia@example.com',
+            'phone': '+57 310 3460237',
+        })
 
         cls.product_to_ship1 = cls.env["product.product"].create({
             'name': 'Door with Legs',
@@ -194,6 +214,16 @@ class TestDeliveryEnvia(TransactionCase):
         with _mock_envia_call():
             with self.assertRaises(ValidationError):
                 choose_delivery_carrier.update_price()
+
+    def test_prepare_address_values_colombia_uses_envia_codes(self):
+        envia_request = Envia(self.envia, prod_environment=True, debug_logger=lambda *args, **kwargs: None)
+
+        with _mock_envia_call():
+            address = envia_request._prepare_address_values(self.co_partner, is_cust=True)
+
+        self.assertEqual(address['city'], '73001000')
+        self.assertEqual(address['city_select'], 'Ibagué')
+        self.assertEqual(address['postalCode'], '73001000')
 
     def test_shipping_order(self):
         """ Ensure that the shipping of an order works properly. """

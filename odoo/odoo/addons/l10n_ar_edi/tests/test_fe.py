@@ -134,3 +134,22 @@ class TestArEdiWsfe(TestArEdiCommon):
     def test_ar_edi_wsfe_payment_foreign_currency(self):
         """ Payment in Foreign Currency  """
         self._test_payment_foreign_currency()
+
+    def test_ar_edi_wsfe_rounding_complex(self):
+        custom_invoice_line_ids = [
+            self._prepare_invoice_line(price_unit=100.545, tax_ids=self.tax_21, discount=25.0),
+            self._prepare_invoice_line(price_unit=100.545, tax_ids=self.tax_21, discount=25.0),
+            self._prepare_invoice_line(price_unit=100.545, tax_ids=self.tax_21, discount=25.0),
+            self._prepare_invoice_line(price_unit=100.545, tax_ids=self.tax_21, discount=25.0),
+        ]
+
+        with self.subTest('invoice_a'), self.cr.savepoint() as sp:
+            self.env.company.tax_calculation_rounding_method = 'round_globally'
+            invoice_a = self._create_invoice_ar(invoice_line_ids=custom_invoice_line_ids)
+            self._validate_and_review(invoice_a, "test_wsfe_round_01")
+            sp.close()
+
+        with self.subTest('invoice_b'):
+            self.env.company.tax_calculation_rounding_method = 'round_per_line'
+            invoice_b = self._create_invoice_ar(invoice_line_ids=custom_invoice_line_ids)
+            self._validate_and_review(invoice_b, "test_wsfe_round_02")

@@ -1,6 +1,7 @@
 .account_report {
     .o_account_report_scroll_container {
         margin-inline: 0 !important;
+        padding-bottom: 40px;
     }
 
     //------------------------------------------------------------------------------------------------------------------
@@ -67,7 +68,7 @@
         > thead {
             > tr {
                 th:first-child {
-                    color: lightgrey;
+                    color: var(--AccountReport-muted-data-color, $o-gray-300);
                 }
                 th:not(:first-child) {
                     text-align: center;
@@ -96,6 +97,10 @@
 
                         &.o_account_report_chatter_selected,
                         &.o_account_report_chatter_annoted {
+                            opacity: 1;
+                        }
+
+                        .o_web_client.o_touch_device & {
                             opacity: 1;
                         }
                     }
@@ -258,7 +263,7 @@
         color: $o-gray-300;
         font-size: inherit;
         font-weight: normal;
-        padding: 0;
+        padding: 0 !important;
         text-align: center;
         width: 20px;
         white-space: nowrap;
@@ -284,7 +289,7 @@
         background-color: $o-view-background-color;
         color: $o-gray-600;
         width: auto;
-        padding: 0 0.25rem;
+        padding: 0 0.25rem !important;
         margin: 0 0.25rem;
         border: 1px solid $o-gray-300;
         border-radius: 0.25rem;
@@ -300,7 +305,8 @@
     //------------------------------------------------------------------------------------------------------------------
     .o_account_report_chatter {
         border-left: 1px solid var(--border-color);
-        max-width: calc(#{$o-mail-Chatter-minWidth} + 20px + var(--Chatter-asideExtraWidth));
+        // using Min instead of min to trick scss since it doesn't like the usage of additions and var.
+        max-width: Min(calc(#{$o-mail-Chatter-minWidth} + 20px + var(--Chatter-asideExtraWidth)), 100%);
         transition: max-width 0.2s ease-in-out;
 
         .o-mail-Chatter-topbar {
@@ -489,5 +495,25 @@ label:focus-within input { border: 0; }
             &.start-0::after { border-bottom-color: $o-white; }
             &.end-0::after { border-top-color: $o-white; }
         }
+    }
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+// Chatter
+//----------------------------------------------------------------------------------------------------------------------
+.o_account_report_mobile_chatter {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 999;
+    height: 60vh;
+    background-color: $o-view-background-color;
+    transform: translateY(0);
+    transition: transform 0.2s ease-in-out;
+    overflow: scroll;
+    
+    &.o_account_report_mobile_chatter_hidden {
+        transform: translateY(100%);
     }
 }

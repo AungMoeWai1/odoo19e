@@ -640,7 +640,7 @@
                 border-left: #{$border-width} solid #{$border-color};
             }
 
-            &.o_wsale_has_sidebar.o_wsale_products_opt_layout_catalog #o_wsale_products_grid {
+            &.o_wsale_has_sidebar .o_wsale_products_opt_layout_catalog#o_wsale_products_grid {
                 @include media-breakpoint-down(lg) {
                     border-left: #{$border-width} solid #{$border-color};
                 }
@@ -2051,4 +2051,13 @@ body.modal-open:has(.js_sale.o_wsale_product_page) {
 
 .o_wsale_alternative_products:not(:has(.s_dynamic_snippet_row)) {
     display: none;
+}
+
+div[name="order_confirmation"] {
+    .alert {
+        padding: #{$alert-padding-y} #{$alert-padding-x} !important; // TODO remove in master
+        p:last-child {
+            margin-bottom: 0;
+        }
+    }
 }

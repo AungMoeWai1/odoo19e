@@ -142,7 +142,6 @@
         <field name="date_from" eval="datetime(2024, 1, 1).date()"/>
     </record>
 
-    <!-- DAILY -->
     <record id="l10n_mx_rule_parameter_uma" model="hr.rule.parameter">
         <field name="name">Mexico: Daily UMA</field>
         <field name="code">l10n_mx_uma</field>
@@ -151,34 +150,57 @@
 <p>UMA: Unidad de Medida y Actualización</p>
 
 <h3 class="mt-5">Source</h3>
+<a href="https://www.inegi.org.mx/temas/uma/" target="_blank">UMA history</a>
 <a href="https://www.inegi.org.mx/app/saladeprensa/noticia/10533" target="_blank">https://www.inegi.org.mx/app/saladeprensa/noticia/10533</a>
 
 <h3 class="mt-5">Data Format</h3>
-<pre><em>Value</em> -> <strong>Float</strong></pre>
+<pre><em>Value</em> -> <strong>Dict</strong>{
+    <em>Period</em> -> <strong>String</strong>: <em>Value</em> -> <strong>Float</strong>
+}</pre>
         </field>
     </record>
     <record id="l10n_mx_rule_parameter_uma_2022" model="hr.rule.parameter.value">
-        <field name="parameter_value">96.22</field>
+        <field name="parameter_value">{
+            'daily': 96.22,
+            'monthly': 2925.09,
+            'annually': 35101.08,
+        }</field>
         <field name="rule_parameter_id" ref="l10n_mx_rule_parameter_uma"/>
         <field name="date_from" eval="datetime(2022, 2, 1).date()"/>
     </record>
     <record id="l10n_mx_rule_parameter_uma_2023" model="hr.rule.parameter.value">
-        <field name="parameter_value">103.74</field>
+        <field name="parameter_value">{
+            'daily': 103.74,
+            'monthly': 3153.70,
+            'annually': 37844.40,
+        }</field>
         <field name="rule_parameter_id" ref="l10n_mx_rule_parameter_uma"/>
         <field name="date_from" eval="datetime(2023, 2, 1).date()"/>
     </record>
     <record id="l10n_mx_rule_parameter_uma_2024" model="hr.rule.parameter.value">
-        <field name="parameter_value">108.57</field>
+        <field name="parameter_value">{
+            'daily': 108.57,
+            'monthly': 3300.53,
+            'annually': 39606.36,
+        }</field>
         <field name="rule_parameter_id" ref="l10n_mx_rule_parameter_uma"/>
         <field name="date_from" eval="datetime(2024, 2, 1).date()"/>
     </record>
     <record id="l10n_mx_rule_parameter_uma_2025" model="hr.rule.parameter.value">
-        <field name="parameter_value">113.14</field>
+        <field name="parameter_value">{
+            'daily': 113.14,
+            'monthly': 3439.46,
+            'annually': 41273.52,
+        }</field>
         <field name="rule_parameter_id" ref="l10n_mx_rule_parameter_uma"/>
         <field name="date_from" eval="datetime(2025, 2, 1).date()"/>
     </record>
     <record id="l10n_mx_rule_parameter_uma_2026" model="hr.rule.parameter.value">
-        <field name="parameter_value">117.31</field>
+        <field name="parameter_value">{
+            'daily': 117.31,
+            'monthly': 3566.22,
+            'annually': 42794.64,
+        }</field>
         <field name="rule_parameter_id" ref="l10n_mx_rule_parameter_uma"/>
         <field name="date_from" eval="datetime(2026, 2, 1).date()"/>
     </record>
@@ -677,6 +699,36 @@
             ],
         }</field>
         <field name="rule_parameter_id" ref="l10n_mx_rule_parameter_isr_table"/>
+        <field name="date_from" eval="datetime(2026, 1, 1).date()"/>
+    </record>
+
+    <record id="l10n_mx_rule_parameter_subsidy_salary_limit" model="hr.rule.parameter">
+        <field name="name">Mexico: Salary Limit for Employment Subsidy</field>
+        <field name="code">l10n_mx_subsidy_salary_limit</field>
+        <field name="country_id" ref="base.mx"/>
+        <field name="description" type="html">
+<p></p>
+
+<h3 class="mt-5">Source</h3>
+<a href="https://www.dof.gob.mx/nota_detalle.php?codigo=5777649&amp;fecha=31/12/2025" target="_blank">https://www.dof.gob.mx/nota_detalle.php?codigo=5777649&amp;fecha=31/12/2025</a>
+
+<h3 class="mt-5">Data Format</h3>
+<pre><em>Value</em> -> <strong>Float</strong></pre>
+        </field>
+    </record>
+    <record id="l10n_mx_rule_parameter_subsidy_salary_limit_2024" model="hr.rule.parameter.value">
+        <field name="parameter_value">9081.00</field>
+        <field name="rule_parameter_id" ref="l10n_mx_rule_parameter_subsidy_salary_limit"/>
+        <field name="date_from" eval="datetime(2024, 1, 1).date()"/>
+    </record>
+    <record id="l10n_mx_rule_parameter_subsidy_salary_limit_2025" model="hr.rule.parameter.value">
+        <field name="parameter_value">10171.00</field>
+        <field name="rule_parameter_id" ref="l10n_mx_rule_parameter_subsidy_salary_limit"/>
+        <field name="date_from" eval="datetime(2025, 1, 1).date()"/>
+    </record>
+    <record id="l10n_mx_rule_parameter_subsidy_salary_limit_2026" model="hr.rule.parameter.value">
+        <field name="parameter_value">11492.66</field>
+        <field name="rule_parameter_id" ref="l10n_mx_rule_parameter_subsidy_salary_limit"/>
         <field name="date_from" eval="datetime(2026, 1, 1).date()"/>
     </record>
 

@@ -252,6 +252,7 @@ class ShopeeShop(models.Model):
         :param int account_id: The Shopee account identifier.
         :param int shop_id: The Shopee shop identifier.
         :param dict shop_vals: The values to update the shop with.
+            TODO: rename to ``token_vals`` in master
         :return: shopee.shop
         """
         shop = self.search(
@@ -266,9 +267,9 @@ class ShopeeShop(models.Model):
                 'company_id': company_id,
                 **shop_vals,  # Contains the tokens from the account
             })
+        elif shop_vals:
+            shop.write(shop_vals)
         else:
-            if shop_vals:
-                shop.write(shop_vals)
             utils.request_access_token(shop)
 
         shop._update_shop_information(force_update=True)

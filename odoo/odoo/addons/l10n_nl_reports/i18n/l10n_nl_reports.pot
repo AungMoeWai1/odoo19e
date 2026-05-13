@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 19:06+0000\n"
-"PO-Revision-Date: 2026-02-20 19:06+0000\n"
+"POT-Creation-Date: 2026-05-08 18:09+0000\n"
+"PO-Revision-Date: 2026-05-08 18:09+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -128,6 +128,14 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_nl_reports/wizard/l10n_nl_reports_sbr_tax_report_wizard.py:0
 msgid ""
+"An error occured while using your certificate. Please verify the certificate"
+" you uploaded and try again."
+msgstr ""
+
+#. module: l10n_nl_reports
+#. odoo-python
+#: code:addons/l10n_nl_reports/wizard/l10n_nl_reports_sbr_tax_report_wizard.py:0
+msgid ""
 "An error occurred while using your certificate. Please verify the "
 "certificate you uploaded and try again."
 msgstr ""
@@ -150,8 +158,9 @@ msgstr ""
 #: model:ir.model.fields,help:l10n_nl_reports.field_l10n_nl_reports_sbr_icp_wizard__is_test
 #: model:ir.model.fields,help:l10n_nl_reports.field_l10n_nl_reports_sbr_tax_report_wizard__is_test
 msgid ""
-"Check this if you want the system to use the pre-production environment with"
-" test certificates."
+"Check this if you want the system to use the pre-production environment. A "
+"valid PKIoverheid certificate is required for both pre-production and "
+"production environments."
 msgstr ""
 
 #. module: l10n_nl_reports
@@ -473,9 +482,27 @@ msgid "Message Exchange ID"
 msgstr ""
 
 #. module: l10n_nl_reports
+#: model:ir.model.fields.selection,name:l10n_nl_reports.selection__l10n_nl_reports_sbr_icp_wizard__tax_consultant_order__nba
+#: model:ir.model.fields.selection,name:l10n_nl_reports.selection__l10n_nl_reports_sbr_tax_report_wizard__tax_consultant_order__nba
+msgid "NBA - Accountants"
+msgstr ""
+
+#. module: l10n_nl_reports
 #: model:ir.actions.client,name:l10n_nl_reports.action_account_financial_report_nl_pnl
 #: model:ir.actions.client,name:l10n_nl_reports.action_account_financial_report_nl_pnl_tags
 msgid "NL Profit And Loss"
+msgstr ""
+
+#. module: l10n_nl_reports
+#: model:ir.model.fields.selection,name:l10n_nl_reports.selection__l10n_nl_reports_sbr_icp_wizard__tax_consultant_order__noab
+#: model:ir.model.fields.selection,name:l10n_nl_reports.selection__l10n_nl_reports_sbr_tax_report_wizard__tax_consultant_order__noab
+msgid "NOAB - Dutch Order of Administrative and Tax Experts"
+msgstr ""
+
+#. module: l10n_nl_reports
+#: model:ir.model.fields.selection,name:l10n_nl_reports.selection__l10n_nl_reports_sbr_icp_wizard__tax_consultant_order__nob
+#: model:ir.model.fields.selection,name:l10n_nl_reports.selection__l10n_nl_reports_sbr_tax_report_wizard__tax_consultant_order__nob
+msgid "NOB - Dutch Order of Tax Advisors"
 msgstr ""
 
 #. module: l10n_nl_reports
@@ -556,6 +583,12 @@ msgstr ""
 #. module: l10n_nl_reports
 #: model:ir.model.fields,field_description:l10n_nl_reports.field_l10n_nl_reports_vat_pay_wizard__qr_code
 msgid "Qr Code"
+msgstr ""
+
+#. module: l10n_nl_reports
+#: model:ir.model.fields.selection,name:l10n_nl_reports.selection__l10n_nl_reports_sbr_icp_wizard__tax_consultant_order__rb
+#: model:ir.model.fields.selection,name:l10n_nl_reports.selection__l10n_nl_reports_sbr_tax_report_wizard__tax_consultant_order__rb
+msgid "RB - Register of Tax Advisors"
 msgstr ""
 
 #. module: l10n_nl_reports
@@ -653,6 +686,12 @@ msgid "Tax Consultant Number"
 msgstr ""
 
 #. module: l10n_nl_reports
+#: model:ir.model.fields,field_description:l10n_nl_reports.field_l10n_nl_reports_sbr_icp_wizard__tax_consultant_order
+#: model:ir.model.fields,field_description:l10n_nl_reports.field_l10n_nl_reports_sbr_tax_report_wizard__tax_consultant_order
+msgid "Tax Consultant Order"
+msgstr ""
+
+#. module: l10n_nl_reports
 #. odoo-python
 #: code:addons/l10n_nl_reports/models/dutch_report_custom_handler.py:0
 msgid "Tax Report SBR"
@@ -714,11 +753,23 @@ msgid ""
 msgstr ""
 
 #. module: l10n_nl_reports
+#: model:ir.model.fields,help:l10n_nl_reports.field_l10n_nl_reports_sbr_icp_wizard__tax_consultant_order
+#: model:ir.model.fields,help:l10n_nl_reports.field_l10n_nl_reports_sbr_tax_report_wizard__tax_consultant_order
+msgid "The order of tax consultants the tax consultant belongs to."
+msgstr ""
+
+#. module: l10n_nl_reports
 #. odoo-python
 #: code:addons/l10n_nl_reports/models/res_company.py:0
 msgid ""
 "The server root certificate is not accessible at the moment. Please try "
 "again later."
+msgstr ""
+
+#. module: l10n_nl_reports
+#. odoo-python
+#: code:addons/l10n_nl_reports/wizard/l10n_nl_reports_sbr_tax_report_wizard.py:0
+msgid "The signing certificate is not trusted."
 msgstr ""
 
 #. module: l10n_nl_reports

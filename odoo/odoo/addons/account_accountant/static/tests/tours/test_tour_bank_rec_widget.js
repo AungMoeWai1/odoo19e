@@ -54,7 +54,7 @@ registry.category("web_tour.tours").add("account_accountant_bank_rec_widget", {
         },
         {
             content: "Set Partner",
-            trigger: "button.btn-primary span:contains('Set Partner')",
+            trigger: "button.set-partner-btn",
             run: "click",
         },
         {
@@ -63,7 +63,7 @@ registry.category("web_tour.tours").add("account_accountant_bank_rec_widget", {
         },
         {
             content: "Select first partner",
-            trigger: "tbody > tr > td[name='complete_name']",
+            trigger: "tbody > tr > td[name='display_name']",
             run: "click",
         },
         {

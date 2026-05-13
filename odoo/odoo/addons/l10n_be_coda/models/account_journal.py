@@ -685,7 +685,7 @@ class AccountJournal(models.Model):
                         infoLine['communication'] = line[40:113]
                     statement['lines'].append(infoLine)
                 elif line[1] == '2':
-                    if infoLine['ref'] != rmspaces(line[2:10]):
+                    if infoLine['ref_move'] != rmspaces(line[2:6]):
                         raise UserError(_(
                             "Error %(error_code)s: CODA parsing error on information data record 3.2, seq nr %(seq_nr)s! Please report this issue via your Odoo support channel.",
                             error_code="R3004",
@@ -693,7 +693,7 @@ class AccountJournal(models.Model):
                         ))
                     statement['lines'][-1]['communication'] += rmspaces(line[10:115])
                 elif line[1] == '3':
-                    if infoLine['ref'] != rmspaces(line[2:10]):
+                    if infoLine['ref_move'] != rmspaces(line[2:6]):
                         raise UserError(_(
                             "Error %(error_code)s: CODA parsing error on information data record 3.3, seq nr %(seq_nr)s! Please report this issue via your Odoo support channel.",
                             error_code="R3005",
@@ -793,10 +793,11 @@ class AccountJournal(models.Model):
                     if not self.coda_split_transactions and statement_line and line['ref_move'] == statement_line[-1]['ref'][:4]:
                         to_add['amount'] = to_add.get('amount', 0) + line['amount']
                     else:
+                        transaction_type = parse_operation(line['transaction_type'], line['transaction_family'], line['transaction_code'], line['transaction_category'])
                         line_data = {
-                            'payment_ref': " ".join((structured_com or line.get('communication', '') or '/').split()),  # To avoid space in the middle or start/end
+                            'payment_ref': " ".join((structured_com or line.get('communication', '') or '/').split()) or transaction_type or self.env._('No description'),  # To avoid space in the middle or start/end
                             'transaction_details': transaction_details,
-                            'transaction_type': parse_operation(line['transaction_type'], line['transaction_family'], line['transaction_code'], line['transaction_category']),
+                            'transaction_type': transaction_type,
                             'date': line['entryDate'],
                             'amount': line['amount'],
                             'account_number': line.get('counterpartyNumber', None),
@@ -829,7 +830,9 @@ class AccountJournal(models.Model):
         result = []
         for acc_number, statements in itertools.groupby(sorted(file_statements, key=lambda k: k['acc_number']), key=lambda k: k['acc_number']):
             statements = list(statements)
-            ret_statements = self._get_coda_final_statements(statements)
+            ret_statements = []
+            if not self.env.context.get("ignore_statements"):
+                ret_statements = self._get_coda_final_statements(statements)
 
             # Order the transactions according the newly created statements to ensure valid balances.
             line_sequence = 1

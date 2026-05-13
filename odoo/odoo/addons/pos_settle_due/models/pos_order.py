@@ -12,7 +12,7 @@ class PosOrder(models.Model):
     @api.depends('payment_ids', 'settled_order_line_ids', 'is_invoiced')
     def _compute_customer_due_total(self):
         for order in self:
-            order_pay_later_pm = order.payment_ids.filtered(lambda payment: payment.amount > 0 and payment.payment_method_id.type == 'pay_later')
+            order_pay_later_pm = order.payment_ids.filtered(lambda payment: payment.payment_method_id.type == 'pay_later')
             # Only compute potential customer due if there is a partner and there is a pay_later payment method and if the order is not invoiced
             if order.partner_id and order_pay_later_pm and not order.is_invoiced:
                 if order.customer_due_total:
@@ -23,14 +23,14 @@ class PosOrder(models.Model):
                     )
                     order.customer_due_total = order_due - order_settled
                 else:
-                    order_due = sum(order.payment_ids.filtered(lambda payment: payment.amount > 0 and payment.payment_method_id.type == 'pay_later').mapped('amount'))
+                    order_due = sum(order.payment_ids.filtered(lambda payment: payment.payment_method_id.type == 'pay_later').mapped('amount'))
                     customer_due = order.partner_id.get_total_due(order.config_id.id)['res.partner'][0]['total_due']
                     total_before = customer_due - order_due
                     if customer_due > 0:
                         if total_before < 0:
                             # If the customer had a deposited amount
                             order_due = customer_due
-                        if order_due > 0:
+                        if order_due:
                             order.customer_due_total = order_due
                             order.init_customer_due_total = order_due
             else:

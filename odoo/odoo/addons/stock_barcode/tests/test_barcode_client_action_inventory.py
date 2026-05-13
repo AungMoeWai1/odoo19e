@@ -354,20 +354,34 @@ class TestInventoryAdjustmentBarcodeClientAction(TestBarcodeClientAction):
         """ Simulate an adjustment where a package is scanned and edited """
         self.env.user.write({'group_ids': [Command.link(self.env.ref('stock.group_tracking_lot').id)]})
 
-        pack = self.env['stock.package'].create({
-            'name': 'PACK001',
+        parent_pack = self.env['stock.package'].create({
+            'name': 'SUPERPACK',
         })
+        pack, pack2 = self.env['stock.package'].create([{
+            'name': f'PACK00{i + 1}',
+            'parent_package_id': parent_pack.id,
+            } for i in range(2)
+        ])
 
         self.env['stock.quant']._update_available_quantity(self.product1, self.stock_location, 7, package_id=pack)
         self.env['stock.quant']._update_available_quantity(self.product2, self.stock_location, 3, package_id=pack)
+        self.env['stock.quant']._update_available_quantity(self.product1, self.stock_location, 3, package_id=pack2)
+        # Request count for these quants
+        quants_to_count = self.env['stock.quant'].search([('package_id', 'in', pack.ids + pack2.ids)])
+        request_wizard = self.env['stock.request.count'].create({
+            'quant_ids': quants_to_count.ids,
+            'show_expected_quantity': True,
+        })
+        request_wizard.action_request_count()
 
         self.start_tour("/odoo/barcode", "test_inventory_package", login="admin", timeout=180)
 
         # Check the package is updated after adjustment
-        self.assertDictEqual(
-            {q.product_id: q.quantity for q in pack.quant_ids},
-            {self.product1: 7, self.product2: 21}
-        )
+        self.assertRecordValues(quants_to_count, [
+            {'product_id': self.product1.id, 'quantity': 7.0, 'package_id': pack.id},
+            {'product_id': self.product2.id, 'quantity': 21.0, 'package_id': pack.id},
+            {'product_id': self.product1.id, 'quantity': 3.0, 'package_id': pack2.id},
+        ])
 
     def test_inventory_packaging(self):
         """ Scans a product's packaging and ensures its quantity is correctly

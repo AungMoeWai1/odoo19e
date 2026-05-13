@@ -19,6 +19,8 @@ class TestCodaFile(AccountTestInvoicingCommon):
 
         cls.coda_file = cls._get_coda_file('l10n_be_coda/test_coda_file/Ontvangen_CODA.2013-01-11-18.59.15.txt')
         cls.coda_globalisation_file = cls._get_coda_file('l10n_be_coda/test_coda_file/test_coda_globalisation.txt')
+        cls.coda_32_increment_file = cls._get_coda_file('l10n_be_coda/test_coda_file/test_coda_with_32_incrementation.txt')
+        cls.coda_without_label = cls._get_coda_file('l10n_be_coda/test_coda_file/coda_without_label.txt')
 
     @classmethod
     def _get_coda_file(cls, coda_file_path):
@@ -179,3 +181,70 @@ class TestCodaFile(AccountTestInvoicingCommon):
             'balance_end': 10722.44,
             'balance_end_real': 10722.44,
         }])
+
+    def test_coda_file_with_32_incrementation_import(self):
+        """
+        Ensure the file can be imported even if the bank give a document with incorrect 3.2 incrementation
+        """
+        self.company_data['default_journal_bank'].coda_split_transactions = False
+        self.company_data['default_journal_bank'].create_document_from_attachment(self.env['ir.attachment'].create({
+            'mimetype': 'application/text',
+            'name': 'test_coda_with_32_incrementation.coda',
+            'raw': self.coda_32_increment_file,
+        }).ids)
+
+        imported_statement = self.env['account.bank.statement'].search([('company_id', '=', self.env.company.id)])
+
+        self.assertRecordValues(imported_statement.line_ids, [
+            {'amount': -435.00},
+            {'amount': 3044.45},
+            {'amount': -479.04},
+            {'amount': -479.04},
+            {'amount': 63.74},
+            {'amount': -2795.69},
+            {'amount': -9.68},
+        ])
+
+        self.assertRecordValues(imported_statement, [{
+            'balance_start': 11812.70,
+            'balance_end': 10722.44,
+            'balance_end_real': 10722.44,
+        }])
+
+    def test_coda_parsing_ignore_statements(self):
+        """
+        In some cases, we do not need the returning statements but only the currency and account_number
+        """
+        coda_attachment = self.env['ir.attachment'].create({
+            'mimetype': 'application/text',
+            'name': 'test_coda_globalisation.coda',
+            'raw': self.coda_globalisation_file,
+        })
+        journal_eur = self.company_data['default_journal_bank']
+        journal_eur.currency_id = self.env.ref('base.EUR').id
+        journal_usd = self.company_data['default_journal_bank'].copy({
+            "name": "J2",
+            "code": "J2",
+            "currency_id": self.env.ref('base.USD').id,
+        })
+        journals = journal_eur | journal_usd
+
+        with self.assertRaisesRegex(ValueError, r"Expected singleton"):
+            journals._parse_bank_statement_file(coda_attachment.raw)
+
+        currency, __, __ = journals.with_context(ignore_statements=True)._parse_bank_statement_file(coda_attachment.raw)[0]
+        self.assertEqual(currency, "EUR")
+
+    def test_coda_without_label(self):
+        self.company_data['default_journal_bank'].create_document_from_attachment(self.env['ir.attachment'].create({
+            'mimetype': 'application/text',
+            'name': 'test_coda_globalisation.coda',
+            'raw': self.coda_without_label,
+        }).ids)
+        imported_statement = self.env['account.bank.statement'].search([('company_id', '=', self.env.company.id)])
+        # When no label we will fallback on the transaction type
+        self.assertRecordValues(imported_statement.line_ids, [
+            {'payment_ref': '6703420000000301201946342016831102518305DELHAIZE P', 'transaction_type': 'Detail of Simple amount with detailed data: Cards (Payment by means of a payment card within the Eurozone)'},
+            {'payment_ref': '6703420000000301201946303764002112514455DELHAIZE P', 'transaction_type': 'Detail of Simple amount with detailed data: Cards (Payment by means of a payment card within the Eurozone)'},
+            {'payment_ref': 'Amount as totalised by the customer: Domestic or local SEPA credit transfers (Payment of wages, etc.)', 'transaction_type': 'Amount as totalised by the customer: Domestic or local SEPA credit transfers (Payment of wages, etc.)'},
+        ])

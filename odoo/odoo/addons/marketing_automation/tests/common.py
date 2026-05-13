@@ -171,7 +171,7 @@ class MarketingAutomationCase(MassMailCase):
                             )
 
             # check sub-records (mailing related notably)
-            if info.get('trace_status') and activity.activity_type == 'mail':
+            if info.get('trace_status') and activity.activity_type == 'email':
                 self.assertMarketAutoTracesMail(info, activity, traces)
             elif not info.get('trace_status'):
                 self.assertEqual(linked_traces.mailing_trace_ids, self.env['mailing.trace'])

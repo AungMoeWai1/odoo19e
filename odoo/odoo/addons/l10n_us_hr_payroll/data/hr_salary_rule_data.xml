@@ -53,7 +53,9 @@ year_payslips = version.env['hr.payslip'].search([
     ('company_id', '=', version.company_id.id),
 ])
 overtime_sum = year_payslips._get_line_values(['QAOT'], compute_sum=True)['QAOT']['sum']['total']
-result = 'OVERTIME' in worked_days and overtime_sum &lt; payslip._rule_parameter('l10n_us_qualified_overtime_deduction_cap')[employee.l10n_us_filing_status]</field>
+overtime_caps = payslip._rule_parameter('l10n_us_qualified_overtime_deduction_cap') if 'OVERTIME' in worked_days else {}
+result = employee.l10n_us_filing_status in overtime_caps and overtime_sum &lt; overtime_caps[employee.l10n_us_filing_status]
+        </field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
 overtime_cap = payslip._rule_parameter('l10n_us_qualified_overtime_deduction_cap')[employee.l10n_us_filing_status]
@@ -718,7 +720,7 @@ else:
 
 # Step 3
 # Final taxable amount by applying the deduction
-taxable = gross_income - deduction
+taxable = max(gross_income - deduction, 0)
 
 # Step 4
 # Tax amount per year

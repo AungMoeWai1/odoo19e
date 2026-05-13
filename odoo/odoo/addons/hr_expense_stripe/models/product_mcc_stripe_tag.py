@@ -1,6 +1,7 @@
 import random
+import re
 
-from odoo import _, api, models, fields
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -12,7 +13,7 @@ class ProductMCCSTripeTag(models.Model):
 
     name = fields.Char(string="Name", required=True, translate=True)
     stripe_name = fields.Char(string="Stripe Name", required=True, readonly=True)
-    code = fields.Char(string="Code", required=True, readonly=True, size=4, copy=False, index='btree')
+    code = fields.Char(string="Code", required=True, readonly=True, size=9, copy=False, index='btree')
     product_id = fields.Many2one(
         string="Expense Category to use",
         comodel_name='product.product',
@@ -37,6 +38,29 @@ class ProductMCCSTripeTag(models.Model):
         for product in self.product_id:
             if round(product.standard_price, int(price_precision)) != 0:
                 raise ValidationError(_("To be used by Expense cards, the product '%(name)s' must have a cost of 0.00", name=product.name))
+
+    @api.constrains('code')
+    def _check_code_format(self):
+        pattern = re.compile(r'^\d{4}(-\d{4})?$')
+        for mcc in self:
+            if not pattern.match(mcc.code):
+                raise ValidationError(self.env._(
+                    "The MCC code '%(code)s' is not valid. It must be either a 4-digit code or a range in the format 'XXXX-XXXX'.",
+                    code=mcc.code,
+                ))
+
+    def _mcc_is_in_range(self, mcc_code):
+        if not mcc_code:
+            return False
+        mcc_ranges = self.filtered(lambda mcc: '-' in mcc.code)
+        if mcc_code in set((self - mcc_ranges).mapped('code')):
+            return True
+        mcc_code = int(mcc_code)
+        for mcc in mcc_ranges:
+            start, end = (int(code) for code in mcc.code.split('-'))
+            if start <= mcc_code <= end:
+                return True
+        return False
 
     def write(self, vals):
         if ('code' in vals or 'stripe_name' in vals) and not self.has_access('create'):

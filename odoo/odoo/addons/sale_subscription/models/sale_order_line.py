@@ -64,7 +64,7 @@ class SaleOrderLine(models.Model):
             currency_id = line.order_id.currency_id or self.env.company.currency_id
             next_invoice_date = line.order_id.next_invoice_date
             last_invoiced_date = line.last_invoiced_date
-            if not line.order_id.is_subscription or not line.recurring_invoice:
+            if (not line.order_id.is_subscription and line.order_id.subscription_state != '7_upsell') or not line.recurring_invoice:
                 continue
             # Subscriptions and upsells
             recurring_free = currency_id.compare_amounts(line.order_id.recurring_monthly, 0) < 1
@@ -80,7 +80,7 @@ class SaleOrderLine(models.Model):
                 future_line = line.order_id.start_date and line.order_id.start_date > today or (currency_id.is_zero(line.price_subtotal))
                 if future_line:
                     line.invoice_status = 'no'
-                elif last_invoiced_date and last_invoiced_date <= today and next_invoice_date:
+                elif last_invoiced_date and next_invoice_date and next_invoice_date > today:
                     line.invoice_status = 'invoiced'
 
     @api.depends(
@@ -172,6 +172,7 @@ class SaleOrderLine(models.Model):
 
             is_order_active = (
                 order.subscription_state in ('3_progress', '4_paused')
+                and order.next_invoice_date
                 and (not order.end_date or order.next_invoice_date < order.end_date)
             )
             if line.recurring_invoice and is_order_active and not float_is_zero(line.price_subtotal, precision_rounding=line.currency_id.rounding):
@@ -370,15 +371,16 @@ class SaleOrderLine(models.Model):
                 new_period_start = self.order_id.next_invoice_date or max(start_date, first_contract_date)
                 new_period_stop = new_period_start + self.order_id.plan_id.billing_period
 
-        if not self.order_id.plan_id.billing_first_day or self.order_id.plan_id.billing_period_unit == 'week':
-            # Never apply billing_first_day for weekly plan.
-            return new_period_start, new_period_stop - relativedelta(days=1), 1, None
+        # For upsells, new_period_stop is already the parent's next_invoice_date (correct boundary)
+        # Never apply billing_first_day for weekly plan.
+        if is_upsell or not self.order_id.plan_id.billing_first_day or self.order_id.plan_id.billing_period_unit == 'week':
+            return new_period_start, new_period_stop - relativedelta(days=1), 1, (new_period_stop - new_period_start).days
         elif self.order_id.plan_id.billing_period_unit == 'month':
-            reference_date = new_period_stop if new_period_stop >= today else new_period_stop + relativedelta(months=1)
-            next_date_1st = reference_date + relativedelta(day=1)
+            # Align billing to calendar month: increment by `billing_period_value` months, then set day to 1st day of the month
+            next_date_1st = new_period_start + relativedelta(months=self.order_id.plan_id.billing_period_value, day=1)
         elif self.order_id.plan_id.billing_period_unit == 'year':
-            reference_date = new_period_stop if new_period_stop >= today else new_period_stop + relativedelta(years=1)
-            next_date_1st = reference_date + relativedelta(day=1, month=1)
+            # Align billing to calendar year: increment by `billing_period_value` years, then set month and day to January 1.
+            next_date_1st = new_period_start + relativedelta(years=self.order_id.plan_id.billing_period_value, month=1, day=1)
 
         number_of_days = (next_date_1st - new_period_start).days
         ratio = number_of_days / (new_period_stop - new_period_start).days
@@ -695,6 +697,12 @@ class SaleOrderLine(models.Model):
         return res
 
     # === UTILS === #
+
+    def _is_collapsed(self):
+        if not self:
+            return False
+        self.ensure_one()
+        return self.display_type in ('line_section', 'line_subsection') and self.collapse_composition
 
     def _is_postpaid_line(self):
         self.ensure_one()

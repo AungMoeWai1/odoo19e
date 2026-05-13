@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-30 18:42+0000\n"
+"POT-Creation-Date: 2026-04-24 17:41+0000\n"
 "PO-Revision-Date: 2025-10-08 18:43+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -942,16 +942,17 @@ msgid ""
 "                        </t>\n"
 "                    </t>\n"
 "                    <t t-else=\"\">\n"
-"                        Your subscription <t t-out=\"ctx.get('code') or "
-"''\">CODE</t> is due for renewal but we haven’t received your payment yet. "
-"To keep your subscription active, please make your payment as soon as "
+"                        Your subscription <t t-out=\"object.client_order_ref "
+"or ''\">CODE</t> is due for renewal but we haven’t received your payment "
+"yet. To keep your subscription active, please make your payment as soon as "
 "possible.\n"
 "                    </t>\n"
 "                    <br/><br/>\n"
-"                    Your subscription <t t-out=\"ctx.get('code') or "
+"                    Your subscription <t t-out=\"object.client_order_ref or "
 "''\">CODE</t> is still valid but will be <strong>suspended</strong>\n"
-"                    on <t t-out=\"format_date(ctx.get('date_close')) or "
-"''\">05/05/2021</t><br/>\n"
+"                    on <t t-"
+"out=\"format_date(object._get_subscription_close_date()) or ''\">05/05/2021</"
+"t><br/>\n"
 "                    <div style=\"margin: 16px 0px; text-align: center;\">\n"
 "                        <a t-attf-href=\"{{ ctx.get('payment_link', "
 "object.get_portal_url()) }}\" t-attf-style=\"display: inline-block; padding: "
@@ -1352,15 +1353,6 @@ msgstr ""
 #, fuzzy
 msgid "Automatic payment failed. Email sent to customer. Error: %s"
 msgstr "Avtomatik to‘lov amalga oshmadi. Mijozga xabar yuborildi. Xato: %s"
-
-#. module: sale_subscription
-#. odoo-python
-#: code:addons/sale_subscription/models/sale_order.py:0
-#, fuzzy
-msgid ""
-"Automatic payment failed. No country specified on payment_token's partner"
-msgstr ""
-"Avtomatik to‘lov amalga oshmadi. To‘lov belgilamasida mamlakat ko‘rsatilmagan"
 
 #. module: sale_subscription
 #. odoo-python
@@ -3594,8 +3586,6 @@ msgid "Quantity"
 msgstr "Miqdor"
 
 #. module: sale_subscription
-#. odoo-python
-#: code:addons/sale_subscription/models/sale_order.py:0
 #: model:ir.model.fields.selection,name:sale_subscription.selection__sale_order__subscription_state__1_draft
 #: model:ir.model.fields.selection,name:sale_subscription.selection__sale_order_log__subscription_state__1_draft
 #: model:ir.model.fields.selection,name:sale_subscription.selection__sale_order_log_report__state__draft
@@ -4746,6 +4736,16 @@ msgid "The start date indicate when the subscription periods begin."
 msgstr "Boshlanish sanasi obuna muddatlari qachon boshlanishini ko‘rsatadi."
 
 #. module: sale_subscription
+#. odoo-python
+#: code:addons/sale_subscription/models/sale_order.py:0
+msgid ""
+"The start date of an upsell cannot be greater or equal to the next invoice "
+"date of the subscription %s.\n"
+"You should first invoice the original subscription, use an earlier start "
+"date for the upsell or create a renewal quotation."
+msgstr ""
+
+#. module: sale_subscription
 #: model:sale.order.close.reason,name:sale_subscription.close_reason_renew
 #, fuzzy
 msgid "The subscription was renewed with a new plan"
@@ -5419,17 +5419,6 @@ msgstr "Obunani boshqa valyutada qo‘shimcha sotolmaysiz."
 #: code:addons/sale_subscription/models/sale_order.py:0
 #, fuzzy
 msgid ""
-"You cannot upsell a subscription whose next invoice date is in the past.\n"
-"Please, invoice directly the %s contract."
-msgstr ""
-"Keyingi hisob-kitob sanasi o‘tgan obunani qo‘shimcha sotolmaysiz. Iltimos, "
-"%s shartnomasiga to‘g‘ridan-to‘g‘ri hisob-faktura yuboring."
-
-#. module: sale_subscription
-#. odoo-python
-#: code:addons/sale_subscription/models/sale_order.py:0
-#, fuzzy
-msgid ""
 "You cannot validate a renewal quotation starting before the next invoice "
 "date of the parent contract. Please update the start date after the %s."
 msgstr ""
@@ -5713,3 +5702,18 @@ msgstr ""
 "talab qilmoqda. Agar bu borada qandaydir savollaringiz yoki muammolaringiz "
 "bo‘lsa, iltimos, sizning aloqa shaxsingiz {{ object.user_id.name }} bilan "
 "bog‘laning."
+
+#, fuzzy
+#~ msgid ""
+#~ "Automatic payment failed. No country specified on payment_token's partner"
+#~ msgstr ""
+#~ "Avtomatik to‘lov amalga oshmadi. To‘lov belgilamasida mamlakat "
+#~ "ko‘rsatilmagan"
+
+#, fuzzy
+#~ msgid ""
+#~ "You cannot upsell a subscription whose next invoice date is in the past.\n"
+#~ "Please, invoice directly the %s contract."
+#~ msgstr ""
+#~ "Keyingi hisob-kitob sanasi o‘tgan obunani qo‘shimcha sotolmaysiz. "
+#~ "Iltimos, %s shartnomasiga to‘g‘ridan-to‘g‘ri hisob-faktura yuboring."

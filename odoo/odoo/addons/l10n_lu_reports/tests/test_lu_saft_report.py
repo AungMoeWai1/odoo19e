@@ -887,6 +887,25 @@ class TestLuSaftReport(TestSaftReport):
             })]
         })
         bill.action_post()
+        foreign_currency = self.setup_other_currency('USD', rates=[
+            ('2016-01-01', 3.0),
+            ('2017-01-01', 2.0),
+        ])
+        bill_forex = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'date': '2025-12-06',
+            'invoice_date': '2025-12-03',
+            'partner_id': partner_c.id,
+            'currency_id': foreign_currency.id,
+            'line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'quantity': 200.0,
+                'price_unit': 1.0,
+                'tax_ids': [Command.set(self.company_data['default_tax_purchase'].ids)],
+            })]
+        })
+
+        bill_forex.action_post()
 
         ChartTemplate = self.env['account.chart.template']
         allocation_acc = ChartTemplate.ref('lu_2020_account_6492')
@@ -972,7 +991,7 @@ class TestLuSaftReport(TestSaftReport):
                                 <StandardAccountID>421611</StandardAccountID>
                                 <AccountType>Current Assets</AccountType>
                                 <OpeningDebitBalance>2720.00</OpeningDebitBalance>
-                                <ClosingDebitBalance>2754.00</ClosingDebitBalance>
+                                <ClosingDebitBalance>2771.00</ClosingDebitBalance>
                             </Account>
                             <Account>
                                 <AccountID>___ignore___</AccountID>
@@ -980,7 +999,7 @@ class TestLuSaftReport(TestSaftReport):
                                 <StandardAccountID>___ignore___</StandardAccountID>
                                 <AccountType>Payable</AccountType>
                                 <OpeningDebitBalance>0.00</OpeningDebitBalance>
-                                <ClosingCreditBalance>234.00</ClosingCreditBalance>
+                                <ClosingCreditBalance>351.00</ClosingCreditBalance>
                             </Account>
                             <Account>
                                 <AccountID>___ignore___</AccountID>
@@ -1004,7 +1023,7 @@ class TestLuSaftReport(TestSaftReport):
                                 <StandardAccountID>601000</StandardAccountID>
                                 <AccountType>Expenses</AccountType>
                                 <OpeningDebitBalance>0.00</OpeningDebitBalance>
-                                <ClosingDebitBalance>200.00</ClosingDebitBalance>
+                                <ClosingDebitBalance>300.00</ClosingDebitBalance>
                             </Account>
                             <Account>
                                 <AccountID>___ignore___</AccountID>
@@ -1052,7 +1071,7 @@ class TestLuSaftReport(TestSaftReport):
                                 </Contact>
                                 <SupplierID>___ignore___</SupplierID>
                                 <OpeningDebitBalance>0.00</OpeningDebitBalance>
-                                <ClosingCreditBalance>234.00</ClosingCreditBalance>
+                                <ClosingCreditBalance>351.00</ClosingCreditBalance>
                             </Supplier>
                         </Suppliers>
                         <TaxTable>
@@ -1109,9 +1128,9 @@ class TestLuSaftReport(TestSaftReport):
                         </Owners>
                     </MasterFiles>
                     <GeneralLedgerEntries>
-                        <NumberOfEntries>3</NumberOfEntries>
-                        <TotalDebit>702.00</TotalDebit>
-                        <TotalCredit>702.00</TotalCredit>
+                        <NumberOfEntries>4</NumberOfEntries>
+                        <TotalDebit>819.00</TotalDebit>
+                        <TotalCredit>819.00</TotalCredit>
                         <Journal>
                             <JournalID>___ignore___</JournalID>
                             <Description>___ignore___</Description>
@@ -1286,6 +1305,73 @@ class TestLuSaftReport(TestSaftReport):
                                     </CreditAmount>
                                 </Line>
                             </Transaction>
+                            <Transaction>
+                                <TransactionID>___ignore___</TransactionID>
+                                <Period>12</Period>
+                                <PeriodYear>2025</PeriodYear>
+                                <TransactionDate>2025-12-06</TransactionDate>
+                                <TransactionType>in_invoic</TransactionType>
+                                <Description>BILL/2025/12/0002</Description>
+                                <SystemEntryDate>___ignore___</SystemEntryDate>
+                                <GLPostingDate>2025-12-06</GLPostingDate>
+                                <CustomerID>___ignore___</CustomerID>
+                                <SupplierID>___ignore___</SupplierID>
+                                <Line>
+                                    <RecordID>___ignore___</RecordID>
+                                    <AccountID>___ignore___</AccountID>
+                                    <ValueDate>2025-12-06</ValueDate>
+                                    <SourceDocumentID>___ignore___</SourceDocumentID>
+                                    <CustomerID>___ignore___</CustomerID>
+                                    <Description>[PA] product_a</Description>
+                                    <DebitAmount>
+                                        <Amount>100.00</Amount>
+                                        <CurrencyCode>USD</CurrencyCode>
+                                        <CurrencyAmount>200.00</CurrencyAmount>
+                                        <ExchangeRate>2.00000000</ExchangeRate>
+                                    </DebitAmount>
+                                    <TaxInformation>
+                                        <TaxType>___ignore___</TaxType>
+                                        <TaxCode>___ignore___</TaxCode>
+                                        <TaxPercentage>17.0</TaxPercentage>
+                                        <TaxBase>100.00</TaxBase>
+                                        <TaxBaseDescription>___ignore___</TaxBaseDescription>
+                                        <TaxAmount>
+                                            <Amount>17.00</Amount>
+                                            <CurrencyCode>USD</CurrencyCode>
+                                            <CurrencyAmount>17.00</CurrencyAmount>
+                                            <ExchangeRate>2.00000000</ExchangeRate>
+                                        </TaxAmount>
+                                    </TaxInformation>
+                                </Line>
+                                <Line>
+                                    <RecordID>___ignore___</RecordID>
+                                    <AccountID>___ignore___</AccountID>
+                                    <ValueDate>2025-12-06</ValueDate>
+                                    <SourceDocumentID>___ignore___</SourceDocumentID>
+                                    <CustomerID>___ignore___</CustomerID>
+                                    <Description>___ignore___</Description>
+                                    <DebitAmount>
+                                        <Amount>17.00</Amount>
+                                        <CurrencyCode>USD</CurrencyCode>
+                                        <CurrencyAmount>34.00</CurrencyAmount>
+                                        <ExchangeRate>2.00000000</ExchangeRate>
+                                    </DebitAmount>
+                                </Line>
+                                <Line>
+                                    <RecordID>___ignore___</RecordID>
+                                    <AccountID>___ignore___</AccountID>
+                                    <ValueDate>2025-12-06</ValueDate>
+                                    <SourceDocumentID>___ignore___</SourceDocumentID>
+                                    <CustomerID>___ignore___</CustomerID>
+                                    <Description>BILL/2025/12/0002</Description>
+                                    <CreditAmount>
+                                        <Amount>117.00</Amount>
+                                        <CurrencyCode>USD</CurrencyCode>
+                                        <CurrencyAmount>234.00</CurrencyAmount>
+                                        <ExchangeRate>2.00000000</ExchangeRate>
+                                    </CreditAmount>
+                                </Line>
+                            </Transaction>
                         </Journal>
                     </GeneralLedgerEntries>
                     <SourceDocuments>
@@ -1429,8 +1515,8 @@ class TestLuSaftReport(TestSaftReport):
                             </Invoice>
                         </SalesInvoices>
                         <PurchaseInvoices>
-                            <NumberOfEntries>1</NumberOfEntries>
-                            <TotalDebit>200.00</TotalDebit>
+                            <NumberOfEntries>2</NumberOfEntries>
+                            <TotalDebit>300.00</TotalDebit>
                             <TotalCredit>0.00</TotalCredit>
                             <Invoice>
                                 <InvoiceNo>BILL/2025/12/0001</InvoiceNo>
@@ -1497,6 +1583,82 @@ class TestLuSaftReport(TestSaftReport):
                                     </TaxInformationTotals>
                                     <NetTotal>-200.00</NetTotal>
                                     <GrossTotal>-234.00</GrossTotal>
+                                </DocumentTotals>
+                            </Invoice>
+                            <Invoice>
+                                <InvoiceNo>BILL/2025/12/0002</InvoiceNo>
+                                <CustomerInfo>
+                                    <CustomerID>___ignore___</CustomerID>
+                                    <BillingAddress>
+                                        <City>Garnich</City>
+                                        <PostalCode>L-8353</PostalCode>
+                                        <Country>LU</Country>
+                                    </BillingAddress>
+                                </CustomerInfo>
+                                <SupplierInfo>
+                                    <SupplierID>___ignore___</SupplierID>
+                                    <BillingAddress>
+                                        <City>Garnich</City>
+                                        <PostalCode>L-8353</PostalCode>
+                                        <Country>LU</Country>
+                                    </BillingAddress>
+                                </SupplierInfo>
+                                <Period>12</Period>
+                                <PeriodYear>2025</PeriodYear>
+                                <InvoiceDate>2025-12-03</InvoiceDate>
+                                <InvoiceType>in_invoic</InvoiceType>
+                                <GLPostingDate>___ignore___</GLPostingDate>
+                                <TransactionID>___ignore___</TransactionID>
+                                <Line>
+                                    <AccountID>___ignore___</AccountID>
+                                    <OrderReferences>
+                                        <OriginatingON>BILL/2025/12/0002</OriginatingON>
+                                        <OrderDate>2025-12-03</OrderDate>
+                                    </OrderReferences>
+                                    <ProductCode>PA</ProductCode>
+                                    <ProductDescription>[PA] product_a</ProductDescription>
+                                    <Quantity>200.0</Quantity>
+                                    <InvoiceUOM>Units</InvoiceUOM>
+                                    <UnitPrice>0.50</UnitPrice>
+                                    <TaxPointDate>2025-12-03</TaxPointDate>
+                                    <Description>[PA] product_a</Description>
+                                    <InvoiceLineAmount>
+                                        <Amount>100.00</Amount>
+                                        <CurrencyCode>USD</CurrencyCode>
+                                        <CurrencyAmount>200.00</CurrencyAmount>
+                                        <ExchangeRate>2.00000000</ExchangeRate>
+                                    </InvoiceLineAmount>
+                                    <DebitCreditIndicator>D</DebitCreditIndicator>
+                                    <TaxInformation>
+                                        <TaxType>___ignore___</TaxType>
+                                        <TaxCode>___ignore___</TaxCode>
+                                        <TaxPercentage>17.0</TaxPercentage>
+                                        <TaxBase>100.00</TaxBase>
+                                        <TaxBaseDescription>___ignore___</TaxBaseDescription>
+                                        <TaxAmount>
+                                            <Amount>17.00</Amount>
+                                            <CurrencyCode>USD</CurrencyCode>
+                                            <CurrencyAmount>17.00</CurrencyAmount>
+                                            <ExchangeRate>2.00000000</ExchangeRate>
+                                        </TaxAmount>
+                                    </TaxInformation>
+                                </Line>
+                                <DocumentTotals>
+                                    <TaxInformationTotals>
+                                        <TaxType>___ignore___</TaxType>
+                                        <TaxCode>___ignore___</TaxCode>
+                                        <TaxPercentage>17.0</TaxPercentage>
+                                        <TaxBase>100.00</TaxBase>
+                                        <TaxBaseDescription>___ignore___</TaxBaseDescription>
+                                        <TaxAmount>
+                                            <Amount>17.00</Amount>
+                                            <CurrencyCode>USD</CurrencyCode>
+                                            <CurrencyAmount>34.00</CurrencyAmount>
+                                            <ExchangeRate>2.00000000</ExchangeRate>
+                                        </TaxAmount>
+                                    </TaxInformationTotals>
+                                    <NetTotal>-100.00</NetTotal>
+                                    <GrossTotal>-117.00</GrossTotal>
                                 </DocumentTotals>
                             </Invoice>
                         </PurchaseInvoices>

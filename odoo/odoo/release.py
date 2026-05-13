@@ -37,9 +37,9 @@ license = 'LGPL-3'
 nt_service_name = "odoo-server-" + series.replace('~','-')
 
 MIN_PY_VERSION = (3, 10)
-MAX_PY_VERSION = (3, 13)
+MAX_PY_VERSION = (3, 14)
 MIN_PG_VERSION = 13
 
-version += '+e-20260223'
+version += '+e-20260512'
 
-repos_heads = {'odoo': '8a38eecbfaf6f79a8adeeb2e75be1fff4ad5fe36', 'enterprise': '3c374b698dee6d2de277c7c86739517bedfb1432', 'design-themes': '7b23e8e51870e17e9de80bebdf44e93975ad3080'}
+repos_heads = {'odoo': 'e119c18e470d4d3624268d901cb1fcea56a194da', 'enterprise': 'd9a9339e1f30f1e5cc37ebb88949451a6652f83b', 'design-themes': '1421da44d8e1cdeeae47659bbcb83f0460dac02c'}

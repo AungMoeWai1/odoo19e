@@ -97,6 +97,9 @@ export class PivotAutofillPlugin extends UIPlugin {
         if (functionName === "PIVOT.VALUE") {
             builder = this._autofillPivotValue.bind(this);
         } else if (functionName === "PIVOT.HEADER") {
+            const nonPositionalArgs = args.map((arg) =>
+                typeof arg === "string" && arg.startsWith("#") ? arg.slice(1) : arg
+            );
             if (args.length === 1) {
                 // Total
                 if (isColumn) {
@@ -106,7 +109,9 @@ export class PivotAutofillPlugin extends UIPlugin {
                     // UP-DOWN
                     builder = this._autofillPivotColHeader.bind(this);
                 }
-            } else if (definition.rows.map((row) => row.nameWithGranularity).includes(args[1])) {
+            } else if (
+                definition.rows.map((row) => row.nameWithGranularity).includes(nonPositionalArgs[1])
+            ) {
                 builder = this._autofillPivotRowHeader.bind(this);
             } else {
                 builder = this._autofillPivotColHeader.bind(this);

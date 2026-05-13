@@ -79,6 +79,22 @@ class TestAccountReturn(TestAccountReportsCommon):
     def _patch_generate_locking_attachments(cls):
         return patch.object(cls.registry['account.return'], '_generate_locking_attachments', lambda self, options: None)
 
+    @classmethod
+    def _patch_postprocess_vat_closing_entry_results(cls, profit_account, loss_account, line_1, line_2):
+        def patched_postprocess_vat_closing_entry_results(self, company, options, results):
+            rounding_accounts = {
+                'profit': profit_account,
+                'loss': loss_account,
+            }
+
+            vat_results_summary = [
+                ('due', line_1.id, 'balance'),
+                ('deductible', line_2.id, 'balance'),
+            ]
+            return self._vat_closing_entry_results_rounding(company, options, results, rounding_accounts, vat_results_summary)
+
+        return patch.object(cls.registry['account.return'], '_postprocess_vat_closing_entry_results', patched_postprocess_vat_closing_entry_results)
+
     def assert_return_dates_equal(self, returns, dates_list):
         self.assertEqual(len(returns), len(dates_list), "Return count mismatch")
 
@@ -312,6 +328,101 @@ class TestAccountReturn(TestAccountReportsCommon):
                 ("2024-12-01", "2024-12-31"),
             ]
         )
+
+    def test_tax_return_with_branches_and_rounding_applied(self):
+        """
+        Some countries apply a rounding to the closing moves by calling `_vat_closing_entry_results_rounding`
+        with a specific `vat_results_summary`.
+        This test checks that the rounding is well computed when having a company with branches
+        """
+        # We need to create a new tax report with report lines which will be used in _postprocess_vat_closing_entry_results
+        report = self.env['account.report'].create({
+            'name': "Tax report",
+            'root_report_id': self.env.ref('account.generic_tax_report').id,
+            'column_ids': [
+                Command.create({
+                    'name': "Balance",
+                    'expression_label': 'balance',
+                }),
+            ],
+        })
+
+        sale_tag, purchase_tag = self.env['account.account.tag'].create([
+            {
+                'name': name,
+                'applicability': 'taxes',
+                'country_id': self.env.company.country_id.id,
+            } for i, name in enumerate(['test_sale_tag', 'test_purchase_tag'])
+        ])
+
+        report_lines = self.env['account.report.line'].create([
+            {
+                'name': 'test_sale_line',
+                'report_id': report.id,
+                'sequence': 10,
+                'expression_ids': [
+                    Command.create({
+                        'label': 'balance',
+                        'engine': 'tax_tags',
+                        'formula': tag.name,
+                    }),
+                ],
+            } for tag in (sale_tag, purchase_tag)
+        ])
+
+        self.basic_return_type.write({
+            'report_id': report.id,
+        })
+
+        self.tax_sale_a.invoice_repartition_line_ids.filtered(lambda l: l.repartition_type == 'tax').tag_ids = sale_tag
+        self.tax_purchase_a.invoice_repartition_line_ids.filtered(lambda l: l.repartition_type == 'tax').tag_ids = purchase_tag
+
+        branch_1, branch_2 = [self._create_company(name=name, parent_id=self.env.company.id) for name in ('Branch A', 'Branch B')]
+
+        for move_type, amount, company in [('in_invoice', 100, self.env.company), ('out_invoice', 200, branch_1), ('out_invoice', 300, branch_2)]:
+            self._create_invoice(move_type=move_type, invoice_date='2023-12-15', post=True, company_id=company.id, invoice_line_ids=[self._prepare_invoice_line(product_id=self.product_a, price_unit=amount)])
+
+        with self._patch_returns_generation():
+            self.env.company.account_opening_date = '2024-01-01'
+
+        existing_returns = self.env['account.return'].search([
+            ('type_id', '=', self.basic_return_type.id),
+            ('company_id', '=', self.env.company.id),
+        ])
+
+        self.assert_return_dates_equal(
+            existing_returns,
+            [
+                ("2023-12-01", "2023-12-31"),
+                ("2024-01-01", "2024-01-31"),
+                ("2024-02-01", "2024-02-29"),
+                ("2024-03-01", "2024-03-31"),
+                ("2024-04-01", "2024-04-30"),
+                ("2024-05-01", "2024-05-31"),
+                ("2024-06-01", "2024-06-30"),
+                ("2024-07-01", "2024-07-31"),
+                ("2024-08-01", "2024-08-31"),
+                ("2024-09-01", "2024-09-30"),
+                ("2024-10-01", "2024-10-31"),
+                ("2024-11-01", "2024-11-30"),
+                ("2024-12-01", "2024-12-31"),
+            ]
+        )
+
+        profit_account = self.company_data['default_account_revenue']
+        loss_account = self.company_data['default_account_expense']
+        with self.allow_pdf_render(), self._patch_postprocess_vat_closing_entry_results(profit_account, loss_account, *report_lines):
+            existing_returns[0].action_mark_completed()
+            existing_returns[0].action_validate(bypass_failing_tests=True)
+
+        self.assertRecordValues(existing_returns[0].closing_move_ids.line_ids.sorted('move_id'), [
+            {'company_id': self.env.company.id, 'account_id': self.company_data['default_account_tax_purchase'].id,   'debit':  0.0, 'credit': 15.0},
+            {'company_id': self.env.company.id, 'account_id': self.company_data['default_account_expense'].id,        'debit': 15.0, 'credit':  0.0},
+            {'company_id': branch_2.id,         'account_id': self.company_data['default_account_tax_sale'].id,       'debit': 45.0, 'credit':  0.0},
+            {'company_id': branch_2.id,         'account_id': self.company_data['default_account_revenue'].id,        'debit':  0.0, 'credit': 45.0},
+            {'company_id': branch_1.id,         'account_id': self.company_data['default_account_tax_sale'].id,       'debit': 30.0, 'credit':  0.0},
+            {'company_id': branch_1.id,         'account_id': self.company_data['default_account_revenue'].id,        'debit':  0.0, 'credit': 30.0},
+        ])
 
     def test_return_generation_change_periodicity_smaller_to_greater(self):
         existing_returns = self.env['account.return'].search([
@@ -1358,7 +1469,6 @@ class TestAccountReturn(TestAccountReportsCommon):
             ec_sales_list_return,
             [
                 'goods_service_classification',
-                'only_b2b',
                 'eu_cross_border',
                 'reverse_charge_mentioned',
                 'no_partners_without_vat'
@@ -1366,11 +1476,9 @@ class TestAccountReturn(TestAccountReportsCommon):
         )
 
         eu_cross_border_check = checks.filtered(lambda c: c.code == 'eu_cross_border')
-        only_b2b_check = checks.filtered(lambda c: c.code == 'only_b2b')
         no_partners_without_vat_check = checks.filtered(lambda c: c.code == 'no_partners_without_vat')
 
         self.assertEqual(eu_cross_border_check.result, 'reviewed', "The EU cross border check should succeed as there is a cross-border transaction")
-        self.assertEqual(only_b2b_check.result, 'reviewed', "The only B2B check should succeed as there is a B2B transaction")
         self.assertEqual(no_partners_without_vat_check.result, 'reviewed', "The no partners without VAT check should succeed as there is a partner without VAT")
 
     def test_annual_return_checks(self):
@@ -1939,3 +2047,58 @@ class TestAccountReturn(TestAccountReportsCommon):
         ])
 
         self.assert_return_dates_equal(existing_return, [('2022-09-01', '2023-12-31')])
+
+    def test_tax_return_with_shared_accounts(self):
+        '''
+        Test that creating an audit including a shared account will not raise an AccessError in case
+        the account is used by the other company in the audit period.
+        '''
+
+        company_1 = self.company_data['company']
+        company_2 = self.company_data_2['company']
+        account_revenue = self.company_data['default_account_revenue']
+
+        # Sharing account
+        self.company_data['default_account_revenue'].write({
+            'code_mapping_ids': [
+                Command.create({'company_id': company_1.id, 'code': '180021'}),
+                Command.create({'company_id': company_2.id, 'code': '180022'}),
+            ],
+            'company_ids': [Command.set([company_1.id, company_2.id])],
+        })
+
+        audit_2024_company_1 = self.audit_2024
+        audit_2024_company_2 = self.audit_return_type.with_context(
+            forced_date_from=fields.Date.from_string('2024-01-01'),
+            forced_date_to=fields.Date.from_string('2024-12-31')
+        )._try_create_returns_for_fiscal_year(company_2, False)
+
+        # Set the account audit status to 'reviewed'
+        account_status = account_revenue.account_status.filtered(lambda status: status.audit_id in (audit_2024_company_1, audit_2024_company_2))
+        account_status.status = 'reviewed'
+
+        # With company 2, create a move in the audit period
+        company_2_move = self.env['account.move'].with_company(company_2).create({
+            'move_type': 'entry',
+            'date': '2024-01-02',
+            'company_id': company_2.id,
+            'line_ids': [
+                Command.create({
+                    'name': 'revenue_line',
+                    'account_id': account_revenue.id,
+                    'debit': 500.0,
+                    'credit': 0.0,
+                }),
+                Command.create({
+                    'name': 'counterpart line',
+                    'account_id': self.company_data_2['default_account_expense'].id,
+                    'debit': 0.0,
+                    'credit': 500.0,
+                }),
+            ]
+        })
+
+        # Should be able to post the move without issues
+        company_2_move.action_post()
+        self.assertEqual(account_status.filtered(lambda a: a.audit_id.company_id == company_1).status, 'reviewed', "Audit status in company 1 should be unchanged")
+        self.assertEqual(account_status.filtered(lambda a: a.audit_id.company_id == company_2).status, 'todo', "Audit status in company 2 should reset to default")

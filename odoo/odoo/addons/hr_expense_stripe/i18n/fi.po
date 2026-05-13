@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-06 18:42+0000\n"
-"PO-Revision-Date: 2026-02-14 10:08+0000\n"
+"POT-Creation-Date: 2026-05-01 17:41+0000\n"
+"PO-Revision-Date: 2026-05-07 10:04+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
 "hr_expense_stripe/fi/>\n"
@@ -18,13 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
-
-#. module: hr_expense_stripe
-#. odoo-javascript
-#: code:addons/hr_expense_stripe/static/src/components/private_card_view_action.js:0
-msgid "(Fetching...)"
-msgstr "(Noudetaan...)"
+"X-Generator: Weblate 5.17\n"
 
 #. module: hr_expense_stripe
 #: model_terms:ir.ui.view,arch_db:hr_expense_stripe.res_config_settings_view_form
@@ -1020,7 +1014,7 @@ msgstr "Ilmastointilaitteiden korjaus"
 #. module: hr_expense_stripe
 #: model:ir.model,name:hr_expense_stripe.model_account_chart_template
 msgid "Account Chart Template"
-msgstr "Tilikarttamalli"
+msgstr "Tilikartan mallipohja"
 
 #. module: hr_expense_stripe
 #. odoo-javascript
@@ -1062,12 +1056,18 @@ msgid "Advertising Services"
 msgstr "Mainostuspalvelut"
 
 #. module: hr_expense_stripe
+#: model:product.mcc.stripe.tag,name:hr_expense_stripe.agricultural_cooperative
+msgid "Agricultural Cooperative"
+msgstr "Maatalousosuuskunta"
+
+#. module: hr_expense_stripe
 #: model_terms:ir.ui.view,arch_db:hr_expense_stripe.view_product_mcc_stripe_tag_search
 msgid "Agricultural services"
 msgstr "Maatalouspalvelut"
 
 #. module: hr_expense_stripe
 #: model:product.mcc.stripe.tag,name:hr_expense_stripe.airlines_air_carriers
+#: model:product.mcc.stripe.tag,name:hr_expense_stripe.airlines_air_carriers_specific
 msgid "Airlines Air Carriers"
 msgstr "Lentoyhtiöt"
 
@@ -1115,7 +1115,7 @@ msgstr "Ambulanssipalvelut"
 #. module: hr_expense_stripe
 #: model:ir.model.fields,field_description:hr_expense_stripe.field_hr_expense_stripe_topup_wizard__amount
 msgid "Amount"
-msgstr "Arvo"
+msgstr "Määrä"
 
 #. module: hr_expense_stripe
 #: model:product.mcc.stripe.tag,name:hr_expense_stripe.amusement_parks_carnivals
@@ -1181,6 +1181,11 @@ msgid "Auto Paint Shops"
 msgstr "Autonmaalausliikkeet"
 
 #. module: hr_expense_stripe
+#: model:product.mcc.stripe.tag,name:hr_expense_stripe.car_rental_agencies_specific
+msgid "Auto Rental Agency"
+msgstr "Autovuokraamo"
+
+#. module: hr_expense_stripe
 #: model:product.mcc.stripe.tag,name:hr_expense_stripe.auto_service_shops
 msgid "Auto Service Shops"
 msgstr "Autopalveluliikkeet"
@@ -1189,6 +1194,11 @@ msgstr "Autopalveluliikkeet"
 #: model:product.mcc.stripe.tag,name:hr_expense_stripe.auto_and_home_supply_stores
 msgid "Auto and Home Supply Stores"
 msgstr "Auto- ja kodintarvikeliikkeet"
+
+#. module: hr_expense_stripe
+#: model:product.mcc.stripe.tag,name:hr_expense_stripe.automated_cash_disburse
+msgid "Automated Cash Disburse"
+msgstr "Automaattinen käteismaksu"
 
 #. module: hr_expense_stripe
 #: model:product.mcc.stripe.tag,name:hr_expense_stripe.automated_fuel_dispensers
@@ -1274,7 +1284,7 @@ msgstr "Syntymäpäivä"
 #: model_terms:ir.ui.view,arch_db:hr_expense_stripe.hr_expense_stripe_card_block_wizard_form
 #: model_terms:ir.ui.view,arch_db:hr_expense_stripe.view_hr_expense_stripe_card_form
 msgid "Block"
-msgstr "Lohko"
+msgstr "Estä"
 
 #. module: hr_expense_stripe
 #. odoo-python
@@ -1371,6 +1381,16 @@ msgstr "Peruutuksen syy"
 #: model:product.mcc.stripe.tag,name:hr_expense_stripe.candy_nut_and_confectionery_stores
 msgid "Candy Nut and Confectionery Stores"
 msgstr "Karkki-, pähkinä- ja konditoriakaupat"
+
+#. module: hr_expense_stripe
+#: model:product.mcc.stripe.tag,name:hr_expense_stripe.car_rental_agencies
+msgid "Car Rental Agencies"
+msgstr "Autovuokraamot"
+
+#. module: hr_expense_stripe
+#: model:product.mcc.stripe.tag,name:hr_expense_stripe.car_washes
+msgid "Car Washes"
+msgstr "Autopesut"
 
 #. module: hr_expense_stripe
 #: model:product.mcc.stripe.tag,name:hr_expense_stripe.car_and_truck_dealers_new_used
@@ -1771,15 +1791,15 @@ msgid "Country"
 msgstr "Maa"
 
 #. module: hr_expense_stripe
+#. odoo-python
+#: code:addons/hr_expense_stripe/models/hr_expense_stripe_card.py:0
+msgid "Country %(country_name)s not allowed"
+msgstr "Maa %(country_name)s ei ole sallittu"
+
+#. module: hr_expense_stripe
 #: model:product.mcc.stripe.tag,name:hr_expense_stripe.country_clubs
 msgid "Country Clubs"
 msgstr "Yksityiskerhot"
-
-#. module: hr_expense_stripe
-#. odoo-python
-#: code:addons/hr_expense_stripe/models/hr_expense_stripe_card.py:0
-msgid "Country not allowed"
-msgstr "Maa ei sallittu"
 
 #. module: hr_expense_stripe
 #: model:product.mcc.stripe.tag,name:hr_expense_stripe.courier_services
@@ -1862,6 +1882,11 @@ msgid "Dance Hall Studios Schools"
 msgstr "Tanssistudiot ja -koulut"
 
 #. module: hr_expense_stripe
+#: model:product.mcc.stripe.tag,name:hr_expense_stripe.dating_escort_services
+msgid "Dating/Escort Services"
+msgstr "Treffi-/seuralaispalvelut"
+
+#. module: hr_expense_stripe
 #: model:ir.model.fields.selection,name:hr_expense_stripe.selection__hr_expense_stripe_card__spending_policy_interval__daily
 msgid "Day"
 msgstr "Päivä"
@@ -1929,7 +1954,7 @@ msgstr "Suoramarkkinointi ja postimyynti"
 #. module: hr_expense_stripe
 #: model:product.mcc.stripe.tag,name:hr_expense_stripe.direct_marketing_combination_catalog_and_retail_merchant
 msgid "Direct Marketing Combination Catalog and Retail Merchant"
-msgstr "Suoramarkkinointi, yhdistelmäkuvasto ja vähittäiskauppias"
+msgstr "Suoramarkkinointi, yhdistelmäkatalogi ja vähittäiskauppias"
 
 #. module: hr_expense_stripe
 #: model:product.mcc.stripe.tag,name:hr_expense_stripe.direct_marketing_inbound_telemarketing
@@ -2142,9 +2167,27 @@ msgstr "Henkilöstövuokrausyritykset"
 
 #. module: hr_expense_stripe
 #. odoo-javascript
-#: code:addons/hr_expense_stripe/static/src/components/private_card_view_action.xml:0
-msgid "Enter the code we sent to the cardholder's phone number ending in"
-msgstr "Syötä koodi, jonka lähetimme kortinhaltijalle. Puhelinnumero loppuu"
+#: code:addons/hr_expense_stripe/static/src/components/private_card_view_action.js:0
+msgid "Enter the code we sent to the cardholder's email %(email)s."
+msgstr ""
+"Syötä koodi, jonka lähetimme kortinhaltijan sähköpostiosoitteeseen %(email)s."
+
+#. module: hr_expense_stripe
+#. odoo-javascript
+#: code:addons/hr_expense_stripe/static/src/components/private_card_view_action.js:0
+msgid ""
+"Enter the code we sent to the cardholder's phone number ending in %(phone)s."
+msgstr ""
+"Syötä koodi, jonka lähetimme kortinhaltijalle. Puhelinnumero loppuu %(phone)"
+"s."
+
+#. module: hr_expense_stripe
+#. odoo-javascript
+#: code:addons/hr_expense_stripe/static/src/components/private_card_view_action.js:0
+msgid "Enter the code we sent to the cardholder's phone or email: Fetching ..."
+msgstr ""
+"Syötä koodi, jonka lähetimme kortinhaltijan puhelimeen tai sähköpostiin: "
+"Haetaan ..."
 
 #. module: hr_expense_stripe
 #: model:product.mcc.stripe.tag,name:hr_expense_stripe.equipment_rental
@@ -2506,6 +2549,7 @@ msgstr "Sairaalat"
 
 #. module: hr_expense_stripe
 #: model:product.mcc.stripe.tag,name:hr_expense_stripe.hotels_motels_and_resorts
+#: model:product.mcc.stripe.tag,name:hr_expense_stripe.hotels_motels_and_resorts_specific
 msgid "Hotels Motels and Resorts"
 msgstr "Hotellit, motellit ja lomakohteet"
 
@@ -2605,7 +2649,7 @@ msgstr ""
 #. module: hr_expense_stripe
 #: model:ir.model.fields.selection,name:hr_expense_stripe.selection__hr_expense_stripe_card__state__inactive
 msgid "Inactive"
-msgstr "Passiivinen"
+msgstr "Epäaktiivinen"
 
 #. module: hr_expense_stripe
 #. odoo-javascript
@@ -2622,6 +2666,11 @@ msgstr "Teollisuustarvikkeet"
 #: model:product.mcc.stripe.tag,name:hr_expense_stripe.information_retrieval_services
 msgid "Information Retrieval Services"
 msgstr "Tiedonhakupalvelut"
+
+#. module: hr_expense_stripe
+#: model:product.mcc.stripe.tag,name:hr_expense_stripe.insurance_default
+msgid "Insurance - Default"
+msgstr "Vakuutus - Oletus"
 
 #. module: hr_expense_stripe
 #: model:product.mcc.stripe.tag,name:hr_expense_stripe.insurance_underwriting_premiums
@@ -2808,13 +2857,18 @@ msgstr "MCC"
 #. module: hr_expense_stripe
 #. odoo-python
 #: code:addons/hr_expense_stripe/models/hr_expense_stripe_card.py:0
-msgid "MCC not allowed"
-msgstr "MCC ei sallittu"
+msgid "MCC %(mcc_code)s %(mcc_name)s not allowed"
+msgstr "MCC %(mcc_code)s %(mcc_name)s ei sallittu"
 
 #. module: hr_expense_stripe
 #: model_terms:ir.ui.view,arch_db:hr_expense_stripe.view_product_mcc_stripe_tag_search
 msgid "MCCs"
 msgstr "MCC:t"
+
+#. module: hr_expense_stripe
+#: model:product.mcc.stripe.tag,name:hr_expense_stripe.manual_cash_disburse
+msgid "Manual Cash Disburse"
+msgstr "Manuaalinen käteismaksu"
 
 #. module: hr_expense_stripe
 #: model:product.mcc.stripe.tag,name:hr_expense_stripe.marinas_service_and_supplies
@@ -2955,6 +3009,11 @@ msgstr "Sekalaiset julkaisu- ja painotuotteet"
 #: model:product.mcc.stripe.tag,name:hr_expense_stripe.miscellaneous_recreation_services
 msgid "Miscellaneous Recreation Services"
 msgstr "Sekalaiset vapaa-ajan palvelut"
+
+#. module: hr_expense_stripe
+#: model:product.mcc.stripe.tag,name:hr_expense_stripe.miscellaneous_repair_shops
+msgid "Miscellaneous Repair Shops"
+msgstr "Sekalaiset korjaamot"
 
 #. module: hr_expense_stripe
 #: model:product.mcc.stripe.tag,name:hr_expense_stripe.miscellaneous_specialty_retail
@@ -3178,16 +3237,30 @@ msgstr "Toimisto- ja liiketilakalusteet"
 #. odoo-python
 #: code:addons/hr_expense_stripe/wizard/hr_expense_stripe_topup_wizard.py:0
 msgid ""
-"Only IBAN is supported for Stripe Issuing funding instructions right now"
+"Only BACS is supported for Stripe Issuing funding instructions in the UK "
+"right now"
 msgstr ""
-"Tällä hetkellä Stripe Issuing -rahoitusohjeet tukevat vain IBAN-numeroita"
+"Tällä hetkellä Iso-Britanniassa tuetaan vain BACS-järjestelmää Stripe "
+"Issuing -rahoitusohjeille"
 
 #. module: hr_expense_stripe
 #. odoo-python
 #: code:addons/hr_expense_stripe/wizard/hr_expense_stripe_topup_wizard.py:0
 msgid ""
-"Only SEPA is supported for Stripe Issuing funding instructions right now"
-msgstr "Tällä hetkellä Stripe Issuing -rahoitusohjeet tukevat vain SEPA-maksuja"
+"Only IBAN or BACS are supported for Stripe Issuing funding instructions "
+"right now"
+msgstr ""
+"Tällä hetkellä vain IBAN tai BACS ovat tuettuja Stripe Issuing "
+"-rahoitusohjeissa"
+
+#. module: hr_expense_stripe
+#. odoo-python
+#: code:addons/hr_expense_stripe/wizard/hr_expense_stripe_topup_wizard.py:0
+msgid ""
+"Only SEPA is supported for Stripe Issuing funding instructions in the EU "
+"right now"
+msgstr ""
+"Tällä hetkellä vain SEPA on tuettu EU:ssa Stripe Issuing -rahoitusohjeille"
 
 #. module: hr_expense_stripe
 #. odoo-python
@@ -3195,7 +3268,8 @@ msgstr "Tällä hetkellä Stripe Issuing -rahoitusohjeet tukevat vain SEPA-maksu
 msgid ""
 "Only administrators can change the code or the stripe technical name of a "
 "MCC."
-msgstr "Vain ylläpitäjät voivat muuttaa MCC:n koodia tai teknisen stripe-nimen."
+msgstr ""
+"Vain ylläpitäjät voivat muuttaa MCC:n koodia tai teknisen stripe-nimen."
 
 #. module: hr_expense_stripe
 #. odoo-python
@@ -3512,7 +3586,8 @@ msgstr "Päivitä"
 #. module: hr_expense_stripe
 #: model:ir.model.fields,help:hr_expense_stripe.field_hr_expense_stripe_card__user_id
 msgid "Related user name for the resource to manage its access."
-msgstr "Resurssiin liittyvä käyttäjänimi sen käyttöoikeuksien hallinnoimiseksi."
+msgstr ""
+"Resurssiin liittyvä käyttäjänimi sen käyttöoikeuksien hallinnoimiseksi."
 
 #. module: hr_expense_stripe
 #: model:product.mcc.stripe.tag,name:hr_expense_stripe.religious_goods_stores
@@ -3707,6 +3782,11 @@ msgid "State"
 msgstr "Osavaltio"
 
 #. module: hr_expense_stripe
+#: model:product.mcc.stripe.tag,name:hr_expense_stripe.stationary_office_supplies_printing_and_writing_paper
+msgid "Stationary Office Supplies Printing and Writing Paper"
+msgstr "Toimistotarvikkeet, tulostus- ja kirjoituspaperi"
+
+#. module: hr_expense_stripe
 #: model:product.mcc.stripe.tag,name:hr_expense_stripe.stationery_stores_office_and_school_supply_stores
 msgid "Stationery Stores Office and School Supply Stores"
 msgstr "Paperitavara-, toimisto- ja koulutarvikekaupat"
@@ -3860,6 +3940,15 @@ msgid ""
 msgstr ""
 "Stripe Issuing -määritys on virheellinen, laita se asetuksissa tilaan 'live' "
 "tai 'test'."
+
+#. module: hr_expense_stripe
+#. odoo-python
+#: code:addons/hr_expense_stripe/wizard/hr_expense_stripe_topup_wizard.py:0
+msgid ""
+"Stripe Issuing funding instructions with USD currency aren't supported right "
+"now"
+msgstr ""
+"USD-valuutta ei ole tällä hetkellä tuettu Stripe Issuing -rahoitusohjeissa"
 
 #. module: hr_expense_stripe
 #. odoo-python
@@ -4045,6 +4134,16 @@ msgstr "Kortinhaltija oli päivitetty onnistuneesti."
 
 #. module: hr_expense_stripe
 #. odoo-python
+#: code:addons/hr_expense_stripe/models/product_mcc_stripe_tag.py:0
+msgid ""
+"The MCC code '%(code)s' is not valid. It must be either a 4-digit code or a "
+"range in the format 'XXXX-XXXX'."
+msgstr ""
+"MCC-koodi '%(code)s' ei ole kelvollinen. Sen on oltava joko 4-numeroinen "
+"koodi tai alue muodossa 'XXXX-XXXX'."
+
+#. module: hr_expense_stripe
+#. odoo-python
 #: code:addons/hr_expense_stripe/utils.py:0
 msgid ""
 "The Stripe account specified in the request wasn't found. Please check your "
@@ -4201,12 +4300,27 @@ msgstr "Odoo-kulukorttisi pääsykoodi on: %(code)s"
 #. module: hr_expense_stripe
 #. odoo-python
 #: code:addons/hr_expense_stripe/utils.py:0
+msgid "The country of the phone number is not supported for SMS."
+msgstr "Puhelinnumeron maata ei tueta tekstiviesteissä."
+
+#. module: hr_expense_stripe
+#. odoo-python
+#: code:addons/hr_expense_stripe/utils.py:0
 msgid ""
 "The creation rate limit for this type of cards has been reached. Please try "
 "again later."
 msgstr ""
 "Määräraja tämän tyyppisten korttien luomiseksi on saavutettu. Yritä "
 "myöhemmin uudelleen."
+
+#. module: hr_expense_stripe
+#. odoo-python
+#: code:addons/hr_expense_stripe/models/hr_expense_stripe_card.py:0
+msgid ""
+"The delivery address must be in the European Union or in the United Kingdom."
+msgstr ""
+"Toimitusosoitteen on oltava Euroopan unionin alueella tai Yhdistyneessä "
+"kuningaskunnassa."
 
 #. module: hr_expense_stripe
 #. odoo-python
@@ -4347,6 +4461,26 @@ msgstr "Odoo-tietokannassasi oli virhe ja Stripe sai virheellisen vastauksen"
 #. module: hr_expense_stripe
 #. odoo-python
 #: code:addons/hr_expense_stripe/utils.py:0
+msgid ""
+"There was an error when sending the SMS, please try again later. If the "
+"problem persists, please contact the support."
+msgstr ""
+"Tekstiviestin lähettämisessä tapahtui virhe, yritä myöhemmin uudelleen. Jos "
+"ongelma jatkuu, ota yhteyttä tukeen."
+
+#. module: hr_expense_stripe
+#. odoo-python
+#: code:addons/hr_expense_stripe/utils.py:0
+msgid ""
+"There was an error when sending the email, please try again later. If the "
+"problem persists, please contact the support."
+msgstr ""
+"Sähköpostin lähettämisessä tapahtui virhe, yritä myöhemmin uudelleen. Jos "
+"ongelma jatkuu, ota yhteyttä tukeen."
+
+#. module: hr_expense_stripe
+#. odoo-python
+#: code:addons/hr_expense_stripe/utils.py:0
 msgid "There was an unexpected error on Odoo IAP proxy server"
 msgstr "Odottamaton virhe Odoo IAP-välityspalvelimessa"
 
@@ -4397,8 +4531,8 @@ msgid ""
 "Top-up request failed with the following error sent by Stripe:\n"
 "%(stripe_error)s"
 msgstr ""
-"Saldon lisäyspyyntö epäonnistui seuraavan Stripen lähettämän virheen vuoksi:"
-"\n"
+"Saldon lisäyspyyntö epäonnistui seuraavan Stripen lähettämän virheen "
+"vuoksi:\n"
 "%(stripe_error)s"
 
 #. module: hr_expense_stripe
@@ -4454,24 +4588,24 @@ msgstr "Tapahtuma hyväksytty"
 
 #. module: hr_expense_stripe
 #. odoo-python
+#: code:addons/hr_expense_stripe/models/hr_expense_stripe_card.py:0
+msgid "Transaction amount (%(amount)s) exceeds the maximum allowed"
+msgstr "Tapahtuman summa (%(amount)s) ylittää sallitun enimmäismäärän"
+
+#. module: hr_expense_stripe
+#. odoo-python
+#: code:addons/hr_expense_stripe/models/hr_expense_stripe_card.py:0
+msgid "Transaction amount (%(total_spent)s) exceeds the interval limit"
+msgstr "Tapahtuman summa (%(total_spent)s) ylittää aikavälin rajan"
+
+#. module: hr_expense_stripe
+#. odoo-python
 #: code:addons/hr_expense_stripe/utils.py:0
 msgid ""
 "Transaction amount exceeded the card daily/transaction hard limit of 50.000 €"
 msgstr ""
 "Tapahtuman summa ylitti kortin päivittäisen/tapahtumakohtaisen 50 000 € "
 "enimmäisrajan"
-
-#. module: hr_expense_stripe
-#. odoo-python
-#: code:addons/hr_expense_stripe/models/hr_expense_stripe_card.py:0
-msgid "Transaction amount exceeds the interval limit"
-msgstr "Tapahtuman summa ylittää intervallirajan"
-
-#. module: hr_expense_stripe
-#. odoo-python
-#: code:addons/hr_expense_stripe/models/hr_expense_stripe_card.py:0
-msgid "Transaction amount exceeds the maximum allowed"
-msgstr "Tapahtuman summa ylittää sallitun enimmäismäärän"
 
 #. module: hr_expense_stripe
 #. odoo-python
@@ -5047,6 +5181,37 @@ msgstr "tunniste"
 #: model_terms:ir.ui.view,arch_db:hr_expense_stripe.res_config_settings_view_form
 msgid "terms and conditions"
 msgstr "käyttöehdot"
+
+#~ msgid "(Fetching...)"
+#~ msgstr "(Noudetaan...)"
+
+#~ msgid "Enter the code we sent to the cardholder's phone number ending in"
+#~ msgstr "Syötä koodi, jonka lähetimme kortinhaltijalle. Puhelinnumero loppuu"
+
+#~ msgid "MCC %(mcc_name)s not allowed"
+#~ msgstr "MCC %(mcc_name)s ei ole sallittu"
+
+#~ msgid "Country not allowed"
+#~ msgstr "Maa ei sallittu"
+
+#~ msgid "MCC not allowed"
+#~ msgstr "MCC ei sallittu"
+
+#~ msgid ""
+#~ "Only IBAN is supported for Stripe Issuing funding instructions right now"
+#~ msgstr ""
+#~ "Tällä hetkellä Stripe Issuing -rahoitusohjeet tukevat vain IBAN-numeroita"
+
+#~ msgid ""
+#~ "Only SEPA is supported for Stripe Issuing funding instructions right now"
+#~ msgstr ""
+#~ "Tällä hetkellä Stripe Issuing -rahoitusohjeet tukevat vain SEPA-maksuja"
+
+#~ msgid "Transaction amount exceeds the interval limit"
+#~ msgstr "Tapahtuman summa ylittää intervallirajan"
+
+#~ msgid "Transaction amount exceeds the maximum allowed"
+#~ msgstr "Tapahtuman summa ylittää sallitun enimmäismäärän"
 
 #~ msgid ""
 #~ "<span class=\"card_cvc w-50 text-end stripe_card_text_sm\" "

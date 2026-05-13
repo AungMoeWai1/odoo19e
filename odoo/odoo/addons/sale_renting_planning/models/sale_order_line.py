@@ -47,12 +47,21 @@ class SaleOrderLine(models.Model):
                 ('end_datetime', '>=', sol.start_date),
             ])
             resource_leaves = self.env['resource.calendar.leaves'].search([
-                ('resource_id', 'in', available_resources.ids),
+                ('resource_id', 'in', available_resources.ids + [False]),
                 ('date_from', '<=', sol.return_date),
                 ('date_to', '>=', sol.start_date),
+                ('company_id', '=', sol.company_id.id),
             ])
-            available_resources -= (unavailable_resource_slots.resource_id + resource_leaves.resource_id)
-            if not available_resources and sync_shift_rental:
+            all_resource_leave = False
+            unavailable_resources = self.env['resource.resource']
+            for resource in resource_leaves:
+                if not resource.resource_id:
+                    all_resource_leave = True
+                    break
+                unavailable_resources += resource.resource_id
+            available_resources -= (unavailable_resource_slots.resource_id + unavailable_resources)
+            # if no resource_id then leave applies to all resources
+            if (not available_resources or all_resource_leave) and sync_shift_rental:
                 problematic_services.append(sol.product_id.name)
                 continue
 
@@ -118,9 +127,23 @@ class SaleOrderLine(models.Model):
         return vals
 
     def write(self, vals):
-        if 'product_uom_qty' in vals and vals['product_uom_qty'] == 0 and (rental_sols := self.filtered('is_rental')):
-            if slots := self.env['planning.slot'].search([('sale_line_id', 'in', rental_sols.ids)]):
-                slots.unlink()
+        if 'product_uom_qty' in vals and (rental_sols := self.filtered(lambda sol: sol.is_rental and sol._should_generate_planning_slot())):
+            new_qty = int(vals['product_uom_qty'])
+            uom_hour = self.env.ref('uom.product_uom_hour')
+            for sol in rental_sols:
+                # ignore slot update for hours unless all slots are being unlinked
+                if new_qty > 0 and sol.product_id.uom_id == uom_hour:
+                    continue
+                slots = sol.planning_slot_ids
+                slot_count = len(slots)
+                if new_qty < slot_count and not self.env.context.get("unlink_qty", False):
+                    slots[new_qty:].unlink()
+                elif new_qty > slot_count:
+                    self.env['planning.slot'].create([{
+                        'sale_line_id': sol.id,
+                        'start_datetime': sol.start_date,
+                        'end_datetime': sol.return_date,
+                    } for _ in range(new_qty - slot_count)])._set_slot_resource()
         return super().write(vals)
 
     def unlink(self):
@@ -128,3 +151,18 @@ class SaleOrderLine(models.Model):
         if slots := self.env['planning.slot'].search([('sale_line_id', 'in', rental_order_lines.ids)]):
             slots.unlink()
         return super().unlink()
+
+    def update_product_uom_qty(self, planning_slots):
+        self.ensure_one()
+        if not self.order_is_rental:
+            return
+        uom_hour = self.env.ref('uom.product_uom_hour')
+        new_qty = 0
+        if self.product_uom_id == uom_hour:
+            for slot in planning_slots:
+                new_qty += slot.allocated_hours
+        else:
+            new_qty = len(planning_slots)
+
+        if self.product_uom_qty != new_qty:
+            self.with_context(unlink_qty=True).write({'product_uom_qty': new_qty})

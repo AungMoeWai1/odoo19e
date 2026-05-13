@@ -1754,3 +1754,19 @@ class TestDocumentsAccess(TransactionCaseDocuments, MockEmail):
 
         self.assertNotIn(self.internal_user.partner_id, secret_folder.access_ids.partner_id)
         self.assertNotIn(self.doc_user.partner_id, secret_folder.access_ids.partner_id)
+
+    @users('documents@example.com')
+    def test_owner_edition(self):
+        """Check that with edit permission, users can change the owner of a document he owns or without owners."""
+        document = self.env['documents.document'].create({'name': 'test'})
+        self.assertEqual(document.owner_id, self.env.user)
+        self.assertEqual(document.user_folder_id, 'MY')
+        document.owner_id = False
+        self.assertEqual(document.user_permission, 'edit', 'Removing the owner gives him edit permission')
+        self.assertEqual(document.user_folder_id, 'COMPANY')
+        document.owner_id = self.env.user
+        self.assertEqual(document.user_folder_id, 'MY')
+        document.owner_id = False
+        document.owner_id = self.document_manager
+        with self.assertRaises(AccessError, msg='You cannot change the owner of documents you do not own.'):
+            document.owner_id = self.env.user

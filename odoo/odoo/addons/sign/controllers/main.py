@@ -166,6 +166,18 @@ class Sign(http.Controller):
         if res.get('error'):
             return request.render(res['template']) if res.get('template') else request.not_found()
 
+        user = request.env.user
+        current_request_item = res['rendering_context']['current_request_item']
+        if user.has_group('sign.group_sign_user') and current_request_item and current_request_item.state == 'completed':
+            sign_request = res['rendering_context']['sign_request']
+            return request.redirect('/odoo/sign.request/%s/action-sign.Document?id=%s&token=%s&name=%s&state=%s' % (
+                sign_request_id,
+                sign_request_id,
+                token,
+                sign_request.reference,
+                sign_request.state
+            ))
+
         return http.request.render('sign.doc_sign', res.get('rendering_context'))
 
     @http.route([
@@ -241,14 +253,14 @@ class Sign(http.Controller):
         Returns:
             http.Response: Response containing the document data or a ZIP file, or a 404 response if not found.
         """
+        template_documents_ids = sign_request.template_document_ids
         if sign_document_id:
-            document_id = request.env['sign.document'].sudo().browse(sign_document_id)
+            document_id = template_documents_ids.filtered(lambda d: d.id == sign_document_id)
             if not document_id:
                 return request.not_found()
             attachment_data = document_id.attachment_id.datas
             return self._create_document_response(sign_request, attachment_data, document_name=document_id.name)
 
-        template_documents_ids = sign_request.template_document_ids
         if len(template_documents_ids) == 1:
             attachment_data = template_documents_ids[0].attachment_id.datas
             return self._create_document_response(sign_request, attachment_data, document_name=template_documents_ids[0].name)
@@ -330,13 +342,7 @@ class Sign(http.Controller):
             subject = subject[:-4]
         if not doc_name.endswith('.pdf'):
             doc_name += '.pdf'
-        download_name = f'{subject}/{doc_name}'
-        counter = 1
-        while download_name in existing_document_names:
-            name, ext = download_name.rsplit('.', 1)
-            download_name = f'{name} ({counter}).{ext}'
-            counter += 1
-        existing_document_names.add(download_name)
+        download_name = f'{subject}_{sign_request.id}/{doc_name}'
         return download_name
 
     def _create_document_response(self, sign_request, attachment_data, document_name=None):
@@ -691,13 +697,13 @@ class Sign(http.Controller):
         """
         sign_request = request.env['sign.request'].browse(request_id).sudo()
         sign_item = request.env['sign.request.item'].browse(sign_item_id).sudo()
-        if not sign_request.exists() or not consteq(sign_request.access_token, token) or not sign_item.exists() or not sign_item.signer_email:
+        if not sign_request.exists() or not sign_item.exists() or not consteq(sign_item.access_token, token) or not sign_item.signer_email:
             return []
         uid = sign_request.create_uid.id
         items = request.env['sign.request.item'].sudo().search_read(
             domain=[
                 ('signer_email', '!=', False),
-                ('signer_email', '=', sign_item.signer_email),
+                ('partner_id', '=', sign_item.partner_id.id),
                 ('state', '=', 'sent'),
                 ('sign_request_id.state', '=', 'sent'),
                 ('id', '!=', sign_item.id)

@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from base64 import b64encode
 import uuid
 from freezegun import freeze_time
+from lxml import etree
 from unittest.mock import patch
 
 from odoo import fields, sql_db, tools, Command
@@ -92,7 +94,7 @@ class TestItEdiImport(TestItEdi):
             'move_type': 'in_invoice',
             'invoice_date': fields.Date.from_string('2014-12-18'),
             'amount_untaxed': 28.75,
-            'amount_tax': 6.32,
+            'amount_tax': 6.33,
             'invoice_line_ids': [{
                 'quantity': 5.0,
                 'price_unit': 1.0,
@@ -496,6 +498,40 @@ class TestItEdiImport(TestItEdi):
             ],
         }], applied_xml)
 
+    def test_receive_bill_with_discount_rounding_issue(self):
+        applied_xml = """
+            <xpath expr="//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee[1]" position="inside">
+                <ScontoMaggiorazione>
+                    <Tipo>SC</Tipo>
+                    <Percentuale>50.00</Percentuale>
+                </ScontoMaggiorazione>
+            </xpath>
+
+            <xpath expr="//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee[1]/PrezzoUnitario" position="replace">
+                <PrezzoUnitario>11.85</PrezzoUnitario>
+            </xpath>
+            <xpath expr="//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee[1]/Quantita" position="replace">
+                <Quantita>3</Quantita>
+            </xpath>
+            <xpath expr="//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee[1]/PrezzoTotale" position="replace">
+                <PrezzoTotale>17.78</PrezzoTotale>
+            </xpath>
+        """
+
+        self._assert_import_invoice('IT01234567890_FPR01.xml', [{
+            'invoice_date': fields.Date.from_string('2014-12-18'),
+            'amount_untaxed': 17.78,
+            'amount_tax': 3.91,
+            'invoice_line_ids': [
+                {
+                    'quantity': 3.0,
+                    'name': 'DESCRIZIONE DELLA FORNITURA',
+                    'price_unit': 11.85,
+                    'discount': 50.0,
+                },
+            ],
+        }], applied_xml)
+
     def test_invoice_user_can_compute_is_self_invoice(self):
         """Ensure that a user having only group_account_invoice can compute field l10n_it_edi_is_self_invoice"""
         user = new_test_user(self.env, login='jag', groups='account.group_account_invoice')
@@ -614,3 +650,121 @@ class TestItEdiImport(TestItEdi):
                 },
             ],
         }], applied_xml)
+
+    def test_receive_bill_with_attachment(self):
+        """ Test that a bill with embedded attachments saves attachments and original xml file."""
+        # must build file from scratch in order to check l10n_it_edi_attachment_file
+        filename = 'IT01234567890_FPR02.xml'
+        embedded_files = {
+            'testfile.txt': ('TXT', 'This is a test file.'),
+            'testfile2.txt': ('', 'Test file without FormatoAttachment.'),
+            'testfile3.xml': ('XML', '<hello>How are you?</hello>'),
+        }
+        attachments_data = [
+            f"""
+                <Allegati>
+                    <NomeAttachment>{filename}</NomeAttachment>
+                    <FormatoAttachment>{extension}</FormatoAttachment>
+                    <DescrizioneAttachment>An embedded attachment.</DescrizioneAttachment>
+                    <Attachment>{b64encode(raw.encode()).decode()}</Attachment>
+                </Allegati>
+            """
+            for filename, (extension, raw) in embedded_files.items()
+        ]
+        attachments_str = "\n".join(attachments_data)
+        applied_xml = f'<xpath expr="//FatturaElettronicaBody/DatiGenerali" position="after">{attachments_str}</xpath>'
+
+        tree = self.with_applied_xpath(
+            etree.fromstring(self.fake_test_content.encode()),
+            applied_xml
+        )
+        import_content = etree.tostring(tree)
+
+        # import the xml
+        move = self.env['account.move']._l10n_it_edi_process_downloads_attachments(
+            self.company,
+            [{
+                'name': filename,
+                'raw': import_content.decode(),
+                'type': 'binary',
+            }])
+
+        # There should be one attachment with this filename, and it should match the original XML.
+        # TODO: During bill import, we bypass the ORM to manually create the
+        # `ir.attachment` with `res_field`. This requires cache invalidation,
+        # (or commit) as the Binary field isn't updated automatically.
+        # In `master`, we should fix the import by letting the Binary field
+        # handle attachment creation on write.
+        move.invalidate_recordset(fnames=['l10n_it_edi_attachment_file'])
+        it_edi_attachment = self.env['ir.attachment'].search([
+            ('name', '=', filename),
+            ('res_model', '=', 'account.move'),
+            ('res_field', '=', 'l10n_it_edi_attachment_file'),
+        ])
+        self.assertEqual(len(it_edi_attachment), 1)
+        self.assertEqual(move.l10n_it_edi_attachment_name, 'IT01234567890_FPR02.xml')
+        self.assertEqual(move.l10n_it_edi_attachment_file, b64encode(import_content))
+
+        # ensure that the embedded files are imported correctly
+        for filename, (extension, raw) in embedded_files.items():
+            chatter_attachments = self.env['ir.attachment'].search([
+                ('name', '=', filename),
+                ('res_model', '=', 'account.move'),
+                ('res_id', '=', move.id),
+                ('res_field', '=', False),
+            ])
+            self.assertEqual(len(chatter_attachments), 1)
+            self.assertEqual(chatter_attachments.raw.decode(), raw)
+
+    def test_transaction_id_several_bills_in_fewer_files(self):
+        invoices_data = {}
+        transaction_ids = [f'{1:0>11}', f'{2:0>11}']
+        for filename, transaction_id in zip(('IT01234567890_FPR03.xml', 'IT01234567890_FPR02.xml.p7m'), transaction_ids):
+            invoices_data.update({
+                transaction_id: {
+                    'filename': filename,
+                    'file': '',
+                    'key': str(uuid.uuid4()),
+            }})
+
+        # import the xml
+        path = f'{self.module}/tests/import_xmls/IT01234567890_FPR03.xml'
+        with tools.file_open(path, mode='rb') as fd:
+            import_content = fd.read()
+
+        def mock_commit(self):
+            pass
+
+        super_create = self.env.registry['account.move'].create
+        created_moves = []
+
+        def mock_create(self, vals_list):
+            moves = super_create(self, vals_list)
+            created_moves.extend(moves)
+            return moves
+
+        with (patch.object(self.proxy_user.__class__, '_decrypt_data', return_value=import_content),
+              patch.object(sql_db.Cursor, "commit", mock_commit),
+              patch.object(self.env.registry['account.move'], 'create', mock_create),
+              freeze_time('2019-01-01')):
+            self.env['account.move'].with_company(self.company)._l10n_it_edi_process_downloads(
+                invoices_data,
+                self.proxy_user,
+            )
+        moves = self.env['account.move']
+        for m in created_moves:
+            moves |= m
+        self.assertRecordValues(moves, [
+            {'l10n_it_edi_attachment_name': 'IT01234567890_FPR03.xml',
+            'l10n_it_edi_transaction': f'{1:0>11}',
+            },
+            {'l10n_it_edi_attachment_name': 'IT01234567890_FPR02.xml.p7m',
+            'l10n_it_edi_transaction': f'{2:0>11}',
+            },
+            {'l10n_it_edi_attachment_name': 'IT01234567890_FPR03_2.xml',
+            'l10n_it_edi_transaction': f'{1:0>11}',
+            },
+            {'l10n_it_edi_attachment_name': 'IT01234567890_FPR02.xml_2.p7m',
+            'l10n_it_edi_transaction': f'{2:0>11}',
+            },
+        ])

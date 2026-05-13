@@ -16,29 +16,6 @@ class TestDianMoves(TestCoDianCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        # Sugar Taxes (need to fill 'l10n_co_edi_ref_nominal_tax' on the product !)
-        cls.sugar_tax_1 = cls.env['account.tax'].create({
-            'name': "IBUA >10gr 3500ml",
-            'amount_type': 'fixed',
-            'amount': 35 * 35,  # rate of the tax = 35 (for a product with >10gr of sugar per 100ml)
-            'l10n_co_edi_type': cls.env.ref('l10n_co_edi.tax_type_20').id,  # IBUA
-        })
-        cls.sugar_tax_2 = cls.sugar_tax_1.copy({
-            'name': "IBUA >6gr & <10gr 100ml",
-            'amount': 36,  # rate of the tax = 36 (for a product with >10gr of sugar per 100ml)
-        })
-
-        # Products
-        cls.product_sugar_1 = cls._create_product(
-            name="Coca cola 3.5L",
-            l10n_co_edi_ref_nominal_tax=3500,
-            default_code='P1111',
-        )
-        cls.product_sugar_2 = cls._create_product(
-            name="Sprite 100mL",
-            l10n_co_edi_ref_nominal_tax=100,
-            default_code='P2222',
-        )
 
         # Alcohol Taxes
         cls.alcohol_tax_1 = cls.env['account.tax'].create({
@@ -263,6 +240,8 @@ class TestDianMoves(TestCoDianCommon):
         )
         xml = self._generate_xml(credit_note)
         self._assert_document_dian(xml, "l10n_co_dian/tests/attachments/credit_note_20.xml")
+        self.assertFalse('xmlns:sts="http://www.dian.gov.co/contratos/facturaelectronica/v1/Structures"' in xml.decode())
+        self.assertTrue('xmlns:sts="dian:gov:co:facturaelectronica:Structures-2-1"' in xml.decode())
 
     def test_credit_note_22(self):
         """ Credit note not referencing an invoice """
@@ -276,6 +255,8 @@ class TestDianMoves(TestCoDianCommon):
         xml = self._generate_xml(credit_note)
         self.env['l10n_co_dian.document']._create_document(xml, credit_note, state='invoice_accepted')
         self._assert_document_dian(xml, "l10n_co_dian/tests/attachments/credit_note_22.xml")
+        self.assertFalse('xmlns:sts="http://www.dian.gov.co/contratos/facturaelectronica/v1/Structures"' in xml.decode())
+        self.assertTrue('xmlns:sts="dian:gov:co:facturaelectronica:Structures-2-1"' in xml.decode())
 
     def test_invoice_exportation(self):
         """ Invoice to a non-Colombian customer. Also checks the rounding of the tax amounts. """
@@ -548,7 +529,10 @@ class TestDianMoves(TestCoDianCommon):
                 ],
             },
         }
-        self._assert_imported_invoice_from_file(filename='import_attached_document.xml', **kwargs)
+        # We are testing variation of the ProfileID
+        self._assert_imported_invoice_from_file(filename='import_attached_document.xml', **kwargs)  # DIAN 2.1
+        self._assert_imported_invoice_from_file(filename='import_attached_document_2.xml', **kwargs)  # DIAN 2.1: Factura Electrónica de Venta
+        self._assert_imported_invoice_from_file(filename='import_attached_document_3.xml', **kwargs)  # Factura Electrónica de Venta
 
     def test_dian_invoicing_access_rights(self):
         self.user.group_ids = [Command.unlink(self.env.ref('base.group_system').id)]

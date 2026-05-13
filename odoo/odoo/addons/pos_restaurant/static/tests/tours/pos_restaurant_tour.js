@@ -761,10 +761,13 @@ registry.category("web_tour.tours").add("test_customer_alone_saved", {
             FloorScreen.clickTable("5"),
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
             Chrome.clickOrders(),
+            Chrome.waitRequest(),
             Chrome.clickRegister(),
             ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("Acme Corporation"),
+            ProductScreen.customerIsSelected("Acme Corporation"),
             Chrome.clickOrders(),
+            Chrome.waitRequest(),
             Chrome.clickRegister(),
             ProductScreen.customerIsSelected("Acme Corporation"),
         ].flat(),
@@ -1250,5 +1253,47 @@ registry.category("web_tour.tours").add("test_futur_orders_are_not_cancelled", {
             Chrome.clickMenuOption("Close Register"),
             Dialog.confirm("Close Register"),
             Dialog.confirm("Cancel Orders", ".btn-secondary"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_floating_order_name_change_partner", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickNewOrder(),
+
+            ProductScreen.selectPreset("Eat in", "Delivery"),
+            ProductScreen.clickCustomer("Abigael"),
+            ProductScreen.customerIsSelected("Abigael"),
+
+            // Check that order name is Abigael in the ticket screen/order list
+            Chrome.clickOrders(),
+            TicketScreen.nthRowContains(1, "Abigael"),
+            Chrome.clickRegister(),
+
+            // Change partner
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Deco Addict"),
+            ProductScreen.customerIsSelected("Deco Addict"),
+
+            // Check that order name updated to Deco Addict
+            Chrome.clickOrders(),
+            TicketScreen.nthRowContains(1, "Deco Addict"),
+            Chrome.clickRegister(),
+
+            // Clear partner
+            ProductScreen.clickPartnerButton(),
+            {
+                content: "click unselect partner",
+                trigger: ".unselect-tag",
+                run: "click",
+            },
+            ProductScreen.customerIsSelected("Customer"),
+
+            // Check that order name is reset (or just not the old partner)
+            Chrome.clickOrders(),
+            TicketScreen.nthRowNotContains(1, "Deco Addict"),
+            Chrome.clickRegister(),
         ].flat(),
 });

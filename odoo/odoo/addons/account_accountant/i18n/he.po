@@ -21,15 +21,15 @@
 # דודי מלכה <Dudimalka6@gmail.com>, 2023
 # Yihya Hugirat <hugirat@gmail.com>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# or balmas <or@laylinetech.com>, 2025.
+# or balmas <or@laylinetech.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 18:41+0000\n"
-"PO-Revision-Date: 2025-11-08 19:31+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-04-24 17:42+0000\n"
+"PO-Revision-Date: 2026-03-03 17:20+0000\n"
+"Last-Translator: or balmas <or@laylinetech.com>\n"
 "Language-Team: Hebrew <https://translate.odoo.com/projects/odoo-19/"
 "account_accountant/he/>\n"
 "Language: he\n"
@@ -38,7 +38,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
 "n % 10 == 0) ? 2 : 3));\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.16.1\n"
 
 #. module: account_accountant
 #. odoo-python
@@ -262,6 +262,8 @@ msgid ""
 msgstr ""
 
 #. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/button_list/button_list.js:0
 #: model:ir.model,name:account_accountant.model_account_account
 #: model:ir.model.fields,field_description:account_accountant.field_account_reconcile_wizard__account_id
 #: model_terms:ir.ui.view,arch_db:account_accountant.view_account_list_bank_rec_widget
@@ -354,6 +356,13 @@ msgid ""
 msgstr ""
 "לאחר הוצאת הנתונים, בדוק ואמת את החשבונית. אם לא נמצא ספק, הוסף ספק לפני "
 "האימות."
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.res_config_settings_view_form
+msgid ""
+"All entries created by Invoicing before that date will be ignored in "
+"Accounting."
+msgstr ""
 
 #. module: account_accountant
 #: model:ir.model.fields,field_description:account_accountant.field_account_reconcile_wizard__reco_model_autocomplete_ids
@@ -1317,6 +1326,11 @@ msgid "Invoice Date"
 msgstr "תאריך אסמכתא"
 
 #. module: account_accountant
+#: model:res.groups,name:account_accountant.group_account_basic
+msgid "Invoicing & Banks"
+msgstr ""
+
+#. module: account_accountant
 #: model:ir.model.fields,field_description:account_accountant.field_res_company__invoicing_switch_threshold
 #: model:ir.model.fields,field_description:account_accountant.field_res_config_settings__invoicing_switch_threshold
 msgid "Invoicing Switch Threshold"
@@ -1863,6 +1877,8 @@ msgid "Outstanding debits"
 msgstr "יתרת חובה"
 
 #. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/button_list/button_list.js:0
 #: model:ir.model.fields,field_description:account_accountant.field_account_reconcile_wizard__to_partner_id
 #: model_terms:ir.ui.view,arch_db:account_accountant.view_account_move_line_reconcile_search
 #: model_terms:ir.ui.view,arch_db:account_accountant.view_bank_statement_line_quick_create_form_bank_rec_widget
@@ -2267,6 +2283,12 @@ msgid "Subscription 12 months"
 msgstr ""
 
 #. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/button_list/button_list.xml:0
+msgid "Suggestions"
+msgstr "הצעות"
+
+#. module: account_accountant
 #: model:ir.model,name:account_accountant.model_account_tax
 #: model:ir.model.fields,field_description:account_accountant.field_account_reconcile_wizard__tax_id
 msgid "Tax"
@@ -2320,13 +2342,6 @@ msgstr "הפקודות הנדחות שנוצרו ע\"י החשבונית"
 #: code:addons/account_accountant/models/account_fiscal_year.py:0
 msgid "The ending date must not be prior to the starting date."
 msgstr "תאריך הסיום חייב להיות לפני תאריך ההתחלה."
-
-#. module: account_accountant
-#: model_terms:ir.ui.view,arch_db:account_accountant.res_config_settings_view_form
-msgid ""
-"The invoices before this date will not be taken into account as accounting "
-"entries"
-msgstr "החשבוניות לפני תאריך זה לא יילקחו בחשבון כרשומות חשבונאיות."
 
 #. module: account_accountant
 #: model:ir.model.fields,help:account_accountant.field_account_bank_statement_line__deferred_original_move_ids
@@ -2690,6 +2705,11 @@ msgid "You need to select who the exception applies to."
 msgstr "עליך לבחור למי החריגה חלה."
 
 #. module: account_accountant
+#: model:res.groups,comment:account_accountant.group_account_basic
+msgid "adds the accounting dashboard, bank management and follow-up reports."
+msgstr ""
+
+#. module: account_accountant
 #: model:ir.model.fields.selection,name:account_accountant.selection__account_change_lock_date__exception_duration__1h
 msgid "for 1 hour"
 msgstr "למשך שעה אחת"
@@ -2746,6 +2766,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_accountant.account_journal_dashboard_kanban_view
 msgid "to reconcile"
 msgstr "להתאמה"
+
+#~ msgid ""
+#~ "The invoices before this date will not be taken into account as "
+#~ "accounting entries"
+#~ msgstr "החשבוניות לפני תאריך זה לא יילקחו בחשבון כרשומות חשבונאיות."
 
 #~ msgid "Models"
 #~ msgstr "דגמים"
@@ -2937,9 +2962,6 @@ msgstr "להתאמה"
 
 #~ msgid "State"
 #~ msgstr "סטטוס"
-
-#~ msgid "Suggestions"
-#~ msgstr "הצעות"
 
 #~ msgid "Tax Lock Date"
 #~ msgstr "תאריך חסימה לצורכי מס"

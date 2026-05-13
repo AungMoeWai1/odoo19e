@@ -421,7 +421,8 @@ class AccountMove(models.Model):
 
         payment_way = cfdi_infos['cfdi_node'].attrib.get('FormaPago')
         if payment_way:
-            payment_method = self.env['l10n_mx_edi.payment.method'].search([('code', '=', payment_way)], limit=1)
+            # Method 99 was archived in stable, but we still need it here.
+            payment_method = self.env['l10n_mx_edi.payment.method'].with_context(active_test=payment_way != '99').search([('code', '=', payment_way)], limit=1)
             cfdi_infos['payment_way'] = f'{payment_way} - {payment_method.name}'
         cfdi_infos['usage_desc'] = dict(self._fields['l10n_mx_edi_usage']._description_selection(self.env)).get(cfdi_infos['usage'])
 
@@ -620,14 +621,7 @@ class AccountMove(models.Model):
 
     @api.depends('l10n_mx_edi_payment_document_ids.state')
     def _compute_l10n_mx_edi_force_pue_payment_needed(self):
-        for move in self:
-            force_pue = False
-            if move._l10n_mx_edi_is_cfdi_payment() and not move.l10n_mx_edi_cfdi_state:
-                for doc in move.l10n_mx_edi_payment_document_ids.sorted():
-                    if doc.state == 'payment_sent_pue':
-                        force_pue = True
-                        break
-            move.l10n_mx_edi_force_pue_payment_needed = force_pue
+        self.l10n_mx_edi_force_pue_payment_needed = False
 
     @api.depends('state', 'l10n_mx_edi_cfdi_state', 'l10n_mx_edi_cfdi_sat_state')
     def _compute_l10n_mx_edi_update_sat_needed(self):
@@ -1871,6 +1865,13 @@ class AccountMove(models.Model):
             on_failure,
             on_success,
         )
+        if (
+            (doc := self.l10n_mx_edi_invoice_document_ids.sorted()[0])
+            and doc.state == 'invoice_sent'
+            and (original_doc := doc._get_original_document())
+            and original_doc.state == 'invoice_sent'
+        ):
+            original_doc.move_id._l10n_mx_edi_cfdi_invoice_try_cancel(original_doc, '01')
 
     def _l10n_mx_edi_cfdi_invoice_post_cancel(self):
         """ Cancel the current invoice and drop a message in the chatter.
@@ -2123,7 +2124,8 @@ class AccountMove(models.Model):
 
         :param pay_results: The amounts to consider for each invoice.
                             See '_l10n_mx_edi_cfdi_payment_get_reconciled_invoice_values'.
-        :param force_cfdi:  Force the sending of the CFDI if the payment is PUE.
+        :param force_cfdi:  [DEPRECATED] used to force the sending of the CFDI if the payment was PUE.
+                            It's not possible anymore to send CFDI if the payment is PUE
         """
         self.ensure_one()
 
@@ -2133,7 +2135,6 @@ class AccountMove(models.Model):
         # == Check PUE/PPD ==
         if (
             not last_document
-            and not force_cfdi
             and 'PPD' not in set(invoices.mapped('l10n_mx_edi_payment_policy'))
         ):
             self._l10n_mx_edi_cfdi_payment_document_sent_pue(invoices)
@@ -2151,6 +2152,8 @@ class AccountMove(models.Model):
 
         # == Send ==
         def on_populate(cfdi_values):
+            pay_results['invoices'] = pay_results['invoices'].filtered(lambda m: m.l10n_mx_edi_payment_policy != 'PUE')
+            pay_results['invoice_results'] = [invoice_result for invoice_result in pay_results['invoice_results'] if invoice_result['invoice'] in pay_results['invoices']]
             self._l10n_mx_edi_add_payment_cfdi_values(cfdi_values, pay_results)
 
         def on_failure(error, cfdi_filename=None, cfdi_str=None):
@@ -2168,6 +2171,13 @@ class AccountMove(models.Model):
             on_failure,
             on_success,
         )
+        if (
+            (new_doc := self.l10n_mx_edi_payment_document_ids.sorted()[0])
+            and new_doc.state == 'payment_sent'
+            and (original_doc := new_doc._get_original_document())
+            and original_doc.state == 'payment_sent'
+        ):
+            original_doc.move_id._l10n_mx_edi_cfdi_invoice_try_cancel_payment(original_doc)
 
     def _l10n_mx_edi_cfdi_payment_post_cancel(self):
         """ Cancel the current payment and drop a message in the chatter.
@@ -2219,7 +2229,8 @@ class AccountMove(models.Model):
         for invoice, pay_results_list in reconciled_invoice_values.items():
             payments = self.env['account.move']
             for pay_results in pay_results_list:
-                payments |= pay_results['payment']
+                if pay_results['payment'].date <= fields.Date.context_today(self):
+                    payments |= pay_results['payment']
             all_payments |= payments
 
             commands = []
@@ -2252,6 +2263,7 @@ class AccountMove(models.Model):
                 for invoice in sat_sent_payments[payment]:
                     results['need_update'].add(invoice)
 
+            invoices = invoices.filtered(lambda move: move.l10n_mx_edi_payment_policy != 'PUE')
             # Check if something changed in the already sent payment.
             if last_document.state == 'payment_sent':
                 current_uuids = set(invoices.mapped('l10n_mx_edi_cfdi_uuid'))
@@ -2288,7 +2300,7 @@ class AccountMove(models.Model):
     def _l10n_mx_edi_cfdi_payment_try_send(self, force_cfdi=False):
         """ Force the sending of the current payment.
 
-        :param force_cfdi: Force the sending of the payment, even if the payment is PUE.
+        :param force_cfdi: [DEPRECATED]Force the sending of the payment, even if the payment is PUE.
         """
         self.ensure_one()
         reconciled_payment_values = self._l10n_mx_edi_cfdi_payment_get_reconciled_invoice_values()
@@ -2322,7 +2334,10 @@ class AccountMove(models.Model):
         self._l10n_mx_edi_cfdi_move_update_sat_state(document, sat_state, error=error)
 
     def l10n_mx_edi_cfdi_payment_force_try_send(self):
-        self._l10n_mx_edi_cfdi_payment_try_send(force_cfdi=True)
+        """
+        DEPRECATED: it's not allowed to send PUE to CFDI
+        """
+        self._l10n_mx_edi_cfdi_payment_try_send()
 
     def _l10n_mx_edi_cfdi_global_invoice_try_send(self, periodicity='04', origin=None):
         """ Create a CFDI global invoice for multiple invoices.
@@ -2423,6 +2438,14 @@ class AccountMove(models.Model):
 
             document_date = max(document_dates)
 
+            # issued address
+            journal = invoices.journal_id
+            if (
+                'l10n_mx_address_issued_id' in journal._fields
+                and journal.l10n_mx_address_issued_id
+            ):
+                cfdi_values['issued_address'] = journal.l10n_mx_address_issued_id
+
             Document._add_global_invoice_cfdi_values(
                 cfdi_values,
                 base_lines,
@@ -2464,6 +2487,14 @@ class AccountMove(models.Model):
             on_failure,
             on_success,
         )
+        if (
+            origin
+            and (new_doc := invoices[0].l10n_mx_edi_invoice_document_ids.sorted()[0])
+            and new_doc.state == 'ginvoice_sent'
+            and (original_doc := new_doc._get_original_document())
+            and original_doc.state == 'ginvoice_sent'
+        ):
+            original_doc.invoice_ids._l10n_mx_edi_cfdi_global_invoice_try_cancel(original_doc, '01')
 
     def _l10n_mx_edi_cfdi_global_invoice_post_cancel(self):
         """ Cancel the current payment and drop a message in the chatter.
@@ -2675,6 +2706,9 @@ class AccountMove(models.Model):
         if not partner:
             return
         self.partner_id = partner
+        # CFDI to public
+        if self.is_sale_document() and cfdi_vals['customer_rfc'] in ('XAXX010101000', 'XEXX010101000'):
+            self.l10n_mx_edi_cfdi_to_public = True
         # Payment way
         forma_pago = tree.attrib.get('FormaPago')
         self.l10n_mx_edi_payment_method_id = self.env['l10n_mx_edi.payment.method'].search(

@@ -1,13 +1,18 @@
+import logging
 import re
 from collections import defaultdict
 from concurrent.futures import as_completed, ThreadPoolExecutor
+from markupsafe import Markup
 from socket import IPPROTO_TCP, gaierror, getaddrinfo
 from urllib.parse import urlparse
 
-from odoo import api, fields, models
+from odoo import api, Command, fields, models
 from odoo.fields import Domain
 
 from ..api import ApiError, OdooComApi, OdooDatabaseApi, _humanize_version
+
+
+_logger = logging.getLogger(__name__)
 
 
 class DatabasesSynchronizationWizard(models.TransientModel):
@@ -148,12 +153,27 @@ class DatabasesSynchronizationWizard(models.TransientModel):
 
         self.database_ids |= self.created_database_ids
 
-        dbs_ignored = existing_databases - dbs_to_update
-        for db in dbs_ignored:
+        saas_databases = existing_databases | self.created_database_ids | dbs_to_update
+        erroneous_dbs = []
+        for db in saas_databases.filtered(lambda db: db.active and not db.database_api_key).try_lock_for_update():
+            args = [db.database_url, db.database_name, db.database_api_login, db.sudo().database_api_key_to_use]
+            if not all(args):
+                continue
+            db_api = OdooDatabaseApi(*args)
+            key_name = ICP.get_param('databases.remote_api_key_description', f'Access for {self.env.company.name}')
+            try:
+                db.database_api_key = db_api.create_api_key(key_name)
+            except ApiError:
+                _logger.exception("Error while creating an API key on %r", db.database_name)
+                erroneous_dbs.append(db.database_name)
+        if erroneous_dbs:
+            dbnames = ''.join(f'- {dbname}\n' for dbname in erroneous_dbs[:10])
+            if len(erroneous_dbs) > 10:
+                dbnames += self.env._('- … and %(nb_dbs)d more!\n', nb_dbs=len(erroneous_dbs) - 10)
             self.error_message += self.env._(
-                "The database %(url)s is registered as a saas database in odoo.com. As it seems to be configured we have left it as is.\n",
-                url=db.database_url,
-            )
+                "Error while creating an API key on %(nb_dbs)d databases:\n",
+                nb_dbs=len(erroneous_dbs),
+            ) + dbnames
 
     def _do_synchronize(self):
         self.check_access("write")
@@ -174,48 +194,71 @@ class DatabasesSynchronizationWizard(models.TransientModel):
         database_kpi_base_definition_id.ensure_one()
         self.property_definition = database_kpi_base_definition_id.properties_definition
 
+        unreachable_tag_id = self._get_unreachable_tag_id()
+
+        def _mark_db_unreachable(db, errors):
+            db = db.sudo()
+            db.write({'tag_ids': [Command.link(unreachable_tag_id)]})
+            db.message_post(body=Markup('<br>').join(errors))
+
         db_by_url = {db.database_url: db for db in dbs_to_process}
         db_apis = []
+        nb_failed_dbs = 0
         for db in dbs_to_process:
             args = (db.database_url, db.database_name, db.database_api_login, db.sudo().database_api_key_to_use)
             if not all(args):
-                self.error_message += self.env._(
+                nb_failed_dbs += 1
+                _mark_db_unreachable(db, [self.env._(
                     "Error while connecting to %(url)s: We are missing the database name, the api login or the api key\n",
                     url=db.database_url,
-                )
+                )])
                 continue
             db_apis.append(OdooDatabaseApi(*args))
 
         # avoid flooding a server with tons of parallel requests in case several dbs are hosted on the same server.
-        db_apis_per_ip = self._group_by_ips(db_apis)
+        db_apis_per_ip, errors_by_url = _group_by_ips(db_apis, self.env._)
+        nb_failed_dbs += len(errors_by_url)
+        for db_url, errors in errors_by_url.items():
+            _mark_db_unreachable(db_by_url[db_url], errors)
 
         with ThreadPoolExecutor(max_workers=8) as executor:
             db_apis_by_future = {executor.submit(_fetch_database_info, db_apis, self.env._): (db_apis, ip)
                                  for ip, db_apis in db_apis_per_ip.items()}
             for future in as_completed(db_apis_by_future):
                 try:
-                    results, errors = future.result()
+                    results, errors_by_url = future.result()
                 except Exception as e:  # noqa: BLE001
-                    # meaningful errors should already be in `errors`, but an unexpected error from a thread should not stop the loop
+                    # Meaningful per-database errors are handled in `errors_by_url`.
+                    # Any exception reaching here is unexpected/system-level,
+                    # should not stop the synchronization and should be reported in the wizard.
                     db_apis, ip = db_apis_by_future[future]
                     host_names = ', '.join(db_api.host for db_api in db_apis)
-                    errors += self.env._("Error while fetching information from %(host_names)s on %(ip)s: %(message)s\n",
-                                         host_names=host_names, ip=ip, message=str(e))
+                    _logger.warning('Error while fetching information from %s on %s: %s', host_names, ip, e)
+                    self.error_message += self.env._("Error while fetching information from %(host_names)s on %(ip)s: %(message)s\n",
+                                                     host_names=host_names, ip=ip, message=str(e))
                     continue
 
-                self.error_message += errors
                 for db_url, values in results.items():
                     db = db_by_url[db_url]
-                    users = values.pop('users', None)
+                    values.setdefault('tag_ids', []).append(Command.unlink(unreachable_tag_id))
                     kpi_summary = values.pop('kpi_summary', None)
-                    if users is not None:
-                        self._write_users(db, users)
                     if kpi_summary is not None:
                         self._write_kpis(db, kpi_summary)
-                    db.write(values)
+                    users = values.pop('users', None)
+                    if users is not None:
+                        self._write_users(db, users)
+                    db.sudo().write(values)  # databases_user should be able to synchronize, values keys are hardcoded
+
+                nb_failed_dbs += len(errors_by_url)
+                for db_url, errors in errors_by_url.items():
+                    _mark_db_unreachable(db_by_url[db_url], errors)
 
         self.action_add_metrics_to_dashboard()
         self.write({'new_properties': {}})
+
+        if nb_failed_dbs > 0:
+            self.error_message += self.env._("%(nb_failed_dbs)s databases could not be synchronized.\n",
+                                             nb_failed_dbs=nb_failed_dbs)
 
         if dbs_to_postpone:
             dbs_to_postpone.sudo().database_last_synchro = False
@@ -236,13 +279,14 @@ class DatabasesSynchronizationWizard(models.TransientModel):
         return self._open()
 
     def _write_users(self, db, users):
+        # sudo in this method are there to allow databases_user to synchronize
         users = {u['login']: u for u in users}
         existing_users = db.database_user_ids
         common_users = existing_users.filtered(lambda u: u.login in users)
         missing_logins = set(users) - set(existing_users.mapped('login'))
         users_to_delete = existing_users - common_users
 
-        users_to_delete.unlink()
+        users_to_delete.sudo().unlink()
         existing_users.sudo().create([
             {
                 'project_id': db.id,
@@ -265,7 +309,7 @@ class DatabasesSynchronizationWizard(models.TransientModel):
         for kpi in kpi_summary:
             if kpi['id'] == 'documents.inbox':
                 if db.database_fetch_documents:
-                    db.database_nb_documents = kpi['value']
+                    db.sudo().database_nb_documents = kpi['value']  # databases_user should be able to synchronize, values keys are hardcoded
                 continue
 
             if kpi['id'].startswith('account_move_type.') and not db.database_fetch_draft_entries:
@@ -352,27 +396,47 @@ class DatabasesSynchronizationWizard(models.TransientModel):
         }
         return action
 
-    def _group_by_ips(self, db_apis):
-        groups = defaultdict(list)
-        for db_api in db_apis:
-            hostname = urlparse(db_api.host).hostname
-            try:
-                addrinfo = getaddrinfo(hostname, None, proto=IPPROTO_TCP)
-            except gaierror as e:
-                self.error_message += self.env._("Error while resolving %(url)s: %(exception)s\n", url=db_api.host, exception=str(e))
-                continue
-            if not addrinfo:
-                self.error_message += self.env._("Error while resolving %(url)s: found no IP\n", url=db_api.host)
-                continue
+    def _get_unreachable_tag_id(self):
+        # TODO in saas~19.3: add XML data definition and replace calls by `self.env.ref('databases.project_tag_db_unreachable')`
+        IMD = self.env['ir.model.data']
+        xml_id = 'databases.project_tag_db_unreachable'
+        unreachable_tag_id = IMD._xmlid_to_res_id(xml_id, raise_if_not_found=False)
+        if unreachable_tag_id:
+            return unreachable_tag_id
 
-            _family, _type, _proto, _canonname, (ip, _port, *_) = sorted(addrinfo)[0]  # sort IPv4 before IPv6
-            groups[ip].append(db_api)
-        return groups
+        unreachable_tag = self.env['project.tags'].create({
+            'name': self.env._('Unreachable'),
+            'color': 1,
+        })
+        IMD._update_xmlids([{
+            'xml_id': xml_id,
+            'record': unreachable_tag,
+        }])
+        return unreachable_tag.id
+
+
+def _group_by_ips(db_apis, translate):
+    groups = defaultdict(list)
+    errors_by_url = defaultdict(list)
+    for db_api in db_apis:
+        hostname = urlparse(db_api.host).hostname
+        try:
+            addrinfo = getaddrinfo(hostname, None, proto=IPPROTO_TCP)
+        except gaierror as e:
+            errors_by_url[db_api.host].append(translate("Error while resolving %(url)s: %(exception)s\n", url=db_api.host, exception=str(e)))
+            continue
+        if not addrinfo:
+            errors_by_url[db_api.host].append(translate("Error while resolving %(url)s: found no IP\n", url=db_api.host))
+            continue
+
+        _family, _type, _proto, _canonname, (ip, _port, *_) = sorted(addrinfo)[0]  # sort IPv4 before IPv6
+        groups[ip].append(db_api)
+    return groups, errors_by_url
 
 
 def _fetch_database_info(db_apis, translate):
     results = {}
-    errors = ''
+    errors_by_url = defaultdict(list)
     for db_api in db_apis:
         results[db_api.host] = {
             'database_last_synchro': fields.Datetime.now(),
@@ -384,19 +448,19 @@ def _fetch_database_info(db_apis, translate):
         try:
             results[db_api.host]['users'] = db_api.list_internal_users()
         except ApiError as e:
-            errors += translate(
+            errors_by_url[db_api.host].append(translate(
                 "Error while getting users from %(dbname)s: %(message)s\n",
                 dbname=db_api.database,
                 message=e.args[0],
-            )
+            ))
 
         try:
             results[db_api.host]['kpi_summary'] = db_api.get_kpi_summary()
         except ApiError as e:
-            errors += translate(
+            errors_by_url[db_api.host].append(translate(
                 "Error while getting KPIs from %(dbname)s: %(message)s\n",
                 dbname=db_api.database,
                 message=e.args[0],
-            )
+            ))
 
-    return results, errors
+    return results, errors_by_url

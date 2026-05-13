@@ -285,7 +285,9 @@ class PosConfig(models.Model):
         iface_fiscal_data_module = order.config_id.iface_fiscal_data_module
         blackbox_data = order._create_order_for_blackbox(clock, clock_in)
         message = {
+            "iot_identifier": iface_fiscal_data_module.iot_id.identifier,
             "iot_identifiers": [iface_fiscal_data_module.iot_id.identifier],
+            "device_identifier": iface_fiscal_data_module.identifier,
             "device_identifiers": [iface_fiscal_data_module.identifier],
             "action": "registerReceiptWeb",
             "high_level_message": blackbox_data,
@@ -323,3 +325,8 @@ class PosConfig(models.Model):
         if self.certified_blackbox_identifier:
             self._clock_kiosk_user(False)
         return super().action_close_kiosk_session()
+
+    @api.model
+    def _load_pos_self_data_fields(self, pos_config_id):
+        fields = super()._load_pos_self_data_fields(pos_config_id)
+        return fields + ['iface_fiscal_data_module']

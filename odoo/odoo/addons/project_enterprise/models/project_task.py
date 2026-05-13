@@ -11,7 +11,7 @@ from odoo.fields import Domain
 from odoo.exceptions import UserError
 from odoo.tools import _, format_list, topological_sort, get_lang, babel_locale_parse
 from odoo.tools.intervals import Intervals
-from odoo.tools.date_utils import sum_intervals, get_timedelta, weeknumber, weekstart, weekend
+from odoo.tools.date_utils import sum_intervals, get_timedelta, weeknumber, weekstart, weekend, parse_date
 from odoo.tools.sql import SQL
 from odoo.addons.resource.models.utils import filter_domain_leaf
 
@@ -572,7 +572,8 @@ class ProjectTask(models.Model):
                 ('date_deadline', '<', start_date + delta)
             ])) & domain
         )
-        return self.search(domain_expand).user_ids.filtered(lambda user: user.active) | self.env.user
+        users = self.env['res.users'].search([('task_ids', 'any', domain_expand), ('share', '=', False), ('active', '=', True)])
+        return users | self.env.user
 
     def _group_expand_user_ids_domain(self, domain_expand):
         project_id = self.env.context.get('default_project_id')
@@ -623,7 +624,7 @@ class ProjectTask(models.Model):
         filters = []
         for dom in domain:
             if len(dom) == 3 and dom[0] == 'date_deadline' and dom[1] == '>=':
-                min_date = dom[2] if isinstance(dom[2], datetime) else datetime.strptime(dom[2], '%Y-%m-%d %H:%M:%S')
+                min_date = dom[2] if isinstance(dom[2], datetime) else parse_date(dom[2], self.env)
                 min_date = min_date - get_timedelta(1, self.env.context.get('gantt_scale'))
                 filters.append((dom[0], dom[1], min_date))
             else:
@@ -1601,9 +1602,14 @@ class ProjectTask(models.Model):
 
         cell_dt = timedelta(hours=1) if scale in ['day', 'week'] else timedelta(hours=12)
 
+        resource_by_id = {r.id: r for r in resources}
         result = {}
         for user_id in res_ids + [False]:
             resource_id = user_resource_mapping.get(user_id)
+            resource = resource_by_id.get(resource_id)
+            if resource and resource._is_flexible() and resource_id not in leaves_mapping:
+                result[user_id] = []
+                continue
             calendar = leaves_mapping.get(resource_id, company_leaves)
             # remove intervals smaller than a cell, as they will cause half a cell to turn grey
             # ie: when looking at a week, a employee start everyday at 8, so there is a unavailability

@@ -31,29 +31,31 @@ export class BankRecSelectCreateDialog extends SelectCreateDialog {
             this.changeInSelectedMoveLine(selectedLines);
         };
 
-        this.baseViewProps.bankRecInfo = {
-            date: this.formattedStatementLineDate,
-            reference: this.props.reference,
-            state: this.state,
-            currencyId: this.suspenseAccountLine.currency_id.id,
-        };
+        if (!this.env.isSmall) {
+            this.baseViewProps.bankRecInfo = {
+                date: this.formattedStatementLineDate,
+                reference: this.props.reference,
+                state: this.state,
+                currencyId: this.suspenseAccountLine.currency_id.id,
+            };
+        }
     }
 
     async changeInSelectedMoveLine(selectedLines) {
+        this.state.hideRemainingAmount = false;
         if (!selectedLines?.length) {
             this.state.remainingAmount = this.suspenseAccountLine.amount_currency;
             return;
         }
 
         let selectedLinesSum = 0;
-        this.state.hideRemainingAmount = false;
         // When the suspense currency is different from the company one, we cannot compute the remaining amount correctly
         // due to the currency rates. So in this case, when the user select multiple currencies we add the remaining amount
         if (
             this.suspenseAccountLine.currency_id.id !==
             this.suspenseAccountLine.company_currency_id.id
         ) {
-            const selectedLineCurrencies = selectedLines.map((line) => line.currency_id);
+            const selectedLineCurrencies = [...new Set(selectedLines.map((line) => line.currency_id))];
 
             if (
                 selectedLineCurrencies.length !== 1 ||

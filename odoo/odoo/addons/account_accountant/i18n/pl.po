@@ -35,8 +35,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 18:41+0000\n"
-"PO-Revision-Date: 2026-02-03 12:05+0000\n"
+"POT-Creation-Date: 2026-04-24 17:42+0000\n"
+"PO-Revision-Date: 2026-05-02 09:48+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/"
 "account_accountant/pl/>\n"
@@ -47,7 +47,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
 "(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
 "n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: account_accountant
 #. odoo-python
@@ -321,6 +321,8 @@ msgstr ""
 "do statusu \"niezłożona\"."
 
 #. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/button_list/button_list.js:0
 #: model:ir.model,name:account_accountant.model_account_account
 #: model:ir.model.fields,field_description:account_accountant.field_account_reconcile_wizard__account_id
 #: model_terms:ir.ui.view,arch_db:account_accountant.view_account_list_bank_rec_widget
@@ -413,6 +415,15 @@ msgid ""
 msgstr ""
 "Sprawdź i zatwierdź rachunek po ekstrakcji danych. Jeśli nie znaleziono "
 "dostawcy, dodaj go przed zatwierdzeniem."
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.res_config_settings_view_form
+msgid ""
+"All entries created by Invoicing before that date will be ignored in "
+"Accounting."
+msgstr ""
+"Wszystkie wpisy utworzone przez Fakturowanie przed tą datą zostaną "
+"zignorowane w Księgowości."
 
 #. module: account_accountant
 #: model:ir.model.fields,field_description:account_accountant.field_account_reconcile_wizard__reco_model_autocomplete_ids
@@ -715,7 +726,7 @@ msgstr "Waluta firmy"
 #. module: account_accountant
 #: model:ir.model,name:account_accountant.model_res_config_settings
 msgid "Config Settings"
-msgstr "Ustawienia konfiguracji"
+msgstr "Konfiguracja ustawień"
 
 #. module: account_accountant
 #. odoo-javascript
@@ -1050,7 +1061,7 @@ msgstr "Nie masz dostępu, pomiń te dane dla wiadomości e-mail użytkownika"
 #. module: account_accountant
 #: model_terms:ir.ui.view,arch_db:account_accountant.view_account_move_line_search_bank_rec_widget
 msgid "Draft"
-msgstr "Projekt"
+msgstr "Wersja robocza"
 
 #. module: account_accountant
 #. odoo-python
@@ -1385,6 +1396,11 @@ msgstr "Nieprawidłowe oświadczenia"
 #: model_terms:ir.ui.view,arch_db:account_accountant.view_move_line_reconcile_tree
 msgid "Invoice Date"
 msgstr "Data faktury"
+
+#. module: account_accountant
+#: model:res.groups,name:account_accountant.group_account_basic
+msgid "Invoicing & Banks"
+msgstr "Fakturowanie i banki"
 
 #. module: account_accountant
 #: model:ir.model.fields,field_description:account_accountant.field_res_company__invoicing_switch_threshold
@@ -1761,7 +1777,7 @@ msgstr "Przesunięcie załącznika"
 #. module: account_accountant
 #: model:ir.model.fields,field_description:account_accountant.field_account_reconcile_wizard__move_line_ids
 msgid "Move lines to reconcile"
-msgstr "Przesuń linie, aby uzgodnić"
+msgstr "Przesuń pozycje, aby uzgodnić"
 
 #. module: account_accountant
 #: model:ir.model.fields,field_description:account_accountant.field_account_fiscal_year__name
@@ -1938,6 +1954,8 @@ msgid "Outstanding debits"
 msgstr "Obciążenia"
 
 #. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/button_list/button_list.js:0
 #: model:ir.model.fields,field_description:account_accountant.field_account_reconcile_wizard__to_partner_id
 #: model_terms:ir.ui.view,arch_db:account_accountant.view_account_move_line_reconcile_search
 #: model_terms:ir.ui.view,arch_db:account_accountant.view_bank_statement_line_quick_create_form_bank_rec_widget
@@ -2305,6 +2323,8 @@ msgstr "Tryb jednowalutowy"
 msgid ""
 "Some lines cannot be processed because they have already been reconciled."
 msgstr ""
+"Niektóre wiersze nie mogą zostać przetworzone, ponieważ zostały już "
+"uzgodnione."
 
 #. module: account_accountant
 #. odoo-javascript
@@ -2346,6 +2366,12 @@ msgstr "Pozycje wyciągu"
 #: code:addons/account_accountant/demo/account_accountant_demo.py:0
 msgid "Subscription 12 months"
 msgstr "Subskrypcja 12 miesięcy"
+
+#. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/button_list/button_list.xml:0
+msgid "Suggestions"
+msgstr "Sugestie"
 
 #. module: account_accountant
 #: model:ir.model,name:account_accountant.model_account_tax
@@ -2403,13 +2429,6 @@ msgstr "Wpisy odroczone utworzone przez tę fakturę"
 #: code:addons/account_accountant/models/account_fiscal_year.py:0
 msgid "The ending date must not be prior to the starting date."
 msgstr "Data zakończenia nie może być wcześniejsza od daty rozpoczęcia."
-
-#. module: account_accountant
-#: model_terms:ir.ui.view,arch_db:account_accountant.res_config_settings_view_form
-msgid ""
-"The invoices before this date will not be taken into account as accounting "
-"entries"
-msgstr "Faktury przed tą datą nie będą brane pod uwagę jako zapisy księgowe"
 
 #. module: account_accountant
 #: model:ir.model.fields,help:account_accountant.field_account_bank_statement_line__deferred_original_move_ids
@@ -2470,8 +2489,8 @@ msgid ""
 "The system will try to predict the product on vendor bill lines based on the "
 "label of the line"
 msgstr ""
-"System spróbuje przewidzieć produkt na liniach rachunku sprzedawcy na "
-"podstawie etykiety linii"
+"System spróbuje przewidzieć produkt na pozycjach rachunku sprzedawcy na "
+"podstawie etykiety pozycji"
 
 #. module: account_accountant
 #: model_terms:ir.ui.view,arch_db:account_accountant.view_bank_create_statement_form_bank_rec_widget
@@ -2498,7 +2517,7 @@ msgstr "Można to wykorzystać tylko w pozycjach dziennika"
 #. odoo-javascript
 #: code:addons/account_accountant/static/src/components/bank_reconciliation/line_to_reconcile/line_to_reconcile.xml:0
 msgid "This line has invalid analytic distribution"
-msgstr "Ta linia ma nieprawidłowy rozkład analityczny"
+msgstr "Ta pozycja ma nieprawidłowy rozkład analityczny"
 
 #. module: account_accountant
 #: model_terms:ir.ui.view,arch_db:account_accountant.view_bank_rec_edit_line
@@ -2800,6 +2819,12 @@ msgid "You need to select who the exception applies to."
 msgstr "Należy ustalić kogo dotyczy wyjątek."
 
 #. module: account_accountant
+#: model:res.groups,comment:account_accountant.group_account_basic
+msgid "adds the accounting dashboard, bank management and follow-up reports."
+msgstr ""
+"dodaje konsolę księgową, zarządzanie bankami i raporty działań następczych."
+
+#. module: account_accountant
 #: model:ir.model.fields.selection,name:account_accountant.selection__account_change_lock_date__exception_duration__1h
 msgid "for 1 hour"
 msgstr "na 1 godzinę"
@@ -2856,6 +2881,11 @@ msgstr "druga waluta"
 #: model_terms:ir.ui.view,arch_db:account_accountant.account_journal_dashboard_kanban_view
 msgid "to reconcile"
 msgstr "do uzgodnienia"
+
+#~ msgid ""
+#~ "The invoices before this date will not be taken into account as "
+#~ "accounting entries"
+#~ msgstr "Faktury przed tą datą nie będą brane pod uwagę jako zapisy księgowe"
 
 #~ msgid "Reconciliation model %s applied"
 #~ msgstr "Zastosowano model uzgadniania %s"
@@ -3190,9 +3220,6 @@ msgstr "do uzgodnienia"
 
 #~ msgid "State"
 #~ msgstr "Stan"
-
-#~ msgid "Suggestions"
-#~ msgstr "Sugestie"
 
 #~ msgid "Tax Base Amount Currency"
 #~ msgstr "Kwota waluty podstawy opodatkowania"

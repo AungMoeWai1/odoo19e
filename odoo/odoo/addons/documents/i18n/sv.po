@@ -23,8 +23,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-06 18:41+0000\n"
-"PO-Revision-Date: 2026-02-20 17:14+0000\n"
+"POT-Creation-Date: 2026-04-24 17:41+0000\n"
+"PO-Revision-Date: 2026-05-07 17:15+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/"
 "documents/sv/>\n"
@@ -33,7 +33,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: documents
 #. odoo-python
@@ -101,17 +101,6 @@ msgid ""
 ". Scanned files will appear automatically in your folder. Then, process your "
 "documents in bulk with the split tool: launch user defined actions, request "
 "a signature, convert to vendor bills with AI, etc."
-msgstr ""
-
-#. module: documents
-#: model:documents.tag,name:documents.documents_tag_year_previous
-msgid "2025"
-msgstr ""
-
-#. module: documents
-#: model:documents.document,name:documents.document_finance_annual_closing_year_current_folder
-#: model:documents.tag,name:documents.documents_tag_year_current
-msgid "2026"
 msgstr ""
 
 #. module: documents
@@ -214,7 +203,7 @@ msgstr "<span title=\"Requested Document\">Begärt dokument</span>"
 #. module: documents
 #: model_terms:ir.ui.view,arch_db:documents.public_page_layout
 msgid "<span>&amp;nbsp;Documents.</span>"
-msgstr ""
+msgstr "<span>&amp;nbsp;Dokument</span>"
 
 #. module: documents
 #: model_terms:ir.ui.view,arch_db:documents.document_view_kanban
@@ -932,7 +921,7 @@ msgstr "Verksamhet"
 #. module: documents
 #: model:ir.model.fields,field_description:documents.field_documents_document__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Aktivitet undantaget dekoration"
+msgstr "Undantagsaktiviteter dekoration"
 
 #. module: documents
 #: model:ir.ui.menu,name:documents.mail_activity_plan_menu
@@ -942,7 +931,7 @@ msgstr "Verksamhetsplaner"
 #. module: documents
 #: model:ir.model.fields,field_description:documents.field_documents_document__activity_state
 msgid "Activity State"
-msgstr "Aktivitetsläge"
+msgstr "Aktivitetsstatus"
 
 #. module: documents
 #: model:ir.model,name:documents.model_mail_activity_type
@@ -1911,7 +1900,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/documents/static/src/views/list/document_size_field.js:0
 msgid "DocumentSizeIntegerField"
-msgstr ""
+msgstr "DocumentSizeIntegerField"
 
 #. module: documents
 #: model:ir.actions.act_window,name:documents.document_action
@@ -2043,7 +2032,7 @@ msgstr "Klar"
 #: code:addons/documents/static/src/views/documents_controller_mixin.js:0
 #: code:addons/documents/static/src/views/list/action_widget/documents_list_action_item_download.js:0
 msgid "Download"
-msgstr "Nedladdningar"
+msgstr "Ladda ner"
 
 #. module: documents
 #: model_terms:ir.ui.view,arch_db:documents.public_folder_page
@@ -2360,7 +2349,7 @@ msgstr "Följare"
 #. module: documents
 #: model:ir.model.fields,field_description:documents.field_documents_document__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Följare (kontakter)"
+msgstr "Följare (Partners)"
 
 #. module: documents
 #: model:ir.model.fields,help:documents.field_documents_document__activity_type_icon
@@ -2495,13 +2484,14 @@ msgstr ""
 #. module: documents
 #: model:ir.model.fields,help:documents.field_documents_document__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Om markerat, nya meddelanden kräver din uppmärksamhet."
+msgstr ""
+"Om ikryssad, så finns det nya meddelanden som kräver din uppmärksamhet."
 
 #. module: documents
 #: model:ir.model.fields,help:documents.field_documents_document__message_has_error
 #: model:ir.model.fields,help:documents.field_documents_document__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Om markerad, några meddelanden har leveransfel."
+msgstr "Om ikryssad, så finns det meddelanden med leveransfel."
 
 #. module: documents
 #: model_terms:ir.ui.view,arch_db:documents.document_view_search
@@ -2878,7 +2868,7 @@ msgstr ""
 #. module: documents
 #: model:documents.document,name:documents.document_loans_folder
 msgid "Loans"
-msgstr ""
+msgstr "Lån"
 
 #. module: documents
 #. odoo-javascript
@@ -2960,7 +2950,7 @@ msgstr "Meddelande"
 #. module: documents
 #: model:ir.model.fields,field_description:documents.field_documents_document__message_has_error
 msgid "Message Delivery error"
-msgstr "Meddelande leveransfel"
+msgstr "Leveransfel för meddelanden"
 
 #. module: documents
 #: model:ir.model.fields,field_description:documents.field_documents_document__message_ids
@@ -3029,7 +3019,7 @@ msgstr "Mer"
 #: code:addons/documents/static/src/views/documents_controller_mixin.js:0
 #: model:ir.model.fields.selection,name:documents.selection__documents_operation__operation__move
 msgid "Move"
-msgstr "Verifikat"
+msgstr "Flytta"
 
 #. module: documents
 #. odoo-javascript
@@ -3105,7 +3095,7 @@ msgstr "Mina aktivieteter"
 #. module: documents
 #: model:ir.model.fields,field_description:documents.field_documents_document__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr "Mina aktiviteters deadline"
+msgstr "Tidsgräns för mina aktiviteter"
 
 #. module: documents
 #: model_terms:ir.ui.view,arch_db:documents.document_view_search
@@ -3168,17 +3158,17 @@ msgstr "Ny prisgrupp"
 #. module: documents
 #: model:ir.model.fields,field_description:documents.field_documents_document__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr "Nästa Kalenderhändelse för aktivitet"
+msgstr "Nästa aktivitetshändelse i kalendern"
 
 #. module: documents
 #: model:ir.model.fields,field_description:documents.field_documents_document__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "Nästa slutdatum för aktivitet"
+msgstr "Nästa tidsgräns för en aktivitet"
 
 #. module: documents
 #: model:ir.model.fields,field_description:documents.field_documents_document__activity_summary
 msgid "Next Activity Summary"
-msgstr "Nästa aktivitetssammanställning"
+msgstr "Nästa aktivitetssammanfattning"
 
 #. module: documents
 #: model:ir.model.fields,field_description:documents.field_documents_document__activity_type_id
@@ -3333,7 +3323,7 @@ msgstr "Antal fel"
 #. module: documents
 #: model:ir.model.fields,help:documents.field_documents_document__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr "Antal meddelanden som kräver åtgärd"
+msgstr "Antal meddelanden som kräver åtgärder"
 
 #. module: documents
 #: model:ir.model.fields,help:documents.field_documents_document__message_has_error_counter
@@ -3480,7 +3470,7 @@ msgstr ""
 #. module: documents
 #: model_terms:ir.ui.view,arch_db:documents.document_view_search
 msgid "PDF/Documents"
-msgstr ""
+msgstr "PDF/Dokument"
 
 #. module: documents
 #: model:ir.model.fields,field_description:documents.field_documents_document__user_folder_id
@@ -3541,7 +3531,7 @@ msgstr ""
 #. module: documents
 #: model:ir.model.fields,field_description:documents.field_documents_document__rating_ids
 msgid "Ratings"
-msgstr "Betyg"
+msgstr "Omdömen"
 
 #. module: documents
 #: model:ir.model.fields,field_description:documents.field_documents_sharing__is_readonly
@@ -3620,7 +3610,7 @@ msgstr ""
 #: code:addons/documents/static/src/views/list/action_widget/documents_list_action_item_rename.js:0
 #: model_terms:ir.ui.view,arch_db:documents.document_view_form_rename
 msgid "Rename"
-msgstr "Byt namn på"
+msgstr "Döp om"
 
 #. module: documents
 #. odoo-javascript
@@ -3729,7 +3719,7 @@ msgstr "Roll"
 #. module: documents
 #: model:ir.model.fields,field_description:documents.field_documents_document__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr "SMS leveransfel"
+msgstr "Leveransfel för SMS"
 
 #. module: documents
 #: model_terms:ir.ui.view,arch_db:documents.documents_sharing_view_form
@@ -3750,9 +3740,7 @@ msgstr "Sök..."
 
 #. module: documents
 #. odoo-javascript
-#: code:addons/documents/static/src/core/common/composer_actions_patch.js:0
-#: code:addons/documents/static/src/editor/plugins/add_documents_attachment_plugin.js:0
-#: code:addons/documents/static/src/web/mail_composer_document_selector/mail_composer_document_selector.js:0
+#: code:addons/documents/static/src/views/view_dialogs/select_add_document_create_dialog.js:0
 msgid "Search: Documents"
 msgstr ""
 
@@ -3895,7 +3883,7 @@ msgstr "Inställningar"
 #: code:addons/documents/static/src/web/error_dialog/error_dialog_patch.xml:0
 #: model_terms:ir.ui.view,arch_db:documents.documents_sharing_view_form
 msgid "Share"
-msgstr "Andel"
+msgstr "Skicka"
 
 #. module: documents
 #: model:ir.model.fields,field_description:documents.field_documents_sharing__share_access_ids
@@ -3964,7 +3952,7 @@ msgstr ""
 #. module: documents
 #: model_terms:ir.ui.view,arch_db:documents.document_view_search
 msgid "Show all records whose next activity date is past"
-msgstr ""
+msgstr "Visa alla handlingar vars nästkommande aktivitetsdatum har passerat"
 
 #. module: documents
 #: model:ir.model.fields,field_description:documents.field_documents_operation__destination_children_ids
@@ -4552,12 +4540,12 @@ msgstr "Varning"
 #. module: documents
 #: model:ir.model.fields,field_description:documents.field_documents_document__website_message_ids
 msgid "Website Messages"
-msgstr "Webbplatsmeddelanden"
+msgstr "Hemsidesmeddelanden"
 
 #. module: documents
 #: model:ir.model.fields,help:documents.field_documents_document__website_message_ids
 msgid "Website communication history"
-msgstr "Webbplatsens kommunikationshistorik"
+msgstr "Hemsidans kommunikationshistorik"
 
 #. module: documents
 #: model:ir.model.fields.selection,name:documents.selection__documents_document__create_activity_date_deadline_range_type__weeks
@@ -4946,7 +4934,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/documents/models/ir_actions_server.py:0
 msgid "model_name"
-msgstr ""
+msgstr "model_name"
 
 #. module: documents
 #. odoo-python
@@ -4958,7 +4946,7 @@ msgstr "ingen"
 #. odoo-python
 #: code:addons/documents/models/ir_actions_server.py:0
 msgid "parent_id"
-msgstr ""
+msgstr "parent_id"
 
 #. module: documents
 #: model:documents.document,name:documents.documents_image_people_document

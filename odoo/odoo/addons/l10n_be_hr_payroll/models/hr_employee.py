@@ -34,7 +34,7 @@ class HrEmployee(models.Model):
         string="Number of days to recover (N)", tracking=True, groups="hr_payroll.group_hr_payroll_user",
         help="Number of days on which you should recover the holiday pay.")
     l10n_be_holiday_pay_recovered_n = fields.Float(
-        string="Recovered Simple Holiday Pay (N)", tracking=True,
+        string="Recovered Simple Holiday Pay (N)",
         compute='_compute_l10n_be_holiday_pay_recovered', groups="hr_payroll.group_hr_payroll_user",
         help="Amount of the holiday pay paid by the previous employer already recovered.")
     double_pay_line_n_ids = fields.Many2many(
@@ -52,7 +52,7 @@ class HrEmployee(models.Model):
         string="Number of days to recover (N-1)", tracking=True, groups="hr_payroll.group_hr_payroll_user",
         help="Number of days on which you should recover the holiday pay.")
     l10n_be_holiday_pay_recovered_n1 = fields.Float(
-        string="Recovered Simple Holiday Pay (N-1)", tracking=True,
+        string="Recovered Simple Holiday Pay (N-1)",
         compute='_compute_l10n_be_holiday_pay_recovered', groups="hr_payroll.group_hr_payroll_user",
         help="Amount of the holiday pay paid by the previous employer already recovered.")
     double_pay_line_n1_ids = fields.Many2many(
@@ -298,17 +298,28 @@ Earnings are made of professional income, remuneration, unemployment allocations
         return versions.filtered(
             lambda c: c.company_id.country_id.code != 'BE' or (c.company_id.country_id.code == 'BE' and c.contract_type_id != pfi))
 
-    def write(self, vals):
-        res = super().write(vals)
-        if vals.get('current_version_id'):
-            self.current_version_id.sudo().filtered('contract_date_start')._trigger_l10n_be_next_activities()
-        return res
-
     @api.model_create_multi
     def create(self, vals_list):
-        employees = super().create(vals_list)
-        employees.current_version_id.sudo().filtered('contract_date_start')._trigger_l10n_be_next_activities()
-        return employees
+        employees = super(HrEmployee, self.with_context(pending_employee_creation=True)).create(vals_list)
+        updated_context = dict(employees.env.context)
+        updated_context.pop('pending_employee_creation')
+        created_employees = employees.with_context(updated_context)
+        created_employees.current_version_id.sudo().filtered(
+            lambda v: v._is_struct_from_country('BE') and v.contract_date_start
+        )._trigger_l10n_be_next_activities()
+        return created_employees
+
+    def _compute_current_version_id(self):
+        prev_current_version_id_by_employee = self.current_version_id.grouped('employee_id')
+        super()._compute_current_version_id()
+        to_trigger_next_activities = self.current_version_id.filtered(
+            lambda v: not prev_current_version_id_by_employee.get(v.employee_id) or
+                prev_current_version_id_by_employee.get(v.employee_id) != v
+        )
+        if to_trigger_next_activities:
+            to_trigger_next_activities.sudo().filtered(
+                lambda v: v._is_struct_from_country('BE') and v.contract_date_start
+            )._trigger_l10n_be_next_activities()
 
     def action_employee_work_schedule_change_wizard(self):
         if len(self) != 1:

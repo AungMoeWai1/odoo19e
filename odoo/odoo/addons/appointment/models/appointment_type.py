@@ -868,6 +868,8 @@ class AppointmentType(models.Model):
         if not self.active:
             return []
         now = datetime.utcnow()
+        month, year = self.env.context.get('appointment_slots_force_month') or (False, False)
+
         if not reference_date:
             reference_date = now
 
@@ -912,30 +914,79 @@ class AppointmentType(models.Model):
         if filter_resources and not valid_resources:
             return []
         # Used to check availabilities for the whole last day as _slot_generate will return all slots on that date.
-        last_day_end_of_day = datetime.combine(
-            last_day.astimezone(pytz.timezone(self.appointment_tz)),
-            time.max
+        first_day_as_utc = first_day.astimezone(pytz.utc)
+        appointment_tz = pytz.timezone(self.appointment_tz)
+        last_day_end_of_day_utc = datetime.combine(
+            last_day.astimezone(appointment_tz),
+            time.max,
+            # this seems broken but it's the existing behaviour as far as I can tell:
+            # - datetime.combine keeps the tzinfo of the *time*
+            # - time.max doesn't have a tzinfo
+            # - datetime(tzinfo=None).astimezone(...) treats the input a local
+            #   datetime, which for odoo should mean UTC, so astimezone(UTC)
+            #   does no conversion and sets the UTC on the dt
+            tzinfo=pytz.utc,
         )
+
+        # If nothing is given:
+        # Just check the first month (based on the first day)
+
+        # If month and year are given, check only that month
+
+        # If no slot -> Go back to original way but stop as soon as a slot exist to get that month
+        month = month or first_day_as_utc.month
+        year = year or first_day_as_utc.year
+
+        fill_slots_from = datetime.combine(
+            first_day_as_utc.replace(day=1, month=month, year=year) if self.category != 'custom' else first_day_as_utc,
+            time.min,
+            tzinfo=pytz.utc,
+        )
+        fill_slots_to = datetime.combine(
+            fill_slots_from + relativedelta(months=1, days=-1) if self.category != 'custom' else last_day_end_of_day_utc,
+            time.max,
+            tzinfo=pytz.utc,
+        )
+
+        self._slots_fill_availability(
+            slots,
+            fill_slots_from,
+            fill_slots_to,
+            valid_resources,
+            valid_users,
+            asked_capacity=asked_capacity
+        )
+
         if self.schedule_based_on == 'users':
-            self._slots_fill_users_availability(
-                slots,
-                first_day.astimezone(pytz.UTC),
-                last_day_end_of_day.astimezone(pytz.UTC),
-                valid_users,
-                asked_capacity,
-            )
             slot_field_label = 'available_staff_users' if not self.is_auto_assign and self.is_date_first else 'staff_user_id'
         else:
-            self._slots_fill_resources_availability(
-                slots,
-                first_day.astimezone(pytz.UTC),
-                last_day_end_of_day.astimezone(pytz.UTC),
-                valid_resources,
-                asked_capacity,
-            )
             slot_field_label = 'available_resource_ids'
-
         total_nb_slots = sum(slot_field_label in slot for slot in slots)
+
+        if self.env.context.get('appointment_slots_force_month'):
+            # Moving from reference date to max date in months until a slot exists.
+            fill_slots_from = datetime.combine(first_day_as_utc.replace(day=1), time.min, tzinfo=pytz.utc)
+            fill_slots_to = datetime.combine(
+                fill_slots_from + relativedelta(months=1, days=-1),
+                time.max,
+            )
+        while not total_nb_slots and fill_slots_from < last_day_end_of_day_utc:
+            if (fill_slots_from.month, fill_slots_to.year) != (month, year):
+                self._slots_fill_availability(
+                    slots,
+                    fill_slots_from,
+                    fill_slots_to,
+                    valid_resources,
+                    valid_users,
+                    asked_capacity=asked_capacity
+                )
+                total_nb_slots = sum(slot_field_label in slot for slot in slots)
+            fill_slots_from += relativedelta(months=1)
+            fill_slots_to = datetime.combine(
+                fill_slots_from + relativedelta(months=1, days=-1),
+                time.max,
+            )
+
         # If there is no slot for the minimum capacity then we return an empty list.
         # This will lead to a screen informing the customer that there is no availability.
         # We don't want to return an empty list if the capacity as been tempered by the customer
@@ -971,7 +1022,8 @@ class AppointmentType(models.Model):
                             if (slots[0][tz][0].date() == day) and (slot_field_label in slots[0]):
                                 slot_start_dt_tz, slot_end_dt_tz = slots[0][tz]
                                 slot_start_dt_tz_formatted = slot_start_dt_tz.strftime('%Y-%m-%d %H:%M:%S')
-                                slot_duration = slots[0]['slot'].duration or str((slot_end_dt_tz - slot_start_dt_tz).total_seconds() / 3600)
+                                real_slot_end_dt_tz = slot_end_dt_tz + relativedelta(days=1) if is_allday else slot_end_dt_tz
+                                slot_duration = (real_slot_end_dt_tz - slot_start_dt_tz).total_seconds() / 3600
                                 # Remove one second in case the end time slot reached midnight of the next day
                                 # e.g. 6PM (June 1st) to 12AM (June 2nd) should not be considered as a multi day slot
                                 is_multi_day = (
@@ -1047,6 +1099,16 @@ class AppointmentType(models.Model):
             })
             start = start + relativedelta(months=1)
         return months
+
+    def _slots_fill_availability(self, slots, start, end, resources, users, asked_capacity=0):
+        if self.schedule_based_on == 'users':
+            self.with_context(
+                appointment_specific_interval_only=True
+            )._slots_fill_users_availability(slots, start, end, users, asked_capacity)
+        else:
+            self.with_context(
+                appointment_specific_interval_only=True
+            )._slots_fill_resources_availability(slots, start, end, resources, asked_capacity)
 
     def _check_appointment_is_valid_slot(self, staff_user, resources, asked_capacity, timezone, start_dt, duration, allday):
         """
@@ -1202,7 +1264,12 @@ class AppointmentType(models.Model):
             available_users_tz, start_dt, end_dt
         )
 
-        for slot in slots:
+        # We only check availability for slots starting in the given interval
+        interval_slots = filter(
+            lambda slot: start_dt.replace(tzinfo=None) <= slot['UTC'][0] <= end_dt.replace(tzinfo=None), slots
+        ) if self.env.context.get('appointment_specific_interval_only') else slots
+
+        for slot in interval_slots:
             if (self.is_date_first and not self.is_auto_assign) or self.env.context.get('slots_check_all_users', False):
                 available_staff_users = available_users_tz.filtered(
                     lambda staff_user: self._slot_availability_is_user_available(
@@ -1476,7 +1543,12 @@ class AppointmentType(models.Model):
         )
 
         capacity_info_to_best_resources = {}
-        for slot in slots:
+        # We only check availability for slots starting in the given interval
+        interval_slots = filter(
+            lambda slot: start_dt_utc.replace(tzinfo=None) <= slot['UTC'][0] <= end_dt_utc.replace(tzinfo=None), slots
+        ) if self.env.context.get('appointment_specific_interval_only') else slots
+
+        for slot in interval_slots:
             capacity_info = {}
             for resource in available_resources:
                 if not self._slot_availability_is_resource_available(slot, resource, availability_values):

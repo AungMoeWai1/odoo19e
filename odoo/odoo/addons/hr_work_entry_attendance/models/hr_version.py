@@ -25,13 +25,16 @@ class HrVersion(models.Model):
         start_naive = start_dt.replace(tzinfo=None)
         end_naive = end_dt.replace(tzinfo=None)
 
+        domain = [("manual_duration", ">", 0),
+                  ("employee_id", "=", self.employee_id.ids),
+                  "|",
+                  ("time_stop", "<=", end_naive),
+                  ("time_stop", "=", False),
+                  ("time_start", ">=", start_naive),
+                  ]
+
         overtimes = self.env['hr.attendance.overtime.line']._read_group(
-            domain=[
-                ('employee_id', 'in', self.employee_id.ids),
-                ('date', '<=', end_naive.date()),
-                ('date', '>=', start_naive.date()),
-                ('manual_duration', '>', 0),
-            ],
+            domain=domain,
             groupby=['employee_id', 'date:day'],
             aggregates=['id:recordset']
         )
@@ -46,9 +49,13 @@ class HrVersion(models.Model):
                 for (check_in, check_out), ots in overtimes.grouped(lambda ot: (ot.time_start, ot.time_stop)).items():
                     prev_duration = 0  # to avoid intervals overlapping
                     for ot in ots:
-                        datetime_stop = min(
-                            datetime.combine(ot.date, datetime.max.time()),
-                            ot.time_stop
+                        tz = timezone(ot.employee_id.tz or resource.tz or 'UTC')
+                        # Localization represents the LOCAL end of day for the date of the line
+                        end_of_day_tz = tz.localize(datetime.combine(ot.date, datetime.max.time()))
+                        end_of_day = end_of_day_tz.astimezone(utc).replace(tzinfo=None)
+
+                        datetime_stop = (
+                            min(end_of_day, ot.time_stop) if ot.time_stop else end_of_day
                         ) - relativedelta(hours=prev_duration)
                         datetime_start = datetime_stop - timedelta(hours=ot.duration)
                         prev_duration += ot.duration
@@ -273,7 +280,7 @@ class HrVersion(models.Model):
                 attendances_list.append((start, stop, model))
             else:
                 no_attendances_list.append((start, stop, model))
-        super_list = super()._get_real_attendances(Intervals(no_attendances_list), leaves, worked_leaves)._items
+        super_list = super()._get_real_attendances(Intervals(no_attendances_list, keep_distinct=True), leaves, worked_leaves)._items
         return Intervals(attendances_list + super_list, keep_distinct=True)
 
     @api.model

@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:46+0000\n"
+"POT-Creation-Date: 2026-05-08 17:43+0000\n"
 "PO-Revision-Date: 2025-10-08 18:46+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -120,6 +120,11 @@ msgstr "Ilova"
 #, fuzzy
 msgid "Bank Statement"
 msgstr "Bank ko‘chirmasi"
+
+#. module: documents_account
+#: model:ir.model,name:documents_account.model_account_document_import_mixin
+msgid "Business document import mixin"
+msgstr ""
 
 #. module: documents_account
 #: model_terms:ir.ui.view,arch_db:documents_account.res_config_settings_view_form
@@ -305,12 +310,25 @@ msgid "Credit Note"
 msgstr "Kredit qaydnomasi"
 
 #. module: documents_account
+#. odoo-python
+#: code:addons/documents_account/models/documents_document.py:0
+msgid "Customer Credit Notes"
+msgstr ""
+
+#. module: documents_account
 #: model:ir.model.fields.selection,name:documents_account.selection__ir_actions_server__documents_account_create_model__account_move_out_invoice
 #, fuzzy
 msgid "Customer Invoice"
 msgstr "Mijoz hisobi"
 
 #. module: documents_account
+#. odoo-python
+#: code:addons/documents_account/models/documents_document.py:0
+msgid "Customer Invoices"
+msgstr ""
+
+#. module: documents_account
+#: model:ir.model.fields,field_description:documents_account.field_account_document_import_mixin__display_name
 #: model:ir.model.fields,field_description:documents_account.field_account_journal__display_name
 #: model:ir.model.fields,field_description:documents_account.field_account_move__display_name
 #: model:ir.model.fields,field_description:documents_account.field_account_report__display_name
@@ -381,6 +399,12 @@ msgstr "Buxgalteriya hisobotlari uchun eksport yordamchisi"
 
 #. module: documents_account
 #. odoo-javascript
+#: code:addons/documents_account/static/src/components/mail_attachments/mail_attachments_selector_patch.js:0
+msgid "Failed to paste links: "
+msgstr ""
+
+#. module: documents_account
+#. odoo-javascript
 #. odoo-python
 #: code:addons/documents_account/models/documents_document.py:0
 #: code:addons/documents_account/static/src/js/tour.js:0
@@ -430,6 +454,7 @@ msgid "Has Embedded PDF"
 msgstr "Joylashtirilgan PDF mavjud"
 
 #. module: documents_account
+#: model:ir.model.fields,field_description:documents_account.field_account_document_import_mixin__id
 #: model:ir.model.fields,field_description:documents_account.field_account_journal__id
 #: model:ir.model.fields,field_description:documents_account.field_account_move__id
 #: model:ir.model.fields,field_description:documents_account.field_account_report__id
@@ -451,13 +476,6 @@ msgstr "ID"
 #, fuzzy
 msgid "Import Bank Statement"
 msgstr "Bank ko‘chirmasini import qilish"
-
-#. module: documents_account
-#. odoo-python
-#: code:addons/documents_account/models/documents_document.py:0
-#, fuzzy
-msgid "Invoices"
-msgstr "Hisob-fakturalar"
 
 #. module: documents_account
 #: model:ir.model,name:documents_account.model_account_journal
@@ -541,6 +559,12 @@ msgid ""
 msgstr ""
 "Keling, bu xatni Moliya deb belgilaymiz<br/> <i>Maslahatlar: amallar jildga "
 "muvofiq jarayoningizga moslashtirilishi mumkin.</i>"
+
+#. module: documents_account
+#. odoo-javascript
+#: code:addons/documents_account/static/src/components/mail_attachments/mail_attachments_selector_patch.js:0
+msgid "Links pasted"
+msgstr ""
 
 #. module: documents_account
 #: model:ir.model.fields.selection,name:documents_account.selection__ir_actions_server__documents_account_create_model__account_move_entry
@@ -690,10 +714,28 @@ msgid "Vendor Bill"
 msgstr "Yetkazib beruvchi hisob-fakturasi"
 
 #. module: documents_account
+#. odoo-python
+#: code:addons/documents_account/models/documents_document.py:0
+msgid "Vendor Bills"
+msgstr ""
+
+#. module: documents_account
 #: model:ir.model.fields.selection,name:documents_account.selection__ir_actions_server__documents_account_create_model__account_move_in_refund
 #, fuzzy
 msgid "Vendor Credit Note"
 msgstr "Yetkazib beruvchi krediti eslatmasi"
+
+#. module: documents_account
+#. odoo-python
+#: code:addons/documents_account/models/documents_document.py:0
+msgid "Vendor Receipts"
+msgstr ""
+
+#. module: documents_account
+#. odoo-python
+#: code:addons/documents_account/models/documents_document.py:0
+msgid "Vendor Refunds"
+msgstr ""
 
 #. module: documents_account
 #. odoo-javascript
@@ -734,3 +776,7 @@ msgstr "hisob standart jildi"
 #, fuzzy
 msgid "to mark this invoice as paid."
 msgstr "ushbu hisob-fakturani to‘langan deb belgilash uchun."
+
+#, fuzzy
+#~ msgid "Invoices"
+#~ msgstr "Hisob-fakturalar"

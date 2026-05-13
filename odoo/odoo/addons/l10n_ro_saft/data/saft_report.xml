@@ -91,6 +91,7 @@
             <UOMTable>
                 <UOMTableEntry t-foreach="uoms" t-as="uom">
                     <UnitOfMeasure t-out="unece_code_by_uom[uom.id]"/>
+                    <Description t-out="uom.name[:256]"/>
                 </UOMTableEntry>
             </UOMTable>
             <AnalysisTypeTable/>
@@ -249,35 +250,33 @@
                     </t>
                 </Payments>
                 <MovementOfGoods/>
-                <AssetTransactions>
-                    <t t-if="l10n_ro_saft_required_sections['source_documents']['asset_transactions']">
-                        <NumberOfAssetTransactions t-out="len(asset_transactions)"/>
-                        <AssetTransaction t-foreach="asset_transactions" t-as="asset_transaction">
-                            <AssetTransactionID t-out="asset_transaction['asset_transaction_id']"/>
-                            <AssetID t-out="asset_transaction['asset_id']"/>
-                            <AssetTransactionType t-out="asset_transaction['asset_transaction_type']"/>
-                            <Description t-out="asset_transaction['description']"/>
-                            <AssetTransactionDate t-out="asset_transaction['asset_transaction_date']"/>
-                            <AssetSupplier t-foreach="asset_transaction['supplier_ids']" t-as="supplier_id">
-                                <t t-set="partner" t-value="partner_detail_map[supplier_id]"/>
-                                <SupplierName t-out="partner['partner'].name[:70]"/>
-                                <SupplierID t-out="partner['registration_number']"/>
-                                <PostalAddress>
-                                    <t t-set="partner_address" t-value="partner['partner']"/>
-                                    <t t-call="account_saft.address"/>
-                                </PostalAddress>
-                            </AssetSupplier>
-                            <TransactionID t-out="asset_transaction['transaction_id']"/>
-                            <AssetTransactionValuations>
-                                <AssetTransactionValuation t-foreach="asset_transaction['asset_transaction_valuation']" t-as="transaction_valuation">
-                                    <AssetValuationType t-out="transaction_valuation['asset_valuation_type']"/>
-                                    <AcquisitionAndProductionCostsOnTransaction t-out="transaction_valuation['acquisition_and_production_costs_on_transaction']"/>
-                                    <BookValueOnTransaction t-out="transaction_valuation['book_value_transaction']"/>
-                                    <AssetTransactionAmount t-out="transaction_valuation['asset_transaction_amount']"/>
-                                </AssetTransactionValuation>
-                            </AssetTransactionValuations>
-                        </AssetTransaction>
-                    </t>
+                <AssetTransactions t-if="l10n_ro_saft_required_sections['source_documents']['asset_transactions']">
+                    <NumberOfAssetTransactions t-out="len(asset_transactions)"/>
+                    <AssetTransaction t-foreach="asset_transactions" t-as="asset_transaction">
+                        <AssetTransactionID t-out="asset_transaction['asset_transaction_id']"/>
+                        <AssetID t-out="asset_transaction['asset_id']"/>
+                        <AssetTransactionType t-out="asset_transaction['asset_transaction_type']"/>
+                        <Description t-out="asset_transaction['description']"/>
+                        <AssetTransactionDate t-out="asset_transaction['asset_transaction_date']"/>
+                        <AssetSupplier t-foreach="asset_transaction['supplier_ids']" t-as="supplier_id">
+                            <t t-set="partner" t-value="partner_detail_map[supplier_id]"/>
+                            <SupplierName t-out="partner['partner'].name[:70]"/>
+                            <SupplierID t-out="partner['registration_number']"/>
+                            <PostalAddress>
+                                <t t-set="partner_address" t-value="partner['partner']"/>
+                                <t t-call="account_saft.address"/>
+                            </PostalAddress>
+                        </AssetSupplier>
+                        <TransactionID t-out="asset_transaction['transaction_id']"/>
+                        <AssetTransactionValuations>
+                            <AssetTransactionValuation t-foreach="asset_transaction['asset_transaction_valuation']" t-as="transaction_valuation">
+                                <AssetValuationType t-out="transaction_valuation['asset_valuation_type']"/>
+                                <AcquisitionAndProductionCostsOnTransaction t-out="transaction_valuation['acquisition_and_production_costs_on_transaction']"/>
+                                <BookValueOnTransaction t-out="transaction_valuation['book_value_transaction']"/>
+                                <AssetTransactionAmount t-out="transaction_valuation['asset_transaction_amount']"/>
+                            </AssetTransactionValuation>
+                        </AssetTransactionValuations>
+                    </AssetTransaction>
                 </AssetTransactions>
             </SourceDocuments>
         </xpath>
@@ -295,6 +294,12 @@
             <t t-call="l10n_ro_saft.addresses_contacts">
                 <t t-set="partner_id" t-value="company.partner_id.id"/>
             </t>
+        </xpath>
+        <xpath expr="//IBANNumber" position="attributes">
+            <attribute name="t-out">partner_bank.sanitized_acc_number</attribute>
+        </xpath>
+        <xpath expr="//BankAccountNumber" position="attributes">
+            <attribute name="t-out">partner_bank.sanitized_acc_number</attribute>
         </xpath>
     </template>
 

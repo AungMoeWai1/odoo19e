@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-06 18:41+0000\n"
-"PO-Revision-Date: 2026-02-14 10:06+0000\n"
+"POT-Creation-Date: 2026-04-24 17:41+0000\n"
+"PO-Revision-Date: 2026-05-02 09:37+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-19/documents/es_419/>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: documents
 #. odoo-python
@@ -93,17 +93,6 @@ msgstr ""
 "Luego, procesa tus documentos en lote con la herramienta de división: "
 "ejecuta acciones definidas por el usuario, solicita una firma, convierte en "
 "facturas de proveedor con la IA, etc."
-
-#. module: documents
-#: model:documents.tag,name:documents.documents_tag_year_previous
-msgid "2025"
-msgstr "2025"
-
-#. module: documents
-#: model:documents.document,name:documents.document_finance_annual_closing_year_current_folder
-#: model:documents.tag,name:documents.documents_tag_year_current
-msgid "2026"
-msgstr "2026"
 
 #. module: documents
 #: model_terms:digest.tip,tip_description:documents.digest_tip_documents_0
@@ -2346,9 +2335,7 @@ msgstr "Nombre en pantalla"
 #. odoo-javascript
 #: code:addons/documents/static/src/owl/components/pdf_exit_dialog/pdf_exit_dialog.xml:0
 msgid "Do you want to exit without saving or gather pages into one document ?"
-msgstr ""
-"¿Está seguro de que desea salir sin guardar o agrupar páginas en un "
-"documento?"
+msgstr "¿Quieres salir sin guardar o agrupar las páginas en un documento?"
 
 #. module: documents
 #: model:ir.model,name:documents.model_documents_document
@@ -3666,7 +3653,7 @@ msgid ""
 "Moving the document(s) will change their access rights to the following "
 "settings:"
 msgstr ""
-"Mover los documentos cambiarán sus permisos de acceso a los siguientes "
+"Mover los documentos cambiará sus permisos de acceso a los siguientes "
 "ajustes:"
 
 #. module: documents
@@ -4112,8 +4099,8 @@ msgid ""
 "Please login or contact the person that shared this link for more "
 "information."
 msgstr ""
-"Inicie sesión o póngase en contacto con la persona que compartió este enlace "
-"para más información."
+"Inicia sesión o contacta a la persona que compartió este enlace para obtener "
+"más información."
 
 #. module: documents
 #: model:ir.model.fields.selection,name:documents.selection__documents_document__thumbnail_status__present
@@ -4344,9 +4331,7 @@ msgstr "Buscar..."
 
 #. module: documents
 #. odoo-javascript
-#: code:addons/documents/static/src/core/common/composer_actions_patch.js:0
-#: code:addons/documents/static/src/editor/plugins/add_documents_attachment_plugin.js:0
-#: code:addons/documents/static/src/web/mail_composer_document_selector/mail_composer_document_selector.js:0
+#: code:addons/documents/static/src/views/view_dialogs/select_add_document_create_dialog.js:0
 msgid "Search: Documents"
 msgstr "Buscar: Documentos"
 
@@ -5657,6 +5642,12 @@ msgid ""
 msgstr ""
 "•\n"
 "                                        <b>URL</b>"
+
+#~ msgid "2025"
+#~ msgstr "2025"
+
+#~ msgid "2026"
+#~ msgstr "2026"
 
 #~ msgid ""
 #~ "<t t-set=\"documents\" t-value=\"ctx.get('documents', "

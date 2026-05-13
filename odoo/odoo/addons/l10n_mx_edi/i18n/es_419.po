@@ -2,14 +2,14 @@
 # This file contains the translation of the following modules:
 # * l10n_mx_edi
 #
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # "Patricia Gutiérrez (pagc)" <pagc@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.1alpha1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-30 19:10+0000\n"
-"PO-Revision-Date: 2026-01-03 09:46+0000\n"
+"POT-Creation-Date: 2026-04-10 19:18+0000\n"
+"PO-Revision-Date: 2026-04-20 20:52+0000\n"
 "Last-Translator: \"Patricia Gutiérrez (pagc)\" <pagc@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-19-l10n/l10n_mx_edi/es_419/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: l10n_mx_edi
 #: model:ir.model.fields.selection,name:l10n_mx_edi.selection__account_move__l10n_mx_edi_invoice_cancellation_reason__01
@@ -130,39 +130,8 @@ msgstr "08 - No traslado del IVA, No desglose IEPS"
 
 #. module: l10n_mx_edi
 #: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_bank_transaction_receipt_document
-msgid "2023-01-01"
-msgstr "01-01-2023"
-
-#. module: l10n_mx_edi
-#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_invoice_document
-msgid "2023-09-12"
-msgstr "12-09-2023"
-
-#. module: l10n_mx_edi
-#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_invoice_document
-msgid "20928"
-msgstr "20928"
-
-#. module: l10n_mx_edi
-#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_invoice_document
-msgid "30001000000500003416"
-msgstr "30001000000500003416"
-
-#. module: l10n_mx_edi
-#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_invoice_document
-msgid "30001000000500003442"
-msgstr "30001000000500003442"
-
-#. module: l10n_mx_edi
-#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_bank_transaction_receipt_document
 msgid "50 USD"
 msgstr "50 USD"
-
-#. module: l10n_mx_edi
-#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.l10n_mx_fiscal_regime_receptor
-#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_invoice_document
-msgid "601"
-msgstr "601"
 
 #. module: l10n_mx_edi
 #: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_payment_document
@@ -315,7 +284,7 @@ msgstr "Se debe respetar un plazo de 2 horas antes de realizar la cancelación"
 #. module: l10n_mx_edi
 #: model:ir.model.constraint,message:l10n_mx_edi.constraint_l10n_mx_edi_payment_method_code_uniq
 msgid "A payment method with the same code already exists."
-msgstr ""
+msgstr "Ya existe un método de pago con el mismo código."
 
 #. module: l10n_mx_edi
 #: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_payment_document
@@ -392,8 +361,8 @@ msgid ""
 "Arch must contain `<t t-xml-node=\"(addenda_type)\">(your addenda here)</"
 "t>`, where addenda_type is either 'complemento' or 'addenda'"
 msgstr ""
-"El arco debe contener `<t t-xml-node=\"(addenda_type)\">(tu addenda aquí)</"
-"t>`, en el que el addenda_type es \"complemento\" o \"addenda\""
+"El arco debe contener `<t t-xml-node=\"(addenda_type)\">(tu addenda aquí)</t>"
+"`, en el que el addenda_type es \"complemento\" o \"addenda\""
 
 #. module: l10n_mx_edi
 #. odoo-python
@@ -801,7 +770,7 @@ msgstr "Cuenta del predial"
 #. odoo-python
 #: code:addons/l10n_mx_edi/models/product.py:0
 msgid "Cuenta predial should be alphanumeric!"
-msgstr ""
+msgstr "La cuenta predial debe ser un valor alfanumérico."
 
 #. module: l10n_mx_edi
 #: model:ir.model,name:l10n_mx_edi.model_res_currency
@@ -835,8 +804,7 @@ msgstr "Fecha y hora"
 #: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_company__l10n_mx_edi_fiscal_regime__629
 #: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_partner__l10n_mx_edi_fiscal_regime__629
 msgid "De los Regímenes Fiscales Preferentes y de las Empresas Multinacionales"
-msgstr ""
-"De los Regímenes Fiscales Preferentes y de las Empresas Multinacionales"
+msgstr "De los Regímenes Fiscales Preferentes y de las Empresas Multinacionales"
 
 #. module: l10n_mx_edi
 #. odoo-python
@@ -1298,7 +1266,7 @@ msgstr "¿Se necesita el CFDI?"
 #: model:ir.model.fields,field_description:l10n_mx_edi.field_res_partner__l10n_mx_edi_partner_address_complete
 #: model:ir.model.fields,field_description:l10n_mx_edi.field_res_users__l10n_mx_edi_partner_address_complete
 msgid "L10N Mx Edi Partner Address Complete"
-msgstr ""
+msgstr "Completar la dirección del contacto en EDI"
 
 #. module: l10n_mx_edi
 #: model:ir.model.fields,field_description:l10n_mx_edi.field_account_bank_statement_line__l10n_mx_edi_payment_document_ids
@@ -2015,8 +1983,7 @@ msgstr ""
 #: code:addons/l10n_mx_edi/models/l10n_mx_edi_document.py:0
 msgid ""
 "The Solucion Factible service failed to sign with the following error: %s"
-msgstr ""
-"El servicio Solucion Factible no pudo firmar con el siguiente error: %s"
+msgstr "El servicio Solucion Factible no pudo firmar con el siguiente error: %s"
 
 #. module: l10n_mx_edi
 #: model:ir.model.fields,help:l10n_mx_edi.field_res_partner__l10n_mx_edi_usage
@@ -2063,8 +2030,8 @@ msgstr ""
 "- 05: Traslados de mercancias facturados previamente\n"
 "- 06: Factura generada por los traslados previos\n"
 "- 07: CFDI por aplicación de anticipo\n"
-"Por ejemplo: 01|89966ACC-0F5C-447D-AEF3-3EED22E711EE,89966ACC-0F5C-447D-"
-"AEF3-3EED22E711EE\n"
+"Por ejemplo: 01|89966ACC-0F5C-447D-AEF3-3EED22E711EE,89966ACC-0F5C-447D-AEF3-"
+"3EED22E711EE\n"
 "Si hay más de un tipo de relación, se debe separar por coma\n"
 "Por ejemplo: 01|89966ACC-0F5C-447D-AEF3-3EED22E711EE,03|89966ACC-0F5C-447D-"
 "AEF3-3EED22E711EE,6fad57a1-bf5b-4e27-a5d3-d84b2f36674c"
@@ -2246,6 +2213,12 @@ msgstr "XML CFDI"
 
 #. module: l10n_mx_edi
 #. odoo-python
+#: code:addons/l10n_mx_edi/models/l10n_mx_edi_document.py:0
+msgid "You can no longer send a CFDI for a PUE payment."
+msgstr "Ya no es posible enviar un CFDI para un pago PUE."
+
+#. module: l10n_mx_edi
+#. odoo-python
 #: code:addons/l10n_mx_edi/models/account_move.py:0
 msgid "You can only process invoices sharing the same company and journal."
 msgstr "Solo puedes procesar las facturas que comparten empresa y diario."
@@ -2316,6 +2289,24 @@ msgstr "factura"
 #: model:ir.model.fields.selection,name:l10n_mx_edi.selection__l10n_mx_edi_invoice_cancel__mode__invoice_with_replacement
 msgid "invoice_with_replacement"
 msgstr "invoice_with_replacement"
+
+#~ msgid "2023-01-01"
+#~ msgstr "01-01-2023"
+
+#~ msgid "2023-09-12"
+#~ msgstr "12-09-2023"
+
+#~ msgid "20928"
+#~ msgstr "20928"
+
+#~ msgid "30001000000500003416"
+#~ msgstr "30001000000500003416"
+
+#~ msgid "30001000000500003442"
+#~ msgstr "30001000000500003442"
+
+#~ msgid "601"
+#~ msgstr "601"
 
 #~ msgid "Cuenta predial must be only numbers!"
 #~ msgstr "La cuenta del predial sólo puede contener números."

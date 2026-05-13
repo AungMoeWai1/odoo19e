@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-20 18:46+0000\n"
-"PO-Revision-Date: 2026-02-18 14:56+0000\n"
+"PO-Revision-Date: 2026-03-14 09:40+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
 "spreadsheet_edition/fi/>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: spreadsheet_edition
 #. odoo-javascript
@@ -1330,7 +1330,7 @@ msgstr "Yhteensä"
 #. odoo-javascript
 #: code:addons/spreadsheet_edition/static/src/bundle/pivot/plugins/pivot_autofill_plugin.js:0
 msgid "Unknown"
-msgstr ""
+msgstr "Tuntematon"
 
 #. module: spreadsheet_edition
 #. odoo-javascript
