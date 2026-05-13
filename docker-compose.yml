@@ -1,5 +1,5 @@
 services:
-  odoo19db:
+  db:
     image: postgres
     env_file: myenvfile.env
     volumes:
@@ -15,7 +15,7 @@ services:
     tty: true
     env_file: myenvfile.env
     depends_on:
-      - odoo19db
+      - db
     ports:
       - "8069:8069"
     volumes:
@@ -36,7 +36,7 @@ services:
     volumes:
       - pgadmin_data:/var/lib/pgadmin
     depends_on:
-      - odoo19db
+      - db
     networks:
       - odoo-net
 
